@@ -96,8 +96,8 @@ MemoWidget <- function(prefix,widget,dbTable){
                              sprintf("select memo from %s where name='%s'",
                                      dbTable, enc(currentCode,"UTF-8")))[1, 1]
         
-        print(dbTable)
-        print(currentCode)
+        # print(dbTable)
+        # print(currentCode)
         
         if (isTRUE(all.equal(withinWidget,InRQDA)) | 
             (is.na(InRQDA) && withinWidget==""))

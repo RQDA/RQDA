@@ -368,7 +368,6 @@ backup_proj <- function(con){
 
 ProjectMemoWidget <- function(){
   if (is_projOpen(envir=.rqda,"qdacon")) {
-    print("yes")
     ## use enviroment, so you can refer to the same object easily, this is
     ## the beauty of environment
     ## if project is open, then continue
@@ -392,12 +391,10 @@ ProjectMemoWidget <- function(){
       gettext("Save memo", domain = "R-RQDA"),
       container=.projmemo2,handler=function(h,...){
         ## send the new content of memo back to database
-        print(W)
         newcontent <- svalue(W)
         ## Encoding(newcontent) <- "UTF-8"
         ## take care of double quote.
         newcontent <- enc(newcontent,encoding="UTF-8")
-        print(newcontent)
         
         ## only one row is needed
         dbExecute(
@@ -434,7 +431,7 @@ ProjectMemoWidget <- function(){
     
     insert(W, prvcontent, do.newline = FALSE, where = "beginning",
            font.attr=list(size="large"))
-    
+
     ## do.newline:do not add a \n (new line) at the beginning
     ## push the previous content to the widget.
     enabled(proj_memoB) <- FALSE
