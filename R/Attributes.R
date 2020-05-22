@@ -73,7 +73,7 @@ EditVarWidget <- function(ExistingItems=NULL,container=NULL,title=NULL,ID=NULL,s
   ## create model
   model <- create.model()
   ## create tree view
-  treeview <- gtkTreeViewNewWithModel(model$widget)
+  treeview <- gtkTreeViewNewWithModel(model)
   treeview$setRulesHint(TRUE)
   treeview$getSelection()$setMode("single")
   add.columns(treeview)
