@@ -1,3 +1,4 @@
+#' @export
 getCodingsByOne <- function(cid, fid=NULL,codingTable=c("coding","coding2")){
     if (length(cid)!=1) stop("cid should be length-1 integer vector.", domain = "R-RQDA")
     codingTable <- match.arg(codingTable)
@@ -15,7 +16,8 @@ getCodingsByOne <- function(cid, fid=NULL,codingTable=c("coding","coding2")){
     ct
 }
 
-
+#' @method print codingsByOne
+#' @export 
 print.codingsByOne <- function (x,...)
 {
     ComputeCallbackFun <- function(FileName,rowid){
@@ -106,6 +108,7 @@ andHelper <- function(d1,d2){
     ans
 }
 
+#' @export 
 and <- function (CT1, CT2)
 ### much faster than previous version of and()
 ### can extend to andSmart to handle more codes at the same time
@@ -157,6 +160,7 @@ orHelper <- function(d1,d2){
     ans
 }
 
+#' @export 
 or <- function (CT1, CT2)
 {
     ans <- data.frame(stringsAsFactors=FALSE)
@@ -208,6 +212,7 @@ notHelper <- function(d1,d2){
     ans
 }
 
+#' @export 
 not <- function (CT1, CT2)
 {
     ans <- data.frame(stringsAsFactors=FALSE)
@@ -241,15 +246,21 @@ not <- function (CT1, CT2)
     ans
 }
 
+#' @method %and% codingsByOne
+#' @export
 "%and%.codingsByOne" <- function(e1,e2){
     ## and(e1, e2, showCoding=TRUE, method= getOption("andMethod"))
     and(e1, e2)
 }
 
+#' @method %or% codingsByOne
+#' @export
 "%or%.codingsByOne" <- function(e1,e2){
   or(e1, e2)
 }
 
+#' @method %not% codingsByOne
+#' @export
 "%not%.codingsByOne" <- function(e1,e2){
   not(e1, e2)
 }

@@ -773,6 +773,7 @@ nCodedByTwo <- function(FUN, codeList=NULL, print=TRUE,...){
     ans
 }
 
+#' @export 
 queryFiles <- function(or=NULL,and=NULL,not=NULL,names=TRUE){
   fid.or <- fid.and <- fid.not <- integer(0)
   if (!is.null(or)) fid.or <- filesCodedByOr(or)

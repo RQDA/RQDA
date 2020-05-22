@@ -1,3 +1,4 @@
+#' @export 
 relation <- function(index1,index2){
   ## index1 and index2 are length-2 numeric vectors
   ## results:

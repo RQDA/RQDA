@@ -371,7 +371,7 @@ EditFileFun <- function(FileNameWidget=.rqda$.fnames_rqda){
   }
 }
 
-
+#' @export 
 write.FileList <- function(FileList,encoding=.rqda$encoding,con=.rqda$qdacon,...){
   ## import a list of files into the source table
   ## FileList is a list of file content, with names(FileList) the name of the files.
@@ -415,6 +415,7 @@ write.FileList <- function(FileList,encoding=.rqda$encoding,con=.rqda$qdacon,...
     } else gmessage(gettext("Open a project first.", domain = "R-RQDA"), container=TRUE)
 }
 
+#' @export 
 addFilesFromDir <- function(dir, pattern = "*.txt$"){
   oldDir <- getwd()
   setwd(dir)
@@ -424,61 +425,6 @@ addFilesFromDir <- function(dir, pattern = "*.txt$"){
   write.FileList(Contents)
   on.exit(setwd(oldDir))
 }
-
-# ProjectMemoWidget <- function(){
-#   if (is_projOpen(envir=.rqda,"qdacon")) {
-#     ## use enviroment, so you can refer to the same object easily, this is the 
-#     ## beauty of environment
-#     ## if project is open, then continue
-#     tryCatch(dispose(.rqda$.projmemo),error=function(e) {})
-#     ## Close the open project memo first, then open a new one
-#     ## .projmemo is the container of .projmemocontent,widget for the 
-#     ## content of memo
-#     assign(".projmemo",
-#            gwindow(title="Project Memo", parent=c(395,10),
-#                    width = getOption("widgetSize")[1],
-#                    height = getOption("widgetSize")[2]
-#                    ),
-#            envir=.rqda)
-#     .projmemo <- get(".projmemo",.rqda)
-#     .projmemo2 <- gpanedgroup(horizontal = FALSE, container=.projmemo)
-#     ## use .projmemo2, so can add a save button to it.
-#     gbutton(
-#       gettext("Save memo", domain = "R-RQDA"),
-#       container=.projmemo2, handler=function(h,...){
-#       ## send the new content of memo back to database
-#       newcontent <- svalue(W)
-#       ## Encoding(newcontent) <- "UTF-8"
-#       ## take care of double quote.
-#       newcontent <- enc(newcontent,encoding="UTF-8")
-#       dbGetQuery(.rqda$qdacon,
-#                  ## only one row is needed
-#                  sprintf("update project set memo='%s' where rowid=1",
-#                          newcontent)
-#                  ## have to quote the character in the sql expression
-#       )
-#       }
-#     )## end of save memo button
-#     tmp <- gtext(container=.projmemo2)
-#     font <- pangoFontDescriptionFromString(.rqda$font)
-#     gtkWidgetModifyFont(tmp$widget, font)
-#     assign(".projmemocontent",tmp,envir=.rqda)
-#     prvcontent <- dbGetQuery(.rqda$qdacon, "select memo from project")[1,1]
-#     ## [1,1]turn data.frame to 1-length character. Existing content of memo
-#     if (length(prvcontent)==0) {
-#       dbGetQuery(.rqda$qdacon,"replace into project (memo) values('')")
-#       prvcontent <- ""
-#       ## if there is no record in project table, it fails to save memo, so insert sth into it
-#     }
-#     W <- .rqda$.projmemocontent
-#     Encoding(prvcontent) <- "UTF-8"
-#     insert(W, prvcontent, do.newline = FALSE, where = "beginning")
-#     ## do.newline:do not add a \n (new line) at the beginning
-#     ## push the previous content to the widget.
-#     }
-# }
-
-
 
 FileNameWidgetUpdate <- function(FileNamesWidget=.rqda$.fnames_rqda,sort=TRUE,decreasing = FALSE,FileId=NULL,...){
   ##update file names list in the FileNamesWidget
@@ -598,7 +544,7 @@ getFileIds <- function(condition=c("unconditional","case","filecategory","both")
 }
 
 
-
+#' @export 
 getFileIdsSets <- function(set=c("case","filecategory"),relation=c("union","intersect")){
   set <- match.arg(set)
   relation <- match.arg(relation)
@@ -704,7 +650,7 @@ SearchButton <- function(widget){
 }
 
 
-
+#' @export 
 viewPlainFile <- function(FileNameWidget=.rqda$.fnames_rqda){
     if (is_projOpen(envir= .rqda, conName = "qdacon")) {
         if (length(svalue(FileNameWidget)) == 0) {
@@ -734,44 +680,3 @@ viewPlainFile <- function(FileNameWidget=.rqda$.fnames_rqda){
   insert(tmp, content)
   tmp$widget$set_editable(FALSE)
 }}}
-
-## UncodedFileNamesUpdate <- function(FileNamesWidget = .rqda$.fnames_rqda, sort=TRUE, decreasing = FALSE){
-## replaced by the general function of FileNameWigetUpdate() and getFileIds()
-## ## only show the uncoded file names in the .rqda$.fnames_rqda
-## ## The fnames will be sort if sort=TRUE
-##   fid <- dbGetQuery(.rqda$qdacon,"select id from source where status==1 group by id")$id
-##   if (!is.null(fid)){
-##     fid_coded <- dbGetQuery(.rqda$qdacon,"select fid from coding where status==1 group by fid")$fid
-##     fid_uncoded <- fid[! (fid %in% fid_coded)]
-##     source <- dbGetQuery(.rqda$qdacon,
-##                          sprintf("select name,date, id from source where status=1 and id in (%s)",
-##                                  paste(fid_uncoded,sep="",collapse=",")))
-##     if (nrow(source) != 0){
-##       fnames <- source$name
-##       Encoding(fnames) <- "UTF-8"
-##       if (sort){
-##       fnames <- fnames[OrderByTime(source$date,decreasing=decreasing)]
-##       }
-##     }
-##     tryCatch(FileNamesWidget[] <- fnames, error = function(e) {})
-##   }
-## }
-
-
-## setEncoding <- function(encoding="unknown"){
-  ## moved to utils.R
-##   ## specify what encoding is used in the imported files.
-##   .rqda$encoding <- encoding
-## }
-
-## enc <- function(x,encoding="UTF-8") {
-##   ## replace " with two '. to make insert smoothly.
-##   ## encoding is the encoding of x (character vector).
-##   ## moved to utils.R
-##   Encoding(x) <- encoding
-##   x <- gsub("'", "''", x)
-##   if (Encoding(x)!="UTF-8") {
-##     x <- iconv(x,to="UTF-8")
-##   }
-##   x
-## }

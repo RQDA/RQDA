@@ -51,6 +51,7 @@ OpenProjectButton <- function(container){
           )
 }
 
+#' @export
 openProject <- function(path,updateGUI=FALSE) {
     tryCatch(.rqda$.codes_rqda[]<-NULL,error=function(e){})
     tryCatch(.rqda$.fnames_rqda[]<-NULL,error=function(e){})

@@ -54,8 +54,8 @@ retrieval_by_code <- function (Fid = NULL, order = c("fname", "ftime", "ctime"),
             font <- pangoFontDescriptionFromString(.rqda$font)
             gtkWidgetModifyFont(.retreivalgui$widget, 
                 font)
-            .retreivalgui$SetPixelsBelowLines(5)
-            .retreivalgui$SetPixelsInsideWrap(5)
+            .retreivalgui$widget$SetPixelsBelowLines(5)
+            .retreivalgui$widget$SetPixelsInsideWrap(5)
             for (i in fid) {
                 FileName <- dbGetQuery(.rqda$qdacon, sprintf("select name from source where status=1 and id=%i", 
                   i))[["name"]]

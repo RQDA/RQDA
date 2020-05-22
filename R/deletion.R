@@ -1,3 +1,4 @@
+#' @export
 list.deleted <- function(type=c("file","code","case","codecategory","filecategory")){
   ## list the tmp deleted file/code/case/codecategory/filecategory
   ## no need to list deleted coding
@@ -25,8 +26,7 @@ list.deleted <- function(type=c("file","code","case","codecategory","filecategor
   }
 }
 
-
-
+#' @export
 pdelete <- function(type=c("file","code","case","codecategory","filecategory","coding"),ask=FALSE){
   ## permanantly delete all the "deleted" files/codes/codings (those with status=0)
 
@@ -152,7 +152,7 @@ CleanProject <- function(ask=FALSE){
 }
 
 
-
+#' @export 
 undelete <- function(type=c("file","code","case","codecategory","filecategory"),ask=TRUE){
   ## set the status  back to 1
 
