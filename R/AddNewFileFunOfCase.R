@@ -55,7 +55,7 @@ AddNewFileFunOfCase <- function ()
     gl[1, 1] <- AddNewFilBC
     tmp <- gtext(container = gp)
     font <- pangoFontDescriptionFromString(.rqda$font)
-    gtkWidgetModifyFont(tmp, font)
+    gtkWidgetModifyFont(tmp$widget, font)
     assign(".AddNewFileWidgetW", tmp, envir = .rqda)
     textW <- get(".AddNewFileWidgetW", envir = .rqda)
     addHandlerKeystroke(.rqda$.AddNewFileWidgetW, handler = function(h, ...) {

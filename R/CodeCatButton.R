@@ -348,7 +348,7 @@ GetCodeofCatWidgetMenu <- function()
     }
   })
   
-  CodeofCatWidgetMenu[[3]] <- gaction(gettext("Code Memo", domain = "R-RQDA"), handler = function(h, ...){
+  CodeofCatWidgetMenu[[3]] <- gaction(gettext("Sort by created time", domain = "R-RQDA"), handler = function(h, ...){
     if (is_projOpen(envir=.rqda,conName="qdacon")) {
       UpdateCodeofCatWidget()
     }

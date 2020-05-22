@@ -250,6 +250,8 @@ RQDA <- function() {
 AddHandler <- function(){
   ## add handler function for GUIs
   
+  tmp <<- .rqda
+  
   addHandlerUnrealize(.rqda$.root_rqdagui, handler = function(h,...) {
     ## handler for Root
     ## make sure is the project should be closed by issuing a confirm window.

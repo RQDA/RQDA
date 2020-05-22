@@ -256,7 +256,8 @@ ProjectMemoWidget <- function(){
     .projmemo <- get(".projmemo",.rqda)
     .projmemo2 <- gpanedgroup(horizontal = FALSE, container=.projmemo)
     ## use .projmemo2, so can add a save button to it.
-    proj_memoB <- gbutton(gettext("Save memo", domain = "R-RQDA"),container=.projmemo2,handler=function(h,...){
+    proj_memoB <- gbutton(gettext("Save memo", domain = "R-RQDA"),
+                          container=.projmemo2,handler=function(h,...){
       ## send the new content of memo back to database
       newcontent <- svalue(W)
       ## Encoding(newcontent) <- "UTF-8"
@@ -277,7 +278,7 @@ ProjectMemoWidget <- function(){
                        enabled(mbut) <- TRUE
                    })##
     font <- pangoFontDescriptionFromString(.rqda$font)
-    gtkWidgetModifyFont(tmp,font)
+    gtkWidgetModifyFont(tmp$widget,font)
     assign(".projmemocontent",tmp,envir=.rqda)
     prvcontent <- dbGetQuery(.rqda$qdacon, "select memo from project")[1,1]
     ## [1,1]turn data.frame to 1-length character. Existing content of memo

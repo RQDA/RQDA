@@ -90,7 +90,9 @@ MemoWidget <- function(prefix,widget,dbTable){
       else {
           CloseYes <- function(currentCode){
               withinWidget <- svalue(get(sprintf(".%smemoW",prefix),envir=.rqda))
-              InRQDA <- dbGetQuery(.rqda$qdacon, sprintf("select memo from %s where name='%s'",dbTable, enc(currentCode,"UTF-8")))[1, 1]
+              InRQDA <- dbGetQuery(.rqda$qdacon,
+                                   sprintf("select memo from %s where name='%s'",
+                                           dbTable, enc(currentCode,"UTF-8")))[1, 1]
               if (isTRUE(all.equal(withinWidget,InRQDA))) {
                   return(TRUE) } else {
                       if (is.na(InRQDA) && withinWidget=="")  {
@@ -109,21 +111,30 @@ MemoWidget <- function(prefix,widget,dbTable){
               IfCont <- CloseYes(currentCode=prvSelected)}
           if ( inherits(IsOpen,"simpleError") || IfCont){ ## if not open or the same.
               tryCatch(eval(parse(text=sprintf("dispose(.rqda$.%smemo)",prefix))),error=function(e) {})
-              gw <- gwindow(title=sprintf(gettext("%s Memo:%s", domain = "R-RQDA"),prefix,Selected),
-                            parent=getOption("widgetCoordinate"),
-                            width = getOption("widgetSize")[1],
-                            height = getOption("widgetSize")[2]
-                            )
+            gw <- gwindow(
+              title=sprintf(gettext("%s Memo:%s",domain = "R-RQDA"),
+                            prefix,Selected),
+              parent=getOption("widgetCoordinate"),
+              width = getOption("widgetSize")[1],
+              height = getOption("widgetSize")[2]
+            )
               mainIcon <- system.file("icon", "mainIcon.png", package = "RQDA")
               gw$set_icon(mainIcon)
               assign(sprintf(".%smemo",prefix),gw,envir=.rqda)
               assign(sprintf(".%smemo2",prefix),
-                     gpanedgroup(horizontal = FALSE, container=get(sprintf(".%smemo",prefix),envir=.rqda)),
+                     gpanedgroup(
+                       horizontal = FALSE,
+                       container=get(sprintf(".%smemo",prefix),envir=.rqda)),
                      envir=.rqda)
-              mbut <- gbutton(gettext("Save Memo", domain = "R-RQDA"),container=get(sprintf(".%smemo2",prefix),envir=.rqda),handler=function(h,...){
+              mbut <- gbutton(
+                gettext("Save Memo", domain = "R-RQDA"),
+                container=get(sprintf(".%smemo2",prefix), envir=.rqda),
+                handler=function(h,...){
                   newcontent <- svalue(W)
                   newcontent <- enc(newcontent,encoding="UTF-8") ## take care of double quote.
-                  dbGetQuery(.rqda$qdacon,sprintf("update %s set memo='%s' where name='%s'",dbTable,newcontent,enc(Selected)))
+                  dbGetQuery(.rqda$qdacon,
+                             sprintf("update %s set memo='%s' where name='%s'",
+                                     dbTable,newcontent,enc(Selected)))
                   mbut <- get(sprintf("buttonOf.%smemo",prefix),envir=button)
                   enabled(mbut) <- FALSE
               }
@@ -427,7 +438,7 @@ gselect.list <- function(list,multiple=TRUE,title=NULL,width=200, height=500,...
           assign("selected",value,envir=h$action$env)
           },action=list(envir=ans))
       x2<-gtable(list,multiple=multiple,container=dlg,expand=TRUE)
-      dlg$Move(size(.rqda$.root_rqdagui)[1],2)
+      #dlg$widget$Move(size(.rqda$.root_rqdagui)[1],2)
       size(dlg) <- c(width,height)
       visible(dlg, set=TRUE)
       ans
