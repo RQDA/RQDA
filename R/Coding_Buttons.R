@@ -3,10 +3,13 @@ AddCodeButton <- function(label=gettext("Add", domain = "R-RQDA")){
                      handler= function(h,...) {
                        if (is_projOpen(envir=.rqda,conName="qdacon")) {
                          codename <- ginput(gettext("Enter new code. ", domain = "R-RQDA"), icon="info")
+                         if (!identical(codename, character(0)))
+                         {
                          if (!is.na(codename)){
                            codename <- enc(codename,encoding="UTF-8")
                            addcode(codename)
                            CodeNamesUpdate(sortByTime=FALSE)
+                         }
                          }
                        }
                      }

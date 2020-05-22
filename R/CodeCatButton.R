@@ -265,6 +265,8 @@ GetCodeCatWidgetMenu <- function()
   CodeCatWidgetMenu[[1]] <- gaction(gettext("Add New Code to Selected Category", domain = "R-RQDA"), handler = function(h, ...){
     if (is_projOpen(envir=.rqda,conName="qdacon")) {
       codename <- ginput(gettext("Enter new code. ", domain = "R-RQDA"), icon="info")
+      if (!identical(codename, character(0)))
+      {
       if (!is.na(codename)){
         codename <- enc(codename,encoding="UTF-8")
         addcode(codename)
@@ -284,6 +286,7 @@ GetCodeCatWidgetMenu <- function()
             UpdateCodeofCatWidget()
           } else gmessage(gettext("Failed to assign code category", domain = "R-RQDA"))
         }
+      }
       }
     }
   })
