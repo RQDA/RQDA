@@ -119,15 +119,15 @@ ViewFileFunHelper <- function(FileName,hightlight=TRUE,codingTable=.rqda$codingT
     )
     }
   mainIcon <- system.file("icon", "mainIcon.png", package = "RQDA")
-  gw@widget@widget$SetIconFromFile(mainIcon)
+  gw$set_icon(mainIcon)
   getToolkitWidget(gw)$Move(getOption("widgetCoordinate")[1],getOption("widgetCoordinate")[2])
   assign(".root_edit", gw, envir = .rqda)
   .root_edit <- get(".root_edit", .rqda)
   tmp <- gtext(container=.root_edit)
   font <- pangoFontDescriptionFromString(.rqda$font)
-  gtkWidgetModifyFont(tmp@widget@widget,font)
-  tmp@widget@widget$SetPixelsBelowLines(5) ## set the spacing
-  tmp@widget@widget$SetPixelsInsideWrap(5) ## so the text looks more confortable.
+  gtkWidgetModifyFont(tmp$widget,font)
+  tmp$widget$SetPixelsBelowLines(5) ## set the spacing
+  tmp$widget$SetPixelsInsideWrap(5) ## so the text looks more confortable.
   assign(".openfile_gui", tmp, envir= .rqda)
   Encoding(SelectedFileName) <- "unknown"
   IDandContent <- RQDAQuery(sprintf("select id, file from source where name='%s'",
@@ -137,12 +137,12 @@ ViewFileFunHelper <- function(FileName,hightlight=TRUE,codingTable=.rqda$codingT
   Encoding(content) <- "UTF-8"
   W <- get(".openfile_gui", .rqda)
   add(W, content)
-  slot(W, "widget")@widget$SetEditable(FALSE)
+  W$set_editable(FALSE)
   markidx <- RQDAQuery(sprintf("select %s.rowid,selfirst,selend,freecode.name,freecode.color, freecode.id from %s,freecode where fid=%i and %s.status=1 and freecode.id=cid and freecode.status=1",codingTable,codingTable, IDandContent$id,codingTable))
   if (annotation) {
       anno <- RQDAQuery(sprintf("select position,rowid from annotation where status=1 and fid=%s",IDandContent$id))
   }
-  buffer <- W@widget@widget$GetBuffer()
+  buffer <- W$buffer
   fore.col <- .rqda$fore.col
   back.col <- .rqda$back.col
   buffer$createTag("underline", underline = "single")
@@ -205,7 +205,7 @@ ViewFileFunHelper <- function(FileName,hightlight=TRUE,codingTable=.rqda$codingT
               InsertAnnotation(index=idx,fid=IDandContent$id, rowid=x["rowid"])
           })}}
   buffer$PlaceCursor(buffer$getIterAtOffset(0)$iter) ## place cursor at the beginning
-  ## gSignalConnect(tmp@widget@widget,"expose_event",LineNumber.expose) ## add line number to the widget
+  ## gSignalConnect(tmp,"expose_event",LineNumber.expose) ## add line number to the widget
   ## does not work well yet
   enabled(button$AnnB) <- TRUE
   enabled(button$MarCodB1) <- (length(svalue(.rqda$.codes_rqda))==1)
@@ -241,7 +241,7 @@ EditFileFun <- function(FileNameWidget=.rqda$.fnames_rqda){
                     width = getOption("widgetSize")[1], height = getOption("widgetSize")[2]
                     )
       mainIcon <- system.file("icon", "mainIcon.png", package = "RQDA")
-      gw@widget@widget$SetIconFromFile(mainIcon)
+      gw$set_icon(mainIcon)
       assign(".root_edit",gw,envir=.rqda)
       assign(".root_edit2",gpanedgroup(horizontal = FALSE, container=.rqda$.root_edit),envir=.rqda)
       EdiFilB <- gbutton(gettext("Save File", domain = "R-RQDA"),container=.rqda$.root_edit2,handler=function(h,...){
@@ -309,7 +309,7 @@ EditFileFun <- function(FileNameWidget=.rqda$.fnames_rqda){
       enabled(EdiFilB) <- FALSE
       tmp <- gtext(container=.rqda$.root_edit2)
       font <- pangoFontDescriptionFromString(.rqda$font)
-      gtkWidgetModifyFont(tmp@widget@widget,font)
+      gtkWidgetModifyFont(tmp$widget,font)
       assign(".openfile_gui", tmp, envir= .rqda)
       Encoding(SelectedFileName) <- "unknown"
       IDandContent <- dbGetQuery(.rqda$qdacon, sprintf("select id, file from source where name='%s'",enc(SelectedFileName)))
@@ -318,7 +318,7 @@ EditFileFun <- function(FileNameWidget=.rqda$.fnames_rqda){
       W <- get(".openfile_gui", .rqda)
       ## add(W, content, font.attr = c(sizes = "large"))
       add(W, content)
-      buffer <- slot(W, "widget")@widget$GetBuffer() ## get text buffer.
+      buffer <- W$buffer ## get text buffer.
       mark_index <- dbGetQuery(.rqda$qdacon,sprintf("select selfirst,selend,rowid from coding where fid=%i and status=1",
                                                     IDandContent$id))
       if (nrow(mark_index)!=0){## make sense only when there is coding there
@@ -359,11 +359,11 @@ EditFileFun <- function(FileNameWidget=.rqda$.fnames_rqda){
           gtkTextMarkSetVisible(mark,TRUE)
         }) ## end of apply
       }
-      gSignalConnect(.rqda$.openfile_gui@widget@widget$GetBuffer(), "changed",
+      gSignalConnect(.rqda$.openfile_gui$buffer, "changed",
                      function(h,...){
                          enabled(button$EdiFilB) <- TRUE
                      })
-      addhandlerunrealize(.rqda$.openfile_gui,handler=function(h,...){
+      addHandlerUnrealize(.rqda$.openfile_gui,handler=function(h,...){
           rm("EdiFilB",envir=button)
           rm(".root_edit",".root_edit2",".openfile_gui",envir=.rqda)
           FALSE
@@ -455,7 +455,7 @@ ProjectMemoWidget <- function(){
             )## end of save memo button
     tmp <- gtext(container=.projmemo2)
     font <- pangoFontDescriptionFromString(.rqda$font)
-    gtkWidgetModifyFont(tmp@widget@widget,font)
+    gtkWidgetModifyFont(tmp$widget,font)
     assign(".projmemocontent",tmp,envir=.rqda)
     prvcontent <- dbGetQuery(.rqda$qdacon, "select memo from project")[1,1]
     ## [1,1]turn data.frame to 1-length character. Existing content of memo
@@ -499,8 +499,8 @@ FileNameWidgetUpdate <- function(FileNamesWidget=.rqda$.fnames_rqda,sort=TRUE,de
   tryCatch(FileNamesWidget[] <- fnames,error=function(e){})
 }
 
-
-GetFileId <- function(condition=c("unconditional","case","filecategory","both"),type=c("all","coded","uncoded","selected"))
+#' @export
+getFileIds <- function(condition=c("unconditional","case","filecategory","both"),type=c("all","coded","uncoded","selected"))
 {
   ## helper function
   unconditionalFun <- function(type)
@@ -565,7 +565,7 @@ GetFileId <- function(condition=c("unconditional","case","filecategory","both"),
                                 paste(paste("'",enc(selected),"'",sep=""),collapse=",")
                                 ))$id
     }
-    allfid <- GetFileIdSets("filecategory","intersect")
+    allfid <- getFileIdsSets("filecategory","intersect")
     if (type=="all") {ans <- allfid} else {
       codedfid <- RQDAQuery(sprintf("select fid from coding where status=1 and fid in (%s) group by fid",paste(shQuote(allfid),collapse=",")))$fid
       if (type=="coded") {ans <- codedfid}
@@ -575,7 +575,7 @@ GetFileId <- function(condition=c("unconditional","case","filecategory","both"),
   }
 
   bothFun <- function(type){
-    ans <- intersect(GetFileId("case",type),GetFileId("file",type))
+    ans <- intersect(getFileIds("case",type),getFileIds("file",type))
     ans
   }
 
@@ -594,7 +594,7 @@ GetFileId <- function(condition=c("unconditional","case","filecategory","both"),
 
 
 
-GetFileIdSets <- function(set=c("case","filecategory"),relation=c("union","intersect")){
+getFileIdsSets <- function(set=c("case","filecategory"),relation=c("union","intersect")){
   set <- match.arg(set)
   relation <- match.arg(relation)
   if (set=="case") {
@@ -666,8 +666,8 @@ AddToFileCategory <- function(Widget=.rqda$.fnames_rqda,updateWidget=TRUE){
 
 ## library(RGtk2)
 searchWord <- function(str,widget,from=0,col="green", verbose=FALSE){
-    tview <- slot(widget,"widget")@widget
-    buffer <- tview$GetBuffer()
+    tview <- widget
+    buffer <- tview$buffer
     Iter0 <- buffer$GetIterAtOffset(from)$iter
     ans <- gtkTextIterForwardSearch(Iter0,str,'GTK_TEXT_SEARCH_VISIBLE_ONLY')
     if (ans$retval) {
@@ -713,13 +713,13 @@ viewPlainFile <- function(FileNameWidget=.rqda$.fnames_rqda){
                 height = min(c(wnh[2],getOption("widgetSize")[2]))
                 )
   mainIcon <- system.file("icon", "mainIcon.png", package = "RQDA")
-  gw@widget@widget$SetIconFromFile(mainIcon)
+  gw$set_icon(mainIcon)
   getToolkitWidget(gw)$Move(getOption("widgetCoordinate")[1],getOption("widgetCoordinate")[2])
   tmp <- gtext(container=gw)
   font <- pangoFontDescriptionFromString(.rqda$font)
-  gtkWidgetModifyFont(tmp@widget@widget,font)
-  tmp@widget@widget$SetPixelsBelowLines(5) ## set the spacing
-  tmp@widget@widget$SetPixelsInsideWrap(5) ## so the text looks more confortable.
+  gtkWidgetModifyFont(tmp$widget,font)
+  tmp$widget$SetPixelsBelowLines(5) ## set the spacing
+  tmp$widget$SetPixelsInsideWrap(5) ## so the text looks more confortable.
   Encoding(SelectedFileName) <- "unknown"
   IDandContent <- RQDAQuery(sprintf("select id, file from source where name='%s'",
                                     enc(SelectedFileName))
@@ -727,11 +727,11 @@ viewPlainFile <- function(FileNameWidget=.rqda$.fnames_rqda){
   content <- IDandContent$file
   Encoding(content) <- "UTF-8"
   add(tmp, content)
-  slot(tmp, "widget")@widget$SetEditable(FALSE)
+  tmp$widget$set_editable(FALSE)
 }}}
 
 ## UncodedFileNamesUpdate <- function(FileNamesWidget = .rqda$.fnames_rqda, sort=TRUE, decreasing = FALSE){
-## replaced by the general function of FileNameWigetUpdate() and GetFileId()
+## replaced by the general function of FileNameWigetUpdate() and getFileIds()
 ## ## only show the uncoded file names in the .rqda$.fnames_rqda
 ## ## The fnames will be sort if sort=TRUE
 ##   fid <- dbGetQuery(.rqda$qdacon,"select id from source where status==1 group by id")$id

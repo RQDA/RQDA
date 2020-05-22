@@ -10,7 +10,7 @@
 getFileIds(condition = c("unconditional", "case", "filecategory","both"), 
           type = c("all", "coded", "uncoded","selected"))
 
-getFileNames(fid = GetFileId())
+getFileNames(fid = getFileIds())
 
 getFiles(condition = c("unconditional", "case", "filecategory", "both"),
          type = c("all", "coded", "uncoded", "selected"), names = TRUE) 
@@ -33,7 +33,7 @@ getFiles(condition = c("unconditional", "case", "filecategory", "both"),
 
   When \code{condition} is "both", the result is intersection of File Id of "case" and "filecategory".
   	  
-  \code{GetFileId} returns the ids of files which fit the combined
+  \code{getFileIds} returns the ids of files which fit the combined
   criterion of \code{condition} and \code{type}.
 }
 \value{
@@ -42,12 +42,12 @@ Normally, it is a numeric vector of file id. If condition is "case" or "filecate
 \code{\link{getFiles}} returns a vector of file IDs (with class of "RQDA.vector" and "fileId") when names is FALSE, and a vector of file names ((with class of "RQDA.vector" and "fileName") when names is TRUE.
 }
 \author{ HUANG Ronggui}
-\seealso{ \code{\link{retrieval}}, \code{\link{getFileIdSets}}}
+\seealso{ \code{\link{retrieval}}, \code{\link{getFileIdsSets}}}
 \examples{
 \dontrun{
-GetFileId() ## Id of all files
-GetFileId("unconditional","coded") ## id of all coded files.
-GetFileId("case","uncoded") ## id of uncoded files for the selected case.
-GetFileId("filecategory","all") ## id of all files in the selected file category.
+getFileIds() ## Id of all files
+getFileIds("unconditional","coded") ## id of all coded files.
+getFileIds("case","uncoded") ## id of uncoded files for the selected case.
+getFileIds("filecategory","all") ## id of all files in the selected file category.
 }
 }

@@ -1,5 +1,5 @@
 AutoCoding <- function(KeyWord,expansion=6){
-  Files <- SearchFiles(paste("%",KeyWord,"%",collapse=""),content=TRUE)
+  Files <- searchFiles(paste("%",KeyWord,"%",collapse=""),content=TRUE)
   AnsIndex <- gregexpr(KeyWord,Files$file)
   AnsIndex2 <- lapply(AnsIndex, FUN=function(x) {
     begin <- x-expansion
@@ -54,7 +54,6 @@ insertCoding <- function(fid, cid, start, end, fulltext) {
   }
 }
   
-
 codingBySearchOneFile <- function(pattern, fid, cid, seperator, concatenate, ...) {
   ## auto coding: when seperator is \n, each paragraph is a analysis unit
   ## by providing approperiate seperator, it allows flexible control on the unit of autocoding
@@ -86,6 +85,7 @@ codingBySearchOneFile <- function(pattern, fid, cid, seperator, concatenate, ...
     }
 }
 
+#' @export
 codingBySearch <- function(pattern, fid = getFileIds(), cid, seperator="\n", concatenate=FALSE, ...) {
     if (length(fid)> 0) {
         for (i in fid) {

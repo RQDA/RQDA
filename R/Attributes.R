@@ -73,7 +73,7 @@ EditVarWidget <- function(ExistingItems=NULL,container=NULL,title=NULL,ID=NULL,s
   ## create model
   model <- create.model()
   ## create tree view
-  treeview <- gtkTreeViewNewWithModel(model)
+  treeview <- gtkTreeViewNewWithModel(model$widget)
   treeview$setRulesHint(TRUE)
   treeview$getSelection()$setMode("single")
   add.columns(treeview)
@@ -340,8 +340,8 @@ viewFileAttr <- function(){
   }
 }
 
-
-GetAttr <- function(type=c("case","file"),attrs=svalue(.rqda$.AttrNamesWidget),subset){
+#' @export
+getAttr <- function(type=c("case","file"),attrs=svalue(.rqda$.AttrNamesWidget),subset){
   if (is_projOpen()){
   type <-  match.arg(type)
   if (length(attrs)==0) attrs <- NULL

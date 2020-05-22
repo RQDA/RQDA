@@ -1,3 +1,4 @@
+#' @export
 exportCodedFile <- function(file, fid, closeAfter=TRUE){
     ## possible bug when there is annotations
     ## open a file of fid first
@@ -9,7 +10,7 @@ exportCodedFile <- function(file, fid, closeAfter=TRUE){
     cidx <- RQDAQuery(sprintf("select coding.rowid as rowid,selfirst,selend, freecode.name as code from coding, freecode where fid=%s and coding.status=1 and coding.cid=freecode.id",fid))
     idx <- cidx[order(cidx$selfirst),]
     wf <- .rqda$.openfile_gui
-    buffer <- wf@widget@widget$GetBuffer()
+    buffer <- wf$buffer
     endidx <- buffer$GetEndIter()$iter$GetOffset()
     idx <- sort(unique(c(0, endidx, cidx$selfirst,cidx$selend)))
     nidx <- length(idx) - 1

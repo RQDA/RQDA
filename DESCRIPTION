@@ -5,8 +5,8 @@ Version: 0.3-1
 Date: 2018-03-26
 Author: Ronggui Huang
 Maintainer: Ronggui Huang <ronggui.huang@gmail.com>
-Depends: R (>= 2.8.0), RSQLite(>= 2.0), gWidgetsRGtk2 (>= 0.0-36), DBI(>= 0.4-9)
-Imports: RGtk2 (>= 2.20), igraph, gWidgets (>= 0.0-31), methods
+Depends: RSQLite, gWidgets2RGtk2, DBI
+Imports: RGtk2, igraph, gWidgets2, methods
 Enhances: tcltk, rjpod, d3Network
 Description: Software for qualitative text analysis (Kuckartz, 2014, <doi:10.4135/9781446288719>). Current version only supports plain text, but it can import PDF highlights if package 'rjpod' (<https://r-forge.r-project.org/projects/rqda/>) is installed.
 Additional_repositories: http://r-forge.r-project.org/
@@ -15,3 +15,5 @@ LazyLoad: yes
 SystemRequirements: Java (>= 6) for rjpod
 URL: http://rqda.r-forge.r-project.org
 NeedsCompilation: no
+RoxygenNote: 7.1.0
+Roxygen: list(load = "installed", markdown = TRUE)

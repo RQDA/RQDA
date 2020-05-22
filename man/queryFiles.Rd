@@ -31,8 +31,8 @@ HUANG Ronggui
 
 \examples{
 \dontrun{
-QueryFile(or=1:2) ## files coded to code 1 or 2.
-QueryFile(and=1:2) ## files coded to code 1 and 2.
-QueryFile(or=1:2, not=3:4) ## files coded to code 1 or 2 but neither 3 nor 4.
+queryFiles(or=1:2) ## files coded to code 1 or 2.
+queryFiles(and=1:2) ## files coded to code 1 and 2.
+queryFiles(or=1:2, not=3:4) ## files coded to code 1 or 2 but neither 3 nor 4.
 }
 }

@@ -23,19 +23,3 @@
   cat("Bye, RQDA is unloaded.\n")
   options(.rqda$optOld)
 }
-
-
-## use cam name conventions; duplicated the original functions for smooth transition.
-## must in ultis.R
-## crossCodes <- CrossCode
-crossTwoCodes <- CrossTwo
-exportCodings <- ExportCoding
-getCaseNames <- GetCaseName
-getCaseIds <- GetCaseId
-getCodingTable <- GetCodingTable
-queryFiles <- QueryFile
-getFileNames <- GetFileName
-getFileIds <- GetFileId
-getFileIdSets <- GetFileIdSets
-getAttr <- GetAttr
-showSubset <- ShowSubset

@@ -20,14 +20,16 @@ coding2.selend as index2, coding2.seltext as coding2, coding2.selend - coding2.s
 where coding2.status=1 and source.status=1 and freecode.status=1 and coding2.cid in (%s)", paste(cid,collapse=",")))
     }
     if (nrow(ct) != 0) {
-        Encoding(ct$codename) <- Encoding(ct$filename) <- Encoding(ct$coding) <- "UTF-8"
+        Encoding(ct$codename) <- Encoding(ct$filename) <-
+            Encoding(ct$coding) <- "UTF-8"
         if (!is.null(fid))
             ct <- ct[ct$fid %in% fid, ]
     }
     ct ## can be printed via print.CodingsByOne
 }
 
-getCodingsFromFiles <- function(Fid, order=c("fname","ftime","ctime"), codingTable="coding")
+getCodingsFromFiles <- function(Fid, order=c("fname","ftime","ctime"),
+                                codingTable="coding")
 {
     order <- match.arg(order)
     order <- switch(order,
@@ -43,32 +45,39 @@ getCodingsFromFiles <- function(Fid, order=c("fname","ftime","ctime"), codingTab
         if(Ncodings == 1){
             title <- sprintf(ngettext(Nfiles,
                                       "1 retrieved coding from %i file",
-                                      "1 retrieved coding from %i files", domain = "R-RQDA"), Nfiles)
+                                      "1 retrieved coding from %i files",
+                                      domain = "R-RQDA"), Nfiles)
         } else {
             title <- sprintf(ngettext(Nfiles,
                                       "%i retrieved codings from %i file",
-                                      "%i retrieved codings from %i files", domain = "R-RQDA"), Ncodings, Nfiles)
+                                      "%i retrieved codings from %i files",
+                                      domain = "R-RQDA"), Ncodings, Nfiles)
         }
-        wnh <- size(.rqda$.root_rqdagui) ## size of the main window
+        wnh <- size(.rqda$.root_rqdagui$widget) ## size of the main window
         .gw <- gwindow(title=title, parent=c(wnh[1]+10,2),
-                       width = min(c(gdkScreenWidth()- wnh[1]-20,getOption("widgetSize")[1])),
+                       width = min(c(gdkScreenWidth()- wnh[1]-20,
+                                     getOption("widgetSize")[1])),
                        height = min(c(wnh[2],getOption("widgetSize")[2]))
                        )
         mainIcon <- system.file("icon", "mainIcon.png", package = "RQDA")
-        .gw@widget@widget$SetIconFromFile(mainIcon)
+        .gw$set_icon(mainIcon)
         .retreivalgui <- gtext(container=.gw)
         font <- pangoFontDescriptionFromString(.rqda$font)
-        gtkWidgetModifyFont(.retreivalgui@widget@widget,font)
-        .retreivalgui@widget@widget$SetPixelsBelowLines(5) ## set the spacing
-        .retreivalgui@widget@widget$SetPixelsInsideWrap(5) ## so the text looks more confortable.
+        gtkWidgetModifyFont(.retreivalgui$widget,font)
+        .retreivalgui$widget$SetPixelsBelowLines(5) ## set the spacing
+        .retreivalgui$widget$SetPixelsInsideWrap(5) ## so the text looks more confortable.
         for (i in fid){
-            FileName <- dbGetQuery(.rqda$qdacon,sprintf("select name from source where status=1 and id=%i",i))[['name']]
+            FileName <- dbGetQuery(
+                .rqda$qdacon,sprintf(
+                    "select name from source where status=1 and id=%i",
+                    i))[['name']]
             if (!is.null(FileName)){
                 Encoding(FileName) <- "UTF-8"
                 retrieval$fname[retrieval$fid==i] <- FileName
             } else {
                 retrieval <- retrieval[retrieval$fid!=i,]
-                RQDAQuery(sprintf("update %s set status=0 where fid=%i",codingTable, i))
+                RQDAQuery(sprintf("update %s set status=0 where fid=%i",
+                                  codingTable, i))
             }
         }
         Encoding(retrieval$seltext) <-  Encoding(retrieval$fname) <- "UTF-8"
@@ -76,8 +85,8 @@ getCodingsFromFiles <- function(Fid, order=c("fname","ftime","ctime"), codingTab
         ComputeCallbackFun <- function(FileName,rowid){
             CallBackFUN <- function(widget,event,...){
                 ViewFileFunHelper(FileName,hightlight=FALSE)
-                textView <- .rqda$.openfile_gui@widget@widget
-                buffer <- textView$GetBuffer()
+                textView <- .rqda$.openfile_gui$widget
+                buffer <- textView$buffer
                 mark1 <- gtkTextBufferGetMark(buffer,sprintf("%s.1",rowid))
                 gtkTextViewScrollToMark(textView,mark1,0)
                 iter1 <- buffer$GetIterAtMark(mark1)$iter
@@ -86,17 +95,20 @@ getCodingsFromFiles <- function(Fid, order=c("fname","ftime","ctime"), codingTab
                 gtkTextMarkSetVisible(mark2,TRUE)
                 iter2 <- buffer$GetIterAtMark(mark2)$iter
                 idx2 <- gtkTextIterGetOffset(iter2)
-                HL(.rqda$.openfile_gui, data.frame(idx1,idx2), fore.col = .rqda$fore.col, back.col = NULL)
+                HL(.rqda$.openfile_gui, data.frame(idx1,idx2),
+                   fore.col = .rqda$fore.col, back.col = NULL)
             }
             CallBackFUN
         } ## end of ComputeCallbackFun
 
-        buffer <- .retreivalgui@widget@widget$GetBuffer()
+        buffer <- .retreivalgui$buffer
         buffer$createTag("red", foreground = "red")
         iter <- buffer$getIterAtOffset(0)$iter
 
         apply(retrieval,1, function(x){
-            metaData <- sprintf("[%s] - %s [%i:%i]",x[["code"]], x[['fname']],as.numeric(x[['selfirst']]),as.numeric(x[['selend']]))
+            metaData <- sprintf("[%s] - %s [%i:%i]",x[["code"]], x[['fname']],
+                                as.numeric(x[['selfirst']]),
+                                as.numeric(x[['selend']]))
             ## buffer$InsertWithTagsByName(iter, metaData,"x-large","red")
             buffer$InsertWithTagsByName(iter, metaData,"red")
             anchorcreated <- buffer$createChildAnchor(iter)
@@ -106,8 +118,9 @@ getCodingsFromFiles <- function(Fid, order=c("fname","ftime","ctime"), codingTab
             widget <- gtkEventBoxNew()
             widget$Add(lab)
             gSignalConnect(widget, "button-press-event",
-                           ComputeCallbackFun(x[["fname"]],as.numeric(x[["rowid"]])))
-            .retreivalgui@widget@widget$addChildAtAnchor(widget, anchor)
+                           ComputeCallbackFun(x[["fname"]],
+                                              as.numeric(x[["rowid"]])))
+            .retreivalgui$addChildAtAnchor(widget, anchor)
             widget$showAll()
             iter$ForwardChar()
             buffer$insert(iter, "\n")

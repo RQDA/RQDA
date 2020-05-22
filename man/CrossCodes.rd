@@ -7,7 +7,7 @@
 }
 \usage{
 crossCodes(relation=c("overlap","inclusion","exact","proximity"),codeList=NULL,
-          data=GetCodingTable(),print=TRUE,...)
+          data=getCodingTable(),print=TRUE,...)
 
 crossTwoCodes(cid1,cid2,data,relation=c("overlap","inclusion","exact","proximity"),...)
 }

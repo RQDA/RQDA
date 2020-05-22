@@ -60,10 +60,11 @@ relation <- function(index1,index2){
   }
 }
 
-CrossTwo <- function(cid1, cid2,data,relation=c("overlap","inclusion","exact","proximity"),...)
+#' @export 
+crossTwoCodes <- function(cid1, cid2,data,relation=c("overlap","inclusion","exact","proximity"),...)
 {
   ## cid1 and cid2 is length-1 numeric, represents the id of codes
-  ## data is return by GetCodingTable.
+  ## data is return by getCodingTable.
   ## cid1=1; cid2=2
   relation <- match.arg(relation)
   data <- data[data$cid %in% c(cid1,cid2),c("cid","fid","index1","index2")]
@@ -87,7 +88,7 @@ CrossTwo <- function(cid1, cid2,data,relation=c("overlap","inclusion","exact","p
   ans
 }
 
-crossCodes <- CrossCode <- function(relation=c("overlap","inclusion","exact","proximity"),codeList=NULL,data=GetCodingTable(),print=TRUE,...){
+crossCodes <- CrossCode <- function(relation=c("overlap","inclusion","exact","proximity"),codeList=NULL,data=getCodingTable(),print=TRUE,...){
 ## codeList is character vector of codes.
   if (nrow(data)==0) {
     stop("No coding in this project.", domain = "R-RQDA")
@@ -110,7 +111,7 @@ crossCodes <- CrossCode <- function(relation=c("overlap","inclusion","exact","pr
                                                                  cidList))
       for (i in 1:length(codeList)){
         for (j in i:length(codeList)){
-          ans[i,j] <- CrossTwo(cidList[i],cidList[j],data=data,relation=relation)
+          ans[i,j] <- crossTwoCodes(cidList[i],cidList[j],data=data,relation=relation)
         }
       }
       class(ans) <- "crossCodes"
@@ -120,6 +121,9 @@ crossCodes <- CrossCode <- function(relation=c("overlap","inclusion","exact","pr
   }
 }
 
+#' @importFrom igraph V 
+#' @method plot crossCodes
+#' @export
 plot.crossCodes <- function(x, ...){
     colnames(x) <- rownames(x)
     if (all(x==0,na.rm=T)) x <- x + 0.5

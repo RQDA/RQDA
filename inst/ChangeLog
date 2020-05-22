@@ -463,7 +463,7 @@
 	highlighting coding.
 
 2009-06-10
-	* change GetFileId() according change of 2009-06-05.
+	* change getFileIds() according change of 2009-06-05.
 
 2009-06-06
 	* use font from "font setting" to set font of journal widget.
@@ -596,7 +596,7 @@
 	* New function of GetCaseId(): the name may be changed in the future.
 
 2009-04-19
-	* New function of GetFileIdSets, can be used to do more complex conditional retrieval.
+	* New function of getFileIdsSets, can be used to do more complex conditional retrieval.
 
 2009-04-18
 	* Minor bugfix related to naming with "'".
@@ -606,7 +606,7 @@
 	* Add documents of RQDA2tm.Rd,retrieval.Rd and GetAttr.Rd.
 
 2009-04-16
-	* GetFileId() can return fid of selected files now.
+	* getFileIds() can return fid of selected files now.
 
 2009-04-15
 	* "Add To ..." popup menu of files.of.category Widget.
@@ -721,12 +721,12 @@
 	* New function of CrossTable for inter-relationship between codes (The name of it may change in the future).
 
 2008-12-15
-	* Add help of GetCodingTable.
+	* Add help of getCodingTable.
 	* Fix bugs of "Web Search-Baidu" and "Web Search-Sohu" of the case popup menu (now works for UTF-8 locale).
 	* Fix bugs of "Add to case/file category" of the fils popup menu.
 
 2008-12-14
-	* Add help of SearchFiles and GetFileId.
+	* Add help of SearchFiles and getFileIdss.
 	* Change the default of ask argument of undelete to TRUE.
 
 2008-12-13
@@ -734,7 +734,7 @@
 	* Add help of SummaryCoding, improve help of write.FileList.
 
 2008-12-12
-	* Fix bugs of SortByTime(), now should work for R < 2.8.0. Fix bug of GetCodingTable and SummaryCoding.
+	* Fix bugs of SortByTime(), now should work for R < 2.8.0. Fix bug of getCodingTable and SummaryCoding.
 	* New function of RunOnSelected. Use it to replace select.list.
 	* Now popup menu of add to case/ category can add multiple files at a time (Files Tab).
 	* New Coding Button: C2Info
@@ -743,7 +743,7 @@
 	* New functions of SearchFiles.
 
 2008-12-09
-	* New functions to summary codings: SummaryCoding, GetCodingTable.
+	* New functions to summary codings: SummaryCoding, getCodingTable.
 	* Add documentation.
 
 2008-12-08

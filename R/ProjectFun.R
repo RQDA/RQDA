@@ -251,7 +251,7 @@ ProjectMemoWidget <- function(){
                 height = min(c(wnh[2],getOption("widgetSize")[2]))
                  )
     mainIcon <- system.file("icon", "mainIcon.png", package = "RQDA")
-    gw@widget@widget$SetIconFromFile(mainIcon)
+    gw$set_icon(mainIcon)
     assign(".projmemo", gw, envir=.rqda)
     .projmemo <- get(".projmemo",.rqda)
     .projmemo2 <- gpanedgroup(horizontal = FALSE, container=.projmemo)
@@ -271,13 +271,13 @@ ProjectMemoWidget <- function(){
             )## end of save memo button
     assign("proj_memoB",proj_memoB,envir=button)
     tmp <- gtext(container=.projmemo2,font.attr=c(sizes="large"))
-    gSignalConnect(tmp@widget@widget$GetBuffer(), "changed",
+    gSignalConnect(tmp$buffer, "changed",
                    function(h,...){
                        mbut <- get("proj_memoB",envir=button)
                        enabled(mbut) <- TRUE
                    })##
     font <- pangoFontDescriptionFromString(.rqda$font)
-    gtkWidgetModifyFont(tmp@widget@widget,font)
+    gtkWidgetModifyFont(tmp,font)
     assign(".projmemocontent",tmp,envir=.rqda)
     prvcontent <- dbGetQuery(.rqda$qdacon, "select memo from project")[1,1]
     ## [1,1]turn data.frame to 1-length character. Existing content of memo

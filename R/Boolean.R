@@ -21,8 +21,8 @@ print.codingsByOne <- function (x,...)
     ComputeCallbackFun <- function(FileName,rowid){
         CallBackFUN <- function(widget,event,...){
             ViewFileFunHelper(FileName,hightlight=FALSE)
-            textView <- .rqda$.openfile_gui@widget@widget
-            buffer <- textView$GetBuffer()
+            textView <- .rqda$.openfile_gui
+            buffer <- textView$buffer
             mark1 <- gtkTextBufferGetMark(buffer,sprintf("%s.1",rowid))
             gtkTextViewScrollToMark(textView,mark1,0)
             iter1 <- buffer$GetIterAtMark(mark1)$iter
@@ -58,14 +58,14 @@ print.codingsByOne <- function (x,...)
         .gw <- gwindow(title = title, parent = getOption("widgetCoordinate"),
                        width = getOption("widgetSize")[1], height = getOption("widgetSize")[2])
         mainIcon <- system.file("icon", "mainIcon.png", package = "RQDA")
-        .gw@widget@widget$SetIconFromFile(mainIcon)
+        .gw$set_icon(mainIcon)
         assign(sprintf(".codingsOf%s","codingsByone"), .gw, envir = .rqda)
         .retreivalgui <- gtext(container = .gw)
         font <- pangoFontDescriptionFromString(.rqda$font)
-        gtkWidgetModifyFont(.retreivalgui@widget@widget,font)
-        .retreivalgui@widget@widget$SetPixelsBelowLines(5)
-        .retreivalgui@widget@widget$SetPixelsInsideWrap(5)
-        buffer <- .retreivalgui@widget@widget$GetBuffer()
+        gtkWidgetModifyFont(.retreivalgui$widget,font)
+        .retreivalgui$widget$SetPixelsBelowLines(5)
+        .retreivalgui$widget$SetPixelsInsideWrap(5)
+        buffer <- .retreivalgui$buffer
         buffer$createTag("red", foreground = "red")
         iter <- buffer$getIterAtOffset(0)$iter
         apply(x, 1, function(x) {
@@ -79,7 +79,7 @@ print.codingsByOne <- function (x,...)
             widget$Add(lab)
             gSignalConnect(widget, "button-press-event",
                            ComputeCallbackFun(x[["filename"]],as.numeric(x[["rowid"]])))
-            .retreivalgui@widget@widget$addChildAtAnchor(widget, anchor)
+            .retreivalgui$addChildAtAnchor(widget, anchor)
             widget$showAll()
             iter$ForwardChar()
             buffer$insert(iter, "\n")
@@ -257,7 +257,7 @@ not <- function (CT1, CT2)
 
 
 ## and_helper <- function(CT1,CT2,method){
-##   ## CT1 and CT2 is from GetCodingTable,each for one code and one file only
+##   ## CT1 and CT2 is from getCodingTable,each for one code and one file only
 ##   ridx <- vector()
 ##   idx <- vector()
 ##   for (i in 1:nrow(CT1)) {
@@ -281,7 +281,7 @@ not <- function (CT1, CT2)
 
 
 ## and <- function(CT1,CT2,showCoding=TRUE, method= c("overlap","exact","inclusion")){
-##   ## CT1 and CT2 is from GetCodingTable,each for one code only
+##   ## CT1 and CT2 is from getCodingTable,each for one code only
 ##   fid <- intersect(CT1$fid,CT2$fid)
 ##   if (length(fid)>0) {
 ##     ans <- lapply(fid,FUN=function(x) {
