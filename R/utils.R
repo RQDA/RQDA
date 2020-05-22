@@ -251,8 +251,8 @@ print.Info4Widget <- function(x, ...){
         .retreivalgui <- gtext(container = .gw)
         font <- pangoFontDescriptionFromString(.rqda$font)
         gtkWidgetModifyFont(.retreivalgui$widget, font)
-        .retreivalgui$SetPixelsBelowLines(5)
-        .retreivalgui$SetPixelsInsideWrap(5)
+        .retreivalgui$widget$SetPixelsBelowLines(5)
+        .retreivalgui$widget$SetPixelsInsideWrap(5)
         buffer <- .retreivalgui$buffer
         buffer$createTag("red", foreground = "red")
         iter <- buffer$getIterAtOffset(0)$iter
