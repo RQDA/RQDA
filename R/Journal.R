@@ -31,9 +31,13 @@ RenameJournalButton <- function(label=gettext("Rename", domain = "R-RQDA"))
       NewName <- ginput(gettext("Enter new journal name. ", domain = "R-RQDA"),text=substring(selected,20), icon="info")
       Encoding(NewName) <- "UTF-8"
       NewName <- paste(substring(selected,0 ,19), NewName, sep=" ")
+
+        if (!identical(NewName, character(0)))
+        {
         if (!is.na(NewName)) {
           rename(from=selected,to=NewName,"journal")
           JournalNamesUpdate()
+        }
         }
     }
           )

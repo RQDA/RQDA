@@ -83,81 +83,112 @@ MemoWidget <- function(prefix,widget,dbTable){
   ## prefix of window tile. E.g. "Code" ->  tile of gwindow becomes "Code Memo:"
   ## widget of the F-cat/C-cat list, such as widget=.rqda$.fnames_rqda
   if (is_projOpen(envir=.rqda,"qdacon")) {
-      Selected <- svalue(widget)
-      if (length(Selected)==0){
-        gmessage(gettext("Select first.", domain = "R-RQDA"),icon="error",container=TRUE)
-      }
-      else {
-          CloseYes <- function(currentCode){
-              withinWidget <- svalue(get(sprintf(".%smemoW",prefix),envir=.rqda))
-              InRQDA <- dbGetQuery(.rqda$qdacon,
-                                   sprintf("select memo from %s where name='%s'",
-                                           dbTable, enc(currentCode,"UTF-8")))[1, 1]
-              if (isTRUE(all.equal(withinWidget,InRQDA))) {
-                  return(TRUE) } else {
-                      if (is.na(InRQDA) && withinWidget=="")  {
-                          return(TRUE) } else {
-                      val <- gconfirm(gettext("The memo has been changed. Close anyway?", domain = "R-RQDA"),container=TRUE)
-                  }
-                      return(val)
-                  }
-          } ## helper function
-          IsOpen <- tryCatch(eval(parse(text=sprintf("svalue(.rqda$.%smemoW)",prefix))),error=function(e) simpleError("No opened memo widget."))
-          if (!inherits(IsOpen,"simpleError")){ ## if a widget is open
-              prvSelected <- svalue(get(sprintf(".%smemo",prefix),envir=.rqda)) ## title of the memo widget
-              Encoding(prvSelected) <- "UTF-8"
-              prvSelected <- sub(sprintf("^%s Memo: ",prefix),"",prvSelected)
-              prvSelected <- iconv(prvSelected,to="UTF-8") ## previously selected codename
-              IfCont <- CloseYes(currentCode=prvSelected)}
-          if ( inherits(IsOpen,"simpleError") || IfCont){ ## if not open or the same.
-              tryCatch(eval(parse(text=sprintf("dispose(.rqda$.%smemo)",prefix))),error=function(e) {})
-            gw <- gwindow(
-              title=sprintf(gettext("%s Memo:%s",domain = "R-RQDA"),
-                            prefix,Selected),
-              parent=getOption("widgetCoordinate"),
-              width = getOption("widgetSize")[1],
-              height = getOption("widgetSize")[2]
-            )
-              mainIcon <- system.file("icon", "mainIcon.png", package = "RQDA")
-              gw$set_icon(mainIcon)
-              assign(sprintf(".%smemo",prefix),gw,envir=.rqda)
-              assign(sprintf(".%smemo2",prefix),
-                     gpanedgroup(
-                       horizontal = FALSE,
-                       container=get(sprintf(".%smemo",prefix),envir=.rqda)),
-                     envir=.rqda)
-              mbut <- gbutton(
-                gettext("Save Memo", domain = "R-RQDA"),
-                container=get(sprintf(".%smemo2",prefix), envir=.rqda),
-                handler=function(h,...){
-                  newcontent <- svalue(W)
-                  newcontent <- enc(newcontent,encoding="UTF-8") ## take care of double quote.
-                  dbGetQuery(.rqda$qdacon,
-                             sprintf("update %s set memo='%s' where name='%s'",
-                                     dbTable,newcontent,enc(Selected)))
-                  mbut <- get(sprintf("buttonOf.%smemo",prefix),envir=button)
-                  enabled(mbut) <- FALSE
-              }
-                              )## end of save memo button
-              enabled(mbut) <- FALSE
-              assign(sprintf("buttonOf.%smemo",prefix),mbut,envir=button) ## assign the button object
-              tmp <- gtext(container=get(sprintf(".%smemo2",prefix),envir=.rqda))
-              font <- pangoFontDescriptionFromString(.rqda$font)
-              gtkWidgetModifyFont(tmp$widget,font)## set the default fontsize
-              assign(sprintf(".%smemoW",prefix),tmp,envir=.rqda)
-              prvcontent <- dbGetQuery(.rqda$qdacon, sprintf("select memo from %s where name='%s'",dbTable,enc(Selected)))[1,1]
-              if (is.na(prvcontent)) prvcontent <- ""
-              Encoding(prvcontent) <- "UTF-8"
-              W <- get(sprintf(".%smemoW",prefix),envir=.rqda)
-              add(W,prvcontent,do.newline=FALSE)
-              addHandlerUnrealize(get(sprintf(".%smemo",prefix),envir=.rqda),handler <- function(h,...)  {!CloseYes(Selected)})
-              gSignalConnect(tmp$widget$buffer, "changed", function(h,...) {
-                  mbut <- get(sprintf("buttonOf.%smemo",prefix),envir=button)
-                  enabled(mbut) <- TRUE
-              }
-                             )##
+    Selected <- svalue(widget)
+    if (length(Selected)==0){
+      gmessage(
+        gettext("Select first.", domain = "R-RQDA"),
+        icon="error",container=TRUE)
+    } else {
+      
+      CloseYes <- function(currentCode){
+        withinWidget <- svalue(get(sprintf(".%smemoW",prefix),envir=.rqda))
+        InRQDA <- dbGetQuery(.rqda$qdacon,
+                             sprintf("select memo from %s where name='%s'",
+                                     dbTable, enc(currentCode,"UTF-8")))[1, 1]
+        
+        print(dbTable)
+        print(currentCode)
+        
+        if (isTRUE(all.equal(withinWidget,InRQDA)) | 
+            (is.na(InRQDA) && withinWidget==""))
+        {
+          return(TRUE)
+        } else {
+          val <- gconfirm(
+            gettext("The memo has been changed. Close anyway?",
+                    domain = "R-RQDA"), container=TRUE)
+        }
+        return(val)
+      } ## helper function
+      
+      
+      
+      IsOpen <- tryCatch(
+        eval(parse(text=sprintf("svalue(.rqda$.%smemoW)",prefix)))
+        | stopifnot(
+          !is.null(eval(parse(text=sprintf("svalue(.rqda$.%smemoW)",prefix))))
+          ),
+        error=function(e) simpleError("No opened memo widget."))
+      
+      
+      if (!inherits(IsOpen,"simpleError")){ ## if a widget is open
+        ## title of the memo widget
+        prvSelected <- svalue(get(sprintf(".%smemo",prefix),envir=.rqda))
+        Encoding(prvSelected) <- "UTF-8"
+        prvSelected <- sub(sprintf("^%s Memo: ",prefix),"",prvSelected)
+        ## previously selected codename
+        prvSelected <- iconv(prvSelected,to="UTF-8")
+        IfCont <- CloseYes(currentCode=prvSelected)}
+
+      ## if not open or the same.
+      if ( inherits(IsOpen,"simpleError") || IfCont){ 
+        tryCatch(
+          eval(parse(text=sprintf("dispose(.rqda$.%smemo)",prefix))),
+          error=function(e) {})
+        gw <- gwindow(
+          title=sprintf(gettext("%s Memo:%s",domain = "R-RQDA"),
+                        prefix,Selected),
+          parent=getOption("widgetCoordinate"),
+          width = getOption("widgetSize")[1],
+          height = getOption("widgetSize")[2]
+        )
+        mainIcon <- system.file("icon", "mainIcon.png", package = "RQDA")
+        gw$set_icon(mainIcon)
+        assign(sprintf(".%smemo",prefix),gw,envir=.rqda)
+        assign(sprintf(".%smemo2",prefix),
+               gpanedgroup(
+                 horizontal = FALSE,
+                 container=get(sprintf(".%smemo",prefix),envir=.rqda)),
+               envir=.rqda)
+        mbut <- gbutton(
+          gettext("Save Memo", domain = "R-RQDA"),
+          container=get(sprintf(".%smemo2",prefix), envir=.rqda),
+          handler=function(h,...){
+            newcontent <- svalue(W)
+            ## take care of double quote.
+            newcontent <- enc(newcontent,encoding="UTF-8") 
+            dbGetQuery(.rqda$qdacon,
+                       sprintf("update %s set memo='%s' where name='%s'",
+                               dbTable,newcontent,enc(Selected)))
+            mbut <- get(sprintf("buttonOf.%smemo",prefix),envir=button)
+            enabled(mbut) <- FALSE
           }
+        )## end of save memo button
+        enabled(mbut) <- FALSE
+        assign(sprintf("buttonOf.%smemo",prefix),
+               mbut,envir=button) ## assign the button object
+        tmp <- gtext(container=get(sprintf(".%smemo2",prefix),envir=.rqda))
+        font <- pangoFontDescriptionFromString(.rqda$font)
+        gtkWidgetModifyFont(tmp$widget,font)## set the default fontsize
+        assign(sprintf(".%smemoW",prefix),tmp,envir=.rqda)
+        prvcontent <- dbGetQuery(
+          .rqda$qdacon,
+          sprintf("select memo from %s where name='%s'",
+                  dbTable,enc(Selected)))[1,1]
+        if (is.na(prvcontent)) prvcontent <- ""
+        Encoding(prvcontent) <- "UTF-8"
+        W <- get(sprintf(".%smemoW",prefix),envir=.rqda)
+        insert(W, prvcontent, do.newline=FALSE, where = "beginning")
+        addHandlerUnrealize(
+          get(sprintf(".%smemo",prefix),envir=.rqda),
+          handler <- function(h,...)  {!CloseYes(Selected)})
+        gSignalConnect(tmp$widget$buffer, "changed", function(h,...) {
+          mbut <- get(sprintf("buttonOf.%smemo",prefix),envir=button)
+          enabled(mbut) <- TRUE
+        }
+        )##
       }
+    }
   }
 }
 

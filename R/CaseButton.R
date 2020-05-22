@@ -51,9 +51,13 @@ Case_RenameButton <- function(label=gettext("Rename", domain = "R-RQDA"),CaseNam
     selectedCaseName <- svalue(CaseNamesWidget)
     ## get the new file names
     NewName <- ginput(gettext("Enter new Case name. ", domain = "R-RQDA"), text=selectedCaseName, icon="info")
+
+    if (!identical(NewName, character(0)))
+    {
     if (!is.na(NewName)){
       rename(selectedCaseName,NewName,"cases")
       CaseNamesUpdate()
+    }
     }
   }
   )

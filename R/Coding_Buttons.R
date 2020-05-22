@@ -400,6 +400,9 @@ FreeCode_RenameButton <- function(label=gettext("Rename", domain = "R-RQDA"),Cod
       else {
         ## get the new file names
         NewCodeName <- ginput(gettext("Enter new code name. ", domain = "R-RQDA"), text=selectedCodeName, icon="info")
+
+        if (!identical(NewCodeName, character(0)))
+        {
         if (!is.na(NewCodeName)) {
           Encoding(NewCodeName) <- Encoding(selectedCodeName) <- "UTF-8"
           ## update the name in source table by a function
@@ -407,6 +410,7 @@ FreeCode_RenameButton <- function(label=gettext("Rename", domain = "R-RQDA"),Cod
           ## (name is the only field should be modifed, as other table use ID rather than name)
           ## CodeNamesUpdate(sortByTime=FALSE)
           UpdateWidget(".codes_rqda",from=selectedCodeName,to=NewCodeName)
+        }
         }
       }
     }

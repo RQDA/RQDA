@@ -74,8 +74,7 @@ File_MemoButton <- function(label=gettext("Memo", domain = "R-RQDA"),
   ## memo of selected file.
   FilMemB <- gbutton(label, container=container, handler=function(h,...) {
     MemoWidget(gettext("File", domain = "R-RQDA"),FileWidget,"source")
-  }
-  )
+  })
   assign("FilMemB",FilMemB,envir=button)
   gtkWidgetSetSensitive(button$FilMemB$widget, FALSE)
 }
@@ -91,15 +90,19 @@ File_RenameButton <- function(label=gettext("Rename", domain = "R-RQDA"), contai
     else {
       ## get the new file names
       NewFileName <- ginput(gettext("Enter new file name. ", domain = "R-RQDA"),text=selectedFN, icon="info")
-      if (!is.na(NewFileName)) {
-        Encoding(NewFileName) <- "UTF-8"
-        ## otherwise, R transform it into local Encoding rather than keep it as UTF-8
-        ## Newfilename <- iconv(codename,from="UTF-8") ## now use UTF-8 for SQLite data set.
-        ## update the name in source table by a function
-        rename(selectedFN,NewFileName,"source")
-        FileNamesUpdate()
-        UpdateWidget(".fnames_rqda",from=selectedFN,to=NewFileName) ## speed it up by bypassing access the database.
-        ## (name is the only field should be modifed, as other table use fid rather than name)
+      
+      if (!identical(NewFileName, character(0)))
+      {
+        if (!is.na(NewFileName)) {
+          Encoding(NewFileName) <- "UTF-8"
+          ## otherwise, R transform it into local Encoding rather than keep it as UTF-8
+          ## Newfilename <- iconv(codename,from="UTF-8") ## now use UTF-8 for SQLite data set.
+          ## update the name in source table by a function
+          rename(selectedFN,NewFileName,"source")
+          FileNamesUpdate()
+          UpdateWidget(".fnames_rqda",from=selectedFN,to=NewFileName) ## speed it up by bypassing access the database.
+          ## (name is the only field should be modifed, as other table use fid rather than name)
+        }
       }
     }
   }

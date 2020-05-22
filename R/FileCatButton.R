@@ -46,10 +46,14 @@ FileCat_RenameButton <- function(label=gettext("Rename", domain = "R-RQDA"),Widg
     OldName <- svalue(Widget)
     ## get the new file names
     NewName <- ginput(gettext("Enter new Category name. ", domain = "R-RQDA"),text=OldName, icon="info")
+
+    if (!identical(NewName, character(0)))
+    {
     if (!is.na(NewName)) {
       Encoding(NewName) <- "UTF-8"
       rename(OldName,NewName,"filecat")
       UpdateTableWidget(Widget=.rqda$.FileCatWidget,FromdbTable="filecat")
+    }
     }
   }
                       )
@@ -319,6 +323,9 @@ GetFileofCatWidgetMenu <- function()
       }
       else {
         NewFileName <- ginput(gettext("Enter new file name. ", domain = "R-RQDA"),text=selectedFN, icon="info")
+
+        if (!identical(NewFileName, character(0)))
+        {
         if (!is.na(NewFileName)) {
           Encoding(NewFileName) <- "UTF-8"
           rename(selectedFN,NewFileName,"source")
@@ -326,6 +333,7 @@ GetFileofCatWidgetMenu <- function()
           Fnames <- .rqda$.FileofCat[]
           Fnames[Fnames==selectedFN] <- NewFileName
           .rqda$.FileofCat[] <- Fnames
+        }
         }
       }}
   })

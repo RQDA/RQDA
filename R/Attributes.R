@@ -279,6 +279,9 @@ RenameAttrButton <- function(label=gettext("Rename", domain = "R-RQDA")){
   RenAttB <- gbutton(label,handler=function(h,...) {
     selected <- svalue(.rqda$.AttrNamesWidget)
     NewName <- ginput(gettext("Enter new attribute name. ", domain = "R-RQDA"), text=selected, icon="info")
+    
+    if (!identical(NewName, character(0)))
+    {
     if (!is.na(NewName)){
       Encoding(NewName) <- "UTF-8"
       selected <- enc(selected,encoding="UTF-8")
@@ -296,6 +299,7 @@ RenameAttrButton <- function(label=gettext("Rename", domain = "R-RQDA")){
           AttrNamesUpdate()
         }
       }
+    }
     }
   }
                      )

@@ -87,10 +87,14 @@ CodeCat_RenameButton <- function(label=gettext("Rename", domain = "R-RQDA"),Widg
       else {
           ## get the new file names
           NewName <- ginput(gettext("Enter new Category name. ", domain = "R-RQDA"), text=OldName, icon="info")
+          
+          if (!identical(NewName, character(0)))
+          {
           if (!is.na(NewName)) {
               Encoding(NewName) <- "UTF-8"
               rename(OldName,NewName,"codecat")
               UpdateTableWidget(Widget=.rqda$.CodeCatWidget,FromdbTable="codecat")
+          }
           }
       }
   })
@@ -186,7 +190,6 @@ CodeCatDropFromButton <- function(label=gettext("Drop From", domain = "R-RQDA"),
     gtkWidgetSetTooltipText(getToolkitWidget(ans),gettext("Drop selected code(s) from code category.", domain = "R-RQDA"))
     assign("CodCatADroFromB",ans, envir=button)
     enabled(ans) <- FALSE
-    return(ans)
     return(ans)
 }
 
@@ -336,12 +339,16 @@ GetCodeofCatWidgetMenu <- function()
     }
     else {
       NewCodeName <- ginput(gettext("Enter new code name. ", domain = "R-RQDA"), text=selectedCodeName, icon="info")
+
+    if (!identical(NewCodeName, character(0)))
+    {
       if (!is.na(NewCodeName)) {
         Encoding(NewCodeName) <- Encoding(selectedCodeName) <- "UTF-8"
         rename(selectedCodeName,NewCodeName,"freecode")
         UpdateWidget(".codes_rqda",from=selectedCodeName,to=NewCodeName)
         UpdateWidget(".CodeofCat",from=selectedCodeName,to=NewCodeName)
       }
+    }
     }
   })
   
