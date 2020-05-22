@@ -315,7 +315,7 @@ CodingMemoButton <- function(label=gettext("C2Memo", domain = "R-RQDA"))
     iter$BackwardChar()
     anchor <- iter$getChildAnchor()
     anchor <- gtkTextIterGetChildAnchor(iter)
-    widget$addChildAtAnchor(label, anchor)
+    widget$widget$addChildAtAnchor(label, anchor)
     return(TRUE)
   }
   

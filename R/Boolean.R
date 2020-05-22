@@ -81,7 +81,7 @@ print.codingsByOne <- function (x,...)
             widget$Add(lab)
             gSignalConnect(widget, "button-press-event",
                            ComputeCallbackFun(x[["filename"]],as.numeric(x[["rowid"]])))
-            .retreivalgui$addChildAtAnchor(widget, anchor)
+            .retreivalgui$widget$addChildAtAnchor(widget, anchor)
             widget$showAll()
             iter$ForwardChar()
             buffer$insert(iter, "\n")

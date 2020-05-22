@@ -120,7 +120,7 @@ getCodingsFromFiles <- function(Fid, order=c("fname","ftime","ctime"),
             gSignalConnect(widget, "button-press-event",
                            ComputeCallbackFun(x[["fname"]],
                                               as.numeric(x[["rowid"]])))
-            .retreivalgui$addChildAtAnchor(widget, anchor)
+            .retreivalgui$widget$addChildAtAnchor(widget, anchor)
             widget$showAll()
             iter$ForwardChar()
             buffer$insert(iter, "\n")

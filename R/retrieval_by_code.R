@@ -105,7 +105,7 @@ retrieval_by_code <- function (Fid = NULL, order = c("fname", "ftime", "ctime"),
                 widget$Add(lab)
                 gSignalConnect(widget, "button-press-event", 
                   ComputeCallbackFun(x[["fname"]], as.numeric(x[["rowid"]])))
-                .retreivalgui$addChildAtAnchor(widget, 
+                .retreivalgui$widget$addChildAtAnchor(widget, 
                   anchor)
                 widget$showAll()
                 iter$ForwardChar()

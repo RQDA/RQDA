@@ -239,7 +239,7 @@ InsertAnchor <- function(widget,label,index,label.col="gray90",
     iter$BackwardChar()
     anchor <- iter$getChildAnchor()
     anchor <- gtkTextIterGetChildAnchor(iter)
-    widget$addChildAtAnchor(labelEvBox, anchor)
+    widget$widget$addChildAtAnchor(labelEvBox, anchor)
 }
 
 
@@ -492,7 +492,7 @@ retrieval <- function(Fid=NULL,order=c("fname","ftime","ctime"),CodeNameWidget=.
         widget$Add(lab)
         gSignalConnect(widget, "button-press-event",
                        ComputeCallbackFun(x[["fname"]],as.numeric(x[["rowid"]])))
-        .retreivalgui$addChildAtAnchor(widget, anchor)
+        .retreivalgui$widget$addChildAtAnchor(widget, anchor)
         iter$ForwardChar()
         buffer$Insert(iter, " ")
         buffer$createChildAnchor(iter)
@@ -503,7 +503,7 @@ retrieval <- function(Fid=NULL,order=c("fname","ftime","ctime"),CodeNameWidget=.
         widget_recode$Add(lab_recode)
         gSignalConnect(widget_recode, "button-press-event",
                        ComputeRecodeFun(as.numeric(x[["rowid"]])))
-        .retreivalgui$addChildAtAnchor(widget_recode, anchor_recode)
+        .retreivalgui$widget$addChildAtAnchor(widget_recode, anchor_recode)
         iter$ForwardChar()
         buffer$Insert(iter, " ")
         buffer$createChildAnchor(iter)
@@ -514,7 +514,7 @@ retrieval <- function(Fid=NULL,order=c("fname","ftime","ctime"),CodeNameWidget=.
         widget_unmark$Add(lab_unmark)
         gSignalConnect(widget_unmark, "button-press-event",
                        ComputeUnMarkFun(as.numeric(x[["rowid"]]), sOffset, nBytes))
-        .retreivalgui$addChildAtAnchor(widget_unmark, anchor_unmark)
+        .retreivalgui$widget$addChildAtAnchor(widget_unmark, anchor_unmark)
         widget$showAll()
         iter$ForwardChar()
         buffer$insert(iter, "\n")
@@ -721,7 +721,7 @@ InsertAnnotation <- function (index,fid,rowid,label=gettext("[Annotation]", doma
     iter$BackwardChar()
     anchor <- iter$getChildAnchor()
     anchor <- gtkTextIterGetChildAnchor(iter)
-    widget$addChildAtAnchor(label, anchor)
+    widget$widget$addChildAtAnchor(label, anchor)
   } ## end of helper widget
 
 DeleteAnnotationAnchorByMark <- function(markname){
