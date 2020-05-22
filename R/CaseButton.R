@@ -216,10 +216,6 @@ GetCaseNamesWidgetMenu <- function()
       freefile <-  dbGetQuery(.rqda$qdacon,"select name, id, file from source where status=1")
       fileofcase <- dbGetQuery(.rqda$qdacon,sprintf("select fid from caselinkage where status=1 and caseid=%i",caseid))
       Encoding(freefile[['name']]) <- Encoding(freefile[['file']]) <- "UTF-8"
-
-      print(freefile)
-      print(fileofcase)
-
       if (nrow(fileofcase)!=0){
         fileoutofcase <- subset(freefile,!(freefile$id %in% fileofcase$fid))
       } else  fileoutofcase <- freefile
