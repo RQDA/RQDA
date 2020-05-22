@@ -337,7 +337,7 @@ CodingMemoButton <- function(label=gettext("C2Memo", domain = "R-RQDA"))
       ## }
       ## if newcontent is "", should delete the codingMemoAnchor (not add memoanchor here)
     })## end of save memo button
-    assign(".cdmemocontent",gtext(container=.codingmemo2,font.attr=c(sizes="large")),envir=.rqda)
+    assign(".cdmemocontent",gtext(container=.codingmemo2,font.attr=list(size="large")),envir=.rqda)
     prvcontent <- RQDAQuery(sprintf("select memo from coding where rowid=%i",rowid))[1,1]
     if (is.na(prvcontent)) prvcontent <- ""
     Encoding(prvcontent) <- "UTF-8"

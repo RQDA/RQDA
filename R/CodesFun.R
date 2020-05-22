@@ -217,7 +217,7 @@ InsertAnchor <- function(widget,label,index,label.col="gray90",
                   })## end of save memo button
                   enabled(.codingMemoSaveButton) <- FALSE
                   assign(".codingMemoSaveButton",.codingMemoSaveButton,envir=.rqda)
-                  assign(".cdmemocontent",gtext(container=.codingmemo2,font.attr=c(sizes="large")),envir=.rqda)
+                  assign(".cdmemocontent",gtext(container=.codingmemo2,font.attr=list(size="large")),envir=.rqda)
                   if (is.na(prvcontent)) prvcontent <- ""
                   Encoding(prvcontent) <- "UTF-8"
                   if (prvcontent=="") assign("NewCodingMemo",TRUE,envir=.rqda)
@@ -772,7 +772,7 @@ openAnnotation <- function(New=TRUE,pos,fid,rowid,AnchorPos=NULL){
             )## end of save button
     enabled(savAnnB) <- FALSE
     assign("savAnnB", savAnnB, envir=button)
-    assign(".annotationContent",gtext(container=.annotation2,font.attr=c(sizes="large")),envir=.rqda)
+    assign(".annotationContent",gtext(container=.annotation2,font.attr=list(size="large")),envir=.rqda)
     ## prvcontent <- RQDAQuery(sprintf("select annotation from annotation where fid=%i and position=%s and status=1",fid,pos))[1,1]
     prvcontent <- RQDAQuery(sprintf("select annotation from annotation where rowid=%s and status=1",rowid))[1,1]
     if (is.null(prvcontent) || is.na(prvcontent)) prvcontent <- ""
