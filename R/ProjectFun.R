@@ -333,8 +333,10 @@ is_projOpen <- function(envir=.rqda,conName="qdacon",message=TRUE){
     pkg <- attr(attr(con,"class"),'package')
     Open2 <- getFunction("dbIsValid",where=sprintf("package:%s",pkg))(con)
     open <- open + Open2
-    } ,error=function(e){})
-  if (!open & message) gmessage(gettext("No Project is Open.", domain = "R-RQDA"),icon="warning",container=TRUE)
+  } ,error=function(e){})
+  if (!open & message) gmessage(gettext("No Project is Open.",
+                                        domain = "R-RQDA"),icon="warning",
+                                container=TRUE)
   return(open)
 }
 
@@ -342,53 +344,66 @@ backup_proj <- function(con){
   ## con=.rqda$qdacon
   dbname <- con@dbname
   Encoding(dbname) <- "UTF-8"
-  backupname <- sprintf("%s%s.rqda",gsub("rqda$","",dbname),format(Sys.time(), "%H%M%S%d%m%Y"))
+  backupname <- sprintf("%s%s.rqda",gsub("rqda$","",dbname),
+                        format(Sys.time(), "%H%M%S%d%m%Y"))
   success <- file.copy(from=dbname, to=backupname , overwrite = FALSE)
   if (success) {
-    gmessage(gettext("Succeeded!", domain = "R-RQDA"),container=TRUE,icon="info")
+    gmessage(gettext("Succeeded!", domain = "R-RQDA"),
+             container=TRUE,icon="info")
   } else{
-    gmessage(gettext("Fail to back up the project.", domain = "R-RQDA"),container=TRUE,icon="error")
+    gmessage(gettext("Fail to back up the project.", domain = "R-RQDA"),
+             container=TRUE,icon="error")
   }
 }
 
 ProjectMemoWidget <- function(){
   if (is_projOpen(envir=.rqda,"qdacon")) {
-    ## use enviroment, so you can refer to the same object easily, this is the beauty of environment
+    ## use enviroment, so you can refer to the same object easily, this is
+    ## the beauty of environment
     ## if project is open, then continue
     tryCatch(dispose(.rqda$.projmemo),error=function(e) {})
     ## Close the open project memo first, then open a new one
     ## .projmemo is the container of .projmemocontent,widget for the content of memo
     wnh <- size(.rqda$.root_rqdagui) ## size of the main window
     gw <- gwindow(title="Project Memo", parent=c(wnh[1]+10,2),
-                width = min(c(gdkScreenWidth()- wnh[1]-20,getOption("widgetSize")[1])),
-                height = min(c(wnh[2],getOption("widgetSize")[2]))
-                 )
+                  width = min(c(gdkScreenWidth()- wnh[1]-20,
+                                getOption("widgetSize")[1])),
+                  height = min(c(wnh[2],getOption("widgetSize")[2]))
+    )
     mainIcon <- system.file("icon", "mainIcon.png", package = "RQDA")
     gw$set_icon(mainIcon)
     assign(".projmemo", gw, envir=.rqda)
     .projmemo <- get(".projmemo",.rqda)
     .projmemo2 <- gpanedgroup(horizontal = FALSE, container=.projmemo)
     ## use .projmemo2, so can add a save button to it.
-    proj_memoB <- gbutton(gettext("Save memo", domain = "R-RQDA"),
-                          container=.projmemo2,handler=function(h,...){
-      ## send the new content of memo back to database
-      newcontent <- svalue(W)
-      ## Encoding(newcontent) <- "UTF-8"
-      newcontent <- enc(newcontent,encoding="UTF-8") ## take care of double quote.
-      dbGetQuery(.rqda$qdacon,sprintf("update project set memo='%s' where rowid=1", ## only one row is needed
-                                      newcontent)
-                 ## have to quote the character in the sql expression
-                 )
-      mbut <- get("proj_memoB",envir=button)
-      enabled(mbut) <- FALSE ## grey out the  button
-  }
-            )## end of save memo button
+    proj_memoB <- gbutton(
+      gettext("Save memo", domain = "R-RQDA"),
+      container=.projmemo2,handler=function(h,...){
+        ## send the new content of memo back to database
+        print(W)
+        newcontent <- svalue(W)
+        ## Encoding(newcontent) <- "UTF-8"
+        ## take care of double quote.
+        newcontent <- enc(newcontent,encoding="UTF-8")
+        print(newcontent)
+        
+        ## only one row is needed
+        dbExecute(
+          .rqda$qdacon,
+          sprintf("update project set memo='%s' where rowid=1", 
+                  newcontent)
+          ## have to quote the character in the sql expression
+        )
+        mbut <- get("proj_memoB", envir=button)
+        enabled(mbut) <- FALSE ## grey out the  button
+      }
+    )## end of save memo button
     assign("proj_memoB",proj_memoB,envir=button)
-    tmp <- gtext(container=.projmemo2,font.attr=c(sizes="large"))
+    tmp <- gtext(container=.projmemo2,font.attr=list(size="large"))
     gSignalConnect(tmp$buffer, "changed",
                    function(h,...){
-                       mbut <- get("proj_memoB",envir=button)
-                       enabled(mbut) <- TRUE
+                     mbut <- get("proj_memoB",envir=button)
+                     enabled(mbut) <- TRUE
                    })##
     font <- pangoFontDescriptionFromString(.rqda$font)
     gtkWidgetModifyFont(tmp$widget,font)
@@ -398,32 +413,41 @@ ProjectMemoWidget <- function(){
     if (length(prvcontent)==0) {
       dbGetQuery(.rqda$qdacon,"replace into project (memo) values('')")
       prvcontent <- ""
-      ## if there is no record in project table, it fails to save memo, so insert sth into it
+      ## if there is no record in project table, it fails to save memo,
+      ## so insert sth into it
     }
+    
     W <- .rqda$.projmemocontent
     Encoding(prvcontent) <- "UTF-8"
+    
     ## add(W,prvcontent,font.attr=c(sizes="large"),do.newline=FALSE)
-    add(W,prvcontent,do.newline=FALSE)
+    # add(W,prvcontent,do.newline=FALSE)
+    insert(W, prvcontent, do.newline = FALSE, where = "beginning")
+    
     ## do.newline:do not add a \n (new line) at the beginning
     ## push the previous content to the widget.
     enabled(proj_memoB) <- FALSE
     addHandlerUnrealize(get(".projmemo",envir=.rqda),handler <- function(h,...){
       withinWidget <- svalue(get(".projmemocontent",envir=.rqda))
-      InRQDA <- dbGetQuery(.rqda$qdacon, "select memo from project where rowid=1")[1, 1]
+      InRQDA <- dbGetQuery(
+        .rqda$qdacon, "select memo from project where rowid=1")[1, 1]
       if (isTRUE(all.equal(withinWidget,InRQDA))) {
         return(FALSE) } else {
-          val <- gconfirm(gettext("The memo has bee change. Close anyway?", domain = "R-RQDA"),container=TRUE)
+          val <- gconfirm(
+            gettext(
+              "The memo has bee change. Close anyway?", domain = "R-RQDA"),
+            container=TRUE)
           return(!val)
         }
     }
-                        )
-    }
+    )
+  }
 }
 
 close_AllCodings <- function(){
   obj <- ls(.rqda,all.names=TRUE,pattern="^.codingsOf")
   if (length(obj)!=0) {
     for (i in obj){tryCatch(dispose(get(i,envir=.rqda)),error=function(e){})
-                 }
+    }
   }
 }
