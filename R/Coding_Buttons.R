@@ -111,7 +111,7 @@ MarkCodeFun <- function(codeListWidget=".codes_rqda",codingTable="coding"){
           if (nrow(Exist1)==0){
             rowid <- NextRowId(codingTable)
             ## success <- dbWriteTable(.rqda$qdacon,codingTable,DAT,row.name=FALSE,append=TRUE)
-            success <- try(dbGetQuery(.rqda$qdacon, sprintf("insert into %s (cid,fid, seltext, selfirst, selend, status, owner, date) values (%s, %s, '%s', %s, %s, %s, '%s', '%s') ",
+            success <- try(dbExecute(.rqda$qdacon, sprintf("insert into %s (cid,fid, seltext, selfirst, selend, status, owner, date) values (%s, %s, '%s', %s, %s, %s, '%s', '%s') ",
                                                            codingTable,DAT$cid, DAT$fid,DAT$seltext, DAT$selfirst, DAT$selend, 1, .rqda$owner, as.character(date()))),silent=TRUE) > 0
             if (success){
               markRange(widget=.rqda$.openfile_gui,from=ans$start,to=ans$end,rowid=rowid,addButton=TRUE,buttonLabel=SelectedCode,buttonCol=codeCol,codingTable=codingTable)}
@@ -130,7 +130,7 @@ MarkCodeFun <- function(codeListWidget=".codes_rqda",codingTable="coding"){
               if (all(Exist$Relation=="proximity")){
                 rowid <- NextRowId(codingTable)
                 ## success <- dbWriteTable(.rqda$qdacon,codingTable,DAT,row.name=FALSE,append=TRUE)
-                success <- try(dbGetQuery(.rqda$qdacon, sprintf("insert into %s (cid,fid, seltext, selfirst, selend, status, owner, date) values (%s, %s, '%s', %s, %s, %s, '%s', '%s') ",
+                success <- try(dbExecute(.rqda$qdacon, sprintf("insert into %s (cid,fid, seltext, selfirst, selend, status, owner, date) values (%s, %s, '%s', %s, %s, %s, '%s', '%s') ",
                                                                codingTable,DAT$cid, DAT$fid, DAT$seltext, DAT$selfirst, DAT$selend, 1, .rqda$owner, as.character(date()))),silent=TRUE) > 0
                 if (success){
                   markRange(widget=.rqda$.openfile_gui,from=ans$start,to=ans$end,rowid=rowid,addButton=TRUE,
