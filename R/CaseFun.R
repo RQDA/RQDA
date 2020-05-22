@@ -63,7 +63,7 @@ AddFileToCaselinkage <- function(Widget=.rqda$.fnames_rqda){
               exist <- RQDAQuery(sprintf("select fid from caselinkage where status=1 and fid in (%s) and caseid=%i",paste("'",fid,"'",sep="",collapse=","),i))
               if (nrow(exist)!=length(fid)){
                   ## write only when the selected file associated with specific case is not in the caselinkage table
-                  DAT <- data.frame(caseid=caseid, fid=fid[!fid %in% exist$fid], selfirst=0, selend=selend[!fid %in% exist$fid], status=1,owner=.rqda$owner,data=date(),memo='')
+                  DAT <- data.frame(caseid=caseid, fid=fid[!fid %in% exist$fid], selfirst=0, selend=selend[!fid %in% exist$fid], status=1,owner=.rqda$owner,date=date(),memo='')
                   success <- dbWriteTable(.rqda$qdacon,"caselinkage",DAT,row.name=FALSE,append=TRUE)
                   if (!success) gmessage(sprintf(gettext("Fail to write to database for case with id %i", domain = "R-RQDA"), i))
               }}
