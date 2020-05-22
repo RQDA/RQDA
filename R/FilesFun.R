@@ -136,7 +136,7 @@ ViewFileFunHelper <- function(FileName,hightlight=TRUE,codingTable=.rqda$codingT
   content <- IDandContent$file
   Encoding(content) <- "UTF-8"
   W <- get(".openfile_gui", .rqda)
-  add(W, content)
+  insert(W, content)
   W$set_editable(FALSE)
   markidx <- RQDAQuery(sprintf("select %s.rowid,selfirst,selend,freecode.name,freecode.color, freecode.id from %s,freecode where fid=%i and %s.status=1 and freecode.id=cid and freecode.status=1",codingTable,codingTable, IDandContent$id,codingTable))
   if (annotation) {
@@ -316,8 +316,7 @@ EditFileFun <- function(FileNameWidget=.rqda$.fnames_rqda){
       content <- IDandContent$file
       Encoding(content) <- "UTF-8"
       W <- get(".openfile_gui", .rqda)
-      ## add(W, content, font.attr = c(sizes = "large"))
-      add(W, content)
+      insert(W, content)
       buffer <- W$buffer ## get text buffer.
       mark_index <- dbGetQuery(.rqda$qdacon,sprintf("select selfirst,selend,rowid from coding where fid=%i and status=1",
                                                     IDandContent$id))
@@ -426,52 +425,58 @@ addFilesFromDir <- function(dir, pattern = "*.txt$"){
   on.exit(setwd(oldDir))
 }
 
-ProjectMemoWidget <- function(){
-  if (is_projOpen(envir=.rqda,"qdacon")) {
-    ## use enviroment, so you can refer to the same object easily, this is the beauty of environment
-    ## if project is open, then continue
-    tryCatch(dispose(.rqda$.projmemo),error=function(e) {})
-    ## Close the open project memo first, then open a new one
-    ## .projmemo is the container of .projmemocontent,widget for the content of memo
-    assign(".projmemo",
-           gwindow(title="Project Memo", parent=c(395,10),
-                   width = getOption("widgetSize")[1],
-                   height = getOption("widgetSize")[2]
-                   ),
-           envir=.rqda)
-    .projmemo <- get(".projmemo",.rqda)
-    .projmemo2 <- gpanedgroup(horizontal = FALSE, container=.projmemo)
-    ## use .projmemo2, so can add a save button to it.
-    gbutton(gettext("Save memo", domain = "R-RQDA"),container=.projmemo2,handler=function(h,...){
-      ## send the new content of memo back to database
-      newcontent <- svalue(W)
-      ## Encoding(newcontent) <- "UTF-8"
-      newcontent <- enc(newcontent,encoding="UTF-8") ## take care of double quote.
-      dbGetQuery(.rqda$qdacon,sprintf("update project set memo='%s' where rowid=1", ## only one row is needed
-                                      newcontent)
-                 ## have to quote the character in the sql expression
-                 )
-    }
-            )## end of save memo button
-    tmp <- gtext(container=.projmemo2)
-    font <- pangoFontDescriptionFromString(.rqda$font)
-    gtkWidgetModifyFont(tmp$widget,font)
-    assign(".projmemocontent",tmp,envir=.rqda)
-    prvcontent <- dbGetQuery(.rqda$qdacon, "select memo from project")[1,1]
-    ## [1,1]turn data.frame to 1-length character. Existing content of memo
-    if (length(prvcontent)==0) {
-      dbGetQuery(.rqda$qdacon,"replace into project (memo) values('')")
-      prvcontent <- ""
-      ## if there is no record in project table, it fails to save memo, so insert sth into it
-    }
-    W <- .rqda$.projmemocontent
-    Encoding(prvcontent) <- "UTF-8"
-    ## add(W,prvcontent,font.attr=c(sizes="large"),do.newline=FALSE)
-    add(W,prvcontent,do.newline=FALSE)
-    ## do.newline:do not add a \n (new line) at the beginning
-    ## push the previous content to the widget.
-    }
-}
+# ProjectMemoWidget <- function(){
+#   if (is_projOpen(envir=.rqda,"qdacon")) {
+#     ## use enviroment, so you can refer to the same object easily, this is the 
+#     ## beauty of environment
+#     ## if project is open, then continue
+#     tryCatch(dispose(.rqda$.projmemo),error=function(e) {})
+#     ## Close the open project memo first, then open a new one
+#     ## .projmemo is the container of .projmemocontent,widget for the 
+#     ## content of memo
+#     assign(".projmemo",
+#            gwindow(title="Project Memo", parent=c(395,10),
+#                    width = getOption("widgetSize")[1],
+#                    height = getOption("widgetSize")[2]
+#                    ),
+#            envir=.rqda)
+#     .projmemo <- get(".projmemo",.rqda)
+#     .projmemo2 <- gpanedgroup(horizontal = FALSE, container=.projmemo)
+#     ## use .projmemo2, so can add a save button to it.
+#     gbutton(
+#       gettext("Save memo", domain = "R-RQDA"),
+#       container=.projmemo2, handler=function(h,...){
+#       ## send the new content of memo back to database
+#       newcontent <- svalue(W)
+#       ## Encoding(newcontent) <- "UTF-8"
+#       ## take care of double quote.
+#       newcontent <- enc(newcontent,encoding="UTF-8")
+#       dbGetQuery(.rqda$qdacon,
+#                  ## only one row is needed
+#                  sprintf("update project set memo='%s' where rowid=1",
+#                          newcontent)
+#                  ## have to quote the character in the sql expression
+#       )
+#       }
+#     )## end of save memo button
+#     tmp <- gtext(container=.projmemo2)
+#     font <- pangoFontDescriptionFromString(.rqda$font)
+#     gtkWidgetModifyFont(tmp$widget, font)
+#     assign(".projmemocontent",tmp,envir=.rqda)
+#     prvcontent <- dbGetQuery(.rqda$qdacon, "select memo from project")[1,1]
+#     ## [1,1]turn data.frame to 1-length character. Existing content of memo
+#     if (length(prvcontent)==0) {
+#       dbGetQuery(.rqda$qdacon,"replace into project (memo) values('')")
+#       prvcontent <- ""
+#       ## if there is no record in project table, it fails to save memo, so insert sth into it
+#     }
+#     W <- .rqda$.projmemocontent
+#     Encoding(prvcontent) <- "UTF-8"
+#     insert(W, prvcontent, do.newline = FALSE, where = "beginning")
+#     ## do.newline:do not add a \n (new line) at the beginning
+#     ## push the previous content to the widget.
+#     }
+# }
 
 
 
@@ -726,7 +731,7 @@ viewPlainFile <- function(FileNameWidget=.rqda$.fnames_rqda){
                             )
   content <- IDandContent$file
   Encoding(content) <- "UTF-8"
-  add(tmp, content)
+  insert(tmp, content)
   tmp$widget$set_editable(FALSE)
 }}}
 

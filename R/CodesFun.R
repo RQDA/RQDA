@@ -222,7 +222,8 @@ InsertAnchor <- function(widget,label,index,label.col="gray90",
                   Encoding(prvcontent) <- "UTF-8"
                   if (prvcontent=="") assign("NewCodingMemo",TRUE,envir=.rqda)
                   W <- get(".cdmemocontent",envir=.rqda)
-                  add(W,prvcontent,font.attr=c(sizes="large"),do.newline=FALSE)
+                  insert(W, prvcontent, do.newline = FALSE, where = "beginning",
+                         font.attr=list(size="large"))
                   gSignalConnect(W$buffer, "changed",
                                  function(h,...){
                                  enabled(.rqda$".codingMemoSaveButton") <- TRUE
@@ -784,7 +785,8 @@ openAnnotation <- function(New=TRUE,pos,fid,rowid,AnchorPos=NULL){
                        enabled(mbut) <- TRUE
                    }
                    )##
-    add(W,prvcontent,font.attr=c(sizes="large"),do.newline=FALSE)
+    insert(W, prvcontent, do.newline = FALSE, where = "beginning",
+           font.attr=list(size="large"))
 }
 
 Annotation <- function(...){

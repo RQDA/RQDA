@@ -192,7 +192,10 @@ CodeCatDropFromButton <- function(label=gettext("Drop From", domain = "R-RQDA"),
 
 CodeCatMemoButton <- function(label=gettext("Memo", domain = "R-RQDA"),...){
     CodCatMemB <- gbutton(label,handler=function(h,...) {
-        MemoWidget(gettext("Code Category", domain = "R-RQDA"),.rqda$.CodeCatWidget,"codecat")
+        MemoWidget(
+          gettext("Code Category", domain = "R-RQDA"),
+          .rqda$.CodeCatWidget,
+          "codecat")
         }
                           )
     assign("CodCatMemB", CodCatMemB,envir=button)

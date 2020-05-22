@@ -498,12 +498,12 @@ GetFileofCaseWidgetMenu <- function()
 ##           dbGetQuery(.rqda$qdacon,sprintf("update cases set memo='%s' where name='%s'",newcontent,currentCase))
 ##         }
 ##                 )## end of save memo button
-##         assign(".casememoW",gtext(container=.casememo2,font.attr=c(sizes="large")),envir=.rqda)
+##         assign(".casememoW",gtext(container=.casememo2,font.attr=list(size="large")),envir=.rqda)
 ##         prvcontent <- dbGetQuery(.rqda$qdacon, sprintf("select memo from cases where name='%s'",currentCase))[1,1]
 ##         if (is.na(prvcontent)) prvcontent <- ""
 ##         Encoding(prvcontent) <- "UTF-8"
 ##         W <- .rqda$.casememoW
-##         add(W,prvcontent,font.attr=c(sizes="large"),do.newline=FALSE)
+##         add(W,prvcontent,font.attr=list(size="large"),do.newline=FALSE)
 ##       }
 ##     }
 ##   }

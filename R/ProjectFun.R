@@ -420,9 +420,8 @@ ProjectMemoWidget <- function(){
     W <- .rqda$.projmemocontent
     Encoding(prvcontent) <- "UTF-8"
     
-    ## add(W,prvcontent,font.attr=c(sizes="large"),do.newline=FALSE)
-    # add(W,prvcontent,do.newline=FALSE)
-    insert(W, prvcontent, do.newline = FALSE, where = "beginning")
+    insert(W, prvcontent, do.newline = FALSE, where = "beginning",
+           font.attr=list(size="large"))
     
     ## do.newline:do not add a \n (new line) at the beginning
     ## push the previous content to the widget.

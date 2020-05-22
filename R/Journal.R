@@ -140,7 +140,7 @@ ViewJournalWidget <- function(prefix="Journal",widget=.rqda$.JournalNamesWidget,
         if (is.na(prvcontent)) prvcontent <- ""
         Encoding(prvcontent) <- "UTF-8"
         W <- get(sprintf(".%smemoW",prefix),envir=.rqda)
-        add(W,prvcontent,do.newline=FALSE)
+        insert(W, prvcontent, do.newline = FALSE, where = "beginning")
         addHandlerKeystroke(tmp,handler=function(h,...){
             enabled(button$saveJournalB) <- TRUE
         })

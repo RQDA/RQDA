@@ -68,14 +68,16 @@ ViewFileButton <-  function(label=gettext("Open", domain = "R-RQDA"), container,
 }
 
 
-File_MemoButton <- function(label=gettext("Memo", domain = "R-RQDA"), container=.rqda$.files_button,FileWidget=.rqda$.fnames_rqda,...){
+File_MemoButton <- function(label=gettext("Memo", domain = "R-RQDA"),
+                            container=.rqda$.files_button,
+                            FileWidget=.rqda$.fnames_rqda, ...){
   ## memo of selected file.
   FilMemB <- gbutton(label, container=container, handler=function(h,...) {
     MemoWidget(gettext("File", domain = "R-RQDA"),FileWidget,"source")
   }
   )
   assign("FilMemB",FilMemB,envir=button)
-  gtkWidgetSetSensitive(button$FilMemB$widget,FALSE)
+  gtkWidgetSetSensitive(button$FilMemB$widget, FALSE)
 }
 
 File_RenameButton <- function(label=gettext("Rename", domain = "R-RQDA"), container=.rqda$.files_button,FileWidget=.rqda$.fnames_rqda,...)
@@ -107,19 +109,22 @@ File_RenameButton <- function(label=gettext("Rename", domain = "R-RQDA"), contai
   gtkWidgetSetSensitive(button$FilRenB$widget,FALSE)
 }
 
-FileAttribute_Button <- function(label=gettext("Attribute", domain = "R-RQDA"),container=.rqda$.files_button,FileWidget=.rqda$.fnames_rqda,...)
+FileAttribute_Button <- function(label=gettext("Attribute", domain = "R-RQDA"),
+                                 container=.rqda$.files_button,
+                                 FileWidget=.rqda$.fnames_rqda,...)
 {
   FileAttrB <- gbutton(label, container=container, handler=function(h,...) {
     if (is_projOpen(envir=.rqda,conName="qdacon")) {
       Selected <- svalue(FileWidget)
       if (length(Selected !=0 )){
-        fileId <- RQDAQuery(sprintf("select id from source where status=1 and name='%s'",
-                                    enc(Selected)))[,1]
+        fileId <- RQDAQuery(
+          sprintf("select id from source where status=1 and name='%s'",
+                  enc(Selected)))[,1]
         FileAttrFun(fileId=fileId,title=Selected)
       }
     }
-  }
-  )
+  })
+  
   FileAttrB
   assign("FileAttrB",FileAttrB,envir=button)
   enabled(FileAttrB) <- FALSE

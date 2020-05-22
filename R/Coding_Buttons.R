@@ -343,7 +343,8 @@ CodingMemoButton <- function(label=gettext("C2Memo", domain = "R-RQDA"))
     Encoding(prvcontent) <- "UTF-8"
     if (prvcontent=="") assign("NewCodingMemo",TRUE,envir=.rqda)
     W <- get(".cdmemocontent",envir=.rqda)
-    add(W,prvcontent,font.attr=c(sizes="large"),do.newline=FALSE)
+    insert(W, prvcontent, do.newline = FALSE, where = "beginning",
+           font.attr=list(size="large"))
   } ## end of OpenCodingMemo
   
   c2memobutton <- gbutton(label, handler= function(h,...){
