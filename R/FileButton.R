@@ -117,6 +117,8 @@ File_RenameButton <- function(label = rqda_txt("Rename"),
           UpdateWidget(".fnames_rqda", from = selectedFN, to = NewFileName)
           ## (name is the only field should be modified, as other table
           ##  use fid rather than name)
+
+          FileNamesUpdate()
         }
       }
     }
