@@ -32,7 +32,7 @@ AddCase <- function(name,conName="qdacon",assignenv=.rqda,...) {
       if (nrow(dup)==0) write <- TRUE
     }
     if (write ) {
-      dbGetQuery(con,sprintf("insert into cases (name, id, status,date,owner)
+      dbExecute(con,sprintf("insert into cases (name, id, status,date,owner)
                                             values ('%s', %i, %i,%s, %s)",
                              enc(name),nextid, 1, shQuote(date()),shQuote(.rqda$owner)))
     }

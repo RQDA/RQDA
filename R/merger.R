@@ -40,7 +40,7 @@ mergeCodes <- function(cid1,cid2){ ## cid1 and cid2 are two code IDs.
             To_memo <- dbGetQuery(.rqda$qdacon,sprintf("select memo from coding where rowid in (%s)",
                                                     paste(Exist$rowid[del],collapse=",",sep="")))$memo
             memo <- paste(c(To_memo,From$memo),collapse="\n",sep="") ## merge the To_memo from From
-            dbGetQuery(.rqda$qdacon,sprintf("delete from coding where rowid in (%s)",
+            dbExecute(.rqda$qdacon,sprintf("delete from coding where rowid in (%s)",
                                             paste(Exist$rowid[del],collapse=",",sep=""))) ## delete codings
             tt <-   dbGetQuery(.rqda$qdacon,sprintf("select file from source where id='%i'", From$fid))[1,1]
             Encoding(tt) <- "UTF-8"  ## fulltext of the file
@@ -79,8 +79,8 @@ mergeCodes <- function(cid1,cid2){ ## cid1 and cid2 are two code IDs.
     ## avoding the NOTE from docs checking.
     mergeHelperFUN(From=x,Exist=Exist)
   }
-  dbGetQuery(.rqda$qdacon,sprintf("update coding set status=0 where cid='%i'",FromCid))
-  dbGetQuery(.rqda$qdacon,sprintf("update freecode set status=0 where id='%i'",FromCid))
+  dbExecute(.rqda$qdacon,sprintf("update coding set status=0 where cid='%i'",FromCid))
+  dbExecute(.rqda$qdacon,sprintf("update freecode set status=0 where id='%i'",FromCid))
 }
 
 findConsecutive <- function(x) {

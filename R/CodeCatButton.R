@@ -26,7 +26,7 @@ AddTodbTable <- function(item,dbTable,Id="id",field="name",con=.rqda$qdacon,...)
             if (nrow(dup)==0) write <- TRUE
         }
         if (write ) {
-            dbGetQuery(con,sprintf("insert into %s (%s, %s, status,date,owner)
+            dbExecute(con,sprintf("insert into %s (%s, %s, status,date,owner)
                                             values ('%s', %i, %i,%s, %s)",dbTable,field,Id,
                                    enc(item),nextid, 1, shQuote(date()),shQuote(.rqda$owner)))
         }
@@ -60,10 +60,10 @@ DeleteCodeCatButton <- function(label=gettext("Delete", domain = "R-RQDA"))
             Encoding(Selected) <- "UTF-8"
             catid <- rqda_sel(sprintf("select catid from codecat where status=1 and name='%s'",enc(Selected)))[,1]
             if (length(catid) ==1){
-                dbGetQuery(.rqda$qdacon,sprintf("update codecat set status=0 where name='%s'",enc(Selected)))
+                dbExecute(.rqda$qdacon,sprintf("update codecat set status=0 where name='%s'",enc(Selected)))
                 ## set status in table freecode to 0
                 UpdateTableWidget(Widget=.rqda$.CodeCatWidget,FromdbTable="codecat")
-                tryCatch(dbGetQuery(.rqda$qdacon,sprintf("update treecode set status=0 where catid='%s'",catid)),error=function(e){})
+                tryCatch(dbExecute(.rqda$qdacon,sprintf("update treecode set status=0 where catid='%s'",catid)),error=function(e){})
                 ## should delete all the related codelists
                 UpdateCodeofCatWidget() ## update the code of cat widget
             } else gmessage(gettext("The Category Name is not unique.", domain = "R-RQDA"),container=TRUE)
@@ -179,7 +179,7 @@ CodeCatDropFromButton <- function(label=gettext("Drop From", domain = "R-RQDA"),
                 catid <- dbGetQuery(.rqda$qdacon,sprintf("select catid from codecat where status=1 and name='%s'",enc(SelectedCodeCat)))[,1]
                 for (i in CodeOfCat){
                     cid <- dbGetQuery(.rqda$qdacon,sprintf("select id from freecode where status=1 and name='%s'",enc(i)))[,1]
-                    dbGetQuery(.rqda$qdacon,sprintf("update treecode set status=0 where catid=%i and cid=%i",catid,cid))
+                    dbExecute(.rqda$qdacon,sprintf("update treecode set status=0 where catid=%i and cid=%i",catid,cid))
                 }
                 ## update .CodeofCat Widget
                 UpdateCodeofCatWidget()

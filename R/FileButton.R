@@ -43,17 +43,17 @@ DeleteFileButton <- function(label = rqda_txt("Delete"), container, ...) {
         fid <- dbGetQuery(.rqda$qdacon,
                           sprintf("select id from source where name = '%s'",
                                   i))$id
-        dbGetQuery(.rqda$qdacon,
+        dbExecute(.rqda$qdacon,
                    sprintf("update source set status = 0 where name = '%s'",
                            i))
         ## set the status of the selected file to 0
-        dbGetQuery(.rqda$qdacon,
+        dbExecute(.rqda$qdacon,
                    sprintf("update caselinkage set status = 0 where fid = %i",
                            fid))
-        dbGetQuery(.rqda$qdacon,
+        dbExecute(.rqda$qdacon,
                    sprintf("update treefile set status = 0 where fid = %i",
                            fid))
-        dbGetQuery(.rqda$qdacon,
+        dbExecute(.rqda$qdacon,
                    sprintf("update coding set status = 0 where fid = %i",
                            fid))
         ## set the status of the related case/f-cat to 0
@@ -188,7 +188,7 @@ AddNewFileFun <- function() {
         maxid <- dbGetQuery(.rqda$qdacon, "select max(id) from source")[[1]]
         ## the new one/ for the new file
         nextid <- ifelse(is.na(maxid), 0+1, maxid+1)
-        ans <- dbGetQuery(
+        ans <- dbExecute(
           .rqda$qdacon,
           sprintf(
             paste("insert into source (name, file, id, status, date, owner )",

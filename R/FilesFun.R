@@ -29,7 +29,7 @@ ImportFile <- function(path,encoding=.rqda$encoding,con=.rqda$qdacon,...){
       }
     }
     if (write ) {
-      dbGetQuery(con,sprintf("insert into source (name, file, id, status,date,owner )
+      dbExecute(con,sprintf("insert into source (name, file, id, status,date,owner )
                              values ('%s', '%s',%i, %i, '%s', '%s')",
                              Fname,content, nextid, 1,date(),.rqda$owner))
     }
@@ -395,7 +395,7 @@ write.FileList <- function(FileList,encoding=.rqda$encoding,con=.rqda$qdacon,...
       }
     }
   if (write ) {
-    dbGetQuery(con,sprintf("insert into source (name, file, id, status,date,owner )
+    dbExecute(con,sprintf("insert into source (name, file, id, status,date,owner )
                              values ('%s', '%s',%i, %i, '%s', '%s')",
                            FnameUTF8,content, nextid, 1,date(),.rqda$owner))
   }

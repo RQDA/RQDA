@@ -104,7 +104,7 @@ new_proj <- function(path, conName="qdacon",assignenv=.rqda,...){
               "date text, memo text)")
       )
       if (dbExistsTable(con,"project")) dbRemoveTable(con, "project")
-      ## dbGetQuery(con,"create table project  
+      ## dbExecute(con,"create table project  
       ## (encoding text, databaseversion text, date text,dateM text,
       ## memo text,BOM integer)")
       dbExecute(
@@ -179,41 +179,41 @@ new_proj <- function(path, conName="qdacon",assignenv=.rqda,...){
 UpgradeTables <- function(){
   Fields <- dbListFields(.rqda$qdacon,"project")
   if (!"databaseversion" %in% Fields) {
-    dbGetQuery(
+    dbExecute(
       .rqda$qdacon,"alter table project add column databaseversion text")
-    dbGetQuery(
+    dbExecute(
       .rqda$qdacon,"update project set databaseversion='0.1.5'")
   }
   currentVersion <- dbGetQuery(
     .rqda$qdacon,"select databaseversion from project")[[1]]
   if (currentVersion=="0.1.5") {
     ##from="0.1.5"
-    dbGetQuery(
+    dbExecute(
       .rqda$qdacon,
       paste("create table caseAttr (variable text, value text, caseID integer,",
             "date text, dateM text, owner text)"))
     ## caseAttr table
-    dbGetQuery(
+    dbExecute(
       .rqda$qdacon,
       paste("create table fileAttr (variable text, value text, fileID integer,",
             "date text, dateM text, owner text)"))
     ## fileAttr table
-    dbGetQuery(
+    dbExecute(
       .rqda$qdacon,
       paste("create table attributes (name text, status integer, date text,",
             "dateM text, owner text, memo text)"))
     ## attributes table
-    dbGetQuery(
+    dbExecute(
       .rqda$qdacon,
       paste("create table journal (name text, journal text, date text,",
             "dateM text, owner text,status integer)"))
     ## journal table
     rqda_exe("alter table project add column about text")
-    dbGetQuery(
+    dbExecute(
       .rqda$qdacon,
       paste("update project set about='Database created by RQDA",
             "(http://rqda.r-forge.r-project.org/)'"))
-    dbGetQuery(.rqda$qdacon,"update project set databaseversion='0.1.9'")
+    dbExecute(.rqda$qdacon,"update project set databaseversion='0.1.9'")
     ## reset the version.
     ## added for version 0.1.8
     ## (no version 0.1.7 to make the version number consistent with RQDA
@@ -239,11 +239,11 @@ UpgradeTables <- function(){
   }
   if (currentVersion=="0.1.6"){
     rqda_exe("alter table project add column about text")
-    dbGetQuery(
+    dbExecute(
       .rqda$qdacon,
       paste("update project set about='Database created by RQDA",
             "(http://rqda.r-forge.r-project.org/)'"))
-    dbGetQuery(.rqda$qdacon,"update project set databaseversion='0.1.9'")
+    dbExecute(.rqda$qdacon,"update project set databaseversion='0.1.9'")
     rqda_exe("alter table project add column imageDir text")
     try(rqda_exe("alter table attributes add column class text"),TRUE)
     rqda_exe("alter table caseAttr add column status integer")
@@ -264,24 +264,24 @@ UpgradeTables <- function(){
             "dateM text, owner text,status integer)"))
   }
   if (currentVersion=="0.1.8"){
-    dbGetQuery(.rqda$qdacon,"update project set databaseversion='0.1.9'")
+    dbExecute(.rqda$qdacon,"update project set databaseversion='0.1.9'")
     rqda_exe("alter table freecode add column color text")
   }
   if (currentVersion<"0.2.0"){
     if (dbExistsTable(.rqda$qdacon,"coding2"))
       dbRemoveTable(.rqda$qdacon, "coding2")
     
-    dbGetQuery(
+    dbExecute(
       .rqda$qdacon,
       paste("create table coding2  (cid integer, fid integer,seltext text,",
             "selfirst real, selend real, status integer, owner text,",
             "date text, memo text)"))
-    dbGetQuery(.rqda$qdacon,"update project set databaseversion='0.2.0'")
+    dbExecute(.rqda$qdacon,"update project set databaseversion='0.2.0'")
   }
   if (currentVersion<"0.2.2"){
     rqda_exe("alter table treecode add column owner text")
     rqda_exe("alter table treefile add column owner text")
-    dbGetQuery(.rqda$qdacon,"update project set databaseversion='0.2.2'")
+    dbExecute(.rqda$qdacon,"update project set databaseversion='0.2.2'")
   }
 }
 
@@ -414,10 +414,10 @@ ProjectMemoWidget <- function(){
     font <- pangoFontDescriptionFromString(.rqda$font)
     gtkWidgetModifyFont(tmp$widget,font)
     assign(".projmemocontent",tmp,envir=.rqda)
-    prvcontent <- dbGetQuery(.rqda$qdacon, "select memo from project")[1,1]
+    prvcontent <- dbExecute(.rqda$qdacon, "select memo from project")[1,1]
     ## [1,1]turn data.frame to 1-length character. Existing content of memo
     if (length(prvcontent)==0) {
-      dbGetQuery(.rqda$qdacon,"replace into project (memo) values('')")
+      dbExecute(.rqda$qdacon,"replace into project (memo) values('')")
       prvcontent <- ""
       ## if there is no record in project table, it fails to save memo,
       ## so insert sth into it

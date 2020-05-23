@@ -28,10 +28,10 @@ DeleteCaseButton <- function(label=gettext("Delete", domain = "R-RQDA")){
       Encoding(SelectedCase) <- "UTF-8"
       caseid <- dbGetQuery(.rqda$qdacon,sprintf("select id from cases where name='%s'",
                                                 enc(SelectedCase)))$id
-      dbGetQuery(.rqda$qdacon,sprintf("update cases set status=0 where name='%s'",
+      dbExecute(.rqda$qdacon,sprintf("update cases set status=0 where name='%s'",
                                       enc(SelectedCase)))
       ## set status in table freecode to 0
-      dbGetQuery(.rqda$qdacon,sprintf("update caselinkage set status=0 where caseid=%i",caseid))
+      dbExecute(.rqda$qdacon,sprintf("update caselinkage set status=0 where caseid=%i",caseid))
       ## set status in table caselinkage to 0
       CaseNamesUpdate()
       .rqda$.FileofCase[] <- NULL
@@ -123,7 +123,7 @@ MarkCaseFun <- function(){
                 memo <- dbGetQuery(.rqda$qdacon,sprintf("select memo from caselinkage where rowid in (%s)",
                                                         paste(ExistLinkage$rowid[del],collapse=",",sep="")))$memo
                 memo <- paste(memo,collapse="",sep="")
-                dbGetQuery(.rqda$qdacon,sprintf("delete from caselinkage where rowid in (%s)",
+                dbExecute(.rqda$qdacon,sprintf("delete from caselinkage where rowid in (%s)",
                                                 paste(ExistLinkage$rowid[del],collapse=",",sep="")))
                 DAT <- data.frame(caseid=currentCid,fid=currentFid,
                                   selfirst=Sel[1],selend=Sel[2],status=1,
@@ -161,7 +161,7 @@ CaseUnMark_Button<-function(label=gettext("Unmark", domain = "R-RQDA")){
         rowid <- codings_index$rowid[(codings_index$selfirst  >= sel_index$startN) &
                                        (codings_index$selend  <= sel_index$endN)]
         if (is.numeric(rowid)) for (j in rowid) {
-          dbGetQuery(con,sprintf("update caselinkage set status=0 where rowid=%i", j))
+          dbExecute(con,sprintf("update caselinkage set status=0 where rowid=%i", j))
         }
         coding.idx <- rqda_sel(sprintf("select selfirst,selend from coding where fid=%i and status=1",currentFid))
         anno.idx <- rqda_sel(sprintf("select position from annotation where fid=%i and status=1",currentFid))$position
@@ -356,7 +356,7 @@ GetFileofCaseWidgetMenu <- function()
             caseid <- dbGetQuery(.rqda$qdacon,sprintf("select id from cases where status=1 and name='%s'",SelectedCase))[,1]
             for (i in FileOfCat){
               fid <- dbGetQuery(.rqda$qdacon,sprintf("select id from source where status=1 and name='%s'",i))[,1]
-              dbGetQuery(.rqda$qdacon,sprintf("update caselinkage set status=0 where caseid=%i and fid=%i",caseid,fid))
+              dbExecute(.rqda$qdacon,sprintf("update caselinkage set status=0 where caseid=%i and fid=%i",caseid,fid))
             }
             ## update Widget
             UpdateFileofCaseWidget()
@@ -371,10 +371,10 @@ GetFileofCaseWidgetMenu <- function()
       Encoding(SelectedFile) <- "UTF-8"
       for (i in SelectedFile){
         fid <- dbGetQuery(.rqda$qdacon, sprintf("select id from source where name='%s'",i))$id
-        dbGetQuery(.rqda$qdacon, sprintf("update source set status=0 where name='%s'",i))
-        dbGetQuery(.rqda$qdacon, sprintf("update caselinkage set status=0 where fid=%i",fid))
-        dbGetQuery(.rqda$qdacon, sprintf("update treefile set status=0 where fid=%i",fid))
-        dbGetQuery(.rqda$qdacon, sprintf("update coding set status=0 where fid=%i",fid))
+        dbExecute(.rqda$qdacon, sprintf("update source set status=0 where name='%s'",i))
+        dbExecute(.rqda$qdacon, sprintf("update caselinkage set status=0 where fid=%i",fid))
+        dbExecute(.rqda$qdacon, sprintf("update treefile set status=0 where fid=%i",fid))
+        dbExecute(.rqda$qdacon, sprintf("update coding set status=0 where fid=%i",fid))
       }
       .rqda$.FileofCase[] <- setdiff(.rqda$.FileofCase[],SelectedFile)
     }
@@ -499,7 +499,7 @@ GetFileofCaseWidgetMenu <- function()
 ##           ## Encoding(newcontent) <- "UTF-8"
 ##           newcontent <- enc(newcontent,encoding="UTF-8") ## take care of double quote.
 ##           ## Encoding(currentCase) <- "UTF-8"
-##           dbGetQuery(.rqda$qdacon,sprintf("update cases set memo='%s' where name='%s'",newcontent,currentCase))
+##           dbExecute(.rqda$qdacon,sprintf("update cases set memo='%s' where name='%s'",newcontent,currentCase))
 ##         }
 ##                 )## end of save memo button
 ##         assign(".casememoW",gtext(container=.casememo2,font.attr=list(size="large")),envir=.rqda)

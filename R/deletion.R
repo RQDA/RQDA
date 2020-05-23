@@ -36,7 +36,7 @@ pdelete <- function(type=c("file","code","case","codecategory","filecategory","c
       del <- gconfirm(gettext("Are you sure to clean the coding table?", domain = "R-RQDA"),icon="question")
     } else del <- TRUE
     if (del) {
-      dbGetQuery(.rqda$qdacon,"delete from coding where status = -1")
+      dbExecute(.rqda$qdacon,"delete from coding where status = -1")
       ## this is codings deleted by unmark button
     }
   }
@@ -46,16 +46,16 @@ pdelete <- function(type=c("file","code","case","codecategory","filecategory","c
     fid <- dbGetQuery(.rqda$qdacon, sprintf("select id from source where status=0 AND name in (%s)",
                                             paste(paste("'",del,"'",sep=""),collapse=",")))[,1]
     if (length(fid)!=0){
-      dbGetQuery(.rqda$qdacon, sprintf("delete from source where status=0 and id in (%s)",
+      dbExecute(.rqda$qdacon, sprintf("delete from source where status=0 and id in (%s)",
                                        paste(paste(fid,sep=""),collapse=",")))
       ## delete from source table
-      dbGetQuery(.rqda$qdacon, sprintf("delete from coding where status=0 and fid in (%s)",
+      dbExecute(.rqda$qdacon, sprintf("delete from coding where status=0 and fid in (%s)",
                                        paste(paste(fid,sep=""),collapse=",")))
       ## delete associated coding
-      dbGetQuery(.rqda$qdacon, sprintf("delete from caselinkage where status=0 and fid in (%s)",
+      dbExecute(.rqda$qdacon, sprintf("delete from caselinkage where status=0 and fid in (%s)",
                                        paste(paste(fid,sep=""),collapse=",")))
       ## delete case linkage
-      dbGetQuery(.rqda$qdacon, sprintf("delete from treefile where status=0 and fid in (%s)",
+      dbExecute(.rqda$qdacon, sprintf("delete from treefile where status=0 and fid in (%s)",
                                        paste(paste(fid,sep=""),collapse=",")))
       ## delete associated file-category
     }
@@ -65,10 +65,10 @@ pdelete <- function(type=c("file","code","case","codecategory","filecategory","c
     cid <- dbGetQuery(.rqda$qdacon, sprintf("select id from freecode where status=0 AND name in (%s)",
                                             paste(paste("'",del,"'",sep=""),collapse=",")))[,1]
     if (length(cid)!=0){
-      dbGetQuery(.rqda$qdacon, sprintf("delete from freecode where status=0 and id in (%s)",
+      dbExecute(.rqda$qdacon, sprintf("delete from freecode where status=0 and id in (%s)",
                                        paste(paste(cid,sep=""),collapse=",")))
       ## delete from freecode table
-      dbGetQuery(.rqda$qdacon, sprintf("delete from coding where status=0 and cid in (%s)",
+      dbExecute(.rqda$qdacon, sprintf("delete from coding where status=0 and cid in (%s)",
                                        paste(paste(cid,sep=""),collapse=",")))
       ## delete associated coding
     }
@@ -78,9 +78,9 @@ pdelete <- function(type=c("file","code","case","codecategory","filecategory","c
     caseid <- dbGetQuery(.rqda$qdacon, sprintf("select id from cases where status=0 AND name in (%s)",
                                             paste(paste("'",del,"'",sep=""),collapse=",")))[,1]
     if (length(caseid)!=0){
-      dbGetQuery(.rqda$qdacon, sprintf("delete from cases where status=0 and id in (%s)",
+      dbExecute(.rqda$qdacon, sprintf("delete from cases where status=0 and id in (%s)",
                                        paste(paste(caseid,sep=""),collapse=",")))
-      dbGetQuery(.rqda$qdacon, sprintf("delete from caselinkage where status=0 and caseid in (%s)",
+      dbExecute(.rqda$qdacon, sprintf("delete from caselinkage where status=0 and caseid in (%s)",
                                        paste(paste(caseid,sep=""),collapse=",")))
       ## caselinkage table
     }
@@ -90,9 +90,9 @@ pdelete <- function(type=c("file","code","case","codecategory","filecategory","c
     catid <- dbGetQuery(.rqda$qdacon, sprintf("select catid from codecat where status=0 AND name in (%s)",
                                             paste(paste("'",del,"'",sep=""),collapse=",")))[,1]
     if (length(catid)!=0){
-      dbGetQuery(.rqda$qdacon, sprintf("delete from codecat where status=0 and catid in (%s)",
+      dbExecute(.rqda$qdacon, sprintf("delete from codecat where status=0 and catid in (%s)",
                                        paste(paste(catid,sep=""),collapse=",")))
-      dbGetQuery(.rqda$qdacon, sprintf("delete from treecode where status=0 and catid in (%s)",
+      dbExecute(.rqda$qdacon, sprintf("delete from treecode where status=0 and catid in (%s)",
                                        paste(paste(catid,sep=""),collapse=",")))
       ## caselinkage table
     }
@@ -102,9 +102,9 @@ pdelete <- function(type=c("file","code","case","codecategory","filecategory","c
       catid <- dbGetQuery(.rqda$qdacon, sprintf("select catid from filecat where status=0 AND name in (%s)",
                                               paste(paste("'",del,"'",sep=""),collapse=",")))[,1]
     if (length(catid)!=0){
-      dbGetQuery(.rqda$qdacon, sprintf("delete from filecat where status=0 and catid in (%s)",
+      dbExecute(.rqda$qdacon, sprintf("delete from filecat where status=0 and catid in (%s)",
                                        paste(paste(catid,sep=""),collapse=",")))
-      dbGetQuery(.rqda$qdacon, sprintf("delete from treefile where status=0 and catid in (%s)",
+      dbExecute(.rqda$qdacon, sprintf("delete from treefile where status=0 and catid in (%s)",
                                        paste(paste(catid,sep=""),collapse=",")))
       ## caselinkage table
     }
@@ -162,13 +162,13 @@ undelete <- function(type=c("file","code","case","codecategory","filecategory"),
     fid <- dbGetQuery(.rqda$qdacon, sprintf("select id from source where status=0 AND name in (%s)",
                                             paste(paste("'",del,"'",sep=""),collapse=",")))[,1]
     if (length(fid)!=0){
-      dbGetQuery(.rqda$qdacon, sprintf("update source set status = 1 where status=0 and id in (%s)",
+      dbExecute(.rqda$qdacon, sprintf("update source set status = 1 where status=0 and id in (%s)",
                                        paste(paste(fid,sep=""),collapse=",")))
-      dbGetQuery(.rqda$qdacon, sprintf("update coding set status = 1 where status=0 and fid in (%s)",
+      dbExecute(.rqda$qdacon, sprintf("update coding set status = 1 where status=0 and fid in (%s)",
                                        paste(paste(fid,sep=""),collapse=",")))
-      dbGetQuery(.rqda$qdacon, sprintf("update caselinkage set status =1 where status=0 and fid in (%s)",
+      dbExecute(.rqda$qdacon, sprintf("update caselinkage set status =1 where status=0 and fid in (%s)",
                                        paste(paste(fid,sep=""),collapse=",")))
-      dbGetQuery(.rqda$qdacon, sprintf("update treefile set status = 1 where status=0 and fid in (%s)",
+      dbExecute(.rqda$qdacon, sprintf("update treefile set status = 1 where status=0 and fid in (%s)",
                                        paste(paste(fid,sep=""),collapse=",")))
     }
   }
@@ -177,9 +177,9 @@ undelete <- function(type=c("file","code","case","codecategory","filecategory"),
     cid <- dbGetQuery(.rqda$qdacon, sprintf("select id from freecode where status=0 AND name in (%s)",
                                             paste(paste("'",del,"'",sep=""),collapse=",")))[,1]
     if (length(cid)!=0){
-      dbGetQuery(.rqda$qdacon, sprintf("update freecode set status = 1  where status=0 and id in (%s)",
+      dbExecute(.rqda$qdacon, sprintf("update freecode set status = 1  where status=0 and id in (%s)",
                                        paste(paste(cid,sep=""),collapse=",")))
-      dbGetQuery(.rqda$qdacon, sprintf("update coding set status = 1 where status=0 and cid in (%s)",
+      dbExecute(.rqda$qdacon, sprintf("update coding set status = 1 where status=0 and cid in (%s)",
                                        paste(paste(cid,sep=""),collapse=",")))
     }
   }
@@ -188,9 +188,9 @@ undelete <- function(type=c("file","code","case","codecategory","filecategory"),
     caseid <- dbGetQuery(.rqda$qdacon, sprintf("select id from cases where status=0 AND name in (%s)",
                                             paste(paste("'",del,"'",sep=""),collapse=",")))[,1]
     if (length(caseid)!=0){
-      dbGetQuery(.rqda$qdacon, sprintf("update cases set status =1  where status=0 and id in (%s)",
+      dbExecute(.rqda$qdacon, sprintf("update cases set status =1  where status=0 and id in (%s)",
                                        paste(paste(caseid,sep=""),collapse=",")))
-      dbGetQuery(.rqda$qdacon, sprintf("update caselinkage set status = 1 where status=0 and caseid in (%s)",
+      dbExecute(.rqda$qdacon, sprintf("update caselinkage set status = 1 where status=0 and caseid in (%s)",
                                        paste(paste(caseid,sep=""),collapse=",")))
     }
   }
@@ -199,10 +199,10 @@ undelete <- function(type=c("file","code","case","codecategory","filecategory"),
     catid <- dbGetQuery(.rqda$qdacon, sprintf("select catid from codecat where status=0 AND name in (%s)",
                                             paste(paste("'",del,"'",sep=""),collapse=",")))[,1]
     if (length(catid)!=0){
-      dbGetQuery(.rqda$qdacon, sprintf("update codecat set status = 1 where status=0 and catid in (%s)",
+      dbExecute(.rqda$qdacon, sprintf("update codecat set status = 1 where status=0 and catid in (%s)",
                                        paste(paste(catid,sep=""),collapse=",")))
       UpdateTableWidget(Widget=.rqda$.CodeCatWidget,FromdbTable="codecat")
-      dbGetQuery(.rqda$qdacon, sprintf("update treecode set status = 1 where status=0 and catid in (%s)",
+      dbExecute(.rqda$qdacon, sprintf("update treecode set status = 1 where status=0 and catid in (%s)",
                                        paste(paste(catid,sep=""),collapse=",")))
     }
   }
@@ -211,10 +211,10 @@ undelete <- function(type=c("file","code","case","codecategory","filecategory"),
       catid <- dbGetQuery(.rqda$qdacon, sprintf("select catid from filecat where status=0 AND name in (%s)",
                                               paste(paste("'",del,"'",sep=""),collapse=",")))[,1]
     if (length(catid)!=0){
-      dbGetQuery(.rqda$qdacon, sprintf("update filecat set status = 1 where status=0 and catid in (%s)",
+      dbExecute(.rqda$qdacon, sprintf("update filecat set status = 1 where status=0 and catid in (%s)",
                                        paste(paste(catid,sep=""),collapse=",")))
       UpdateTableWidget(Widget=.rqda$.FileCatWidget,FromdbTable="filecat")
-      dbGetQuery(.rqda$qdacon, sprintf("update treefile set status = 1 where status=0 and catid in (%s)",
+      dbExecute(.rqda$qdacon, sprintf("update treefile set status = 1 where status=0 and catid in (%s)",
                                        paste(paste(catid,sep=""),collapse=",")))
     }
   }

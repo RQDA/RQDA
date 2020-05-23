@@ -32,9 +32,9 @@ DeleteCodeButton <- function(label=gettext("Delete", domain = "R-RQDA")){
                            SelectedCode <- svalue(.rqda$.codes_rqda)
                            SelectedCode2 <- enc(SelectedCode,encoding="UTF-8")
                            cid <- dbGetQuery(.rqda$qdacon,sprintf("select id from freecode where name='%s'",SelectedCode2))$id
-                           dbGetQuery(.rqda$qdacon,sprintf("update freecode set status=0 where name='%s'",SelectedCode2))
+                           dbExecute(.rqda$qdacon,sprintf("update freecode set status=0 where name='%s'",SelectedCode2))
                            ## set status in table freecode to 0
-                           dbGetQuery(.rqda$qdacon,sprintf("update coding set status=0 where cid=%i",cid))
+                           dbExecute(.rqda$qdacon,sprintf("update coding set status=0 where cid=%i",cid))
                            ## set status in table coding to 0
                            ## CodeNamesUpdate(sortByTime=FALSE)
                            UpdateWidget(".codes_rqda",from=SelectedCode,to=NULL)
@@ -238,7 +238,7 @@ UnMarkCodeFun <- function(codeListWidget=.rqda$.codes_rqda,codingTable="coding")
             isRemoved <- DeleteButton(.rqda$.openfile_gui,label=sprintf("<%s>",svalue(codeListWidget)),
                                       index=startN,direction="backward")
             if (isRemoved) {
-              dbGetQuery(con,sprintf("update %s set status=-1 where rowid=%i",codingTable, j))
+              dbExecute(con,sprintf("update %s set status=-1 where rowid=%i",codingTable, j))
               ## better to get around the loop by sqlite condition expression.
               ## status=-1 to differentiate the result of delete button
               endMark <- buffer$GetMark(sprintf("%s.2", j))
@@ -702,7 +702,7 @@ GetCodesNamesWidgetMenu <- function()
 ##                 memo <- dbGetQuery(.rqda$qdacon,sprintf("select memo from coding where rowid in (%s)",
 ##                                                         paste(Exist$rowid[del],collapse=",",sep="")))$memo
 ##                 memo <- paste(memo,collapse="",sep="")
-##                 dbGetQuery(.rqda$qdacon,sprintf("delete from coding where rowid in (%s)",
+##                 dbExecute(.rqda$qdacon,sprintf("delete from coding where rowid in (%s)",
 ##                                                 paste(Exist$rowid[del],collapse=",",sep="")))
 ##                 tt <- svalue(W)
 ##                 ## tt <- enc(tt,encoding="UTF-8")

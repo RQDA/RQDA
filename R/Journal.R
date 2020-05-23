@@ -91,7 +91,7 @@ AddNewJournalFun <- function(){
             }## Make sure it is unique
             content <- svalue(textW)
             content <- enc(content,encoding="UTF-8") ## take care of double quote.
-            ans <- dbGetQuery(.rqda$qdacon,sprintf("insert into journal (name, journal,date,owner, status)
+            ans <- dbExecute(.rqda$qdacon,sprintf("insert into journal (name, journal,date,owner, status)
                              values ('%s', '%s', '%s', '%s', %i)",
                                                    enc(title), content, date(),.rqda$owner,1))
             if (is.null(ans)) {
@@ -130,7 +130,7 @@ ViewJournalWidget <- function(prefix="Journal",widget=.rqda$.JournalNamesWidget,
             newcontent <- svalue(W)
             newcontent <- enc(newcontent,encoding="UTF-8") ## take care of double quote.
             Encoding(Selected) <- "UTF-8"
-            dbGetQuery(.rqda$qdacon,sprintf("update %s set journal='%s' where name='%s'",dbTable,newcontent,enc(Selected)))
+            dbExecute(.rqda$qdacon,sprintf("update %s set journal='%s' where name='%s'",dbTable,newcontent,enc(Selected)))
             enabled(button$saveJournalB) <- FALSE
         }
                                      )## end of save button

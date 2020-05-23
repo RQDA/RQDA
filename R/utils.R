@@ -10,7 +10,7 @@ rename <- function(from,to,table=c("source","freecode","cases","codecat","fileca
       if (nrow(exists) > 0) {
           gmessage(gettext("The new name is duplicated. Please use another new name.", domain = "R-RQDA"),container=TRUE)
       } else {
-          dbGetQuery(.rqda$qdacon, sprintf("update '%s' set name = '%s' where name = '%s' ",table, enc(to), enc(from)))
+          dbExecute(.rqda$qdacon, sprintf("update '%s' set name = '%s' where name = '%s' ",table, enc(to), enc(from)))
       }
   }
 }
@@ -157,7 +157,7 @@ MemoWidget <- function(prefix,widget,dbTable){
             newcontent <- svalue(W)
             ## take care of double quote.
             newcontent <- enc(newcontent,encoding="UTF-8")
-            dbGetQuery(.rqda$qdacon,
+            dbExecute(.rqda$qdacon,
                        sprintf("update %s set memo='%s' where name='%s'",
                                dbTable,newcontent,enc(Selected)))
             mbut <- get(sprintf("buttonOf.%smemo",prefix),envir=button)

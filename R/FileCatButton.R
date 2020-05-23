@@ -23,10 +23,10 @@ DeleteFileCatButton <- function(label=gettext("Delete", domain = "R-RQDA")){
       Encoding(Selected) <- "UTF-8"
       catid <- dbGetQuery(.rqda$qdacon,sprintf("select catid from filecat where status=1 and name='%s'",enc(Selected)))[,1]
       if (length(catid) ==1){
-        dbGetQuery(.rqda$qdacon,sprintf("update filecat set status=0 where name='%s'",enc(Selected)))
+        dbExecute(.rqda$qdacon,sprintf("update filecat set status=0 where name='%s'",enc(Selected)))
         ## set status in table freecode to 0
         UpdateTableWidget(Widget=.rqda$.FileCatWidget,FromdbTable="filecat")
-        tryCatch(dbGetQuery(.rqda$qdacon,sprintf("update treefile set status=0 where catid='%s'",catid)),error=function(e){})
+        tryCatch(dbExecute(.rqda$qdacon,sprintf("update treefile set status=0 where catid='%s'",catid)),error=function(e){})
         ## should delete all the related codelists
         UpdateFileofCatWidget() ## update files of file cat widget
       } else gmessage(gettext("The Category Name is not unique.", domain = "R-RQDA"),con=TRUE)
@@ -151,7 +151,7 @@ FileCatDropFromButton <- function(label=gettext("DropFrom", domain = "R-RQDA"),W
       catid <- dbGetQuery(.rqda$qdacon,sprintf("select catid from filecat where status=1 and name='%s'",enc(SelectedFileCat)))[,1]
       for (i in FileOfCat){
         fid <- dbGetQuery(.rqda$qdacon,sprintf("select id from source where status=1 and name='%s'",enc(i)))[,1]
-        dbGetQuery(.rqda$qdacon,sprintf("update treefile set status=0 where catid=%i and fid=%i",catid,fid))
+        dbExecute(.rqda$qdacon,sprintf("update treefile set status=0 where catid=%i and fid=%i",catid,fid))
       }
       ## update .CodeofCat Widget
       ## .rqda$.FileofCat[] <- setdiff(.rqda$.FileofCat[],FileOfCat)
@@ -216,10 +216,10 @@ GetFileCatWidgetMenu <- function()
     if (is_projOpen(envir =.rqda,conName="qdacon")) {
       fid <- getFileIds("file")
       if (length(fid)>0){
-        dbGetQuery(.rqda$qdacon, sprintf("update source set status=0 where id in (%s)",paste(shQuote(fid),collapse=",")))
-        dbGetQuery(.rqda$qdacon, sprintf("update coding set status=0 where fid in (%s)",paste(shQuote(fid),collapse=",")))
-        dbGetQuery(.rqda$qdacon, sprintf("update caselinkage set status=0 where fid in (%s)",paste(shQuote(fid),collapse=",")))
-        dbGetQuery(.rqda$qdacon, sprintf("update treefile set status=0 where fid in (%s)",paste(shQuote(fid),collapse=",")))
+        dbExecute(.rqda$qdacon, sprintf("update source set status=0 where id in (%s)",paste(shQuote(fid),collapse=",")))
+        dbExecute(.rqda$qdacon, sprintf("update coding set status=0 where fid in (%s)",paste(shQuote(fid),collapse=",")))
+        dbExecute(.rqda$qdacon, sprintf("update caselinkage set status=0 where fid in (%s)",paste(shQuote(fid),collapse=",")))
+        dbExecute(.rqda$qdacon, sprintf("update treefile set status=0 where fid in (%s)",paste(shQuote(fid),collapse=",")))
         UpdateFileofCatWidget()
       }
     }
@@ -261,7 +261,7 @@ GetFileofCatWidgetMenu <- function()
       fid <- getFileIds("file","select")
       ans <- AddToFileCategory(Widget=.rqda$.FileofCat,updateWidget=FALSE)
       if (isTRUE(ans)) {
-        dbGetQuery(.rqda$qdacon,sprintf("update treefile set status=0 where fid in (%s) and catid='%s'",
+        dbExecute(.rqda$qdacon,sprintf("update treefile set status=0 where fid in (%s) and catid='%s'",
                                         paste(shQuote(fid),collapse=","),
                                         fcatid))
         .rqda$.FileofCat[] <- setdiff(.rqda$.FileofCat[],svalue(.rqda$.FileofCat))
@@ -304,10 +304,10 @@ GetFileofCatWidgetMenu <- function()
       for (i in SelectedFile){
         i <- enc(i)
         fid <- dbGetQuery(.rqda$qdacon, sprintf("select id from source where name='%s'",i))$id
-        dbGetQuery(.rqda$qdacon, sprintf("update source set status=0 where name='%s'",i))
-        dbGetQuery(.rqda$qdacon, sprintf("update caselinkage set status=0 where fid=%i",fid))
-        dbGetQuery(.rqda$qdacon, sprintf("update treefile set status=0 where fid=%i",fid))
-        dbGetQuery(.rqda$qdacon, sprintf("update coding set status=0 where fid=%i",fid))
+        dbExecute(.rqda$qdacon, sprintf("update source set status=0 where name='%s'",i))
+        dbExecute(.rqda$qdacon, sprintf("update caselinkage set status=0 where fid=%i",fid))
+        dbExecute(.rqda$qdacon, sprintf("update treefile set status=0 where fid=%i",fid))
+        dbExecute(.rqda$qdacon, sprintf("update coding set status=0 where fid=%i",fid))
       }
       ## UpdateFileofCatWidget()
       ## .rqda$.FileofCat[] <- setdiff(.rqda$.FileofCat[],SelectedFile)
