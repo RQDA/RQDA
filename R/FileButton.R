@@ -112,7 +112,7 @@ File_RenameButton <- function(label=gettext("Rename", domain = "R-RQDA"), contai
   gtkWidgetSetSensitive(button$FilRenB$widget,FALSE)
 }
 
-FileAttribute_Button <- function(label=gettext("Attribute", domain = "R-RQDA"),
+FileAttribute_Button <- function(label=rqda_txt("Attribute"),
                                  container=.rqda$.files_button,
                                  FileWidget=.rqda$.fnames_rqda,...)
 {
@@ -195,6 +195,7 @@ AddNewFileFun <- function(){
                            handler=function(h,...){
       suc <- saveFileFun()
       if (suc) dispose(.rqda$.AddNewFileWidget)
+      FileNamesUpdate()
     }
     )
     enabled(AddNewFilB2) <- FALSE
