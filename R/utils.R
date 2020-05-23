@@ -459,7 +459,7 @@ RunOnSelected <- function(x,multiple=TRUE,expr,enclos=parent.frame(),title=NULL,
 }
 
 #' @export
-gselect.list <- function(list,multiple=TRUE,title=NULL,width = getOption("widgetSize")[1], height = getOption("widgetSize")[2],...){
+gselect.list <- function(list,multiple=TRUE,title=NULL, height = getOption("widgetSize")[2], width = getOption("widgetSize")[1],...){
   ## gtk version of select.list(), revised on 21 Apr. 2010 to fix a bug (crash R with 2.18 or newer libgtk2).
   ## Thanks go to John Verzani for his help.
   if (is.null(title)) title <- ifelse(multiple,"Select one or more","Select one")
@@ -823,6 +823,7 @@ filesByCodes <- function(codingTable=c("coding","coding2")){
 #' translate string
 #'
 #' used internally to avoid long abundance of code
+#' @param text_string string input
 rqda_txt <- function(text_string) {
   gettext(text_string, domain = "R-RQDA")
 }

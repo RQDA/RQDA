@@ -44,11 +44,11 @@ converted to UTF-8 if it is not (is.UTF8=FALSE).
 \dontrun{
  searchFiles("file like '\\%keyword\\%'"\)
  ## search for files who contain the word of "keyword"
- searchFiles("file like 'keyword\\%'"\) 
+ searchFiles("file like 'keyword\\%'"\)
  ## search for files whose content begin with the word of "keyword"
- searchFiles("name like '\\%keyword'"\) 
+ searchFiles("name like '\\%keyword'"\)
  ## search for files whose name end with the word of "keyword"
- searchFiles("name like '\\%keyword one' and file like '\\%keyword tow\\%'"\) 
+ searchFiles("name like '\\%keyword one' and file like '\\%keyword tow\\%'"\)
  ## combined conditions
 }
 }

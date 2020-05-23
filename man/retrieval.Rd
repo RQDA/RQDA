@@ -4,7 +4,7 @@
 \alias{retrieval}
 \title{Retrieval of codings conditional on the file id.}
 \usage{
-retrieval(Fid = NULL, order = c("fname", "ftime", "ctime"), 
+retrieval(Fid = NULL, order = c("fname", "ftime", "ctime"),
 CodeNameWidget = .rqda$.codes_rqda,codingTable="coding")
 }
 \arguments{

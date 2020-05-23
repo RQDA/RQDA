@@ -7,9 +7,9 @@
 \title{Get the Case ID and Case Name.}
 \usage{
 getCaseIds(fid = getFileIds(), nFiles = FALSE)
-  
+
 getCaseNames(caseId = getCaseIds(nFiles = FALSE))
-  
+
 getCases(fid, names = TRUE)
 }
 \arguments{
