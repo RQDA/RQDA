@@ -63,7 +63,7 @@ EditVarWidget <- function(ExistingItems=NULL,container=NULL,title=NULL,ID=NULL,s
   window <- gtkWindowNew("toplevel", show = F)
   Encoding(title) <- 'UTF-8'
   window$setTitle(paste(gettext("Attribute of:", domain = "R-RQDA"), title))
-  window$setBorder(5)
+  #window$`border-width` <- 5
   vbox <- gtkVBoxNew(FALSE, 5)
   window$add(vbox)
   sw <- gtkScrolledWindowNew(NULL, NULL)
@@ -132,10 +132,12 @@ saveFUN4CaseAttr <- function(button,data){
 
 CaseAttrFun <- function(caseId,title=NULL,attrs=svalue(.rqda$.AttrNamesWidget)){
   if (length(attrs)==0) attrs <-  dbGetQuery(.rqda$qdacon,"select name from attributes where status=1")$name
-  if (is.null(attrs)) gmessage(gettext("add attribute in Attrs Table first.", domain = "R-RQDA"),container=TRUE) else{
+  if (is.null(attrs)) {    
+   gmessage(gettext("add attribute in Attrs Table first.", domain = "R-RQDA"),container=TRUE)
+   } else {
     attrs2 <- data.frame(variable=attrs,value="NA",stringsAsFactors=FALSE)
     variables <- dbGetQuery(.rqda$qdacon,sprintf("select variable, value from caseAttr where caseID=%i and variable in (%s) and status=1", caseId,paste(shQuote(attrs),collapse=",")))
-    if (nrow(variables)!=0){
+    if (nrow(variables)!=0) {
       Encoding(variables$variable) <- Encoding(variables$value) <- 'UTF-8'
       idx <- match(variables[[1]],attrs2[[1]])
       attrs2[idx,] <- variables
