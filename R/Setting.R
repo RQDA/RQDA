@@ -16,45 +16,50 @@ addSettingGUI <- function(container,width=12){
   SettingFL <- gformlayout(align = "default", spacing = 5,
                            container = container, expand=TRUE)
 
+  name <- rqda_txt("Name of Coder")
+  fenc <- rqda_txt("File Encoding")
+  colc <- rqda_txt("Color for Coding")
+  casc <- rqda_txt("Color for Case")
+  codt <- rqda_txt("Current coding table")
+  byto <- rqda_txt("Byte Order Mark")
+  swfp <- rqda_txt("Show File Property")
+  typr <- rqda_txt("Type of Retrieval")
+
   gedit(name = "owner",
-        label = gettext("Name of Coder", domain = "R-RQDA"),
+        label = name,
         text = .rqda$owner, container = SettingFL
   )
   gedit(name = "encoding",
-        label = gettext("File Encoding", domain = "R-RQDA"),
+        label = fenc,
         text = .rqda$encoding, container = SettingFL
   )
   gcombobox(name = "fore.col",
-            label = gettext("Color for Coding", domain = "R-RQDA"),
-            ## type = "gedit",width=width,
-            ## text = .rqda$fore.col
+            label = colc,
             items=c(.rqda$fore.col,colorsList),
             container = SettingFL
   )
   gcombobox(name = "back.col",
-            label = gettext("Color for Case", domain = "R-RQDA"),
-            ## type = "gedit",width=width,
-            ## text = .rqda$back.col
+            label = casc,
             items=c(.rqda$back.col,colorsList),
             container = SettingFL
   )
   gcombobox(name = "codingTable",
-            label = gettext("Current coding table", domain = "R-RQDA"),
+            label = codt,
             items=c(.rqda$codingTable,"coding2"),
             container = SettingFL
   )
   gcombobox(name = "BOM",
-            label = gettext("Byte Order Mark", domain = "R-RQDA"),
+            label = byto,
             items = c(FALSE, TRUE),
             container = SettingFL
   )
   gcombobox(name = "SFP",
-            label = gettext("Show File Property", domain = "R-RQDA"),
+            label = swfp,
             items = c(FALSE, TRUE),
             container = SettingFL
   )
   gcombobox(name = "TOR",
-            label = gettext("Type of Retrieval", domain = "R-RQDA"),
+            label = typr,
             items = c(gettext("unconditional", domain = "R-RQDA"),
                       gettext("case", domain = "R-RQDA"),
                       gettext("filecategory", domain = "R-RQDA"),
@@ -89,16 +94,19 @@ addSettingGUI <- function(container,width=12){
     tryCatch(ClearMark(.rqda$.root_edit,0,
                        nchar(svalue(.rqda$.openfile_gui)),TRUE,TRUE),
              error=function(e){})
-    tryCatch(svalue(SettingFL[]$BOM) <- FALSE,error=function(e){})
-    tryCatch(svalue(SettingFL[]$SFP) <- FALSE,error=function(e){})
-    tryCatch(svalue(SettingFL[]$encoding) <- "unknown",error=function(e){})
-    tryCatch(svalue(SettingFL[]$owner) <- "default",error=function(e){})
-    tryCatch(svalue(SettingFL[]$back.col) <- "gold",error=function(e){})
-    tryCatch(svalue(SettingFL[]$fore.col) <- "blue",error=function(e){})
-    tryCatch(svalue(SettingFL[]$codingTable) <- "coding",error=function(e){})
-    tryCatch(svalue(SettingFL[]$TOR) <- gettext("unconditional",
-                                                domain = "R-RQDA"),
-             error=function(e){})
+
+        sfl <- svalue(SettingFL)
+
+    tryCatch(svalue(SettingFL)[[byto]] <- FALSE, error=function(e){})
+    tryCatch(svalue(SettingFL)[[swfp]] <- FALSE, error=function(e){})
+    tryCatch(svalue(SettingFL)[[fenc]] <- "unknown", error=function(e){})
+    tryCatch(svalue(SettingFL)[[name]] <- "default", error=function(e){})
+    tryCatch(svalue(SettingFL)[[casc]] <- "gold", error=function(e){})
+    tryCatch(svalue(SettingFL)[[colc]] <- "blue", error=function(e){})
+    tryCatch(svalue(SettingFL)[[codt]] <- "coding", error=function(e){})
+    tryCatch(svalue(SettingFL)[[typr]] <- gettext("unconditional",
+                                                domain = "R-RQDA"), 
+                                                error=function(e){})
     assign("BOM",FALSE,envir=.rqda)
     assign("SFP",FALSE,envir=.rqda)
     assign("encoding","unknown",envir=.rqda)

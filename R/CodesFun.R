@@ -88,7 +88,7 @@ mark <- function(widget,fore.col=.rqda$fore.col,back.col=NULL,addButton=FALSE,bu
 
 markRange <- function(widget,from,to,rowid,fore.col=.rqda$fore.col,back.col=NULL,addButton=FALSE,buttonLabel="",buttonCol=.rqda$codeMark.col,codingTable="coding"){
   if (from != to){
-    FileName <- tryCatch(svalue(.rqda$.root_edit),error=function(e){})
+    FileName <- tryCatch(if(exists(".root_edit", envir=.rqda)) svalue(.rqda$.root_edit), error=function(e){})
     if (!is.null(FileName)){
       Fid <- rqda_sel(sprintf("select id from source where status =1 and name='%s'",enc(FileName)))$id
       idx <- rqda_sel(sprintf("select selfirst,selend,rowid from %s where fid=%i and status=1", codingTable, Fid))
