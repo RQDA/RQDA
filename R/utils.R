@@ -660,9 +660,12 @@ showSubset.caseName <- function(x,...){
    .rqda$.CasesNamesWidget[] <- x
 }
 
-ShowFileProperty <- function(Fid = getFileIds(,"selected"),focus=TRUE) {
+ShowFileProperty <- function(Fid = getFileIds(type = "selected"),focus=TRUE) {
   if (is_projOpen(envir = .rqda, conName = "qdacon", message = FALSE)) {
-    if (is.null(Fid)) val <- "No files are selected."
+
+    if (is.null(Fid))
+      val <- "No files are selected."
+
     if (length(Fid)==1) {
       Fcat <- rqda_sel(sprintf("select name from filecat where catid in (select catid from treefile where fid=%i and status=1) and status=1",Fid))$name
       Case <- rqda_sel(sprintf("select name from cases where id in (select caseid from caselinkage where fid=%i and status=1) and status=1",Fid))$name
@@ -672,16 +675,22 @@ ShowFileProperty <- function(Fid = getFileIds(,"selected"),focus=TRUE) {
       Encoding(fcat) <-  "UTF-8"
       val <- sprintf(gettext(" File ID is %i \n %s \nCase is %s", domain = "R-RQDA"),Fid,fcat,paste(shQuote(Case),collapse=", "))
     }
-    if (length(Fid)>1) val <- gettext("Please select one file only.", domain = "R-RQDA")
-    tryCatch(svalue(.rqda$.sfp) <- val,error=function(e){
+
+    if (length(Fid)>1)
+      val <- gettext("Please select one file only.", domain = "R-RQDA")
+
+
+    tryCatch(if(exists(.sfp, envir = .rqda)) svalue(.rqda$.sfp) <- val, error=function(e) {
       gw <- gwindow(gettext("File Property", domain = "R-RQDA"),parent=size(.rqda$.root_rqdagui)+c(19,-50),
-            width = getOption("widgetSize")[1], height = getOption("widgetSize")[2])
+            width = getOption("widgetSize")[1]*.5,
+            height = getOption("widgetSize")[2]*.5)
       mainIcon <- system.file("icon", "mainIcon.png", package = "RQDA")
       gw$set_icon(mainIcon)
       sfp <- glabel(val,container=gw)
       assign(".sfp",sfp,envir=.rqda)
       "focus<-"(gw,value=focus)
     })
+
   }}
 
 #' @export
