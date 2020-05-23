@@ -28,7 +28,4 @@
 .onUnload <- function(...){
   cat("Bye, RQDA is unloaded.\n")
   options(.rqda$optOld)
-
-  rm(button)
-  rm(.rqda)
 }

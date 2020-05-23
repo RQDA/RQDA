@@ -3,21 +3,40 @@ getCodingsOfCodes <- function(fid = NULL, codingTable = c("coding", "coding2")){
     Encoding(codes) <- "UTF-8"
     selected <- gselect.list(codes)
     selected <- enc(selected)
-    cid <- rqda_sel(sprintf("select id from freecode where status=1 and name in (%s)",paste( paste("'", selected, "'", sep=""), collapse = ",")))$id
+    cid <- rqda_sel(sprintf(
+        "select id from freecode where status=1 and name in (%s)",
+        paste( paste("'", selected, "'", sep=""), collapse = ",")))$id
+
     codingTable <- match.arg(codingTable)
+
     if (codingTable == "coding") {
-        ct <- rqda_sel(sprintf("select coding.rowid as rowid, coding.cid, coding.fid,
-freecode.name as codename, source.name as filename, coding.selfirst as index1,
-coding.selend as index2, coding.seltext as coding, coding.selend - coding.selfirst as CodingLength from coding
- left join freecode on (coding.cid=freecode.id) left join source on (coding.fid=source.id)
-where coding.status=1 and source.status=1 and freecode.status=1 and coding.cid in (%s)", paste(cid,collapse=",")))
+        ct <- rqda_sel(
+            sprintf( paste(
+                "select coding.rowid as rowid, coding.cid, coding.fid,",
+                "freecode.name as codename, source.name as filename,",
+                "coding.selfirst as index1, coding.selend as index2,",
+                "coding.seltext as coding, coding.selend - ",
+                "coding.selfirst as CodingLength from coding",
+                "left join freecode on (coding.cid=freecode.id)",
+                "left join source on (coding.fid=source.id)",
+                "where coding.status=1 and source.status=1 and",
+                "freecode.status=1 and coding.cid in (%s)"),
+                paste(cid,collapse=",")))
     }
+
     if (codingTable == "coding2") {
-        ct <- rqda_sel(sprintf("select coding.rowid as rowid, coding.cid, coding.fid,
-freecode.name as codename, source.name as filename, coding2.selfirst as index1,
-coding2.selend as index2, coding2.seltext as coding2, coding2.selend - coding2.selfirst as CodingLength from coding2
- left join freecode on (coding2.cid=freecode.id) left join source on (coding2.fid=source.id)
-where coding2.status=1 and source.status=1 and freecode.status=1 and coding2.cid in (%s)", paste(cid,collapse=",")))
+        ct <- rqda_sel(
+            sprintf( paste(
+                "select coding.rowid as rowid, coding.cid, coding.fid,",
+                "freecode.name as codename, source.name as filename,",
+                "coding2.selfirst as index1, coding2.selend as index2,",
+                "coding2.seltext as coding2, coding2.selend - ",
+                "coding2.selfirst as CodingLength from coding2",
+                "left join freecode on (coding2.cid=freecode.id)",
+                "left join source on (coding2.fid=source.id)",
+                "where coding2.status=1 and source.status=1 and",
+                "freecode.status=1 and coding2.cid in (%s)"),
+                paste(cid,collapse=",")))
     }
     if (nrow(ct) != 0) {
         Encoding(ct$codename) <- Encoding(ct$filename) <-
@@ -32,12 +51,24 @@ getCodingsFromFiles <- function(Fid, order=c("fname","ftime","ctime"),
                                 codingTable="coding")
 {
     order <- match.arg(order)
-    order <- switch(order,
-                    fname="order by freecode.name, source.name, selfirst, selend ASC",
-                    ftime="order by freecode.name, source.id, selfirst, selend ASC",
-                    ctime="")
-    retrieval <- rqda_sel(sprintf("select cid, freecode.name as code, fid, selfirst, selend, seltext, %s.rowid, source.name,source.id from %s,source, freecode where %s.status=1 and source.id=fid and freecode.id=%s.cid and fid in (%s) %s", codingTable, codingTable, codingTable, codingTable, paste(Fid,collapse=","), order))
-    if (nrow(retrieval)==0) gmessage(gettext("No Coding associated with the selected code.", domain = "R-RQDA"),container=TRUE) else {
+    order <- switch(
+        order,
+        fname="order by freecode.name, source.name, selfirst, selend ASC",
+        ftime="order by freecode.name, source.id, selfirst, selend ASC",
+        ctime="")
+
+    retrieval <- rqda_sel(
+        sprintf( paste("select cid, freecode.name as code, fid, selfirst,",
+                       "selend, seltext, %s.rowid, source.name, source.id",
+                       "from %s, source, freecode where %s.status=1 and",
+                       "source.id=fid and freecode.id=%s.cid and fid in",
+                       "(%s) %s"), codingTable, codingTable, codingTable,
+                 codingTable, paste(Fid,collapse=","), order))
+
+    if (nrow(retrieval)==0){
+        gmessage( rqda_txt("No Coding associated with the selected code."),
+                  container=TRUE)
+    } else {
         fid <- unique(retrieval$fid)
         Nfiles <- length(fid)
         retrieval$fname <-""
@@ -54,32 +85,40 @@ getCodingsFromFiles <- function(Fid, order=c("fname","ftime","ctime"),
                                       domain = "R-RQDA"), Ncodings, Nfiles)
         }
         wnh <- size(.rqda$.root_rqdagui$widget) ## size of the main window
-        .gw <- gwindow(title=title, parent=c(wnh[1]+10,2),
-                       width = getOption("widgetSize")[1], height = getOption("widgetSize")[2]
-                       )
+        # parent=c(wnh[1]+10,2), FixMe: ???
+        .gw <- gwindow(title=title,
+                       width = getOption("widgetSize")[1],
+                       height = getOption("widgetSize")[2]
+        )
         mainIcon <- system.file("icon", "mainIcon.png", package = "RQDA")
         .gw$set_icon(mainIcon)
         .retreivalgui <- gtext(container=.gw)
         font <- pangoFontDescriptionFromString(.rqda$font)
         gtkWidgetModifyFont(.retreivalgui$widget,font)
-        .retreivalgui$widget$SetPixelsBelowLines(5) ## set the spacing
-        .retreivalgui$widget$SetPixelsInsideWrap(5) ## so the text looks more confortable.
-        for (i in fid){
+        ## set the spacing
+        .retreivalgui$widget$SetPixelsBelowLines(5)
+        ## so the text looks more comfortable.
+        .retreivalgui$widget$SetPixelsInsideWrap(5)
+
+        for (i in fid) {
             FileName <- rqda_sel(
-                    "select name from source where status=1 and id=%i",
-                    i))[['name']]
-            if (!is.null(FileName)){
+                "select name from source where status=1 and id=%i",
+                i)[['name']]
+
+            if (!is.null(FileName)) {
                 Encoding(FileName) <- "UTF-8"
                 retrieval$fname[retrieval$fid==i] <- FileName
             } else {
                 retrieval <- retrieval[retrieval$fid!=i,]
                 rqda_exe(sprintf("update %s set status=0 where fid=%i",
-                                  codingTable, i))
+                                 codingTable, i))
             }
+
         }
+
         Encoding(retrieval$seltext) <-  Encoding(retrieval$fname) <- "UTF-8"
         ## helper function
-        ComputeCallbackFun <- function(FileName,rowid){
+        ComputeCallbackFun <- function(FileName,rowid) {
             CallBackFUN <- function(widget,event,...){
                 ViewFileFunHelper(FileName,hightlight=FALSE)
                 textView <- .rqda$.openfile_gui$widget
@@ -124,7 +163,7 @@ getCodingsFromFiles <- function(Fid, order=c("fname","ftime","ctime"),
             buffer$InsertWithTagsByName(iter, x[['seltext']])
             buffer$insert(iter, "\n\n")
         }
-              )## end of apply
+        )## end of apply
         buffer$PlaceCursor(buffer$getIterAtOffset(0)$iter)
     }
 }
