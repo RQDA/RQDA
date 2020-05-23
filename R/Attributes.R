@@ -63,7 +63,7 @@ EditVarWidget <- function(ExistingItems=NULL,container=NULL,title=NULL,ID=NULL,s
   window <- gtkWindowNew("toplevel", show = F)
   Encoding(title) <- 'UTF-8'
   window$setTitle(paste(gettext("Attribute of:", domain = "R-RQDA"), title))
-  window$setBorderWidth(5)
+  window$setBorder(5)
   vbox <- gtkVBoxNew(FALSE, 5)
   window$add(vbox)
   sw <- gtkScrolledWindowNew(NULL, NULL)
@@ -421,7 +421,7 @@ setAttrType <- function() {
       items <- c("numeric","character")
       idx <- which (items %in%  oldCls)
     }
-    w <- gwindow(gettext("Type of attribute", domain = "R-RQDA"),height=30,width=150)
+    w <- gwindow(gettext("Type of attribute", domain = "R-RQDA"),width = getOption("widgetSize")[1], height = getOption("widgetSize")[2])
     gp <- ggroup(horizontal=FALSE,container=w)
     rb <- gradio(items,idx,horizontal=TRUE, container=gp)
     gbutton("OK",container=gp,handler=function(h,...){

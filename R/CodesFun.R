@@ -205,7 +205,8 @@ InsertAnchor <- function(widget,label,index,label.col="gray90",
                   tryCatch(dispose(.rqda$.codingmemo),error=function(e) {})
                   ## Close the coding memo first, then open a new one
                   title <- sprintf("Coding Memo:%s",codeName)
-                  .codingmemo <- gwindow(title=title,getOption("widgetCoordinate"),width=600,height=400)
+                  .codingmemo <- gwindow(title=title,getOption("widgetCoordinate"),
+                  width = getOption("widgetSize")[1], height = getOption("widgetSize")[2])
                   assign(".codingmemo",.codingmemo, envir=.rqda)
                   .codingmemo <- get(".codingmemo",envir=.rqda)
                   .codingmemo2 <- gpanedgroup(horizontal = FALSE, container=.codingmemo)
@@ -308,27 +309,27 @@ countAnchorsWithFileName <- function(to,fileName=enc(svalue(.rqda$.root_edit),en
 
 
 #' Retrieval of codings conditional on the file id.
-#' 
-#' 
+#'
+#'
 #' To retrieve the codings of a selected code from specific set of files.
-#' @usage 
-#' retrieval(Fid = NULL, order = c("fname", "ftime", "ctime"), 
+#' @usage
+#' retrieval(Fid = NULL, order = c("fname", "ftime", "ctime"),
 #' CodeNameWidget = .rqda$.codes_rqda,codingTable="coding")
-#' 
+#'
 #' @param Fid Numeric vector, the file id.
 #' @param order The method of sort of retrieved codings.
 #' @param CodeNameWidget The name of code list widget.
 #' @param codingTable name of sqlite data table where codings are stored.
 #'  It should be either "coding" or "coding2"
-#' 
-#' @details  This function retrieves the codings of a selected code from 
-#' \code{CodeNameWidget}, given that all the codings are from a set of 
+#'
+#' @details  This function retrieves the codings of a selected code from
+#' \code{CodeNameWidget}, given that all the codings are from a set of
 #' files which are determined by \code{Fid}.
-#' 
+#'
 #' @return
 #' A \code{\link[gWidgets2]{gtext}} widget is open and all the codings
 #'  are pushed into that widget.
-#'  
+#'
 #' @seealso \code{\link{getFileIds}}
 #' @export
 retrieval <- function(Fid=NULL,order=c("fname","ftime","ctime"),CodeNameWidget=.rqda$.codes_rqda, codingTable="coding")
@@ -368,9 +369,7 @@ retrieval <- function(Fid=NULL,order=c("fname","ftime","ctime"),CodeNameWidget=.
       tryCatch(eval(parse(text=sprintf("dispose(.rqda$.codingsOf%s)",currentCid))),error=function(e){})
       wnh <- size(.rqda$.root_rqdagui) ## size of the main window
       .gw <- gwindow(title=title, parent=c(wnh[1]+10,2),
-                     width = min(c(gdkScreenWidth()- wnh[1]-20,getOption("widgetSize")[1])),
-                     height = min(c(wnh[2],getOption("widgetSize")[2]))
-                     )
+                     width = getOption("widgetSize")[1], height = getOption("widgetSize")[2])
       mainIcon <- system.file("icon", "mainIcon.png", package = "RQDA")
       .gw$set_icon(mainIcon)
       assign(sprintf(".codingsOf%s",currentCid),.gw,envir=.rqda)
@@ -527,7 +526,7 @@ retrieval <- function(Fid=NULL,order=c("fname","ftime","ctime"),CodeNameWidget=.
   }
 }
 
-#' @export 
+#' @export
 exportCodings <- function(file="Exported Codings.html",Fid=NULL,order=c("fname","ftime","ctime"),append=FALSE,codingTable="coding")
 {
 exportCodingsOfOneCode <- function(file,currentCode,Fid,order=c("fname","ftime","ctime"),append=TRUE){
@@ -740,8 +739,7 @@ openAnnotation <- function(New=TRUE,pos,fid,rowid,AnchorPos=NULL){
     tryCatch(dispose(.rqda$.annotation),error=function(e) {})
     wnh <- size(.rqda$.root_rqdagui)
     .annotation <- gwindow(title=ngettext(1, "Annotation", "Annotations", domain = "R-RQDA"),parent=c(wnh[1]+10,2), # ngettext avoid update_pkg_po() crash.
-                           width = min(c(gdkScreenWidth()- wnh[1]-20,getOption("widgetSize")[1])),
-                           height = min(c(wnh[2],getOption("widgetSize")[2]))
+                           width = getOption("widgetSize")[1], height = getOption("widgetSize")[2]
                            )
     mainIcon <- system.file("icon", "mainIcon.png", package = "RQDA")
     .annotation$set_icon(mainIcon)

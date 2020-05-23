@@ -5,16 +5,19 @@
   ## use .onLoad/.onAttach rather than .First.lib when there is namespace
   ## Refer R news 2003-1 for details about name space
   optOld <- options()
-  ## if (is.null(getOption("widgetCoordinate"))) options(widgetCoordinate=c(400,2))
+  ## if (is.null(getOption("widgetCoordinate")))
+  ##  options(widgetCoordinate=c(400,2))
   ## cordinate of ViewFunWidget
-  if (is.null(getOption("widgetSize"))) options(widgetSize=pmin(
-                                                c(550,700),
-                                                c(gdkScreenHeight(),gdkScreenWidth()-300)
-                                                ))
+
+  #if (is.null(getOption("widgetSize")))
+        options(widgetSize = c(gdkScreenWidth()*.9,
+                               gdkScreenHeight()*.9))
+
   options(andMethod=c("overlap","exact","inclusion"))
   assign("optOld",optOld,envir=.rqda)
   if (interactive()) {
-     packageStartupMessage("\nUse 'RQDA()' to start the programme.\n", domain = "R-RQDA")
+     packageStartupMessage(
+       "\nUse 'RQDA()' to start the programme.\n", domain = "R-RQDA")
      RQDA()
    }
 }

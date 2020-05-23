@@ -89,17 +89,17 @@ MemoWidget <- function(prefix,widget,dbTable){
         gettext("Select first.", domain = "R-RQDA"),
         icon="error",container=TRUE)
     } else {
-      
+
       CloseYes <- function(currentCode){
         withinWidget <- svalue(get(sprintf(".%smemoW",prefix),envir=.rqda))
         InRQDA <- dbGetQuery(.rqda$qdacon,
                              sprintf("select memo from %s where name='%s'",
                                      dbTable, enc(currentCode,"UTF-8")))[1, 1]
-        
+
         # print(dbTable)
         # print(currentCode)
-        
-        if (isTRUE(all.equal(withinWidget,InRQDA)) | 
+
+        if (isTRUE(all.equal(withinWidget,InRQDA)) |
             (is.na(InRQDA) && withinWidget==""))
         {
           return(TRUE)
@@ -110,17 +110,17 @@ MemoWidget <- function(prefix,widget,dbTable){
         }
         return(val)
       } ## helper function
-      
-      
-      
+
+
+
       IsOpen <- tryCatch(
         eval(parse(text=sprintf("svalue(.rqda$.%smemoW)",prefix)))
         | stopifnot(
           !is.null(eval(parse(text=sprintf("svalue(.rqda$.%smemoW)",prefix))))
           ),
         error=function(e) simpleError("No opened memo widget."))
-      
-      
+
+
       if (!inherits(IsOpen,"simpleError")){ ## if a widget is open
         ## title of the memo widget
         prvSelected <- svalue(get(sprintf(".%smemo",prefix),envir=.rqda))
@@ -131,7 +131,7 @@ MemoWidget <- function(prefix,widget,dbTable){
         IfCont <- CloseYes(currentCode=prvSelected)}
 
       ## if not open or the same.
-      if ( inherits(IsOpen,"simpleError") || IfCont){ 
+      if ( inherits(IsOpen,"simpleError") || IfCont){
         tryCatch(
           eval(parse(text=sprintf("dispose(.rqda$.%smemo)",prefix))),
           error=function(e) {})
@@ -156,7 +156,7 @@ MemoWidget <- function(prefix,widget,dbTable){
           handler=function(h,...){
             newcontent <- svalue(W)
             ## take care of double quote.
-            newcontent <- enc(newcontent,encoding="UTF-8") 
+            newcontent <- enc(newcontent,encoding="UTF-8")
             dbGetQuery(.rqda$qdacon,
                        sprintf("update %s set memo='%s' where name='%s'",
                                dbTable,newcontent,enc(Selected)))
@@ -351,14 +351,14 @@ print.summaryCodings <- function(x,...){
 }
 
 #' Search files
-#' 
+#'
 #' Search files according to the pattern.
-#' 
-#' @usage 
+#'
+#' @usage
 #' searchFiles(pattern, content = FALSE, Fid = NULL, Widget = NULL,is.UTF8 = FALSE)
-#' 
+#'
 #' @param pattern The criterion of search, see examples section for examples.
-#' @param content When it is TRUE, the content of files fitting the pattern 
+#' @param content When it is TRUE, the content of files fitting the pattern
 #' will be returned as well.
 #' @param Fid integer vector, the ids of subset of files to search.
 #' @param Widget Character, name of a gtable widget. If it is not NULL,
@@ -366,39 +366,39 @@ print.summaryCodings <- function(x,...){
 #' using \code{svalue} method. One useful value is ".fnames_rqda", so
 #' the file names will be pushed to the Files Tab of RQDA. Others are
 #' ".FileofCat" and ".FileofCase".
-#' @param is.UTF8 If the coding of pattern is UTF-8. If you are not sure, 
+#' @param is.UTF8 If the coding of pattern is UTF-8. If you are not sure,
 #' always use FALSE.
-#' 
-#' @details 
-#' This function uses select statement of sql to search files (from source 
+#'
+#' @details
+#' This function uses select statement of sql to search files (from source
 #' database table). The pattern is the WHERE clause (without the keyword WHERE).
 #' For more information, please refer to the website of SQLite syntax. All data
 #' in *.rqda use UTF-8 encoding, so the encoding of pattern matters. It will be
 #' converted to UTF-8 if it is not (is.UTF8=FALSE).
-#' 
-#' @return 
+#'
+#' @return
 #' A data frame with variables (which is \code{invisible} and you need to print
-#' it explicitly): 
+#' it explicitly):
 #' \item{id }{The file id.}
 #' \item{name }{The file name.}
 #' \item{file }{The file content. Only return when content is TRUE.}
-#' 
-#' @references 
+#'
+#' @references
 #'  \url{http://www.sqlite.org/lang_expr.html}
-#'  
-#' @seealso 
+#'
+#' @seealso
 #' \code{\link[gWidgets2]{gtable}}
 #' \code{\link[utils]{localeToCharset}}
-#' 
-#' @examples 
+#'
+#' @examples
 #' \dontrun{
 #'  searchFiles("file like '\%keyword\%'"\)
 #'  ## search for files who contain the word of "keyword"
-#'  searchFiles("file like 'keyword\%'"\) 
+#'  searchFiles("file like 'keyword\%'"\)
 #'  ## search for files whose content begin with the word of "keyword"
-#'  searchFiles("name like '\%keyword'"\) 
+#'  searchFiles("name like '\%keyword'"\)
 #'  ## search for files whose name end with the word of "keyword"
-#'  searchFiles("name like '\%keyword one' and file like '\%keyword tow\%'"\) 
+#'  searchFiles("name like '\%keyword one' and file like '\%keyword tow\%'"\)
 #'  ## combined conditions
 #' }
 #' @export
@@ -434,7 +434,8 @@ RunOnSelected <- function(x,multiple=TRUE,expr,enclos=parent.frame(),title=NULL,
                           ...){
   ## expr used the return of Selected as an argument
   if (is.null(title)) title <- ifelse(multiple,"Select one or more","Select one")
-  g <- gwindow(title=title,width=250,height=600,parent=c(hpos, vpos))
+  g <- gwindow(title=title,
+  width = getOption("widgetSize")[1], height = getOption("widgetSize")[2],parent=c(hpos, vpos))
   x1<-ggroup(FALSE,container=g)
   ##x1$parent$parent$parent$SetTitle(title)
   ##x1$parent$parent$parent$SetDefaultSize(200, 500)
@@ -458,7 +459,7 @@ RunOnSelected <- function(x,multiple=TRUE,expr,enclos=parent.frame(),title=NULL,
 }
 
 #' @export
-gselect.list <- function(list,multiple=TRUE,title=NULL,width=200, height=500,...){
+gselect.list <- function(list,multiple=TRUE,title=NULL,width = getOption("widgetSize")[1], height = getOption("widgetSize")[2],...){
   ## gtk version of select.list(), revised on 21 Apr. 2010 to fix a bug (crash R with 2.18 or newer libgtk2).
   ## Thanks go to John Verzani for his help.
   if (is.null(title)) title <- ifelse(multiple,"Select one or more","Select one")
@@ -513,40 +514,40 @@ getCaseIds <- function(fid=getFileIds(),nFiles=FALSE){
 
 #'Get the Case ID and Case Name.
 #' @aliases getCases getCaseIds getCaseNames getCases
-#' 
-#' @description 
+#'
+#' @description
 #' Return cases IDs or names which a set of files belong to.
-#' @usage 
+#' @usage
 #' getCaseIds(fid = getFileIds(), nFiles = FALSE)
-#'   
+#'
 #' getCaseNames(caseId = getCaseIds(nFiles = FALSE))
-#'   
-#' getCases(fid, names = TRUE) 
-#' 
+#'
+#' getCases(fid, names = TRUE)
+#'
 #' @param fid numeric vector, the file IDs.
 #' @param nFiles logical, return the number of files that belong to a case.
 #' @param caseId numeric vector, the case IDs.
 #' @param names logical.
-#' 
-#' @details 
+#'
+#' @details
 #' \code{getCaseIds} returns the case IDs which a file belongs to given the file
 #'  IDs.
 #' \code{getCaseNames} returns the case Names given the case IDs.
 #' \code{getCases} returns the case Names or IDs depending on the argument of
 #'  names. It is a wrapper of \code{getCaseIds} and \code{getCaseNames}.
-#'  
+#'
 #' @return
-#' \code{getCaseIds} returns a data frame of two columns when nFiles is 
+#' \code{getCaseIds} returns a data frame of two columns when nFiles is
 #' TRUE, and a numeric vector when FALSE.
-#'   
+#'
 #' \code{getCaseNames} returns a character vector or NULL if no cases are
 #' associated with the file IDs.
-#' 
-#' \code{getNames} returns the names of cases when names is TRUE, id of files 
+#'
+#' \code{getNames} returns the names of cases when names is TRUE, id of files
 #' when FALSE.
-#' 
+#'
 #' @seealso \code{\link{getFileIds}}
-#' 
+#'
 #' @examples
 #' \dontrun{
 #' getCaseNames(getCaseIds(getFileIds("filecategory")))
@@ -660,8 +661,7 @@ ShowFileProperty <- function(Fid = getFileIds(,"selected"),focus=TRUE) {
     if (length(Fid)>1) val <- gettext("Please select one file only.", domain = "R-RQDA")
     tryCatch(svalue(.rqda$.sfp) <- val,error=function(e){
       gw <- gwindow(gettext("File Property", domain = "R-RQDA"),parent=size(.rqda$.root_rqdagui)+c(19,-50),
-            width = min(c(gdkScreenWidth() - size(.rqda$.root_rqdagui)[1] -20,getOption("widgetSize")[1])),
-            height = 50)
+            width = getOption("widgetSize")[1], height = getOption("widgetSize")[2])
       mainIcon <- system.file("icon", "mainIcon.png", package = "RQDA")
       gw$set_icon(mainIcon)
       sfp <- glabel(val,container=gw)
@@ -691,7 +691,7 @@ filesCodedByOr <- function(cid, codingTable=c("coding","coding2")){
     fid
 }
 
-#' @export 
+#' @export
 filesCodedByNot <- function(cid, codingTable=c("coding","coding2")){
     codedfid <- filesCodedByOr(cid)
     allfid <- RQDAQuery(sprintf("select fid from %s where status=1 group by fid",codingTable))$fid
@@ -773,7 +773,7 @@ nCodedByTwo <- function(FUN, codeList=NULL, print=TRUE,...){
     ans
 }
 
-#' @export 
+#' @export
 queryFiles <- function(or=NULL,and=NULL,not=NULL,names=TRUE){
   fid.or <- fid.and <- fid.not <- integer(0)
   if (!is.null(or)) fid.or <- filesCodedByOr(or)
@@ -820,4 +820,10 @@ filesByCodes <- function(codingTable=c("coding","coding2")){
   ansWide
 }
 
+#' translate string
+#'
+#' used internally to avoid long abundance of code
+rqda_txt <- function(text_string) {
+  gettext(text_string, domain = "R-RQDA")
+}
 

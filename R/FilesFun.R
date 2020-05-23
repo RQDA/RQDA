@@ -109,14 +109,10 @@ ViewFileFunHelper <- function(FileName,hightlight=TRUE,codingTable=.rqda$codingT
   wnh <- size(.rqda$.root_rqdagui)
   if (grepl("apple", R.version$platform)) {
     gw <- gwindow(title = SelectedFileName,parent = c(0, 0),
-                  width = min(c(gdkScreenWidth()- wnh[1]-20,getOption("widgetSize")[1])),
-                  height = min(c(wnh[2],getOption("widgetSize")[2]))
-    )
+      width = getOption("widgetSize")[1], height = getOption("widgetSize")[2])
   } else {
     gw <- gwindow(title = SelectedFileName,parent = wnh, ## .rqda$.root_rqdagui,
-                width = min(c(gdkScreenWidth()- wnh[1]-20,getOption("widgetSize")[1])),
-                height = min(c(wnh[2],getOption("widgetSize")[2]))
-    )
+                width = getOption("widgetSize")[1], height = getOption("widgetSize")[2])
     }
   mainIcon <- system.file("icon", "mainIcon.png", package = "RQDA")
   gw$set_icon(mainIcon)
@@ -635,7 +631,8 @@ searchWord <- function(str,widget,from=0,col="green", verbose=FALSE){
 SearchButton <- function(widget){
 ## widget=.rqda$.openfile_gui)
     assign("searchFrom",0,envir=.rqda)
-    group <- ggroup(horizontal=FALSE, container=gwindow(width=50,height=20,title="Search a word"))
+    group <- ggroup(horizontal=FALSE, container=gwindow(
+      width = getOption("widgetSize")[1], height = getOption("widgetSize")[2],title="Search a word"))
     kwdW <- gedit("", container=group)
     gbutton(gettext("Search next", domain = "R-RQDA"), container = group,handler=function(h,...){
         if (!is.null(.rqda$searchFrom)){
@@ -660,9 +657,7 @@ viewPlainFile <- function(FileNameWidget=.rqda$.fnames_rqda){
 
   wnh <- size(.rqda$.root_rqdagui) ## size of the main window
   gw <- gwindow(title = SelectedFileName,parent = wnh, ## .rqda$.root_rqdagui,
-                width = min(c(gdkScreenWidth()- wnh[1]-20,getOption("widgetSize")[1])),
-                height = min(c(wnh[2],getOption("widgetSize")[2]))
-                )
+                width = getOption("widgetSize")[1], height = getOption("widgetSize")[2])
   mainIcon <- system.file("icon", "mainIcon.png", package = "RQDA")
   gw$set_icon(mainIcon)
   getToolkitWidget(gw)$Move(getOption("widgetCoordinate")[1],getOption("widgetCoordinate")[2])

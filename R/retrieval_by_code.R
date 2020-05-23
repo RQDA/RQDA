@@ -43,9 +43,10 @@ retrieval_by_code <- function (Fid = NULL, order = c("fname", "ftime", "ctime"),
             })
             wnh <- size(.rqda$.root_rqdagui)
             .gw <- gwindow(title = title, parent = c(wnh[1] + 
-                10, 2), width = min(c(gdkScreenWidth() - wnh[1] - 
-                20, getOption("widgetSize")[1])), height = min(c(wnh[2], 
-                getOption("widgetSize")[2])))
+                10, 2),
+                width = getOption("widgetSize")[1], height = getOption("widgetSize")[2]
+                )
+
             mainIcon <- system.file("icon", "mainIcon.png", package = "RQDA")
             .gw$set_icon(mainIcon)
             assign(sprintf(".codingsOf%s", currentCid), .gw, 

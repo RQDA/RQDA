@@ -377,10 +377,7 @@ ProjectMemoWidget <- function(){
     ## of memo
     wnh <- size(.rqda$.root_rqdagui) ## size of the main window
     gw <- gwindow(title="Project Memo", parent=c(wnh[1]+10,2),
-                  width = min(c(gdkScreenWidth()- wnh[1]-20,
-                                getOption("widgetSize")[1])),
-                  height = min(c(wnh[2],getOption("widgetSize")[2]))
-    )
+                  width = getOption("widgetSize")[1], height = getOption("widgetSize")[2])
     mainIcon <- system.file("icon", "mainIcon.png", package = "RQDA")
     gw$set_icon(mainIcon)
     assign(".projmemo", gw, envir=.rqda)

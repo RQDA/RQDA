@@ -327,7 +327,8 @@ CodingMemoButton <- function(label=gettext("C2Memo", domain = "R-RQDA"))
     tryCatch(dispose(.rqda$.codingmemo),error= function(e) {})
     ## Close the coding memo first, then open a new one
     if (is.null(title)) title <- "Coding Memo"
-    .codingmemo <- gwindow(title=title,getOption("widgetCoordinate"),width=600,height=400)
+    .codingmemo <- gwindow(title=title,getOption("widgetCoordinate"),
+    width = getOption("widgetSize")[1], height = getOption("widgetSize")[2])
     assign(".codingmemo",.codingmemo, envir=.rqda)
     .codingmemo <- get(".codingmemo",envir=.rqda)
     .codingmemo2 <- gpanedgroup(horizontal = FALSE, container=.codingmemo)
