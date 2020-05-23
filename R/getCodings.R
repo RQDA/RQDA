@@ -65,8 +65,7 @@ getCodingsFromFiles <- function(Fid, order=c("fname","ftime","ctime"),
         .retreivalgui$widget$SetPixelsBelowLines(5) ## set the spacing
         .retreivalgui$widget$SetPixelsInsideWrap(5) ## so the text looks more confortable.
         for (i in fid){
-            FileName <- dbGetQuery(
-                .rqda$qdacon,sprintf(
+            FileName <- rqda_sel(
                     "select name from source where status=1 and id=%i",
                     i))[['name']]
             if (!is.null(FileName)){

@@ -5,12 +5,12 @@ rename <- function(from,to,table=c("source","freecode","cases","codecat","fileca
   ## source is the file name, freecode is the free code name
   table <- match.arg(table)
   if (to!=""){ ## if to is "", makes no sense to rename
-      exists <- dbGetQuery(.rqda$qdacon, sprintf("select * from %s where name = '%s' ",table, enc(to)))
+      exists <- rqda_sel( sprintf("select * from %s where name = '%s' ",table, enc(to)))
       ## should check it there is any dupliation in the table
       if (nrow(exists) > 0) {
           gmessage(gettext("The new name is duplicated. Please use another new name.", domain = "R-RQDA"),container=TRUE)
       } else {
-          dbExecute(.rqda$qdacon, sprintf("update '%s' set name = '%s' where name = '%s' ",table, enc(to), enc(from)))
+          rqda_exe( sprintf("update '%s' set name = '%s' where name = '%s' ",table, enc(to), enc(from)))
       }
   }
 }
@@ -32,7 +32,7 @@ UpdateWidget <- function(widget,from,to=NULL){
              error = function(e) cat("warning msg from the replacement.\n"))
     if (length(idx)>0) {
     path <-gtkTreePathNewFromString(idx)
-    gtkTreeViewScrollToCell(get(widget, envir=.rqda),
+    gtkTreeViewScrollToCell(get(widget, envir=.rqda)$widget,
                             path,use.align=TRUE,row.align = 0.07)
   }}
 }
@@ -74,7 +74,7 @@ OrderByTime <- function(date,decreasing = FALSE)
   permutation <- order(Newdate,decreasing = decreasing)
   ##  }
 }
-## dd<- dbGetQuery(.rqda$qdacon,"select date from source")$date
+## dd<- rqda_sel("select date from source")$date
 ## sort(dd) == dd[order(dd)] ## but the order is not correct.
 ## dd[OrderByTime(dd)]
 
@@ -92,7 +92,7 @@ MemoWidget <- function(prefix,widget,dbTable){
 
       CloseYes <- function(currentCode){
         withinWidget <- svalue(get(sprintf(".%smemoW",prefix),envir=.rqda))
-        InRQDA <- dbGetQuery(.rqda$qdacon,
+        InRQDA <- rqda_sel(
                              sprintf("select memo from %s where name='%s'",
                                      dbTable, enc(currentCode,"UTF-8")))[1, 1]
 
@@ -157,7 +157,7 @@ MemoWidget <- function(prefix,widget,dbTable){
             newcontent <- svalue(W)
             ## take care of double quote.
             newcontent <- enc(newcontent,encoding="UTF-8")
-            dbExecute(.rqda$qdacon,
+            rqda_exe(
                        sprintf("update %s set memo='%s' where name='%s'",
                                dbTable,newcontent,enc(Selected)))
             mbut <- get(sprintf("buttonOf.%smemo",prefix),envir=button)
@@ -171,8 +171,7 @@ MemoWidget <- function(prefix,widget,dbTable){
         font <- pangoFontDescriptionFromString(.rqda$font)
         gtkWidgetModifyFont(tmp$widget,font)## set the default fontsize
         assign(sprintf(".%smemoW",prefix),tmp,envir=.rqda)
-        prvcontent <- dbGetQuery(
-          .rqda$qdacon,
+        prvcontent <- rqda_sel(
           sprintf("select memo from %s where name='%s'",
                   dbTable,enc(Selected)))[1,1]
         if (is.na(prvcontent)) prvcontent <- ""
@@ -285,12 +284,12 @@ getCodingTable <- function(){
   ## test when any table is empty
   ## http://archives.postgresql.org/pgsql-sql/2004-01/msg00160.php
   if ( is_projOpen()) {
-   ## Codings <- dbGetQuery(.rqda$qdacon,"select freecode.name as codename, freecode.id as cid,
+   ## Codings <- rqda_sel("select freecode.name as codename, freecode.id as cid,
    ##         coding.cid as cid2,coding.fid as fid,source.id as fid2, source.name as filename,
    ##         coding.selend - coding.selfirst as CodingLength,coding.selend, coding.selfirst
    ##         from coding, freecode, source
    ##         where coding.status==1 and freecode.id=coding.cid and coding.fid=source.id")
-   Codings <- dbGetQuery(.rqda$qdacon,"select coding.rowid as rowid, coding.cid, coding.fid, freecode.name as codename, source.name as filename,
+   Codings <- rqda_sel("select coding.rowid as rowid, coding.cid, coding.fid, freecode.name as codename, source.name as filename,
                                        coding.selfirst as index1, coding.selend as index2,
                                        coding.selend - coding.selfirst as CodingLength
                                       from coding left join freecode on (coding.cid=freecode.id)
@@ -411,9 +410,9 @@ searchFiles <- function(pattern,content=FALSE,Fid=NULL,Widget=NULL,is.UTF8=FALSE
         Encoding(pattern) <- "unknown"
         if (!is.null(Fid)) pattern <- sprintf("(%s) and id in (%s)",pattern,paste(shQuote(Fid),collapse=","))
         if (content){
-            ans <- dbGetQuery(.rqda$qdacon,sprintf("select id, name,file from source where status=1 and %s",pattern))
+            ans <- rqda_sel(sprintf("select id, name,file from source where status=1 and %s",pattern))
         } else {
-            ans <- dbGetQuery(.rqda$qdacon,sprintf("select id, name from source where status=1 and %s",pattern))
+            ans <- rqda_sel(sprintf("select id, name from source where status=1 and %s",pattern))
         }
         if (nrow(ans)>0) Encoding(ans$name) <- "UTF-8"
         if (!is.null(ans$file)) Encoding(ans$file) <- "UTF-8"
@@ -482,7 +481,7 @@ gselect.list <- function(list,multiple=TRUE,title=NULL, height = getOption("widg
 
 #' @export
 getFileNames <- function(fid=getFileIds()){
-  ans <-  dbGetQuery(.rqda$qdacon,sprintf("select name from source where status=1 and id in (%s)",paste(shQuote(fid),collapse=",")))$name
+  ans <-  rqda_sel(sprintf("select name from source where status=1 and id in (%s)",paste(shQuote(fid),collapse=",")))$name
   if (length(ans)>0) Encoding(ans) <- "UTF-8"
   class(ans) <- c("RQDA.vector","fileName")
   ans
@@ -501,11 +500,11 @@ getFiles <- function(condition = c("unconditional", "case", "filecategory", "bot
 getCaseIds <- function(fid=getFileIds(),nFiles=FALSE){
   ## if (caseName){
   if (nFiles) {
-    ## ans <-  dbGetQuery(.rqda$qdacon,sprintf(" select name,id from cases where status=1 and id in (select caseid from caselinkage where status=1 and fid in (%s) group by caseid )",paste(shQuote(fid),collapse=",")))
+    ## ans <-  rqda_sel(sprintf(" select name,id from cases where status=1 and id in (select caseid from caselinkage where status=1 and fid in (%s) group by caseid )",paste(shQuote(fid),collapse=",")))
     ## if (nrow(ans)>0) Encoding(ans$name) <- "UTF-8"
-    ans <- dbGetQuery(.rqda$qdacon,sprintf("select caseid, count(caseid) as nFiles from caselinkage where status=1 and fid in (%s) group by caseid",paste(shQuote(fid),collapse=",")))
+    ans <- rqda_sel(sprintf("select caseid, count(caseid) as nFiles from caselinkage where status=1 and fid in (%s) group by caseid",paste(shQuote(fid),collapse=",")))
   } else {
-    ans <- dbGetQuery(.rqda$qdacon,sprintf("select caseid from caselinkage where status=1 and fid in (%s) group by caseid",paste(shQuote(fid),collapse=",")))$caseid
+    ans <- rqda_sel(sprintf("select caseid from caselinkage where status=1 and fid in (%s) group by caseid",paste(shQuote(fid),collapse=",")))$caseid
   }
   ## attr(ans,"caseName") <- caseName
   class(ans) <- c("RQDA.vector","caseId")
@@ -563,7 +562,7 @@ getCases <- function(fid, names=TRUE) {
 
 #' @export
 getCaseNames <- function(caseId=getCaseIds(nFiles=FALSE)){
-  ans <-  dbGetQuery(.rqda$qdacon,sprintf("select name from cases where status=1 and id in (%s)",paste(shQuote(caseId),collapse=",")))$name
+  ans <-  rqda_sel(sprintf("select name from cases where status=1 and id in (%s)",paste(shQuote(caseId),collapse=",")))$name
   if (length(ans)>0) Encoding(ans) <- "UTF-8"
   class(ans) <- c("RQDA.vector","caseName")
   ans
@@ -610,21 +609,21 @@ casesCodedByOr <- function(cid){
 #' @export
 RQDAQuery <- function(sql){
 if (is_projOpen()) {
-dbGetQuery(.rqda$qdacon,sql)
+rqda_sel(sql)
 } else (cat("open a project first\n."))
 }
 
 #' @param sql sql-text
 rqda_sel <- function(sql){
   if (is_projOpen()) {
-    dbGetQuery(.rqda$qdacon,sql)
+    dbGetQuery(.rqda$qdacon, sql)
   } else (cat("open a project first\n."))
 }
 
 #' @param sql sql-text
 rqda_exe <- function(sql){
   if (is_projOpen()) {
-    dbGetQuery(.rqda$qdacon,sql)
+    dbExecute(.rqda$qdacon, sql)
   } else (cat("open a project first\n."))
 }
 

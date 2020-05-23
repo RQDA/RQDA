@@ -37,12 +37,12 @@ mergeCodes <- function(cid1,cid2){ ## cid1 and cid2 are two code IDs.
           del <- (del1 | del2) ## index of rows in Exist that should be deleted.
           if (any(del)){
             ## no rowid in Exist by sql of select, so add rowid to it (That is ToDat data frame).
-            To_memo <- dbGetQuery(.rqda$qdacon,sprintf("select memo from coding where rowid in (%s)",
+            To_memo <- rqda_sel(sprintf("select memo from coding where rowid in (%s)",
                                                     paste(Exist$rowid[del],collapse=",",sep="")))$memo
             memo <- paste(c(To_memo,From$memo),collapse="\n",sep="") ## merge the To_memo from From
-            dbExecute(.rqda$qdacon,sprintf("delete from coding where rowid in (%s)",
+            rqda_exe(sprintf("delete from coding where rowid in (%s)",
                                             paste(Exist$rowid[del],collapse=",",sep=""))) ## delete codings
-            tt <-   dbGetQuery(.rqda$qdacon,sprintf("select file from source where id='%i'", From$fid))[1,1]
+            tt <-   rqda_sel(sprintf("select file from source where id='%i'", From$fid))[1,1]
             Encoding(tt) <- "UTF-8"  ## fulltext of the file
             Sel <- c(min(Exist$Start[del]), max(Exist$End[del])) ## index to get the new coding
             ## what is Sel?
@@ -57,8 +57,8 @@ mergeCodes <- function(cid1,cid2){ ## cid1 and cid2 are two code IDs.
     }
   } ## end of helper function.
 
-  Coding1 <-  dbGetQuery(.rqda$qdacon,sprintf("select * from coding where cid=%i and status=1",cid1))
-  Coding2 <-  dbGetQuery(.rqda$qdacon,sprintf("select * from coding where cid=%i and status=1",cid2))
+  Coding1 <-  rqda_sel(sprintf("select * from coding where cid=%i and status=1",cid1))
+  Coding2 <-  rqda_sel(sprintf("select * from coding where cid=%i and status=1",cid2))
   if (any(c(nrow(Coding1),nrow(Coding2))==0)) stop("One code has empty coding.", domain = "R-RQDA")
   if (nrow(Coding1) >= nrow(Coding2)) {
     FromDat <- Coding2
@@ -79,8 +79,8 @@ mergeCodes <- function(cid1,cid2){ ## cid1 and cid2 are two code IDs.
     ## avoding the NOTE from docs checking.
     mergeHelperFUN(From=x,Exist=Exist)
   }
-  dbExecute(.rqda$qdacon,sprintf("update coding set status=0 where cid='%i'",FromCid))
-  dbExecute(.rqda$qdacon,sprintf("update freecode set status=0 where id='%i'",FromCid))
+  rqda_exe(sprintf("update coding set status=0 where cid='%i'",FromCid))
+  rqda_exe(sprintf("update freecode set status=0 where id='%i'",FromCid))
 }
 
 findConsecutive <- function(x) {

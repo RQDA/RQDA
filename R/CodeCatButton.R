@@ -2,7 +2,7 @@
 UpdateTableWidget <- function(Widget,FromdbTable,con=.rqda$qdacon,sortByTime=FALSE,decreasing=FALSE,...)
 {
   if (is_projOpen()){
-  items <- dbGetQuery(con, sprintf("select name,date from %s where status=1",FromdbTable))
+  items <- rqda_sel(sprintf("select name,date from %s where status=1",FromdbTable))
   if (nrow(items)!=0) {
     Encoding(items$name) <- "UTF-8"
     if (!sortByTime) {items <- sort(items$name,decreasing=decreasing)} else {
@@ -16,17 +16,17 @@ UpdateTableWidget <- function(Widget,FromdbTable,con=.rqda$qdacon,sortByTime=FAL
 AddTodbTable <- function(item,dbTable,Id="id",field="name",con=.rqda$qdacon,...) {
     ## now handles ' in item
     if (item != ""){
-        maxid <- dbGetQuery(con,sprintf("select max(%s) from %s",Id, dbTable))[[1]]
+        maxid <- rqda_sel(sprintf("select max(%s) from %s",Id, dbTable))[[1]]
         nextid <- ifelse(is.na(maxid),0+1, maxid+1)
         write <- FALSE
         if (nextid==1){
             write <- TRUE
         } else {
-            dup <- dbGetQuery(con,sprintf("select %s from %s where name='%s'",field, dbTable, enc(item)))
+            dup <- rqda_sel(sprintf("select %s from %s where name='%s'",field, dbTable, enc(item)))
             if (nrow(dup)==0) write <- TRUE
         }
         if (write ) {
-            dbExecute(con,sprintf("insert into %s (%s, %s, status,date,owner)
+            rqda_exe(sprintf("insert into %s (%s, %s, status,date,owner)
                                             values ('%s', %i, %i,%s, %s)",dbTable,field,Id,
                                    enc(item),nextid, 1, shQuote(date()),shQuote(.rqda$owner)))
         }
@@ -60,10 +60,10 @@ DeleteCodeCatButton <- function(label=gettext("Delete", domain = "R-RQDA"))
             Encoding(Selected) <- "UTF-8"
             catid <- rqda_sel(sprintf("select catid from codecat where status=1 and name='%s'",enc(Selected)))[,1]
             if (length(catid) ==1){
-                dbExecute(.rqda$qdacon,sprintf("update codecat set status=0 where name='%s'",enc(Selected)))
+                rqda_exe(sprintf("update codecat set status=0 where name='%s'",enc(Selected)))
                 ## set status in table freecode to 0
                 UpdateTableWidget(Widget=.rqda$.CodeCatWidget,FromdbTable="codecat")
-                tryCatch(dbExecute(.rqda$qdacon,sprintf("update treecode set status=0 where catid='%s'",catid)),error=function(e){})
+                tryCatch(rqda_exe(sprintf("update treecode set status=0 where catid='%s'",catid)),error=function(e){})
                 ## should delete all the related codelists
                 UpdateCodeofCatWidget() ## update the code of cat widget
             } else gmessage(gettext("The Category Name is not unique.", domain = "R-RQDA"),container=TRUE)
@@ -109,11 +109,11 @@ UpdateCodeofCatWidget <- function(con=.rqda$qdacon,Widget=.rqda$.CodeofCat,sort=
     if (length(SelectedCodeCat)!=0){
         ## if code cat is selected, then continue
         Encoding(SelectedCodeCat) <- "UTF-8"
-        catid <- dbGetQuery(.rqda$qdacon,sprintf("select catid from codecat where status=1 and name='%s'",
+        catid <- rqda_sel(sprintf("select catid from codecat where status=1 and name='%s'",
                                                  enc(SelectedCodeCat)))[,1]
-        Total_cid <- dbGetQuery(con,sprintf("select cid from treecode where status=1 and catid=%i",catid))
+        Total_cid <- rqda_sel(sprintf("select cid from treecode where status=1 and catid=%i",catid))
         if (nrow(Total_cid)!=0){
-        items <- dbGetQuery(con,"select name,id,date from freecode where status=1")
+        items <- rqda_sel("select name,id,date from freecode where status=1")
         if (nrow(items)!=0) {
             items <- items[items$id %in% Total_cid$cid,c("name","date")]
             items <- items$name[OrderByTime(items$date)] ## sort accoding to date
@@ -130,15 +130,15 @@ CodeCatAddToButton <- function(label=gettext("Add To", domain = "R-RQDA"),Widget
     ans <- gbutton(label,handler=function(h,...) {
         ## SelectedCodeCat and its id (table codecat): svalue()-> Name; sql->catid
         SelectedCodeCat <- svalue(.rqda$.CodeCatWidget)
-        catid <- dbGetQuery(.rqda$qdacon,sprintf("select catid from codecat where status=1 and name='%s'",enc(SelectedCodeCat)))[,1]
+        catid <- rqda_sel(sprintf("select catid from codecat where status=1 and name='%s'",enc(SelectedCodeCat)))[,1]
         ## CodeList and the id (table freecode): sql -> name and id where status=1
-        freecode <-  dbGetQuery(.rqda$qdacon,"select name, id from freecode where status=1")
+        freecode <-  rqda_sel("select name, id from freecode where status=1")
         if (nrow(freecode) == 0){
             gmessage(gettext("No free codes yet.", domain = "R-RQDA"),cont=.rqda$.CodeCatWidget)
         } else {
             Encoding(SelectedCodeCat) <- Encoding(freecode[['name']]) <- "UTF-8"
             ## Get CodeList already in the category (table treecode): sql -> cid where catid==catid
-            codeofcat <- dbGetQuery(.rqda$qdacon,sprintf("select cid from treecode where status=1 and catid=%i",catid))
+            codeofcat <- rqda_sel(sprintf("select cid from treecode where status=1 and catid=%i",catid))
             if (nrow(codeofcat)!=0){
                 ## compute those not in the category, then push them to select.list()
                 codeoutofcat <- subset(freecode,!(freecode$id %in% codeofcat$cid))
@@ -176,10 +176,10 @@ CodeCatDropFromButton <- function(label=gettext("Drop From", domain = "R-RQDA"),
                 ## set status==0 for those selected CodeList (table treecode)
                 SelectedCodeCat <- svalue(.rqda$.CodeCatWidget)
                 ## Encoding(SelectedCodeCat) <- "UTF-8"
-                catid <- dbGetQuery(.rqda$qdacon,sprintf("select catid from codecat where status=1 and name='%s'",enc(SelectedCodeCat)))[,1]
+                catid <- rqda_sel(sprintf("select catid from codecat where status=1 and name='%s'",enc(SelectedCodeCat)))[,1]
                 for (i in CodeOfCat){
-                    cid <- dbGetQuery(.rqda$qdacon,sprintf("select id from freecode where status=1 and name='%s'",enc(i)))[,1]
-                    dbExecute(.rqda$qdacon,sprintf("update treecode set status=0 where catid=%i and cid=%i",catid,cid))
+                    cid <- rqda_sel(sprintf("select id from freecode where status=1 and name='%s'",enc(i)))[,1]
+                    rqda_exe(sprintf("update treecode set status=0 where catid=%i and cid=%i",catid,cid))
                 }
                 ## update .CodeofCat Widget
                 UpdateCodeofCatWidget()
@@ -275,7 +275,7 @@ GetCodeCatWidgetMenu <- function()
         ## end of add a new code to free code.
         SelectedCodeCat <- svalue(.rqda$.CodeCatWidget)
         if (length(SelectedCodeCat)==0) {gmessage(gettext("Select a code category first.", domain = "R-RQDA"),container=TRUE)} else{
-          catid <- dbGetQuery(.rqda$qdacon,sprintf("select catid from codecat where status=1 and name='%s'",SelectedCodeCat))[,1]
+          catid <- rqda_sel(sprintf("select catid from codecat where status=1 and name='%s'",SelectedCodeCat))[,1]
           ## CodeList and the id (table freecode): sql -> name and id where status==1
           Dat <- data.frame(cid=cid,catid=catid,date=date(),dateM=date(),memo="",
                             status=1, owner=.rqda$owner)

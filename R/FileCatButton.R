@@ -21,12 +21,12 @@ DeleteFileCatButton <- function(label=gettext("Delete", domain = "R-RQDA")){
     if (isTRUE(del)){
       Selected <- svalue(.rqda$.FileCatWidget)
       Encoding(Selected) <- "UTF-8"
-      catid <- dbGetQuery(.rqda$qdacon,sprintf("select catid from filecat where status=1 and name='%s'",enc(Selected)))[,1]
+      catid <- rqda_sel(sprintf("select catid from filecat where status=1 and name='%s'",enc(Selected)))[,1]
       if (length(catid) ==1){
-        dbExecute(.rqda$qdacon,sprintf("update filecat set status=0 where name='%s'",enc(Selected)))
+        rqda_exe(sprintf("update filecat set status=0 where name='%s'",enc(Selected)))
         ## set status in table freecode to 0
         UpdateTableWidget(Widget=.rqda$.FileCatWidget,FromdbTable="filecat")
-        tryCatch(dbExecute(.rqda$qdacon,sprintf("update treefile set status=0 where catid='%s'",catid)),error=function(e){})
+        tryCatch(rqda_exe(sprintf("update treefile set status=0 where catid='%s'",catid)),error=function(e){})
         ## should delete all the related codelists
         UpdateFileofCatWidget() ## update files of file cat widget
       } else gmessage(gettext("The Category Name is not unique.", domain = "R-RQDA"),con=TRUE)
@@ -66,10 +66,10 @@ UpdateFileofCatWidget <- function(con=.rqda$qdacon,Widget=.rqda$.FileofCat,sortB
   SelectedFileCat <- svalue(.rqda$.FileCatWidget)
   if (length(SelectedFileCat)!=0){
     Encoding(SelectedFileCat) <- "UTF-8"
-    catid <- dbGetQuery(.rqda$qdacon,sprintf("select catid from filecat where status=1 and name='%s'",enc(SelectedFileCat)))[,1]
-    Total_fid <- dbGetQuery(con,sprintf("select fid from treefile where status=1 and catid=%i",catid))
+    catid <- rqda_sel(sprintf("select catid from filecat where status=1 and name='%s'",enc(SelectedFileCat)))[,1]
+    Total_fid <- rqda_sel(sprintf("select fid from treefile where status=1 and catid=%i",catid))
     if (nrow(Total_fid)!=0){
-      items <- dbGetQuery(con,"select name,id,date from source where status=1")
+      items <- rqda_sel("select name,id,date from source where status=1")
       if (nrow(items)!=0) {
         items <- items[items$id %in% Total_fid$fid,c("name","date")]
         items <- items$name[OrderByTime(items$date)] ## sort by date
@@ -85,7 +85,7 @@ UpdateFileofCatWidget2 <- function(con=.rqda$qdacon,Widget=.rqda$.FileofCat,sort
 {
   Total_fid <- getFileIdsSets("filecategory","intersect")
   if (length(Total_fid)!=0){
-    items <- dbGetQuery(con,"select name,id,date from source where status=1")
+    items <- rqda_sel("select name,id,date from source where status=1")
     if (nrow(items)!=0) {
       items <- items[items$id %in% Total_fid,c("name","date")]
       items <- items$name[OrderByTime(items$date)] ## sort by date
@@ -114,11 +114,11 @@ FileCatAddToButton <- function(label=gettext("AddTo", domain = "R-RQDA"),Widget=
 {
   ans <- gbutton(label,handler=function(h,...) {
     SelectedFileCat <- svalue(.rqda$.FileCatWidget)
-    catid <- dbGetQuery(.rqda$qdacon,sprintf("select catid from filecat where status=1 and name='%s'",enc(SelectedFileCat)))[,1]
-    freefile <-  dbGetQuery(.rqda$qdacon,"select name, id from source where status=1")
+    catid <- rqda_sel(sprintf("select catid from filecat where status=1 and name='%s'",enc(SelectedFileCat)))[,1]
+    freefile <-  rqda_sel("select name, id from source where status=1")
     if (nrow(freefile) == 0){gmessage(gettext("No files Yet.", domain = "R-RQDA"),cont=.rqda$.FileCatWidget)} else {
       Encoding(SelectedFileCat) <- Encoding(freefile[['name']]) <- "UTF-8"
-      fileofcat <- dbGetQuery(.rqda$qdacon,sprintf("select fid from treefile where status=1 and catid=%i",catid))
+      fileofcat <- rqda_sel(sprintf("select fid from treefile where status=1 and catid=%i",catid))
       if (nrow(fileofcat)!=0){
         fileoutofcat <- subset(freefile,!(freefile$id %in% fileofcat$fid))
       } else  fileoutofcat <- freefile
@@ -148,10 +148,10 @@ FileCatDropFromButton <- function(label=gettext("DropFrom", domain = "R-RQDA"),W
     if (isTRUE(del)){
       SelectedFileCat <- svalue(.rqda$.FileCatWidget)
       Encoding(SelectedFileCat) <- Encoding(FileOfCat)<- "UTF-8"
-      catid <- dbGetQuery(.rqda$qdacon,sprintf("select catid from filecat where status=1 and name='%s'",enc(SelectedFileCat)))[,1]
+      catid <- rqda_sel(sprintf("select catid from filecat where status=1 and name='%s'",enc(SelectedFileCat)))[,1]
       for (i in FileOfCat){
-        fid <- dbGetQuery(.rqda$qdacon,sprintf("select id from source where status=1 and name='%s'",enc(i)))[,1]
-        dbExecute(.rqda$qdacon,sprintf("update treefile set status=0 where catid=%i and fid=%i",catid,fid))
+        fid <- rqda_sel(sprintf("select id from source where status=1 and name='%s'",enc(i)))[,1]
+        rqda_exe(sprintf("update treefile set status=0 where catid=%i and fid=%i",catid,fid))
       }
       ## update .CodeofCat Widget
       ## .rqda$.FileofCat[] <- setdiff(.rqda$.FileofCat[],FileOfCat)
@@ -173,12 +173,12 @@ FileCatDropFromButton <- function(label=gettext("DropFrom", domain = "R-RQDA"),W
 ##   ## filenames -> fid -> selfirst=0; selend=nchar(filesource)
 ##   filename <- svalue(.rqda$.fnames_rqda)
 ##   Encoding(filename) <- "unknown"
-##   query <- dbGetQuery(.rqda$qdacon,sprintf("select id, file from source where name in(%s) and status=1",paste("'",filename,"'",sep="",collapse=","))) ## multiple fid
+##   query <- rqda_sel(sprintf("select id, file from source where name in(%s) and status=1",paste("'",filename,"'",sep="",collapse=","))) ## multiple fid
 ##   fid <- query$id
 ##   Encoding(query$file) <- "UTF-8"
 
 ##   ## select a F-cat name -> F-cat id
-##   Fcat <- dbGetQuery(.rqda$qdacon,"select catid, name from filecat where status=1")
+##   Fcat <- rqda_sel("select catid, name from filecat where status=1")
 ##   if (nrow(Fcat)==0){gmessage(gettext("Add File Category first.", domain = "R-RQDA"),con=TRUE)} else{
 ##     Encoding(Fcat$name) <- "UTF-8"
 ##     ##ans <- select.list(Fcat$name,multiple=FALSE)
@@ -187,7 +187,7 @@ FileCatDropFromButton <- function(label=gettext("DropFrom", domain = "R-RQDA"),W
 ##     if (Selected!=""){ ## must use Selected to represent the value of selected items. see RunOnSelected() for info.
 ##       Selected <- iconv(Selected,to="UTF-8")
 ##       Fcatid <- Fcat$catid[Fcat$name %in% Selected]
-##       exist <- dbGetQuery(.rqda$qdacon,sprintf("select fid from treefile where status=1 and fid in (%s) and catid=%i",paste("'",fid,"'",sep="",collapse=","),Fcatid))
+##       exist <- rqda_sel(sprintf("select fid from treefile where status=1 and fid in (%s) and catid=%i",paste("'",fid,"'",sep="",collapse=","),Fcatid))
 ##     if (nrow(exist)!=length(fid)){
 ##     ## write only when the selected file associated with specific f-cat is not there
 ##       DAT <- data.frame(fid=fid[!fid %in% exist$fid], catid=Fcatid, date=date(),dateM=date(),memo='',status=1)
@@ -216,10 +216,10 @@ GetFileCatWidgetMenu <- function()
     if (is_projOpen(envir =.rqda,conName="qdacon")) {
       fid <- getFileIds("file")
       if (length(fid)>0){
-        dbExecute(.rqda$qdacon, sprintf("update source set status=0 where id in (%s)",paste(shQuote(fid),collapse=",")))
-        dbExecute(.rqda$qdacon, sprintf("update coding set status=0 where fid in (%s)",paste(shQuote(fid),collapse=",")))
-        dbExecute(.rqda$qdacon, sprintf("update caselinkage set status=0 where fid in (%s)",paste(shQuote(fid),collapse=",")))
-        dbExecute(.rqda$qdacon, sprintf("update treefile set status=0 where fid in (%s)",paste(shQuote(fid),collapse=",")))
+        rqda_exe( sprintf("update source set status=0 where id in (%s)",paste(shQuote(fid),collapse=",")))
+        rqda_exe( sprintf("update coding set status=0 where fid in (%s)",paste(shQuote(fid),collapse=",")))
+        rqda_exe( sprintf("update caselinkage set status=0 where fid in (%s)",paste(shQuote(fid),collapse=",")))
+        rqda_exe( sprintf("update treefile set status=0 where fid in (%s)",paste(shQuote(fid),collapse=",")))
         UpdateFileofCatWidget()
       }
     }
@@ -256,12 +256,12 @@ GetFileofCatWidgetMenu <- function()
   FileofCatWidgetMenu[[3]] <- gaction(gettext("Move To File Category ...", domain = "R-RQDA"), handler =function(h, ...) {
     if (is_projOpen(envir = .rqda, conName = "qdacon", message = FALSE)) {
       fcatname <- svalue(.rqda$.FileCatWidget) ## should select one only
-      fcatid <- dbGetQuery(.rqda$qdacon,sprintf("select catid from filecat where name='%s'",
+      fcatid <- rqda_sel(sprintf("select catid from filecat where name='%s'",
                                                 enc(fcatname)))$catid
       fid <- getFileIds("file","select")
       ans <- AddToFileCategory(Widget=.rqda$.FileofCat,updateWidget=FALSE)
       if (isTRUE(ans)) {
-        dbExecute(.rqda$qdacon,sprintf("update treefile set status=0 where fid in (%s) and catid='%s'",
+        rqda_exe(sprintf("update treefile set status=0 where fid in (%s) and catid='%s'",
                                         paste(shQuote(fid),collapse=","),
                                         fcatid))
         .rqda$.FileofCat[] <- setdiff(.rqda$.FileofCat[],svalue(.rqda$.FileofCat))
@@ -303,11 +303,11 @@ GetFileofCatWidgetMenu <- function()
       Encoding(SelectedFile) <- "UTF-8"
       for (i in SelectedFile){
         i <- enc(i)
-        fid <- dbGetQuery(.rqda$qdacon, sprintf("select id from source where name='%s'",i))$id
-        dbExecute(.rqda$qdacon, sprintf("update source set status=0 where name='%s'",i))
-        dbExecute(.rqda$qdacon, sprintf("update caselinkage set status=0 where fid=%i",fid))
-        dbExecute(.rqda$qdacon, sprintf("update treefile set status=0 where fid=%i",fid))
-        dbExecute(.rqda$qdacon, sprintf("update coding set status=0 where fid=%i",fid))
+        fid <- rqda_sel( sprintf("select id from source where name='%s'",i))$id
+        rqda_exe( sprintf("update source set status=0 where name='%s'",i))
+        rqda_exe( sprintf("update caselinkage set status=0 where fid=%i",fid))
+        rqda_exe( sprintf("update treefile set status=0 where fid=%i",fid))
+        rqda_exe( sprintf("update coding set status=0 where fid=%i",fid))
       }
       ## UpdateFileofCatWidget()
       ## .rqda$.FileofCat[] <- setdiff(.rqda$.FileofCat[],SelectedFile)

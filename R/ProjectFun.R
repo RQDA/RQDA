@@ -44,114 +44,98 @@ new_proj <- function(path, conName="qdacon",assignenv=.rqda,...){
       
       if (dbExistsTable(con,"source")) dbRemoveTable(con, "source")
       ## interview record
-      dbExecute(
-        con,
+      rqda_exe(
         paste("create table source (name text, id integer, file text,",
               "memo text, owner text, date text, dateM text, status integer)")
       )
       ## dateM means modified date
       if (dbExistsTable(con,"freecode")) dbRemoveTable(con, "freecode")
       ## list of free codes
-      dbExecute(
-        con,
+      rqda_exe(
         paste("create table freecode (name text, memo text, owner text,",
               "date text, dateM text, id integer, status integer, color text)")
       )
       if (dbExistsTable(con,"treecode")) dbRemoveTable(con, "treecode")
       ## tree-like strcuture of code (relationship between code and
       ## code-category[codecat])
-      dbExecute(
-        con,
+      rqda_exe(
         paste("create table treecode  (cid integer, catid integer, date text,", 
               "dateM text, memo text, status integer, owner text)")
       )
       if (dbExistsTable(con,"treefile")) dbRemoveTable(con, "treefile")
       ## tree-like structure of interview record  (relationship between file
       ## and file category [filecat])
-      dbExecute(
-        con,
+      rqda_exe(
         paste("create table treefile  (fid integer, catid integer, date text,",
               "dateM text, memo text, status integer,owner text)")
       )
       if (dbExistsTable(con,"filecat")) dbRemoveTable(con, "filecat")
       ## file category
-      dbExecute(
-        con,
+      rqda_exe(
         paste("create table filecat  (name text,fid integer, catid integer,",
               "owner text, date text, dateM text,memo text, status integer)")
       )
       if (dbExistsTable(con,"codecat")) dbRemoveTable(con, "codecat")
       ## code category
-      dbExecute(
-        con,
+      rqda_exe(
         paste("create table codecat  (name text, cid integer, catid integer,", 
               "owner text, date text, dateM text,memo text, status integer)")
       )
       if (dbExistsTable(con,"coding")) dbRemoveTable(con, "coding")
       ## coding: code and its coded text chunks
-      dbExecute(
-        con,
+      rqda_exe(
         paste("create table coding  (cid integer, fid integer,seltext text,",
               "selfirst real, selend real, status integer, owner text,",
               "date text, memo text)")
       )
       if (dbExistsTable(con,"coding2")) dbRemoveTable(con, "coding2")
       ## second coding
-      dbExecute(
-        con,
+      rqda_exe(
         paste("create table coding2  (cid integer, fid integer,seltext text,",
               "selfirst real, selend real, status integer, owner text,",
               "date text, memo text)")
       )
       if (dbExistsTable(con,"project")) dbRemoveTable(con, "project")
-      ## dbExecute(con,"create table project  
+      ## rqda_exe("create table project  
       ## (encoding text, databaseversion text, date text,dateM text,
       ## memo text,BOM integer)")
-      dbExecute(
-        con,
+      rqda_exe(
         paste("create table project  (databaseversion text, date text,",
               "dateM text, memo text,about text)")
       )
-      dbExecute(
-        con,
+      rqda_exe(
         sprintf(paste("insert into project (databaseversion,date,about,memo)",
                       "values ('0.2.2','%s', 'Database created by RQDA",
                       "(http://rqda.r-forge.r-project.org/)','')"),date()))
       if (dbExistsTable(con,"cases")) dbRemoveTable(con, "cases")
-      dbExecute(
-        con,
+      rqda_exe(
         paste("create table cases  (name text, memo text, owner text,",
               "date text,dateM text, id integer, status integer)")
       )
       if (dbExistsTable(con,"caselinkage")) dbRemoveTable(con, "caselinkage")
-      dbExecute(
-        con,
+      rqda_exe(
         paste("create table caselinkage  (caseid integer, fid integer,",
               "selfirst real, selend real, status integer, owner text,",
               "date text, memo text)")
       )
       
       if (dbExistsTable(con,"attributes")) dbRemoveTable(con, "attributes")
-      dbExecute(
-        .rqda$qdacon,
+      rqda_exe(
         paste("create table attributes (name text, status integer, date text,",
               "dateM text, owner text,memo text)")
       )
       if (dbExistsTable(con,"caseAttr")) dbRemoveTable(con, "caseAttr")
-      dbExecute(
-        .rqda$qdacon,
+      rqda_exe(
         paste("create table caseAttr (variable text, value text,",
               "caseID integer, date text, dateM text, owner text)")
       )
       if (dbExistsTable(con,"fileAttr")) dbRemoveTable(con, "fileAttr")
-      dbExecute(
-        .rqda$qdacon,
+      rqda_exe(
         paste("create table fileAttr (variable text, value text,",
               "fileID integer, date text, dateM text, owner text)")
       )
       if (dbExistsTable(con,"journal")) dbRemoveTable(con, "journal")
-      dbExecute(
-        .rqda$qdacon,
+      rqda_exe(
         paste("create table journal (name text, journal text, date text,",
               "dateM text, owner text,status integer)")
       )
@@ -179,41 +163,33 @@ new_proj <- function(path, conName="qdacon",assignenv=.rqda,...){
 UpgradeTables <- function(){
   Fields <- dbListFields(.rqda$qdacon,"project")
   if (!"databaseversion" %in% Fields) {
-    dbExecute(
-      .rqda$qdacon,"alter table project add column databaseversion text")
-    dbExecute(
-      .rqda$qdacon,"update project set databaseversion='0.1.5'")
+    rqda_exe("alter table project add column databaseversion text")
+    rqda_exe("update project set databaseversion='0.1.5'")
   }
-  currentVersion <- dbGetQuery(
-    .rqda$qdacon,"select databaseversion from project")[[1]]
+  currentVersion <- rqda_sel("select databaseversion from project")[[1]]
   if (currentVersion=="0.1.5") {
     ##from="0.1.5"
-    dbExecute(
-      .rqda$qdacon,
+    rqda_exe(
       paste("create table caseAttr (variable text, value text, caseID integer,",
             "date text, dateM text, owner text)"))
     ## caseAttr table
-    dbExecute(
-      .rqda$qdacon,
+    rqda_exe(
       paste("create table fileAttr (variable text, value text, fileID integer,",
             "date text, dateM text, owner text)"))
     ## fileAttr table
-    dbExecute(
-      .rqda$qdacon,
+    rqda_exe(
       paste("create table attributes (name text, status integer, date text,",
             "dateM text, owner text, memo text)"))
     ## attributes table
-    dbExecute(
-      .rqda$qdacon,
+    rqda_exe(
       paste("create table journal (name text, journal text, date text,",
             "dateM text, owner text,status integer)"))
     ## journal table
     rqda_exe("alter table project add column about text")
-    dbExecute(
-      .rqda$qdacon,
+    rqda_exe(
       paste("update project set about='Database created by RQDA",
             "(http://rqda.r-forge.r-project.org/)'"))
-    dbExecute(.rqda$qdacon,"update project set databaseversion='0.1.9'")
+    rqda_exe("update project set databaseversion='0.1.9'")
     ## reset the version.
     ## added for version 0.1.8
     ## (no version 0.1.7 to make the version number consistent with RQDA
@@ -239,11 +215,10 @@ UpgradeTables <- function(){
   }
   if (currentVersion=="0.1.6"){
     rqda_exe("alter table project add column about text")
-    dbExecute(
-      .rqda$qdacon,
+    rqda_exe(
       paste("update project set about='Database created by RQDA",
             "(http://rqda.r-forge.r-project.org/)'"))
-    dbExecute(.rqda$qdacon,"update project set databaseversion='0.1.9'")
+    rqda_exe("update project set databaseversion='0.1.9'")
     rqda_exe("alter table project add column imageDir text")
     try(rqda_exe("alter table attributes add column class text"),TRUE)
     rqda_exe("alter table caseAttr add column status integer")
@@ -264,24 +239,23 @@ UpgradeTables <- function(){
             "dateM text, owner text,status integer)"))
   }
   if (currentVersion=="0.1.8"){
-    dbExecute(.rqda$qdacon,"update project set databaseversion='0.1.9'")
+    rqda_exe("update project set databaseversion='0.1.9'")
     rqda_exe("alter table freecode add column color text")
   }
   if (currentVersion<"0.2.0"){
     if (dbExistsTable(.rqda$qdacon,"coding2"))
       dbRemoveTable(.rqda$qdacon, "coding2")
     
-    dbExecute(
-      .rqda$qdacon,
+    rqda_exe(
       paste("create table coding2  (cid integer, fid integer,seltext text,",
             "selfirst real, selend real, status integer, owner text,",
             "date text, memo text)"))
-    dbExecute(.rqda$qdacon,"update project set databaseversion='0.2.0'")
+    rqda_exe("update project set databaseversion='0.2.0'")
   }
   if (currentVersion<"0.2.2"){
     rqda_exe("alter table treecode add column owner text")
     rqda_exe("alter table treefile add column owner text")
-    dbExecute(.rqda$qdacon,"update project set databaseversion='0.2.2'")
+    rqda_exe("update project set databaseversion='0.2.2'")
   }
 }
 
@@ -394,8 +368,7 @@ ProjectMemoWidget <- function(){
         newcontent <- enc(newcontent,encoding="UTF-8")
         
         ## only one row is needed
-        dbExecute(
-          .rqda$qdacon,
+        rqda_exe(
           sprintf("update project set memo='%s' where rowid=1", 
                   newcontent)
           ## have to quote the character in the sql expression
@@ -414,10 +387,10 @@ ProjectMemoWidget <- function(){
     font <- pangoFontDescriptionFromString(.rqda$font)
     gtkWidgetModifyFont(tmp$widget,font)
     assign(".projmemocontent",tmp,envir=.rqda)
-    prvcontent <- dbExecute(.rqda$qdacon, "select memo from project")[1,1]
+    prvcontent <- rqda_sel("select memo from project")[1,1]
     ## [1,1]turn data.frame to 1-length character. Existing content of memo
     if (length(prvcontent)==0) {
-      dbExecute(.rqda$qdacon,"replace into project (memo) values('')")
+      rqda_exe("replace into project (memo) values('')")
       prvcontent <- ""
       ## if there is no record in project table, it fails to save memo,
       ## so insert sth into it
@@ -434,8 +407,7 @@ ProjectMemoWidget <- function(){
     enabled(proj_memoB) <- FALSE
     addHandlerUnrealize(get(".projmemo",envir=.rqda),handler <- function(h,...){
       withinWidget <- svalue(get(".projmemocontent",envir=.rqda))
-      InRQDA <- dbGetQuery(
-        .rqda$qdacon, "select memo from project where rowid=1")[1, 1]
+      InRQDA <- rqda_sel("select memo from project where rowid=1")[1, 1]
       if (isTRUE(all.equal(withinWidget,InRQDA))) {
         return(FALSE) } else {
           val <- gconfirm(

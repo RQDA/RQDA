@@ -2,8 +2,8 @@ CaseNamesUpdate <- function(CaseNamesWidget=.rqda$.CasesNamesWidget,
                             sortByTime=FALSE,decreasing=FALSE,...)
 {
   if (is_projOpen()){
-    ## CaseName <- dbGetQuery(.rqda$qdacon, "select name, id,date from cases where status=1 order by lower(name)")
-    CaseName <- dbGetQuery(.rqda$qdacon, "select name, id,date from cases where status=1")
+    ## CaseName <- rqda_sel( "select name, id,date from cases where status=1 order by lower(name)")
+    CaseName <- rqda_sel( "select name, id,date from cases where status=1")
     if (nrow(CaseName)==0) {
       case <- NULL
     } else {
@@ -22,17 +22,17 @@ CaseNamesUpdate <- function(CaseNamesWidget=.rqda$.CasesNamesWidget,
 AddCase <- function(name,conName="qdacon",assignenv=.rqda,...) {
   if (name != ""){
     con <- get(conName,assignenv)
-    maxid <- dbGetQuery(con,"select max(id) from cases")[[1]]
+    maxid <- rqda_sel("select max(id) from cases")[[1]]
     nextid <- ifelse(is.na(maxid),0+1, maxid+1)
     write <- FALSE
     if (nextid==1){
       write <- TRUE
     } else {
-      dup <- dbGetQuery(con,sprintf("select name from cases where name='%s'",enc(name)))
+      dup <- rqda_sel(sprintf("select name from cases where name='%s'",enc(name)))
       if (nrow(dup)==0) write <- TRUE
     }
     if (write ) {
-      dbExecute(con,sprintf("insert into cases (name, id, status,date,owner)
+      rqda_exe(sprintf("insert into cases (name, id, status,date,owner)
                                             values ('%s', %i, %i,%s, %s)",
                              enc(name),nextid, 1, shQuote(date()),shQuote(.rqda$owner)))
     }
@@ -44,7 +44,7 @@ AddFileToCaselinkage <- function(Widget=.rqda$.fnames_rqda){
   ## filenames -> fid -> selfirst=0; selend=nchar(filesource)
   filename <- svalue(Widget)
   ## Encoding(filename) <- "unknown"
-  query <- dbGetQuery(.rqda$qdacon,sprintf("select id, file from source where name in (%s) and status=1",
+  query <- rqda_sel(sprintf("select id, file from source where name in (%s) and status=1",
                                            paste("'",enc(filename),"'",sep="",collapse=",")
                                            ))
   fid <- query$id
@@ -52,7 +52,7 @@ AddFileToCaselinkage <- function(Widget=.rqda$.fnames_rqda){
   selend <- nchar(query$file)
 
   ## select a case name -> caseid
-  cases <- dbGetQuery(.rqda$qdacon,"select id, name from cases where status=1")
+  cases <- rqda_sel("select id, name from cases where status=1")
   if (nrow(cases)!=0){
       Encoding(cases$name) <- "UTF-8"
       Selected <- gselect.list(cases$name,multiple=TRUE,x=getOption("widgetCoordinate")[1])
@@ -74,7 +74,7 @@ AddFileToCaselinkage <- function(Widget=.rqda$.fnames_rqda){
       ##     ##Selected <- iconv(Selected,to="UTF-8")
       ##     Encoding(Selected) <- "UTF-8"
       ##     caseid <- cases$id[cases$name %in% Selected]
-      ##     exist <- dbGetQuery(.rqda$qdacon,sprintf("select fid from caselinkage where status=1 and fid in (%s) and caseid=%i",paste("'",fid,"'",sep="",collapse=","),caseid))
+      ##     exist <- rqda_sel(sprintf("select fid from caselinkage where status=1 and fid in (%s) and caseid=%i",paste("'",fid,"'",sep="",collapse=","),caseid))
       ##     if (nrow(exist)!=length(fid)){
       ##       ## write only when the selected file associated with specific case is not in the caselinkage table
       ##       DAT <- data.frame(caseid=caseid, fid=fid[!fid %in% exist$fid], selfirst=0, selend=selend[!fid %in% exist$fid], status=1,owner=.rqda$owner,data=date(),memo='')
@@ -93,11 +93,11 @@ AddFileToCaselinkage <- function(Widget=.rqda$.fnames_rqda){
 UpdateFileofCaseWidget <- function(con=.rqda$qdacon,Widget=.rqda$.FileofCase,sortByTime=FALSE,...){
   Selected <- svalue(.rqda$.CasesNamesWidget)
   if (length(Selected)!=0){
-    caseid <- dbGetQuery(.rqda$qdacon,sprintf("select id from cases where status=1 and name='%s'",
+    caseid <- rqda_sel(sprintf("select id from cases where status=1 and name='%s'",
                                               enc(Selected)))[,1]
-    Total_fid <- dbGetQuery(con,sprintf("select fid from caselinkage where status=1 and caseid=%i",caseid))
+    Total_fid <- rqda_sel(sprintf("select fid from caselinkage where status=1 and caseid=%i",caseid))
     if (nrow(Total_fid)!=0){
-      items <- dbGetQuery(con,"select name,id,date from source where status=1")
+      items <- rqda_sel("select name,id,date from source where status=1")
       if (nrow(items)!=0) {
         if (sortByTime){
           items <- items[items$id %in% Total_fid$fid,c("name","date")]

@@ -4,7 +4,7 @@ retrieval_by_code <- function (Fid = NULL, order = c("fname", "ftime", "ctime"),
     if (length(currentCode2) != 0) {
         currentCode <- enc(currentCode2, "UTF-8")
         Encoding(currentCode2) <- "UTF-8"
-        currentCid <- dbGetQuery(.rqda$qdacon, sprintf("select id from freecode where name= '%s' ", 
+        currentCid <- rqda_sel( sprintf("select id from freecode where name= '%s' ", 
             currentCode))[1, 1]
         order <- match.arg(order)
         order <- switch(order, fname = "order by source.name", 
@@ -58,7 +58,7 @@ retrieval_by_code <- function (Fid = NULL, order = c("fname", "ftime", "ctime"),
             .retreivalgui$widget$SetPixelsBelowLines(5)
             .retreivalgui$widget$SetPixelsInsideWrap(5)
             for (i in fid) {
-                FileName <- dbGetQuery(.rqda$qdacon, sprintf("select name from source where status=1 and id=%i", 
+                FileName <- rqda_sel( sprintf("select name from source where status=1 and id=%i", 
                   i))[["name"]]
                 if (!is.null(FileName)) {
                   Encoding(FileName) <- "UTF-8"

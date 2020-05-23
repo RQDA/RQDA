@@ -3,7 +3,7 @@ AddNewFileFunOfCase <- function ()
     updateCaseLink <- function(fid){
         SelectedCase <- svalue(.rqda$.CasesNamesWidget)
         SelectedCase <- enc(SelectedCase,"UTF-8")
-        caseid <- dbGetQuery(.rqda$qdacon,sprintf("select id from cases where status=1 and name='%s'",SelectedCase))$id
+        caseid <- rqda_sel(sprintf("select id from cases where status=1 and name='%s'",SelectedCase))$id
         content <- rqda_sel(sprintf("select file from source where id=%s", fid))$file
         Encoding(content) <- "UTF-8"
         selend <- nchar(content)
@@ -22,14 +22,14 @@ AddNewFileFunOfCase <- function ()
         Ftitle <- ginput(gettext("Enter the title", domain = "R-RQDA"), icon = "info")
         if (!is.na(Ftitle)) {
             Ftitle <- enc(Ftitle, "UTF-8")
-            if (nrow(dbGetQuery(.rqda$qdacon, sprintf("select name from source where name='%s'", Ftitle))) != 0) {
+            if (nrow(rqda_sel( sprintf("select name from source where name='%s'", Ftitle))) != 0) {
                 Ftitle <- paste("New", Ftitle)
             }
             content <- svalue(textW)
             content <- enc(content, encoding = "UTF-8")
-            maxid <- dbGetQuery(.rqda$qdacon, "select max(id) from source")[[1]]
+            maxid <- rqda_sel( "select max(id) from source")[[1]]
             nextid <- ifelse(is.na(maxid), 0 + 1, maxid + 1)
-            ans <- dbExecute(.rqda$qdacon, sprintf("insert into source (name, file, id, status,date,owner ) values ('%s', '%s',%i, %i, '%s', '%s')",
+            ans <- rqda_exe( sprintf("insert into source (name, file, id, status,date,owner ) values ('%s', '%s',%i, %i, '%s', '%s')",
                                                     Ftitle, content, nextid, 1, date(), .rqda$owner))
             if (is.null(ans)) {
                 svalue(textW) <- ""

@@ -40,20 +40,20 @@ DeleteFileButton <- function(label = rqda_txt("Delete"), container, ...) {
       ## con <- .rqda$qdacon
       for (i in SelectedFile) {
         i <- enc(i)
-        fid <- dbGetQuery(.rqda$qdacon,
+        fid <- rqda_sel(
                           sprintf("select id from source where name = '%s'",
                                   i))$id
-        dbExecute(.rqda$qdacon,
+        rqda_exe(
                    sprintf("update source set status = 0 where name = '%s'",
                            i))
         ## set the status of the selected file to 0
-        dbExecute(.rqda$qdacon,
+        rqda_exe(
                    sprintf("update caselinkage set status = 0 where fid = %i",
                            fid))
-        dbExecute(.rqda$qdacon,
+        rqda_exe(
                    sprintf("update treefile set status = 0 where fid = %i",
                            fid))
-        dbExecute(.rqda$qdacon,
+        rqda_exe(
                    sprintf("update coding set status = 0 where fid = %i",
                            fid))
         ## set the status of the related case/f-cat to 0
@@ -177,7 +177,7 @@ AddNewFileFun <- function() {
       if (!is.na(Ftitle)) {
         Ftitle <- enc(Ftitle, "UTF-8")
         if (nrow(
-          dbGetQuery(.rqda$qdacon,
+          rqda_sel(
                      sprintf("select name from source where name = '%s'",
                              Ftitle))) != 0) {
           Ftitle <- paste("New", Ftitle)
@@ -185,11 +185,10 @@ AddNewFileFun <- function() {
         content <- svalue(textW)
         content <- enc(content, encoding = "UTF-8")
         ## the current one
-        maxid <- dbGetQuery(.rqda$qdacon, "select max(id) from source")[[1]]
+        maxid <- rqda_sel( "select max(id) from source")[[1]]
         ## the new one/ for the new file
         nextid <- ifelse(is.na(maxid), 0+1, maxid+1)
-        ans <- dbExecute(
-          .rqda$qdacon,
+        ans <- rqda_exe(
           sprintf(
             paste("insert into source (name, file, id, status, date, owner )",
                   "values ('%s', '%s', %i, %i, '%s', '%s')"),
@@ -481,7 +480,7 @@ GetFileNamesWidgetMenu <- function()
     handler = function(h, ...) {
       if (is_projOpen(envir = .rqda, conName = "qdacon", message = FALSE)) {
         fileid <-
-          dbGetQuery(.rqda$qdacon,
+          rqda_sel(
                      "select id from source where memo is not null")
         if (nrow(fileid) != 0) {
           fileid <- fileid[[1]]
@@ -496,7 +495,7 @@ GetFileNamesWidgetMenu <- function()
     rqda_txt("Show Files Without Memo"),
     handler = function(h, ...) {
       if (is_projOpen(envir = .rqda, conName = "qdacon", message = FALSE)) {
-        fileid <- dbGetQuery(.rqda$qdacon,
+        fileid <- rqda_sel(
                              "select id from source where memo is null")
         if (nrow(fileid) != 0) {
           fileid <- fileid[[1]]

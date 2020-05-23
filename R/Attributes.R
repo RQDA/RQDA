@@ -119,7 +119,7 @@ saveFUN4CaseAttr <- function(button,data){
     if (any(mod_idx)) {
     ## alter the table for the modified variable
     vars <- ans[mod_idx,]
-    apply(vars,1,FUN=function(x) dbExecute(.rqda$qdacon,sprintf("update caseAttr set value = '%s' where variable = '%s' and caseID ='%s' and status =1",x[2],x[1],MoreArgs$caseId)))
+    apply(vars,1,FUN=function(x) rqda_exe(sprintf("update caseAttr set value = '%s' where variable = '%s' and caseID ='%s' and status =1",x[2],x[1],MoreArgs$caseId)))
     }
     if (any(new_idx)){
     ## add the new variable to table
@@ -131,12 +131,12 @@ saveFUN4CaseAttr <- function(button,data){
 }
 
 CaseAttrFun <- function(caseId,title=NULL,attrs=svalue(.rqda$.AttrNamesWidget)){
-  if (length(attrs)==0) attrs <-  dbGetQuery(.rqda$qdacon,"select name from attributes where status=1")$name
-  if (is.null(attrs)) {    
+  if (length(attrs)==0) attrs <-  rqda_sel("select name from attributes where status=1")$name
+  if (is.null(attrs)) {
    gmessage(gettext("add attribute in Attrs Table first.", domain = "R-RQDA"),container=TRUE)
    } else {
     attrs2 <- data.frame(variable=attrs,value="NA",stringsAsFactors=FALSE)
-    variables <- dbGetQuery(.rqda$qdacon,sprintf("select variable, value from caseAttr where caseID=%i and variable in (%s) and status=1", caseId,paste(shQuote(attrs),collapse=",")))
+    variables <- rqda_sel(sprintf("select variable, value from caseAttr where caseID=%i and variable in (%s) and status=1", caseId,paste(shQuote(attrs),collapse=",")))
     if (nrow(variables)!=0) {
       Encoding(variables$variable) <- Encoding(variables$value) <- 'UTF-8'
       idx <- match(variables[[1]],attrs2[[1]])
@@ -175,7 +175,7 @@ saveFUN4FileAttr <- function(button,data){
     if (any(mod_idx)) {
     ## alter the table for the modified variable
     vars <- ans[mod_idx,]
-    apply(vars,1,FUN=function(x) dbExecute(.rqda$qdacon,sprintf("update fileAttr set value = '%s' where variable = '%s' and fileID ='%s'and status=1",x[2],x[1],MoreArgs$fileId)))
+    apply(vars,1,FUN=function(x) rqda_exe(sprintf("update fileAttr set value = '%s' where variable = '%s' and fileID ='%s'and status=1",x[2],x[1],MoreArgs$fileId)))
     }
     if (any(new_idx)){
     ## add the new variable to table
@@ -187,11 +187,11 @@ saveFUN4FileAttr <- function(button,data){
 }
 
 FileAttrFun <- function(fileId,title=NULL,attrs=svalue(.rqda$.AttrNamesWidget)){
-  if (length(attrs)==0) attrs <-  dbGetQuery(.rqda$qdacon,"select name from attributes where status=1")$name
+  if (length(attrs)==0) attrs <-  rqda_sel("select name from attributes where status=1")$name
   if (is.null(attrs)) gmessage(gettext("add attribute in Attrs Table first.", domain = "R-RQDA"),container=TRUE) else{
     Encoding(attrs) <- 'UTF-8'
     attrs2 <- data.frame(variable=attrs,value="NA",stringsAsFactors=FALSE)
-    variables <- dbGetQuery(.rqda$qdacon,sprintf("select variable, value from fileAttr where fileID=%i and variable in (%s) and status=1",fileId,paste(shQuote(attrs),collapse=",")))
+    variables <- rqda_sel(sprintf("select variable, value from fileAttr where fileID=%i and variable in (%s) and status=1",fileId,paste(shQuote(attrs),collapse=",")))
     if (nrow(variables)!=0){
       Encoding(variables$variable) <- Encoding(variables$value) <- 'UTF-8'
       idx <- match(variables[[1]],attrs2[[1]])
@@ -208,7 +208,8 @@ FileAttrFun <- function(fileId,title=NULL,attrs=svalue(.rqda$.AttrNamesWidget)){
 AttrNamesUpdate <- function(Widget=.rqda$.AttrNamesWidget,sortByTime=FALSE,decreasing=FALSE,...)
 {
   if (is_projOpen()){
-    attr <- dbGetQuery(.rqda$qdacon, "select name, date from attributes where status=1")
+    attr <- rqda_sel(
+                       "select name, date from attributes where status=1")
     if (nrow(attr)==0) {
       attr <- NULL
     } else {
@@ -225,9 +226,9 @@ AttrNamesUpdate <- function(Widget=.rqda$.AttrNamesWidget,sortByTime=FALSE,decre
 AddAttrNames <- function(name,...) {
   if (name != ""){
     con <- .rqda$qdacon
-    dup <- dbGetQuery(con,sprintf("select name from attributes where name='%s'",name))
+    dup <- rqda_sel(sprintf("select name from attributes where name='%s'",name))
     if (nrow(dup)==0) {
-      dbExecute(con,sprintf("insert into attributes (name,status,date,owner) values ('%s', %i,%s, %s)",
+      rqda_exe(sprintf("insert into attributes (name,status,date,owner) values ('%s', %i,%s, %s)",
                              name,1, shQuote(date()),shQuote(.rqda$owner)))
     }
   }
@@ -236,6 +237,8 @@ AddAttrNames <- function(name,...) {
 AddAttrButton <- function(label=gettext("Add", domain = "R-RQDA")){
   AddAttB <- gbutton(label,handler=function(h,...) {
     AttrName <- ginput(gettext("Enter new Attr Name. ", domain = "R-RQDA"), icon="info")
+    if(!identical(AttrName, character(0)))
+    {
     if (!is.na(AttrName)) {
       Encoding(AttrName) <- "UTF-8"
       invalid <- grepl("'",AttrName)
@@ -250,6 +253,7 @@ AddAttrButton <- function(label=gettext("Add", domain = "R-RQDA")){
         }
       }
     }
+    }
   }
                      )
   assign("AddAttB",AddAttB,envir=button)
@@ -258,19 +262,37 @@ AddAttrButton <- function(label=gettext("Add", domain = "R-RQDA")){
 }
 
 
-DeleteAttrButton <- function(label=gettext("Delete", domain = "R-RQDA")){
+DeleteAttrButton <- function(label=rqda_txt("Delete")) {
   DelAttB <- gbutton(label,handler=function(h,...) {
-    del <- gconfirm(gettext("Really delete the Attribute?", domain = "R-RQDA"),icon="question")
+
+    del <- gconfirm(
+      rqda_txt("Really delete the Attribute?"),
+      icon="question")
+
     if (isTRUE(del)){
-      Selected <- svalue(.rqda$.AttrNamesWidget)
-      Selected <- enc(Selected,"UTF-8")
-      dbExecute(.rqda$qdacon,sprintf("update attributes set status=0 where name='%s'",Selected))
-      rqda_exe(sprintf("update caseAttr set status=0 where variable='%s'",Selected))
-      rqda_exe(sprintf("update fileAttr set status=0 where variable='%s'",Selected))
+      sel <- svalue(.rqda$.AttrNamesWidget)
+      sel <- enc(sel,"UTF-8")
+      rqda_exe(sprintf("update attributes set status=0 where name='%s'", sel))
+
+      found <- rqda_sel(
+        sprintf("select * from caseAttr where variable = '%s' ", sel))
+
+      if (nrow(found) > 0 )
+        rqda_exe(
+          sprintf("update caseAttr set status=0 where variable='%s'", sel))
+
+      found <- rqda_sel(
+        sprintf("select * from fileAttr where variable = '%s' ", sel))
+
+
+      if (nrow(found) > 0 )
+        rqda_exe(sprintf("update fileAttr set status=0 where variable='%s'",
+                         sel))
+
       AttrNamesUpdate()
     }
-  }
-                     )
+  })
+
   assign("DelAttB",DelAttB,envir=button)
   enabled(DelAttB) <- FALSE
   DelAttB
@@ -281,7 +303,7 @@ RenameAttrButton <- function(label=gettext("Rename", domain = "R-RQDA")){
   RenAttB <- gbutton(label,handler=function(h,...) {
     selected <- svalue(.rqda$.AttrNamesWidget)
     NewName <- ginput(gettext("Enter new attribute name. ", domain = "R-RQDA"), text=selected, icon="info")
-    
+
     if (!identical(NewName, character(0)))
     {
     if (!is.na(NewName)){
@@ -291,13 +313,13 @@ RenameAttrButton <- function(label=gettext("Rename", domain = "R-RQDA")){
       if (invalid) {
         gmessage(gettext("Attribute should NOT contain '.", domain = "R-RQDA"),container=TRUE)
       } else {
-        exists <- dbGetQuery(.rqda$qdacon, sprintf("select * from attributes where name = '%s' ",NewName))
+        exists <- rqda_sel( sprintf("select * from attributes where name = '%s' ",NewName))
         if (nrow(exists) > 0 ){
           gmessage(gettext("Name duplicated. Please use another name.", domain = "R-RQDA"),cont=TRUE)
         } else {
-          dbExecute(.rqda$qdacon, sprintf("update attributes set name = '%s' where name = '%s' ",NewName,selected))
-          dbExecute(.rqda$qdacon, sprintf("update caseAttr set variable = '%s' where variable = '%s' ",NewName,selected))
-          dbExecute(.rqda$qdacon, sprintf("update fileAttr set variable = '%s' where variable = '%s' ",NewName,selected))
+          rqda_exe( sprintf("update attributes set name = '%s' where name = '%s' ",NewName,selected))
+          rqda_exe( sprintf("update caseAttr set variable = '%s' where variable = '%s' ",NewName,selected))
+          rqda_exe( sprintf("update fileAttr set variable = '%s' where variable = '%s' ",NewName,selected))
           AttrNamesUpdate()
         }
       }
@@ -321,10 +343,10 @@ AttrMemoButton <- function(label=gettext("Memo", domain = "R-RQDA")){
 }
 
 viewCaseAttr <- function(){
-  DF <- dbGetQuery(.rqda$qdacon,"select variable,value, caseId from caseAttr where status=1")
+  DF <- rqda_sel("select variable,value, caseId from caseAttr where status=1")
   DF <- reshape(DF,v.names="value",idvar="caseID",direction="wide",timevar="variable")
   names(DF) <- gsub("^value.","",names(DF))
-  caseName <- dbGetQuery(.rqda$qdacon,"select name,id from cases where status=1")
+  caseName <- rqda_sel("select name,id from cases where status=1")
   if (nrow(caseName)!=0){
     names(caseName) <- c("case","caseID")
     Encoding(caseName$case) <- "UTF-8"
@@ -334,10 +356,10 @@ viewCaseAttr <- function(){
 }
 
 viewFileAttr <- function(){
-  DF <- dbGetQuery(.rqda$qdacon,"select variable,value, fileId from fileAttr where status=1")
+  DF <- rqda_sel("select variable,value, fileId from fileAttr where status=1")
   DF <- reshape(DF,v.names="value",idvar="fileID",direction="wide",timevar="variable")
   names(DF) <- gsub("^value.","",names(DF))
-  fileName <- dbGetQuery(.rqda$qdacon,"select name,id from source where status=1")
+  fileName <- rqda_sel("select name,id from source where status=1")
   if (nrow(fileName)!=0){
     names(fileName) <- c("file","fileID")
     Encoding(fileName$file) <- "UTF-8"
@@ -355,12 +377,12 @@ getAttr <- function(type=c("case","file"),attrs=svalue(.rqda$.AttrNamesWidget),s
   if (type == "case"){
     rqda_exe("delete from caseAttr where value='NA'")
     rqda_exe("delete from caseAttr where value=''") ## clean the table
-    DF <- dbGetQuery(.rqda$qdacon,sprintf("select variable,value, caseId from caseAttr %s",inClause))
+    DF <- rqda_sel(sprintf("select variable,value, caseId from caseAttr %s",inClause))
     if (nrow(DF) > 0 ){
     Encoding(DF$variable) <- Encoding(DF$value) <- "UTF-8"
     DF <- reshape(DF,v.names="value",idvar="caseID",direction="wide",timevar="variable")
     names(DF) <- gsub("^value.","",names(DF))
-    caseName <- dbGetQuery(.rqda$qdacon,"select name,id from cases where status=1")
+    caseName <- rqda_sel("select name,id from cases where status=1")
     if (nrow(caseName)!=0){
       names(caseName) <- c("case","caseID")
       Encoding(caseName$case) <- "UTF-8"
@@ -370,12 +392,12 @@ getAttr <- function(type=c("case","file"),attrs=svalue(.rqda$.AttrNamesWidget),s
   } else if (type=="file"){
     rqda_exe("delete from fileAttr where value='NA'")
     rqda_exe("delete from fileAttr where value=''") ## clean the table
-    DF <- dbGetQuery(.rqda$qdacon,sprintf("select variable,value, fileId from fileAttr %s",inClause))
+    DF <- rqda_sel(sprintf("select variable,value, fileId from fileAttr %s",inClause))
     if (nrow(DF) > 0 ){
     Encoding(DF$variable) <- Encoding(DF$value) <- "UTF-8"
     DF <- reshape(DF,v.names="value",idvar="fileID",direction="wide",timevar="variable")
     names(DF) <- gsub("^value.","",names(DF))
-    fileName <- dbGetQuery(.rqda$qdacon,"select name,id from source where status=1")
+    fileName <- rqda_sel("select name,id from source where status=1")
     if (nrow(fileName)!=0){
       names(fileName) <- c("file","fileID")
       Encoding(fileName$file) <- "UTF-8"
@@ -411,10 +433,10 @@ SetAttrClsButton <- function(label=gettext("Class", domain = "R-RQDA")){
 
 setAttrType <- function() {
     Selected <- enc(svalue(.rqda$.AttrNamesWidget),encoding="UTF-8")
-    oldCls <- tryCatch(dbGetQuery(.rqda$qdacon,sprintf("select class from attributes where status=1 and name='%s'",Selected))[1,1],
+    oldCls <- tryCatch(rqda_sel(sprintf("select class from attributes where status=1 and name='%s'",Selected))[1,1],
                        error=function(e){
-                         dbExecute(.rqda$qdacon, "alter table attributes add column class text")
-                         dbGetQuery(.rqda$qdacon,sprintf("select class from attributes where status=1 and name='%s'",Selected))[1,1]
+                         rqda_exe( "alter table attributes add column class text")
+                         rqda_sel(sprintf("select class from attributes where status=1 and name='%s'",Selected))[1,1]
                        })
     if (is.null(oldCls)||is.na(oldCls)) {
       items <- c("unspecified","numeric","character")
@@ -428,7 +450,7 @@ setAttrType <- function() {
     rb <- gradio(items,idx,horizontal=TRUE, container=gp)
     gbutton("OK",container=gp,handler=function(h,...){
       if ((newCls <- svalue(rb))!= "unspecified"){
-        dbExecute(.rqda$qdacon,sprintf("update attributes set class='%s' where status=1 and name='%s'",newCls,Selected))
+        rqda_exe(sprintf("update attributes set class='%s' where status=1 and name='%s'",newCls,Selected))
       }
       dispose(w)
     })}
@@ -450,7 +472,7 @@ importAttr <- function(data, type='file', filename){
     for (i in 1:nrow(dat)) {
       exist <- rqda_sel(sprintf("select value from fileAttr where variable='%s' and fileID=%i and status=1", att, fid[i]))
       if (nrow(exist)==0 && !is.na(attval[i])) {
-        rqda_exe(sprintf("insert into fileAttr (variable, value, fileID, date, owner, status) 
+        rqda_exe(sprintf("insert into fileAttr (variable, value, fileID, date, owner, status)
                           values ('%s','%s','%s','%s','rghuang',1)",att, attval[i], fid[i], as.character(date())))
         }
     }
@@ -570,7 +592,7 @@ importAttr <- function(data, type='file', filename){
 ##      idx2 <- seq(2,to=n,by=2)
 ##      ans <- data.frame(Variable=ans[idx1],Value=ans[idx2])
 ##      ans <- cbind(ans,ID)
-##      dbExecute(.rqda$qdacon,sprintf("delete from caseAttr where caseid='%s'",ID))
+##      rqda_exe(sprintf("delete from caseAttr where caseid='%s'",ID))
 ##      dbWriteTable(.rqda$qdacon, "caseAttr", ans, append = TRUE,row.names=FALSE)
 ##      window$Destroy()## close
 ##    }
