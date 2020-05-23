@@ -379,8 +379,8 @@ AddHandler <- function() {
     }
   })
 
-  addRightclickPopupMenu(.rqda$.fnames_rqda, GetFileNamesWidgetMenu())
   ## right click to add file to a case category
+  addRightclickPopupMenu(.rqda$.fnames_rqda, GetFileNamesWidgetMenu())
 
   addHandlerDoubleclick(.rqda$.fnames_rqda, handler <- function(h, ...) {
     ViewFileFun(FileNameWidget = .rqda$.fnames_rqda)
