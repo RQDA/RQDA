@@ -361,7 +361,7 @@ AddHandler <- function() {
   ## handler for .fnames_rqda (gtable holding the file names)
   addHandlerClicked(.rqda$.fnames_rqda, handler <- function(h, ...) {
     if (isTRUE(.rqda$SFP)) ShowFileProperty(focus = FALSE)
-    Fid <- getFileIds("select")
+    Fid <- getFileIds(type = "selected")
     if (!is.null(Fid) && length(Fid) == 1) {
       names(.rqda$.fnames_rqda) <- sprintf(
         rqda_txt("Selected File id is %s"), Fid)
