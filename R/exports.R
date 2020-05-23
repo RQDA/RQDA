@@ -2,12 +2,12 @@
 exportCodedFile <- function(file, fid, closeAfter=TRUE){
     ## possible bug when there is annotations
     ## open a file of fid first
-    fname <- RQDAQuery(sprintf("select name from source where id=%s and status=1",fid))$name[1]
+    fname <- rqda_sel(sprintf("select name from source where id=%s and status=1",fid))$name[1]
     Encoding(fname) <- "UTF-8"
     ViewFileFunHelper(fname, annotation=FALSE)
     ans <- c()
     shift <- 0
-    cidx <- RQDAQuery(sprintf("select coding.rowid as rowid,selfirst,selend, freecode.name as code from coding, freecode where fid=%s and coding.status=1 and coding.cid=freecode.id",fid))
+    cidx <- rqda_sel(sprintf("select coding.rowid as rowid,selfirst,selend, freecode.name as code from coding, freecode where fid=%s and coding.status=1 and coding.cid=freecode.id",fid))
     idx <- cidx[order(cidx$selfirst),]
     wf <- .rqda$.openfile_gui
     buffer <- wf$buffer

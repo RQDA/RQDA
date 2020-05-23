@@ -136,7 +136,7 @@ FileAttribute_Button <- function(label = rqda_txt("Attribute"),
     if (is_projOpen(envir = .rqda, conName = "qdacon")) {
       Selected <- svalue(FileWidget)
       if (length(Selected != 0 )) {
-        fileId <- RQDAQuery(
+        fileId <- rqda_sel(
           sprintf("select id from source where status = 1 and name = '%s'",
                   enc(Selected)))[, 1]
         FileAttrFun(fileId = fileId, title = Selected)
@@ -290,7 +290,7 @@ GetFileNamesWidgetMenu <- function()
         Selected <- tryCatch(svalue(.rqda$.root_edit),
                              error = function(e) {NULL})
         if (!is.null(Selected)) {
-          fileId <- RQDAQuery(
+          fileId <- rqda_sel(
             sprintf("select id from source where status = 1 and name = '%s'",
                     enc(Selected)))[, 1]
           FileAttrFun(fileId = fileId, title = Selected)
@@ -380,7 +380,7 @@ GetFileNamesWidgetMenu <- function()
   FileNamesWidgetMenu[[15]] <- gaction(
     rqda_txt("Open Previous Coded File"), handler = function(h, ...) {
       if (is_projOpen(envir = .rqda, conName = "qdacon", message = FALSE)) {
-        fname <- RQDAQuery(
+        fname <- rqda_sel(
           paste("select name from source where id in ( select fid from",
                 "coding where rowid in (select max(rowid) from coding",
                 "where status = 1))"))$name
@@ -454,7 +454,7 @@ GetFileNamesWidgetMenu <- function()
     rqda_txt("Show Files With Annotation"),
     handler = function(h, ...) {
       fileid <-
-        RQDAQuery(
+        rqda_sel(
           "select fid from annotation where status = 1 group by fid")$fid
       if (length(fileid) != 0) {
         FileNameWidgetUpdate(FileNamesWidget = .rqda$.fnames_rqda,
@@ -466,7 +466,7 @@ GetFileNamesWidgetMenu <- function()
   show_lst[[5]] <- gaction(
     rqda_txt("Show Files Without Annotation"),
     handler = function(h, ...) {
-      fileid <- RQDAQuery(
+      fileid <- rqda_sel(
         paste("select id from source where status = 1 and id not in",
               "(select fid from annotation where status = 1 group by fid)"))$id
       if (length(fileid) != 0) {
@@ -511,7 +511,7 @@ GetFileNamesWidgetMenu <- function()
     rqda_txt("Show Files Without File Category"),
     handler = function(h, ...) {
       if (is_projOpen(envir = .rqda, conName = "qdacon", message = FALSE)) {
-        fileid <- RQDAQuery(
+        fileid <- rqda_sel(
           paste("select id from source where status = 1 and id not in",
                 "(select fid from treefile where status = 1)"))
         if (nrow(fileid) != 0) {
@@ -528,7 +528,7 @@ GetFileNamesWidgetMenu <- function()
     rqda_txt("Show Files With No Case"),
     handler = function(h, ...) {
       if (is_projOpen(envir = .rqda, conName = "qdacon", message = FALSE)) {
-        fileid <- RQDAQuery(
+        fileid <- rqda_sel(
           paste("select id from source where status = 1 and id not in",
                 "(select fid from caselinkage where status = 1)"))
         if (nrow(fileid) != 0) {

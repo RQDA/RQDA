@@ -31,7 +31,7 @@ msgstr "Guardar e Fechar"
 msgid "add attribute in Attrs Table first."
 msgstr "adicionar atributo na Tabela de Atributos primeiro."
 
-msgid "ADD"
+msgid "Add"
 msgstr "Adicionar"
 
 msgid "Enter new Attr Name."

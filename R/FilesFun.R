@@ -126,7 +126,7 @@ ViewFileFunHelper <- function(FileName,hightlight=TRUE,codingTable=.rqda$codingT
   tmp$widget$SetPixelsInsideWrap(5) ## so the text looks more confortable.
   assign(".openfile_gui", tmp, envir= .rqda)
   Encoding(SelectedFileName) <- "unknown"
-  IDandContent <- RQDAQuery(sprintf("select id, file from source where name='%s'",
+  IDandContent <- rqda_sel(sprintf("select id, file from source where name='%s'",
                                     enc(SelectedFileName))
                             )
   content <- IDandContent$file
@@ -134,9 +134,9 @@ ViewFileFunHelper <- function(FileName,hightlight=TRUE,codingTable=.rqda$codingT
   W <- get(".openfile_gui", .rqda)
   insert(W, content)
   W$set_editable(FALSE)
-  markidx <- RQDAQuery(sprintf("select %s.rowid,selfirst,selend,freecode.name,freecode.color, freecode.id from %s,freecode where fid=%i and %s.status=1 and freecode.id=cid and freecode.status=1",codingTable,codingTable, IDandContent$id,codingTable))
+  markidx <- rqda_sel(sprintf("select %s.rowid,selfirst,selend,freecode.name,freecode.color, freecode.id from %s,freecode where fid=%i and %s.status=1 and freecode.id=cid and freecode.status=1",codingTable,codingTable, IDandContent$id,codingTable))
   if (annotation) {
-      anno <- RQDAQuery(sprintf("select position,rowid from annotation where status=1 and fid=%s",IDandContent$id))
+      anno <- rqda_sel(sprintf("select position,rowid from annotation where status=1 and fid=%s",IDandContent$id))
   }
   buffer <- W$buffer
   fore.col <- .rqda$fore.col
@@ -242,7 +242,7 @@ EditFileFun <- function(FileNameWidget=.rqda$.fnames_rqda){
       assign(".root_edit2",gpanedgroup(horizontal = FALSE, container=.rqda$.root_edit),envir=.rqda)
       EdiFilB <- gbutton(gettext("Save File", domain = "R-RQDA"),container=.rqda$.root_edit2,handler=function(h,...){
         content <-  svalue(.rqda$.openfile_gui)
-        RQDAQuery(sprintf("update source set file='%s', dateM='%s' where name='%s'",
+        rqda_exe(sprintf("update source set file='%s', dateM='%s' where name='%s'",
                           enc(content,"UTF-8"),date(),enc(svalue(.rqda$.root_edit),"UTF-8"))) ## update source table
         if (nrow(mark_index)!=0){ ## only manipulate the coding when there is one.
           idx <- apply(mark_index, 1, FUN = function(x) {
@@ -255,9 +255,9 @@ EditFileFun <- function(FileNameWidget=.rqda$.fnames_rqda){
             ans <- c(selfirst = idx1, selend = idx2,x[3])## matrix of 3x N (N=nrow(mark_index))
           }) ## end of apply
           apply(idx,2,FUN=function(x){
-            if (x[1]==x[2])  RQDAQuery(sprintf("update coding set status=0 where rowid=%i",x[3])) else {
+            if (x[1]==x[2])  rqda_exe(sprintf("update coding set status=0 where rowid=%i",x[3])) else {
               Encoding(content) <- "UTF-8"
-              RQDAQuery(sprintf("update coding set seltext='%s',selfirst=%i, selend=%i where rowid=%i",
+              rqda_exe(sprintf("update coding set seltext='%s',selfirst=%i, selend=%i where rowid=%i",
                                 enc(substr(content,x[1],x[2]),"UTF-8"),x[1],x[2],x[3]))
             }
           })## update the coding table (seltext,selfirst, selend), on the rowid (use rowid to name the marks)
@@ -274,9 +274,9 @@ EditFileFun <- function(FileNameWidget=.rqda$.fnames_rqda){
             ans <- c(selfirst = idx1, selend = idx2,x[3])## matrix of 3x N (N=nrow(mark_index))
           }) ## end of apply
           apply(idxS,2,FUN=function(x){
-            if (x[1]==x[2])  RQDAQuery(sprintf("update coding2 set status=0 where rowid=%i",x[3])) else {
+            if (x[1]==x[2])  rqda_exe(sprintf("update coding2 set status=0 where rowid=%i",x[3])) else {
               Encoding(content) <- "UTF-8"
-              RQDAQuery(sprintf("update coding2 set seltext='%s',selfirst=%i, selend=%i where rowid=%i",
+              rqda_exe(sprintf("update coding2 set seltext='%s',selfirst=%i, selend=%i where rowid=%i",
                                 enc(substr(content,x[1],x[2]),"UTF-8"),x[1],x[2],x[3]))
             }
           })
@@ -293,8 +293,8 @@ EditFileFun <- function(FileNameWidget=.rqda$.fnames_rqda){
             ans <- c(selfirst = idx1, selend = idx2,x["rowid"])
           }) ## end of apply
           apply(idx_case,2,FUN=function(x){
-            if (x[1]==x[2])  RQDAQuery(sprintf("update caselinkage set status=0 where rowid=%i",x["rowid"])) else {
-              RQDAQuery(sprintf("update caselinkage set selfirst=%i, selend=%i where rowid=%i",x[1],x[2],x[3]))
+            if (x[1]==x[2])  rqda_exe(sprintf("update caselinkage set status=0 where rowid=%i",x["rowid"])) else {
+              rqda_exe(sprintf("update caselinkage set selfirst=%i, selend=%i where rowid=%i",x[1],x[2],x[3]))
             }
           })## end of apply
         }
@@ -489,9 +489,9 @@ getFileIds <- function(condition=c("unconditional","case","filecategory","both")
         if (length(Selected)>1) {gmessage(gettext("select one file category only.", domain = "R-RQDA"),container=TRUE)
                                  stop("more than one file categories are selected", domain = "R-RQDA")
                                }
-        caseid <- RQDAQuery(sprintf("select id from cases where status=1 and name='%s'",
+        caseid <- rqda_sel(sprintf("select id from cases where status=1 and name='%s'",
                                     enc(Selected)))$id
-        fidofcase <- RQDAQuery(sprintf("select fid from caselinkage where status=1 and caseid=%i",caseid))$fid
+        fidofcase <- rqda_sel(sprintf("select fid from caselinkage where status=1 and caseid=%i",caseid))$fid
         ##         caseid <- dbGetQuery(.rqda$qdacon,sprintf("select id from cases where status=1 and name in (%s)",
         ##                                                  paste(paste("'",Selected,"'",sep=""),collapse=",")))$id
         ##         fidofcase <- dbGetQuery(.rqda$qdacon,sprintf("select fid from caselinkage where status==1 and caseid in (%s)",
@@ -514,7 +514,7 @@ getFileIds <- function(condition=c("unconditional","case","filecategory","both")
     }
     allfid <- getFileIdsSets("filecategory","intersect")
     if (type=="all") {ans <- allfid} else {
-      codedfid <- RQDAQuery(sprintf("select fid from coding where status=1 and fid in (%s) group by fid",paste(shQuote(allfid),collapse=",")))$fid
+      codedfid <- rqda_sel(sprintf("select fid from coding where status=1 and fid in (%s) group by fid",paste(shQuote(allfid),collapse=",")))$fid
       if (type=="coded") {ans <- codedfid}
       if (type=="uncoded") { ans <-  setdiff(allfid,codedfid)}
     }
@@ -667,7 +667,7 @@ viewPlainFile <- function(FileNameWidget=.rqda$.fnames_rqda){
   tmp$widget$SetPixelsBelowLines(5) ## set the spacing
   tmp$widget$SetPixelsInsideWrap(5) ## so the text looks more confortable.
   Encoding(SelectedFileName) <- "unknown"
-  IDandContent <- RQDAQuery(sprintf("select id, file from source where name='%s'",
+  IDandContent <- rqda_sel(sprintf("select id, file from source where name='%s'",
                                     enc(SelectedFileName))
                             )
   content <- IDandContent$file

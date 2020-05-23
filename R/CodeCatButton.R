@@ -35,7 +35,7 @@ AddTodbTable <- function(item,dbTable,Id="id",field="name",con=.rqda$qdacon,...)
 
 
 #################
-AddCodeCatButton <- function(label=gettext("ADD", domain = "R-RQDA")){
+AddCodeCatButton <- function(label=gettext("Add", domain = "R-RQDA")){
     AddCodCatB <- gbutton(label,handler=function(h,...) {
         item <- ginput(gettext("Enter new Code Category. ", domain = "R-RQDA"), icon="info")
         if (!is.na(item)){
@@ -58,7 +58,7 @@ DeleteCodeCatButton <- function(label=gettext("Delete", domain = "R-RQDA"))
         if (isTRUE(del)){
             Selected <- svalue(.rqda$.CodeCatWidget)
             Encoding(Selected) <- "UTF-8"
-            catid <- RQDAQuery(sprintf("select catid from codecat where status=1 and name='%s'",enc(Selected)))[,1]
+            catid <- rqda_sel(sprintf("select catid from codecat where status=1 and name='%s'",enc(Selected)))[,1]
             if (length(catid) ==1){
                 dbGetQuery(.rqda$qdacon,sprintf("update codecat set status=0 where name='%s'",enc(Selected)))
                 ## set status in table freecode to 0
@@ -209,7 +209,7 @@ CodeCatMemoButton <- function(label=gettext("Memo", domain = "R-RQDA"),...){
 
 plotCodeCategory <-function(parent=NULL){
     if (is.null(parent)) parent <- svalue(.rqda$.CodeCatWidget)
-    ans <- RQDAQuery(sprintf("select codecat.name as parent,freecode.name as child from treecode, codecat,freecode
+    ans <- rqda_sel(sprintf("select codecat.name as parent,freecode.name as child from treecode, codecat,freecode
 where treecode.status=1 and codecat.status=1 and freecode.status=1
 and treecode.catid=codecat.catid and freecode.id=treecode.cid and codecat.name in (%s)",paste(shQuote(parent),collapse=",")))
     Encoding(ans$parent) <- "UTF-8"
@@ -222,7 +222,7 @@ and treecode.catid=codecat.catid and freecode.id=treecode.cid and codecat.name i
 
 d3CodeCategory <-function(parent=NULL){
   if (is.null(parent)) parent <- svalue(.rqda$.CodeCatWidget)
-  ans <- RQDAQuery(sprintf("select codecat.name as parent,freecode.name as child from treecode, codecat,freecode
+  ans <- rqda_sel(sprintf("select codecat.name as parent,freecode.name as child from treecode, codecat,freecode
 where treecode.status=1 and codecat.status=1 and freecode.status=1
 and treecode.catid=codecat.catid and freecode.id=treecode.cid and codecat.name in (%s)",paste(shQuote(parent),collapse=",")))
   Encoding(ans$parent) <- "UTF-8"
@@ -233,18 +233,18 @@ and treecode.catid=codecat.catid and freecode.id=treecode.cid and codecat.name i
 }
 
 getCodingsByCategory <- function(catid=NULL, fid = NULL, codingTable = c("coding", "coding2")){
-    if (is.null(catid)) catid <- RQDAQuery(sprintf("select catid from codecat where name = '%s'", enc(svalue(.rqda$.CodeCatWidget))))$catid
-    cid <- RQDAQuery(sprintf("select cid from treecode where catid==%s and status==1",catid))$cid
+    if (is.null(catid)) catid <- rqda_sel(sprintf("select catid from codecat where name = '%s'", enc(svalue(.rqda$.CodeCatWidget))))$catid
+    cid <- rqda_sel(sprintf("select cid from treecode where catid==%s and status==1",catid))$cid
     codingTable <- match.arg(codingTable)
     if (codingTable == "coding") {
-        ct <- RQDAQuery(sprintf("select coding.rowid as rowid, coding.cid, coding.fid,
+        ct <- rqda_sel(sprintf("select coding.rowid as rowid, coding.cid, coding.fid,
 freecode.name as codename, source.name as filename, coding.selfirst as index1,
 coding.selend as index2, coding.seltext as coding, coding.selend - coding.selfirst as CodingLength from coding
  left join freecode on (coding.cid=freecode.id) left join source on (coding.fid=source.id)
 where coding.status=1 and source.status=1 and freecode.status=1 and coding.cid in (%s)", paste(cid,collapse=",")))
     }
     if (codingTable == "coding2") {
-        ct <- RQDAQuery(sprintf("select coding.rowid as rowid, coding.cid, coding.fid,
+        ct <- rqda_sel(sprintf("select coding.rowid as rowid, coding.cid, coding.fid,
 freecode.name as codename, source.name as filename, coding2.selfirst as index1,
 coding2.selend as index2, coding2.seltext as coding2, coding2.selend - coding2.selfirst as CodingLength from coding2
  left join freecode on (coding2.cid=freecode.id) left join source on (coding2.fid=source.id)
@@ -271,7 +271,7 @@ GetCodeCatWidgetMenu <- function()
         codename <- enc(codename,encoding="UTF-8")
         addcode(codename)
         CodeNamesUpdate(sortByTime=FALSE)
-        cid <- RQDAQuery(sprintf("select id from freecode where status=1 and name='%s'",codename))$id
+        cid <- rqda_sel(sprintf("select id from freecode where status=1 and name='%s'",codename))$id
         ## end of add a new code to free code.
         SelectedCodeCat <- svalue(.rqda$.CodeCatWidget)
         if (length(SelectedCodeCat)==0) {gmessage(gettext("Select a code category first.", domain = "R-RQDA"),container=TRUE)} else{

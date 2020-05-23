@@ -1,5 +1,5 @@
 #################
-AddFileCatButton <- function(label=gettext("ADD", domain = "R-RQDA")){
+AddFileCatButton <- function(label=gettext("Add", domain = "R-RQDA")){
   AddFilCatB <- gbutton(label,handler=function(h,...) {
     item <- ginput(gettext("Enter new File Category. ", domain = "R-RQDA"), icon="info")
     if (!is.na(item)){

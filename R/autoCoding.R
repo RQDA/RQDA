@@ -11,12 +11,12 @@ AutoCoding <- function(KeyWord,expansion=6){
 }
 
 insertCoding <- function(fid, cid, start, end, fulltext) {
-  Exist1 <-  RQDAQuery(sprintf("select coding.rowid, selfirst, selend,freecode.name from coding, freecode where cid=%i and fid=%i and coding.status=1 and cid=freecode.id",cid,fid))
+  Exist1 <-  rqda_sel(sprintf("select coding.rowid, selfirst, selend,freecode.name from coding, freecode where cid=%i and fid=%i and coding.status=1 and cid=freecode.id",cid,fid))
   DAT <- data.frame(cid=cid,fid=fid,seltext=substr(fulltext,start+1,end),selfirst=start,selend=end,status=1,owner=.rqda$owner,date=date(),memo=NA,stringsAsFactors=FALSE)
   DAT$seltext <- enc(DAT$seltext)
 
   if (nrow(Exist1)==0){
-    try(RQDAQuery(sprintf("insert into coding (cid,fid, seltext, selfirst, selend, status, owner, date) values (%s, %s, '%s', %s, %s, %s, '%s', '%s') ",
+    try(rqda_exe(sprintf("insert into coding (cid,fid, seltext, selfirst, selend, status, owner, date) values (%s, %s, '%s', %s, %s, %s, '%s', '%s') ",
                            DAT$cid, DAT$fid,DAT$seltext, DAT$selfirst, DAT$selend, 1, .rqda$owner, as.character(date()))),silent=TRUE)
   } else {
     Exist <- Exist1[,c("selfirst","selend","rowid")]
@@ -29,7 +29,7 @@ insertCoding <- function(fid, cid, start, end, fulltext) {
       Exist$End <- sapply(Relations,FUN=function(x)x$UnionIndex[2])
       if (all(Exist$Relation=="proximity")){
         rowid <- NextRowId("coding")
-        try(RQDAQuery(sprintf("insert into coding (cid,fid, seltext, selfirst, selend, status, owner, date) values (%s, %s, '%s', %s, %s, %s, '%s', '%s') ",
+        try(rqda_exe(sprintf("insert into coding (cid,fid, seltext, selfirst, selend, status, owner, date) values (%s, %s, '%s', %s, %s, %s, '%s', '%s') ",
                               DAT$cid, DAT$fid, DAT$seltext, DAT$selfirst, DAT$selend, 1, .rqda$owner, as.character(date()))),silent=TRUE)
       } else {
         del1 <-(Exist$Relation =="inclusion" & (is.na(Exist$WhichMin) | Exist$WhichMin==2))
@@ -40,13 +40,13 @@ insertCoding <- function(fid, cid, start, end, fulltext) {
         del <- (del1 | del2)
         if (any(del)){
           Sel <- c(min(Exist$Start[del]), max(Exist$End[del]))
-          memo <- RQDAQuery(sprintf("select memo from coding where rowid in (%s)", paste(Exist$rowid[del],collapse=",",sep="")))$memo
+          memo <- rqda_sel(sprintf("select memo from coding where rowid in (%s)", paste(Exist$rowid[del],collapse=",",sep="")))$memo
           memo <- paste(memo,collapse="",sep="")
-          RQDAQuery(sprintf("delete from coding where rowid in (%s)", paste(Exist$rowid[del],collapse=",",sep="")))
+          rqda_exe(sprintf("delete from coding where rowid in (%s)", paste(Exist$rowid[del],collapse=",",sep="")))
           DAT <- data.frame(cid=cid,fid=fid,seltext=substr(fulltext,Sel[1]+1,Sel[2]),selfirst=Sel[1],selend=Sel[2],status=1,owner=.rqda$owner,date=date(),memo=memo,stringsAsFactors=FALSE)
           DAT$seltext <- enc(DAT$seltext)
           rowid <- NextRowId("coding")
-          try(RQDAQuery(sprintf("insert into coding (cid,fid, seltext, selfirst, selend, status, owner, date, memo) values (%s, %s, '%s', %s, %s, %s, '%s', '%s','%s') ",
+          try(rqda_exe(sprintf("insert into coding (cid,fid, seltext, selfirst, selend, status, owner, date, memo) values (%s, %s, '%s', %s, %s, %s, '%s', '%s','%s') ",
                                 DAT$cid, DAT$fid,DAT$seltext, DAT$selfirst, DAT$selend, 1, .rqda$owner, as.character(date()), DAT$memo)),silent=TRUE)
         }
       }
@@ -57,7 +57,7 @@ insertCoding <- function(fid, cid, start, end, fulltext) {
 codingBySearchOneFile <- function(pattern, fid, cid, seperator, concatenate, ...) {
   ## auto coding: when seperator is \n, each paragraph is a analysis unit
   ## by providing approperiate seperator, it allows flexible control on the unit of autocoding
-    txt <- RQDAQuery(sprintf("select file from source where status=1 and id=%s",fid))$file
+    txt <- rqda_sel(sprintf("select file from source where status=1 and id=%s",fid))$file
     Encoding(txt) <- "UTF-8"
     pidx <- gregexpr(sprintf("(%s){1,}", seperator),txt)
     idx1 <- c(0,pidx[[1]]+attr(pidx[[1]],"match.length")-1)

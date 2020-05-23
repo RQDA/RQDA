@@ -1,4 +1,4 @@
-AddCaseButton <- function(label=gettext("ADD", domain = "R-RQDA")){
+AddCaseButton <- function(label=gettext("Add", domain = "R-RQDA")){
   AddCasB <- gbutton(label,handler=function(h,...) {
     CaseName <- ginput(gettext("Enter new Case Name. ", domain = "R-RQDA"), icon="info")
     if (!is.na(CaseName)) {
@@ -163,8 +163,8 @@ CaseUnMark_Button<-function(label=gettext("Unmark", domain = "R-RQDA")){
         if (is.numeric(rowid)) for (j in rowid) {
           dbGetQuery(con,sprintf("update caselinkage set status=0 where rowid=%i", j))
         }
-        coding.idx <- RQDAQuery(sprintf("select selfirst,selend from coding where fid=%i and status=1",currentFid))
-        anno.idx <- RQDAQuery(sprintf("select position from annotation where fid=%i and status=1",currentFid))$position
+        coding.idx <- rqda_sel(sprintf("select selfirst,selend from coding where fid=%i and status=1",currentFid))
+        anno.idx <- rqda_sel(sprintf("select position from annotation where fid=%i and status=1",currentFid))$position
         allidx <- unlist(coding.idx,anno.idx)
         if (!is.null(allidx)){
           startN<- sel_index$startN +  sum(allidx <= sel_index$startN)
@@ -251,7 +251,7 @@ GetCaseNamesWidgetMenu <- function()
   
   CaseNamesWidgetMenu[[4]] <- gaction(gettext("Show Cases with Memo Only", domain = "R-RQDA"), handler =function(h, ...) {
     if (is_projOpen(envir=.rqda,conName="qdacon")) {
-      cnames <- RQDAQuery("select name from cases where memo is not null")$name
+      cnames <- rqda_sel("select name from cases where memo is not null")$name
       if (!is.null(cnames)) cnames <- enc(cnames,"UTF-8")
       .rqda$.CasesNamesWidget[] <- cnames
     }

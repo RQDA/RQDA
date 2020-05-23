@@ -36,6 +36,6 @@ HUANG Ronggui
 }
 \examples{
 \dontrun{
-RQDAQuery("select name from source where status=1")
+rqda_sel("select name from source where status=1")
 }
 }

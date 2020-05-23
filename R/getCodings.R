@@ -3,17 +3,17 @@ getCodingsOfCodes <- function(fid = NULL, codingTable = c("coding", "coding2")){
     Encoding(codes) <- "UTF-8"
     selected <- gselect.list(codes)
     selected <- enc(selected)
-    cid <- RQDAQuery(sprintf("select id from freecode where status=1 and name in (%s)",paste( paste("'", selected, "'", sep=""), collapse = ",")))$id
+    cid <- rqda_sel(sprintf("select id from freecode where status=1 and name in (%s)",paste( paste("'", selected, "'", sep=""), collapse = ",")))$id
     codingTable <- match.arg(codingTable)
     if (codingTable == "coding") {
-        ct <- RQDAQuery(sprintf("select coding.rowid as rowid, coding.cid, coding.fid,
+        ct <- rqda_sel(sprintf("select coding.rowid as rowid, coding.cid, coding.fid,
 freecode.name as codename, source.name as filename, coding.selfirst as index1,
 coding.selend as index2, coding.seltext as coding, coding.selend - coding.selfirst as CodingLength from coding
  left join freecode on (coding.cid=freecode.id) left join source on (coding.fid=source.id)
 where coding.status=1 and source.status=1 and freecode.status=1 and coding.cid in (%s)", paste(cid,collapse=",")))
     }
     if (codingTable == "coding2") {
-        ct <- RQDAQuery(sprintf("select coding.rowid as rowid, coding.cid, coding.fid,
+        ct <- rqda_sel(sprintf("select coding.rowid as rowid, coding.cid, coding.fid,
 freecode.name as codename, source.name as filename, coding2.selfirst as index1,
 coding2.selend as index2, coding2.seltext as coding2, coding2.selend - coding2.selfirst as CodingLength from coding2
  left join freecode on (coding2.cid=freecode.id) left join source on (coding2.fid=source.id)
@@ -36,7 +36,7 @@ getCodingsFromFiles <- function(Fid, order=c("fname","ftime","ctime"),
                     fname="order by freecode.name, source.name, selfirst, selend ASC",
                     ftime="order by freecode.name, source.id, selfirst, selend ASC",
                     ctime="")
-    retrieval <- RQDAQuery(sprintf("select cid, freecode.name as code, fid, selfirst, selend, seltext, %s.rowid, source.name,source.id from %s,source, freecode where %s.status=1 and source.id=fid and freecode.id=%s.cid and fid in (%s) %s", codingTable, codingTable, codingTable, codingTable, paste(Fid,collapse=","), order))
+    retrieval <- rqda_sel(sprintf("select cid, freecode.name as code, fid, selfirst, selend, seltext, %s.rowid, source.name,source.id from %s,source, freecode where %s.status=1 and source.id=fid and freecode.id=%s.cid and fid in (%s) %s", codingTable, codingTable, codingTable, codingTable, paste(Fid,collapse=","), order))
     if (nrow(retrieval)==0) gmessage(gettext("No Coding associated with the selected code.", domain = "R-RQDA"),container=TRUE) else {
         fid <- unique(retrieval$fid)
         Nfiles <- length(fid)
@@ -74,7 +74,7 @@ getCodingsFromFiles <- function(Fid, order=c("fname","ftime","ctime"),
                 retrieval$fname[retrieval$fid==i] <- FileName
             } else {
                 retrieval <- retrieval[retrieval$fid!=i,]
-                RQDAQuery(sprintf("update %s set status=0 where fid=%i",
+                rqda_exe(sprintf("update %s set status=0 where fid=%i",
                                   codingTable, i))
             }
         }

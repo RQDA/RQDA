@@ -28,7 +28,7 @@ msgstr ""
 msgid "add attribute in Attrs Table first."
 msgstr ""
 
-msgid "ADD"
+msgid "Add"
 msgstr ""
 
 msgid "Enter new Attr Name."

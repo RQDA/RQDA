@@ -63,13 +63,13 @@ mergeCodes <- function(cid1,cid2){ ## cid1 and cid2 are two code IDs.
   if (nrow(Coding1) >= nrow(Coding2)) {
     FromDat <- Coding2
     ToDat <- Coding1
-    ToDat$rowid <- RQDAQuery(sprintf("select rowid from coding where cid=%i and status=1",cid1))$rowid
+    ToDat$rowid <- rqda_sel(sprintf("select rowid from coding where cid=%i and status=1",cid1))$rowid
     FromDat$cid <- cid1 ## so can write to directly where it is proximate
     FromCid <- cid2
   } else {
     FromDat <- Coding1
     ToDat <- Coding2
-    ToDat$rowid <- RQDAQuery(sprintf("select rowid from coding where cid=%i and status=1",cid2))$rowid
+    ToDat$rowid <- rqda_sel(sprintf("select rowid from coding where cid=%i and status=1",cid2))$rowid
     FromDat$cid <- cid2
     FromCid <- cid1
   } ## use small coding as FromDat -> speed it up.

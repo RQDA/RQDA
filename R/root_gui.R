@@ -447,10 +447,10 @@ AddHandler <- function() {
       enabled(button$CasMarB) <-
         (exists(".root_edit", envir = .rqda) && isExtant(.rqda$.root_edit))
       Encoding(SelectedCase) <- "UTF-8"
-      currentCid <- RQDAQuery(sprintf("select id from cases where name = '%s'",
+      currentCid <- rqda_sel(sprintf("select id from cases where name = '%s'",
                                       enc(SelectedCase)))[, 1]
 
-      freq <- RQDAQuery(
+      freq <- rqda_sel(
         sprintf(paste("select count(distinct fid) as freq from caselinkage",
         "where status = 1 and caseid = %s"), currentCid))$freq
       names(.rqda$.CasesNamesWidget) <- sprintf(
@@ -460,26 +460,26 @@ AddHandler <- function() {
       if (exists(".root_edit", envir = .rqda) && isExtant(.rqda$.root_edit)) {
         SelectedFile <- svalue(.rqda$.root_edit)
         Encoding(SelectedFile) <- "UTF-8"
-        currentFid <- RQDAQuery(sprintf(
+        currentFid <- rqda_sel(sprintf(
           "select id from source where name = '%s'",
           enc(SelectedFile)))[, 1]
 
         ## following code: Only mark the text chuck according to
         ## the current code.
-        coding.idx <- RQDAQuery(
+        coding.idx <- rqda_sel(
           sprintf(paste("select selfirst, selend from coding where",
                         "fid = %i and status = 1"), currentFid))
-        anno.idx <- RQDAQuery(
+        anno.idx <- rqda_sel(
           sprintf(paste("select position from annotation where",
                         "fid = %i and status = 1"), currentFid))$position
         allidx <- unlist(coding.idx, anno.idx)
 
-        sel_index <-  RQDAQuery(
+        sel_index <-  rqda_sel(
           sprintf(paste("select selfirst, selend from caselinkage where",
                         "caseid = %i and fid = %i and status = 1"),
                   currentCid, currentFid))
 
-        Maxindex <- RQDAQuery(
+        Maxindex <- rqda_sel(
           sprintf("select max(selend) from caselinkage where fid = %i",
                   currentFid))[1, 1]
 
@@ -521,7 +521,7 @@ AddHandler <- function() {
       enabled(button$CodCatAddToB) <- TRUE
       enabled(button$MarCodB2) <- FALSE
       enabled(button$UnMarB2) <- FALSE
-      catid <- RQDAQuery(sprintf("select catid from codecat where name = '%s'",
+      catid <- rqda_sel(sprintf("select catid from codecat where name = '%s'",
                                  enc(svalue(.rqda$.CodeCatWidget))
       )
       )$catid

@@ -10,12 +10,12 @@ retrieval_by_code <- function (Fid = NULL, order = c("fname", "ftime", "ctime"),
         order <- switch(order, fname = "order by source.name", 
             ftime = "order by source.id", ctime = "")
         if (is.null(Fid)) {
-            retrieval <- RQDAQuery(sprintf("select cid,fid, selfirst, selend, seltext,%s.rowid, source.name,source.id from %s,source where %s.status=1 and cid=%i and source.id=fid %s", 
+            retrieval <- rqda_sel(sprintf("select cid,fid, selfirst, selend, seltext,%s.rowid, source.name,source.id from %s,source where %s.status=1 and cid=%i and source.id=fid %s", 
                 codingTable, codingTable, codingTable, currentCid, 
                 order))
         }
         else {
-            retrieval <- RQDAQuery(sprintf("select cid,fid, selfirst, selend, seltext, %s.rowid,source.name,source.id from %s,source where %s.status=1 and cid=%i and source.id=fid and fid in (%s) %s", 
+            retrieval <- rqda_sel(sprintf("select cid,fid, selfirst, selend, seltext, %s.rowid,source.name,source.id from %s,source where %s.status=1 and cid=%i and source.id=fid and fid in (%s) %s", 
                 codingTable, codingTable, codingTable, currentCid, 
                 paste(Fid, collapse = ","), order))
         }
@@ -67,7 +67,7 @@ retrieval_by_code <- function (Fid = NULL, order = c("fname", "ftime", "ctime"),
                 else {
                   retrieval <- retrieval[retrieval$fid != i, 
                     ]
-                  RQDAQuery(sprintf("update %s set status=0 where fid=%i", 
+                  rqda_exe(sprintf("update %s set status=0 where fid=%i", 
                     codingTable, i))
                 }
             }

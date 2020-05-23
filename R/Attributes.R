@@ -233,7 +233,7 @@ AddAttrNames <- function(name,...) {
   }
 }
 
-AddAttrButton <- function(label=gettext("ADD", domain = "R-RQDA")){
+AddAttrButton <- function(label=gettext("Add", domain = "R-RQDA")){
   AddAttB <- gbutton(label,handler=function(h,...) {
     AttrName <- ginput(gettext("Enter new Attr Name. ", domain = "R-RQDA"), icon="info")
     if (!is.na(AttrName)) {
@@ -265,8 +265,8 @@ DeleteAttrButton <- function(label=gettext("Delete", domain = "R-RQDA")){
       Selected <- svalue(.rqda$.AttrNamesWidget)
       Selected <- enc(Selected,"UTF-8")
       dbGetQuery(.rqda$qdacon,sprintf("update attributes set status=0 where name='%s'",Selected))
-      RQDAQuery(sprintf("update caseAttr set status=0 where variable='%s'",Selected))
-      RQDAQuery(sprintf("update fileAttr set status=0 where variable='%s'",Selected))
+      rqda_exe(sprintf("update caseAttr set status=0 where variable='%s'",Selected))
+      rqda_exe(sprintf("update fileAttr set status=0 where variable='%s'",Selected))
       AttrNamesUpdate()
     }
   }
@@ -353,8 +353,8 @@ getAttr <- function(type=c("case","file"),attrs=svalue(.rqda$.AttrNamesWidget),s
   if (length(attrs)==0) attrs <- NULL
   inClause <- ifelse(is.null(attrs),"",sprintf("where status=1 and variable in (%s)",paste(shQuote(attrs),collapse=",")))
   if (type == "case"){
-    RQDAQuery("delete from caseAttr where value='NA'")
-    RQDAQuery("delete from caseAttr where value=''") ## clean the table
+    rqda_exe("delete from caseAttr where value='NA'")
+    rqda_exe("delete from caseAttr where value=''") ## clean the table
     DF <- dbGetQuery(.rqda$qdacon,sprintf("select variable,value, caseId from caseAttr %s",inClause))
     if (nrow(DF) > 0 ){
     Encoding(DF$variable) <- Encoding(DF$value) <- "UTF-8"
@@ -368,8 +368,8 @@ getAttr <- function(type=c("case","file"),attrs=svalue(.rqda$.AttrNamesWidget),s
       class(DF) <- c("CaseAttr","data.frame")
     }}
   } else if (type=="file"){
-    RQDAQuery("delete from fileAttr where value='NA'")
-    RQDAQuery("delete from fileAttr where value=''") ## clean the table
+    rqda_exe("delete from fileAttr where value='NA'")
+    rqda_exe("delete from fileAttr where value=''") ## clean the table
     DF <- dbGetQuery(.rqda$qdacon,sprintf("select variable,value, fileId from fileAttr %s",inClause))
     if (nrow(DF) > 0 ){
     Encoding(DF$variable) <- Encoding(DF$value) <- "UTF-8"
@@ -383,7 +383,7 @@ getAttr <- function(type=c("case","file"),attrs=svalue(.rqda$.AttrNamesWidget),s
       class(DF) <- c("FileAttr","data.frame")
     }}
   }
-  tt <- RQDAQuery("select name, class from attributes")
+  tt <- rqda_sel("select name, class from attributes")
   attrs <- tt[tt$class=="numeric","name"]
   idx <- which(names(DF) %in% attrs)
   DF[,idx]<-as.data.frame(apply(DF[,idx,drop=FALSE],2,as.numeric))
@@ -442,15 +442,15 @@ importAttr <- function(data, type='file', filename){
   fnuser <- data[,filename]
   if (!all(fnuser %in% fn)) stop("some files are not in the rqda project.", domain = "R-RQDA")
   fid <- fid[match(data[[filename]],fn)]
-  allAtt <- RQDAQuery("select name from attributes where status=1")$name
+  allAtt <- rqda_sel("select name from attributes where status=1")$name
   if (!all(names(dat) %in% allAtt)) stop("some attributes are in not the rqda project.", domain = "R-RQDA")
   for (att in names(dat)) {
     attval <- dat[[att]]
     if (mode(attval) == "character" && Encoding(attval) != "UTF-8") attval <- iconv(attval, to='UTF-8')
     for (i in 1:nrow(dat)) {
-      exist <- RQDAQuery(sprintf("select value from fileAttr where variable='%s' and fileID=%i and status=1", att, fid[i]))
+      exist <- rqda_sel(sprintf("select value from fileAttr where variable='%s' and fileID=%i and status=1", att, fid[i]))
       if (nrow(exist)==0 && !is.na(attval[i])) {
-        RQDAQuery(sprintf("insert into fileAttr (variable, value, fileID, date, owner, status) 
+        rqda_exe(sprintf("insert into fileAttr (variable, value, fileID, date, owner, status) 
                           values ('%s','%s','%s','%s','rghuang',1)",att, attval[i], fid[i], as.character(date())))
         }
     }

@@ -34,7 +34,7 @@ msgstr "Desa i Tanca"
 msgid "add attribute in Attrs Table first."
 msgstr "afegir abans l'atribut a la Taula d'Atributs."
 
-msgid "ADD"
+msgid "Add"
 msgstr "Afegir"
 
 msgid "Enter new Attr Name."

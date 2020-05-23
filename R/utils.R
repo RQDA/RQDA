@@ -193,7 +193,7 @@ MemoWidget <- function(prefix,widget,dbTable){
 }
 
 getAnnos <- function(type="file"){
-    annos <- RQDAQuery("select annotation.rowid, source.id, source.name, annotation.annotation,annotation.date from annotation join source on annotation.fid=source.id where  annotation.status==1 and annotation not in ('NA','')")
+    annos <- rqda_sel("select annotation.rowid, source.id, source.name, annotation.annotation,annotation.date from annotation join source on annotation.fid=source.id where  annotation.status==1 and annotation not in ('NA','')")
     if (nrow(annos)>0){
         Encoding(annos$annotation) <- "UTF-8"
         Encoding(annos$name) <- "UTF-8"
@@ -206,7 +206,7 @@ getAnnos <- function(type="file"){
 
 #' @export
 getMemos <- function(type="codes"){
-    memos <- RQDAQuery("select memo, name, id, date, dateM from freecode where status==1 and memo not in ('NA','')")
+    memos <- rqda_sel("select memo, name, id, date, dateM from freecode where status==1 and memo not in ('NA','')")
     if (nrow(memos)>0){
         Encoding(memos$memo) <- "UTF-8"
         Encoding(memos$name) <- "UTF-8"
@@ -574,11 +574,11 @@ casesCodedByAnd <- function(cid){
   ## cid can be splitted across files, but still on the same case
   Ncid <- length(cid)
   cid <- paste(cid,collapse=',')
-  fid <- RQDAQuery(sprintf("select fid,cid from coding where status=1 and cid in (%s)",cid))
+  fid <- rqda_sel(sprintf("select fid,cid from coding where status=1 and cid in (%s)",cid))
   if (nrow(fid)>0) {
     fidUnique <- unique(fid$fid)
     fidUnique <- paste(fidUnique,collapse=',')
-    case <- RQDAQuery(sprintf("select fid, caseid from caselinkage where status=1 and fid in (%s)",fidUnique))
+    case <- rqda_sel(sprintf("select fid, caseid from caselinkage where status=1 and fid in (%s)",fidUnique))
     codes <- tapply(case$fid, case$caseid,FUN=function(x) unique(fid[fid$fid %in% unique(x),]$cid))
     ans <- sapply(codes,length)
     ans <- as.numeric(names(ans)[ans==Ncid])
@@ -613,6 +613,21 @@ if (is_projOpen()) {
 dbGetQuery(.rqda$qdacon,sql)
 } else (cat("open a project first\n."))
 }
+
+#' @param sql sql-text
+rqda_sel <- function(sql){
+  if (is_projOpen()) {
+    dbGetQuery(.rqda$qdacon,sql)
+  } else (cat("open a project first\n."))
+}
+
+#' @param sql sql-text
+rqda_exe <- function(sql){
+  if (is_projOpen()) {
+    dbGetQuery(.rqda$qdacon,sql)
+  } else (cat("open a project first\n."))
+}
+
 
 #' @export
 showSubset <- function(x,...){
@@ -650,8 +665,8 @@ ShowFileProperty <- function(Fid = getFileIds(,"selected"),focus=TRUE) {
   if (is_projOpen(envir = .rqda, conName = "qdacon", message = FALSE)) {
     if (is.null(Fid)) val <- "No files are selected."
     if (length(Fid)==1) {
-      Fcat <- RQDAQuery(sprintf("select name from filecat where catid in (select catid from treefile where fid=%i and status=1) and status=1",Fid))$name
-      Case <- RQDAQuery(sprintf("select name from cases where id in (select caseid from caselinkage where fid=%i and status=1) and status=1",Fid))$name
+      Fcat <- rqda_sel(sprintf("select name from filecat where catid in (select catid from treefile where fid=%i and status=1) and status=1",Fid))$name
+      Case <- rqda_sel(sprintf("select name from cases where id in (select caseid from caselinkage where fid=%i and status=1) and status=1",Fid))$name
       if (!is.null(Fcat)) Encoding(Fcat) <- "UTF-8"
       if (!is.null(Case)) Encoding(Case) <- "UTF-8"
       fcat <- paste(strwrap(sprintf(gettext("File Category is %s", domain = "R-RQDA"),paste(shQuote(Fcat),collapse=", ")),105,exdent=4),collapse="\n")
@@ -673,7 +688,7 @@ ShowFileProperty <- function(Fid = getFileIds(,"selected"),focus=TRUE) {
 #' @export
 filesCodedByAnd <- function(cid, codingTable=c("coding","coding2")){
     cid <- paste(cid,collapse=',')
-    fid <- RQDAQuery(sprintf("select fid,cid from %s where status=1 and cid in (%s)",codingTable, cid))
+    fid <- rqda_sel(sprintf("select fid,cid from %s where status=1 and cid in (%s)",codingTable, cid))
     if (nrow(fid)>0) {
         fidList <- by(fid,factor(fid$cid),FUN=function(x) unique(x$fid))
         fid <- Reduce(intersect,fidList)
@@ -685,7 +700,7 @@ filesCodedByAnd <- function(cid, codingTable=c("coding","coding2")){
 #' @export
 filesCodedByOr <- function(cid, codingTable=c("coding","coding2")){
     cid <- paste(cid,collapse=',')
-    fid <- RQDAQuery(sprintf("select fid from %s where status=1 and cid in (%s)",codingTable, cid))$fid
+    fid <- rqda_sel(sprintf("select fid from %s where status=1 and cid in (%s)",codingTable, cid))$fid
     if (length(fid)==0) {fid <- integer(0)}
     class(fid) <- c("RQDA.vector","fileId")
     fid
@@ -694,7 +709,7 @@ filesCodedByOr <- function(cid, codingTable=c("coding","coding2")){
 #' @export
 filesCodedByNot <- function(cid, codingTable=c("coding","coding2")){
     codedfid <- filesCodedByOr(cid)
-    allfid <- RQDAQuery(sprintf("select fid from %s where status=1 group by fid",codingTable))$fid
+    allfid <- rqda_sel(sprintf("select fid from %s where status=1 group by fid",codingTable))$fid
     fid <- setdiff(allfid,codedfid)
     if (length(fid)==0) {fid <- integer(0)}
     class(fid) <- c("RQDA.vector","fileId")
@@ -706,7 +721,7 @@ nCodedByTwo <- function(FUN, codeList=NULL, print=TRUE,...){
     ## codeList is character vector of codes.
     if (!is_projOpen(message=FALSE)) stop("No project is opened.", domain = "R-RQDA")
     FUN <- match.fun(FUN)
-    Cid_Name <- RQDAQuery("select id, name from freecode where status=1")
+    Cid_Name <- rqda_sel("select id, name from freecode where status=1")
     if (is.null(codeList)) {
         codeList <- gselect.list(Cid_Name$name,multiple=TRUE)
     }
@@ -783,7 +798,7 @@ queryFiles <- function(or=NULL,and=NULL,not=NULL,names=TRUE){
   class(ans) <- c("RQDA.vector","fileId")
   if (names) {
     if (length(ans)>0){
-      ans <- RQDAQuery(sprintf("select name from source where status=1 and id in (%s)", paste(ans,collapse=',')))$name
+      ans <- rqda_sel(sprintf("select name from source where status=1 and id in (%s)", paste(ans,collapse=',')))$name
       Encoding(ans) <- "UTF-8"
     } else {
       ans <- character(0)
@@ -795,9 +810,9 @@ queryFiles <- function(or=NULL,and=NULL,not=NULL,names=TRUE){
 }
 
 UpdateCoding <- function(){
-    rowid <- RQDAQuery("select rowid from coding")$rowid
+    rowid <- rqda_sel("select rowid from coding")$rowid
     for (i in rowid) {
-    RQDAQuery(sprintf("update coding set seltext=(select substr(source.file,coding.selfirst+1,coding.selend-coding.selfirst)
+    rqda_exe(sprintf("update coding set seltext=(select substr(source.file,coding.selfirst+1,coding.selend-coding.selfirst)
         from coding inner join source on coding.fid=source.id where coding.ROWID=%i) where coding.ROWID=%i",i,i))
 }}
 #UpdateCoding()
@@ -806,10 +821,10 @@ UpdateCoding <- function(){
 filesByCodes <- function(codingTable=c("coding","coding2")){
   codingTable <- match.arg(codingTable)
   if (codingTable=="coding"){
-    ans <- RQDAQuery("select coding.fid as fid, freecode.name as codename, source.name as filename from coding left join freecode on (coding.cid=freecode.id)left join source on (coding.fid=source.id) where coding.status=1 and source.status=1 and freecode.status=1")
+    ans <- rqda_sel("select coding.fid as fid, freecode.name as codename, source.name as filename from coding left join freecode on (coding.cid=freecode.id)left join source on (coding.fid=source.id) where coding.status=1 and source.status=1 and freecode.status=1")
   }
   if (codingTable=="coding2"){
-    ans <- RQDAQuery("select coding2.fid as fid, freecode.name as codename, source.name as filename from coding2 left join freecode on (coding2.cid=freecode.id)left join source on (coding2.fid=source.id) where coding2.status=1 and source.status=1 and freecode.status=1")
+    ans <- rqda_sel("select coding2.fid as fid, freecode.name as codename, source.name as filename from coding2 left join freecode on (coding2.cid=freecode.id)left join source on (coding2.fid=source.id) where coding2.status=1 and source.status=1 and freecode.status=1")
   }
   if (nrow(ans)!=0){
     Encoding(ans$codename) <- Encoding(ans$filename) <- "UTF-8"

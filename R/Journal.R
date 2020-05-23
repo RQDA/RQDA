@@ -1,4 +1,4 @@
-AddJournalButton <- function(label=gettext("ADD", domain = "R-RQDA")){
+AddJournalButton <- function(label=gettext("Add", domain = "R-RQDA")){
   AddJouB <- gbutton(label,handler=function(h,...) {
         AddNewJournalFun()
     }
@@ -14,7 +14,7 @@ DeleteJournalButton <- function(label=gettext("Delete", domain = "R-RQDA")){
         if (isTRUE(del)){
           Selected <- svalue(.rqda$.JournalNamesWidget)
           Encoding(Selected) <- "UTF-8"
-          RQDAQuery(sprintf("update journal set status=0 where name='%s'",enc(Selected)))
+          rqda_exe(sprintf("update journal set status=0 where name='%s'",enc(Selected)))
           JournalNamesUpdate()
         }
       }

@@ -7,10 +7,10 @@ prof_mat <- function(unit = c("coding", "file"), case_ids = NULL, case_names = N
     } else if (!is.null(case_ids)) {
       case_names <- getCaseNames(case_ids)
     } else {
-      case_ids <- RQDAQuery(sprintf("select id from cases where name in (%s)", paste(shQuote(case_names), collapse=",")))$id
+      case_ids <- rqda_sel(sprintf("select id from cases where name in (%s)", paste(shQuote(case_names), collapse=",")))$id
     }
     
-    codes <- RQDAQuery("select name, id, cid from freecode, coding where freecode.id=coding.cid and freecode.status=1 group by cid order by name")
+    codes <- rqda_sel("select name, id, cid from freecode, coding where freecode.id=coding.cid and freecode.status=1 group by cid order by name")
     Encoding(codes$name) <- "UTF-8"
     
     wnh <- size(.rqda$.root_rqdagui)  
@@ -29,9 +29,9 @@ prof_mat <- function(unit = c("coding", "file"), case_ids = NULL, case_names = N
     }
 
     for (i in 1:nrow(codes)){
-        ncoded <- RQDAQuery(sprintf("select count(fid) as n, fid, status from coding where status=1 and cid=%s group by fid", codes$cid[i]))
+        ncoded <- rqda_sel(sprintf("select count(fid) as n, fid, status from coding where status=1 and cid=%s group by fid", codes$cid[i]))
         for (col in 1:length(case_names)){
-          fid <- RQDAQuery(sprintf("select fid from caselinkage where caseid=%s",case_ids[col]))$fid
+          fid <- rqda_sel(sprintf("select fid from caselinkage where caseid=%s",case_ids[col]))$fid
           if (nrow(ncoded)==0) ncodings <- 0 else {
             ncodings <- switch(unit,
                                coding = sum(ncoded$n[ncoded$fid %in% fid]),
