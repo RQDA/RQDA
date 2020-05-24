@@ -90,14 +90,17 @@ MemoWidget <- function(prefix,widget,dbTable){
         icon="error",container=TRUE)
     } else {
 
+      # get size of root gui as width and height
+      wdh <- size(.rqda$.root_rqdagui)
+      head_s <- c( wdh["width"], wdh["height"] * .1)
+      body_s <- c( wdh["width"], wdh["height"] * .9)
+
+
       CloseYes <- function(currentCode){
         withinWidget <- svalue(get(sprintf(".%smemoW",prefix),envir=.rqda))
         InRQDA <- rqda_sel(
                              sprintf("select memo from %s where name='%s'",
                                      dbTable, enc(currentCode,"UTF-8")))[1, 1]
-
-        # print(dbTable)
-        # print(currentCode)
 
         if (isTRUE(all.equal(withinWidget,InRQDA)) |
             (is.na(InRQDA) && withinWidget==""))
@@ -110,8 +113,6 @@ MemoWidget <- function(prefix,widget,dbTable){
         }
         return(val)
       } ## helper function
-
-
 
       IsOpen <- tryCatch(
         eval(parse(text=sprintf("svalue(.rqda$.%smemoW)",prefix)))
@@ -151,7 +152,7 @@ MemoWidget <- function(prefix,widget,dbTable){
                  container=get(sprintf(".%smemo",prefix),envir=.rqda)),
                envir=.rqda)
         mbut <- gbutton(
-          gettext("Save Memo", domain = "R-RQDA"),
+          rqda_txt("Save Memo"),
           container=get(sprintf(".%smemo2",prefix), envir=.rqda),
           handler=function(h,...){
             newcontent <- svalue(W)
@@ -161,13 +162,17 @@ MemoWidget <- function(prefix,widget,dbTable){
                        sprintf("update %s set memo='%s' where name='%s'",
                                dbTable,newcontent,enc(Selected)))
             mbut <- get(sprintf("buttonOf.%smemo",prefix),envir=button)
+            # size(mbut) <- head_s
             enabled(mbut) <- FALSE
           }
-        )## end of save memo button
+        ) ## end of save memo button
+        # width & height
+        size(mbut) <- head_s
         enabled(mbut) <- FALSE
         assign(sprintf("buttonOf.%smemo",prefix),
                mbut,envir=button) ## assign the button object
         tmp <- gtext(container=get(sprintf(".%smemo2",prefix),envir=.rqda))
+        size(tmp) <- body_s
         font <- pangoFontDescriptionFromString(.rqda$font)
         gtkWidgetModifyFont(tmp$widget,font)## set the default fontsize
         assign(sprintf(".%smemoW",prefix),tmp,envir=.rqda)
@@ -183,6 +188,7 @@ MemoWidget <- function(prefix,widget,dbTable){
           handler <- function(h,...)  {!CloseYes(Selected)})
         gSignalConnect(tmp$widget$buffer, "changed", function(h,...) {
           mbut <- get(sprintf("buttonOf.%smemo",prefix),envir=button)
+          size(mbut) <- head_s
           enabled(mbut) <- TRUE
         }
         )##
@@ -721,7 +727,6 @@ ShowFileProperty <- function(Fid = getFileIds(type = "selected"),focus=TRUE) {
     # not sure what the tryCatch below is supposed to catch.
     #tryCatch(svalue(.rqda$.sfp) <- val, error=function(e) {
       gw <- gwindow(gettext("File Property", domain = "R-RQDA"),
-            parent=size(.rqda$.root_rqdagui)+c(19,-50),
             width = getOption("widgetSize")[1]*.5,
             height = getOption("widgetSize")[2]*.5)
       mainIcon <- system.file("icon", "mainIcon.png", package = "RQDA")

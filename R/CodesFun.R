@@ -368,8 +368,7 @@ retrieval <- function(Fid=NULL,order=c("fname","ftime","ctime"),CodeNameWidget=.
                            Ncodings,currentCode2,Nfiles)
       }
       tryCatch(eval(parse(text=sprintf("dispose(.rqda$.codingsOf%s)",currentCid))),error=function(e){})
-      wnh <- size(.rqda$.root_rqdagui) ## size of the main window
-      .gw <- gwindow(title=title, parent=c(wnh[1]+10,2),
+      .gw <- gwindow(title=title,,
                      width = getOption("widgetSize")[1], height = getOption("widgetSize")[2])
       mainIcon <- system.file("icon", "mainIcon.png", package = "RQDA")
       .gw$set_icon(mainIcon)
@@ -648,7 +647,7 @@ ClickHandlerFun <- function(CodeNameWidget,buttons=c("MarCodB1","UnMarB1"),codin
 
 HL_CodingWithMemo <- function(codingTable="coding"){
   if (is_projOpen(envir=.rqda,conName="qdacon")){
-    print(svalue(.rqda$.root_edit))
+    # print(svalue(.rqda$.root_edit))
     SelectedFile <- tryCatch(svalue(.rqda$.root_edit),error=function(e){})
     if (!is.null(SelectedFile)) {
       SelectedFile <- enc(SelectedFile,encoding="UTF-8")
@@ -739,8 +738,7 @@ DeleteAnnotationAnchorByMark <- function(markname){
 
 openAnnotation <- function(New=TRUE,pos,fid,rowid,AnchorPos=NULL){
     tryCatch(dispose(.rqda$.annotation),error=function(e) {})
-    wnh <- size(.rqda$.root_rqdagui)
-    .annotation <- gwindow(title=ngettext(1, "Annotation", "Annotations", domain = "R-RQDA"),parent=c(wnh[1]+10,2), # ngettext avoid update_pkg_po() crash.
+    .annotation <- gwindow(title=ngettext(1, "Annotation", "Annotations", domain = "R-RQDA"), # ngettext avoid update_pkg_po() crash.
                            width = getOption("widgetSize")[1], height = getOption("widgetSize")[2]
                            )
     mainIcon <- system.file("icon", "mainIcon.png", package = "RQDA")
