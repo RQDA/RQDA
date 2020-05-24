@@ -1,6 +1,7 @@
 
 button <- new.env(parent = emptyenv())
 .rqda <- new.env(parent = emptyenv())
+.codingEnv <- new.env(parent = emptyenv())
 
 .rqda$back.col <- "gold"
 .rqda$BOM <- FALSE
