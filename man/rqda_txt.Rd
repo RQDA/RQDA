@@ -6,6 +6,9 @@
 \usage{
 rqda_txt(text_string)
 }
+\arguments{
+\item{text_string}{string input}
+}
 \description{
 used internally to avoid long abundance of code
 }

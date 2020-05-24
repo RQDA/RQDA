@@ -457,6 +457,37 @@ RunOnSelected <- function(x,multiple=TRUE,expr,enclos=parent.frame(),title=NULL,
   invisible()
 }
 
+
+#' Select Items from a List
+#'
+#' @description
+#' Select item(s) from a character vector.
+#'
+#' @param list character vector. A list of items.
+#' @param multiple logical: can more than one item be selected?
+#' @param title optional character string for window title.
+#' @param width integer. Width of the widget.
+#' @param height integer. Height of the widget.
+#' @param \dots Not used currently.
+#'
+#' @details
+#' GTK version of \code{\link[utils]{select.list}}.
+#'
+#' @note
+#' The license of this function is subject to interpretation of the first author.
+#'
+#' @return
+#' A character vector of selected items with UTF-8 encoding. If no
+#' item was selected and 'OK' is clicked, it returns length 0 character
+#' vector. If 'Cancel' is clicked, '""' is returned.
+#'
+#' @seealso
+#' \code{\link[utils]{select.list}}
+#'
+#' @examples
+#' \dontrun{
+#' select.list(sort(.packages(all.available = TRUE)))
+#' }
 #' @export
 gselect.list <- function(list,multiple=TRUE,title=NULL, height = getOption("widgetSize")[2], width = getOption("widgetSize")[1],...){
   ## gtk version of select.list(), revised on 21 Apr. 2010 to fix a bug (crash R with 2.18 or newer libgtk2).
@@ -613,14 +644,18 @@ rqda_sel(sql)
 } else (cat("open a project first\n."))
 }
 
+#' Wrapper for dbGetQuery
 #' @param sql sql-text
+#' @export
 rqda_sel <- function(sql){
   if (is_projOpen()) {
     dbGetQuery(.rqda$qdacon, sql)
   } else (cat("open a project first\n."))
 }
 
+#' Wrapper for dbExecute
 #' @param sql sql-text
+#' @export
 rqda_exe <- function(sql){
   if (is_projOpen()) {
     dbExecute(.rqda$qdacon, sql)
@@ -663,8 +698,10 @@ showSubset.caseName <- function(x,...){
 ShowFileProperty <- function(Fid = getFileIds(type = "selected"),focus=TRUE) {
   if (is_projOpen(envir = .rqda, conName = "qdacon", message = FALSE)) {
 
-    if (is.null(Fid))
+    if (is.null(Fid)) {
       val <- "No files are selected."
+      return (FALSE)
+    }
 
     if (length(Fid)==1) {
       Fcat <- rqda_sel(sprintf("select name from filecat where catid in (select catid from treefile where fid=%i and status=1) and status=1",Fid))$name
@@ -676,12 +713,15 @@ ShowFileProperty <- function(Fid = getFileIds(type = "selected"),focus=TRUE) {
       val <- sprintf(gettext(" File ID is %i \n %s \nCase is %s", domain = "R-RQDA"),Fid,fcat,paste(shQuote(Case),collapse=", "))
     }
 
-    if (length(Fid)>1)
+    if (length(Fid)>1) {
       val <- gettext("Please select one file only.", domain = "R-RQDA")
+      return (FALSE)
+    }
 
-
-    tryCatch(if(exists(.sfp, envir = .rqda)) svalue(.rqda$.sfp) <- val, error=function(e) {
-      gw <- gwindow(gettext("File Property", domain = "R-RQDA"),parent=size(.rqda$.root_rqdagui)+c(19,-50),
+    # not sure what the tryCatch below is supposed to catch.
+    #tryCatch(svalue(.rqda$.sfp) <- val, error=function(e) {
+      gw <- gwindow(gettext("File Property", domain = "R-RQDA"),
+            parent=size(.rqda$.root_rqdagui)+c(19,-50),
             width = getOption("widgetSize")[1]*.5,
             height = getOption("widgetSize")[2]*.5)
       mainIcon <- system.file("icon", "mainIcon.png", package = "RQDA")
@@ -689,7 +729,7 @@ ShowFileProperty <- function(Fid = getFileIds(type = "selected"),focus=TRUE) {
       sfp <- glabel(val,container=gw)
       assign(".sfp",sfp,envir=.rqda)
       "focus<-"(gw,value=focus)
-    })
+    #})
 
   }}
 
