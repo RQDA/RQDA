@@ -13,8 +13,8 @@
   ## cordinate of ViewFunWidget
 
   #if (is.null(getOption("widgetSize")))
-  options(widgetSize = c(gdkScreenWidth()*.9,
-                         gdkScreenHeight()*.9))
+  options(widgetSize = c(gdkScreenWidth()*.5,
+                         gdkScreenHeight()*.5))
 
   options(andMethod=c("overlap","exact","inclusion"))
   assign("optOld",optOld,envir=.rqda)

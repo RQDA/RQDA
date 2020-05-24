@@ -85,7 +85,7 @@ EditVarWidget <- function(ExistingItems=NULL,container=NULL,title=NULL,ID=NULL,s
   gSignalConnect(button, "clicked",saveFUN,list(model,window,ExistingItems,list(...)))
   hbox$packStart(button, TRUE, TRUE, 0)
   window$setDefaultSize(300, 350)
-  window$Move(size(.rqda$.root_rqdagui)[1],2)
+  # window$Move(size(.rqda$.root_rqdagui)[1],2)
   window$showAll()
   invisible(window)
 }
