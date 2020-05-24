@@ -47,6 +47,10 @@ retrieval_by_code <- function (Fid = NULL, order = c("fname", "ftime", "ctime"),
                 width = getOption("widgetSize")[1], height = getOption("widgetSize")[2]
                 )
 
+    addHandlerKeystroke(.gw, function(h, ...){
+    if(h$key=="\027") dispose(.gw)
+    })
+
             mainIcon <- system.file("icon", "mainIcon.png", package = "RQDA")
             .gw$set_icon(mainIcon)
             assign(sprintf(".codingsOf%s", currentCid), .gw, 

@@ -339,6 +339,10 @@ CodingMemoButton <- function(label=gettext("C2Memo", domain = "R-RQDA"))
     if (is.null(title)) title <- "Coding Memo"
     .codingmemo <- gwindow(title=title,getOption("widgetCoordinate"),
     width = getOption("widgetSize")[1], height = getOption("widgetSize")[2])
+    
+        addHandlerKeystroke(.codingmemo, function(h, ...){
+        if(h$key=="\027") dispose(.codingmemo)
+        })
     assign(".codingmemo",.codingmemo, envir=.rqda)
     .codingmemo <- get(".codingmemo",envir=.rqda)
     .codingmemo2 <- gpanedgroup(horizontal = FALSE, container=.codingmemo)

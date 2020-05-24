@@ -17,6 +17,10 @@ RQDA <- function() {
       visible = FALSE,
       handler = function(h, ...) { closeProject(assignenv = .rqda) }
     )
+    addHandlerKeystroke(.root_rqdagui, function(h, ...){
+      if(h$key=="\021") dispose(.root_rqdagui)
+    })
+
 
     wdh <- size(.root_rqdagui)
     head_s <- c( wdh["width"], wdh["height"] * .1)

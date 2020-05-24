@@ -446,6 +446,9 @@ setAttrType <- function() {
       idx <- which (items %in%  oldCls)
     }
     w <- gwindow(gettext("Type of attribute", domain = "R-RQDA"),width = getOption("widgetSize")[1], height = getOption("widgetSize")[2])
+    addHandlerKeystroke(w, function(h, ...){
+      if(h$key=="\027") dispose(w)
+    })
     gp <- ggroup(horizontal=FALSE,container=w)
     rb <- gradio(items,idx,horizontal=TRUE, container=gp)
     gbutton("OK",container=gp,handler=function(h,...){

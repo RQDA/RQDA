@@ -372,6 +372,11 @@ retrieval <- function(Fid=NULL,order=c("fname","ftime","ctime"),CodeNameWidget=.
                      width = getOption("widgetSize")[1], height = getOption("widgetSize")[2])
       mainIcon <- system.file("icon", "mainIcon.png", package = "RQDA")
       .gw$set_icon(mainIcon)
+
+    addHandlerKeystroke(.gw, function(h, ...){
+      if(h$key=="\027") dispose(.gw)
+    })
+
       assign(sprintf(".codingsOf%s",currentCid),.gw,envir=.rqda)
       .retreivalgui <- gtext(container=.gw)
       font <- pangoFontDescriptionFromString(.rqda$font)
@@ -741,6 +746,10 @@ openAnnotation <- function(New=TRUE,pos,fid,rowid,AnchorPos=NULL){
     .annotation <- gwindow(title=ngettext(1, "Annotation", "Annotations", domain = "R-RQDA"), # ngettext avoid update_pkg_po() crash.
                            width = getOption("widgetSize")[1], height = getOption("widgetSize")[2]
                            )
+
+    addHandlerKeystroke(.annotation, function(h, ...){
+      if(h$key=="\027") dispose(.annotation)
+    })
     mainIcon <- system.file("icon", "mainIcon.png", package = "RQDA")
     .annotation$set_icon(mainIcon)
     assign(".annotation",.annotation, envir=.rqda)

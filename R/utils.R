@@ -143,6 +143,9 @@ MemoWidget <- function(prefix,widget,dbTable){
           width = getOption("widgetSize")[1],
           height = getOption("widgetSize")[2]
         )
+        addHandlerKeystroke(gw, function(h, ...){
+          if(h$key=="\027") dispose(gw)
+        })
         mainIcon <- system.file("icon", "mainIcon.png", package = "RQDA")
         gw$set_icon(mainIcon)
         assign(sprintf(".%smemo",prefix),gw,envir=.rqda)
@@ -251,6 +254,9 @@ print.Info4Widget <- function(x, ...){
         .gw <- gwindow(title = attr(x,"descr"), parent = getOption("widgetCoordinate"),
                        width = getOption("widgetSize")[1], height = getOption("widgetSize")[2])
         mainIcon <- system.file("icon", "mainIcon.png", package = "RQDA")
+        addHandlerKeystroke(.gw, function(h, ...){
+          if(h$key=="\027") dispose(.gw)
+        })
         .gw$set_icon(mainIcon)
         ## assign(sprintf(".codingsOf%s", "codingsByone"), .gw, env = .rqda)
         .retreivalgui <- gtext(container = .gw)
@@ -441,6 +447,9 @@ RunOnSelected <- function(x,multiple=TRUE,expr,enclos=parent.frame(),title=NULL,
   if (is.null(title)) title <- ifelse(multiple,"Select one or more","Select one")
   g <- gwindow(title=title,
   width = getOption("widgetSize")[1], height = getOption("widgetSize")[2],parent=c(hpos, vpos))
+  addHandlerKeystroke(g, function(h, ...){
+    if(h$key=="\027") dispose(g)
+  })
   x1<-ggroup(FALSE,container=g)
   ##x1$parent$parent$parent$SetTitle(title)
   ##x1$parent$parent$parent$SetDefaultSize(200, 500)
@@ -729,6 +738,9 @@ ShowFileProperty <- function(Fid = getFileIds(type = "selected"),focus=TRUE) {
       gw <- gwindow(gettext("File Property", domain = "R-RQDA"),
             width = getOption("widgetSize")[1]*.5,
             height = getOption("widgetSize")[2]*.5)
+      addHandlerKeystroke(gw, function(h, ...){
+        if(h$key=="\027") dispose(gw)
+      })
       mainIcon <- system.file("icon", "mainIcon.png", package = "RQDA")
       gw$set_icon(mainIcon)
       sfp <- glabel(val,container=gw)

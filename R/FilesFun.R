@@ -116,6 +116,11 @@ ViewFileFunHelper <- function(FileName,hightlight=TRUE,codingTable=.rqda$codingT
                 height = getOption("widgetSize")[2]
                 )
     }
+
+  addHandlerKeystroke(gw, function(h, ...){
+  if(h$key=="\027") dispose(gw)
+  })
+
   mainIcon <- system.file("icon", "mainIcon.png", package = "RQDA")
   gw$set_icon(mainIcon)
   # getToolkitWidget(gw)$Move(getOption("widgetCoordinate")[1],
@@ -240,6 +245,10 @@ EditFileFun <- function(FileNameWidget=.rqda$.fnames_rqda){
       gw <- gwindow(title=SelectedFileName,parent=getOption("widgetCoordinate"),
                     width = getOption("widgetSize")[1], height = getOption("widgetSize")[2]
                     )
+
+    addHandlerKeystroke(gw, function(h, ...){
+    if(h$key=="\027") dispose(gw)
+    })
       mainIcon <- system.file("icon", "mainIcon.png", package = "RQDA")
       gw$set_icon(mainIcon)
       assign(".root_edit",gw,envir=.rqda)
@@ -662,6 +671,10 @@ viewPlainFile <- function(FileNameWidget=.rqda$.fnames_rqda){
   wnh <- size(.rqda$.root_rqdagui) ## size of the main window
   gw <- gwindow(title = SelectedFileName,parent = wnh, ## .rqda$.root_rqdagui,
                 width = getOption("widgetSize")[1], height = getOption("widgetSize")[2])
+
+    addHandlerKeystroke(gw, function(h, ...){
+    if(h$key=="\027") dispose(gw)
+    })
   mainIcon <- system.file("icon", "mainIcon.png", package = "RQDA")
   gw$set_icon(mainIcon)
   # getToolkitWidget(gw)$Move(getOption("widgetCoordinate")[1],getOption("widgetCoordinate")[2])

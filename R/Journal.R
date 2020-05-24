@@ -78,11 +78,21 @@ AddNewJournalFun <- function(){
         gw <- gwindow(title="Add New Journal.",parent=getOption("widgetCoordinate"),
                       width = getOption("widgetSize")[1], height = getOption("widgetSize")[2]
                            )
+
+        addHandlerKeystroke(gw, function(h, ...){
+          if(h$key=="\027") dispose(gw)
+        })
+        
+        # get size of root gui as width and height
+        wdh <- size(.rqda$.root_rqdagui)
+        head_s <- c( wdh["width"], wdh["height"] * .1)
+        body_s <- c( wdh["width"], wdh["height"] * .9)
+
         mainIcon <- system.file("icon", "mainIcon.png", package = "RQDA")
         gw$set_icon(mainIcon)
         assign(".AddNewJournalWidget",gw,envir=.rqda)
         assign(".AddNewJournalWidget2",gpanedgroup(horizontal = FALSE, container=get(".AddNewJournalWidget",envir=.rqda)),envir=.rqda)
-        gbutton(gettext("Save Journal", domain = "R-RQDA"),container=get(".AddNewJournalWidget2",envir=.rqda),handler=function(h,...){
+        jbut <- gbutton(gettext("Save Journal", domain = "R-RQDA"),container=get(".AddNewJournalWidget2",envir=.rqda),handler=function(h,...){
             ## title <- ginput(gettext("Enter new file name. ", domain = "R-RQDA"),text=Sys.time(), icon="info")
             title <- as.character(Sys.time())
             if (!is.na(title)){
@@ -100,9 +110,11 @@ AddNewJournalFun <- function(){
             }
             ## must put here rather than in AddJournalButton()
             JournalNamesUpdate()
-        }}
-                )## end of save button
+        }}) ## end of save button
+        
+        size(jbut) <- head_s
         tmp <- gtext(container=get(".AddNewJournalWidget2",envir=.rqda))
+        size(tmp) <- body_s
         font <- pangoFontDescriptionFromString(.rqda$font)
         gtkWidgetModifyFont(tmp$widget,font)
         assign(".AddNewJournalWidgetW", tmp, envir=.rqda)
@@ -120,6 +132,10 @@ ViewJournalWidget <- function(prefix="Journal",widget=.rqda$.JournalNamesWidget,
         gw <- gwindow(title=sprintf("%s:%s",prefix,Selected),parent=getOption("widgetCoordinate"),
                      width = getOption("widgetSize")[1], height = getOption("widgetSize")[2]
                            )
+
+    addHandlerKeystroke(gw, function(h, ...){
+    if(h$key=="\027") dispose(gw)
+    })
         mainIcon <- system.file("icon", "mainIcon.png", package = "RQDA")
         gw$set_icon(mainIcon)
         assign(sprintf(".%smemo",prefix),gw,envir=.rqda)
