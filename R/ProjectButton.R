@@ -1,6 +1,8 @@
 NewProjectButton <- function(container){
   gbutton(rqda_txt("New Project"),container=container,handler=function(h,...){
     path=gfile(type="save",text = rqda_txt("Type a name for the new project and click OK."))
+    if (!identical(path, character(0)))
+    {
     if (Encoding(path) != "UTF-8") {
       Encoding(path) <- "UTF-8"
     }
@@ -38,7 +40,7 @@ NewProjectButton <- function(container){
       enabled(.rqda$.FileCatWidget) <- TRUE
     }
   }
-  )
+  })
 }
 
 OpenProjectButton <- function(container){
@@ -48,9 +50,12 @@ OpenProjectButton <- function(container){
       text = rqda_txt("Select a *.rqda file and click OK."),
       type="open", filter=list("rqda"=list(patterns = c("*.rqda")),
                                "All files" = list(patterns = c("*"))))
+    if (!identical(path, character(0)))
+    {
     if (!is.na(path)){
       Encoding(path) <- "UTF-8"
       openProject(path,updateGUI=TRUE)
+    }
     }
   })
 }

@@ -483,11 +483,14 @@ GetCodesNamesWidgetMenu <- function()
   CodesNamesWidgetMenu[[6]] <- gaction(gettext("Export Codings as HTML", domain = "R-RQDA"), handler = function(h, ...){
     if (is_projOpen(envir = .rqda, conName = "qdacon", message = FALSE)) {
       path=gfile(type="save",text = gettext("Type a name for the exported codings and click OK.", domain = "R-RQDA"))
+     if (!identical(path, character(0)))
+     {
       if (!is.na(path)){
         Encoding(path) <- "UTF-8"
         path <- sprintf("%s.html",path)
         if (.rqda$TOR == "uncondition") fid <- NULL else fid <- getFileIds(condition=.rqda$TOR)
         exportCodings(file=path,Fid=fid)
+      }
       }}
   })
 

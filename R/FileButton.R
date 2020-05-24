@@ -339,10 +339,13 @@ GetFileNamesWidgetMenu <- function()
         path = gfile(
           type = "save",
           text = rqda_txt("Type a name for the exported codings and click OK."))
+        if (!identical(path, character(0)))
+        {
         if (!is.na(path)) {
           Encoding(path) <- "UTF-8"
           path <- sprintf("%s.html", path)
           exportCodedFile(file = path, getFileIds(type = "selected")[1])
+        }
         }}})
 
   FileNamesWidgetMenu[[10]] <- gaction(
