@@ -141,6 +141,7 @@ ViewFileFunHelper <- function(FileName,hightlight=TRUE,codingTable=.rqda$codingT
   buffer <- W$buffer
   fore.col <- .rqda$fore.col
   back.col <- .rqda$back.col
+  # ToDo: Add a check if the tag exists otherwise Gtk will complain
   buffer$createTag("underline", underline = "single")
   buffer$createTag(fore.col,foreground = fore.col)
   buffer$createTag(sprintf("%s.background",back.col),background = back.col)
