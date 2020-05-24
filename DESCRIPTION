@@ -1,8 +1,7 @@
 Package: RQDA
 Type: Package
 Title: Qualitative Data Analysis
-Version: 0.3-1
-Date: 2018-03-26
+Version: 0.3-2
 Author: Ronggui Huang
 Maintainer: Ronggui Huang <ronggui.huang@gmail.com>
 Depends: RSQLite, gWidgets2RGtk2, DBI
