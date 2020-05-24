@@ -102,8 +102,9 @@ getCodingsFromFiles <- function(Fid, order=c("fname","ftime","ctime"),
 
         for (i in fid) {
             FileName <- rqda_sel(
-                "select name from source where status=1 and id=%i",
-                i)[['name']]
+                sprintf(
+                    "select name from source where status=1 and id=%i",
+                    i))[['name']]
 
             if (!is.null(FileName)) {
                 Encoding(FileName) <- "UTF-8"
