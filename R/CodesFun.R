@@ -61,11 +61,12 @@ mark <- function(widget,fore.col=.rqda$fore.col,back.col=NULL,addButton=FALSE,bu
   Encoding(selected) <- "UTF-8"
   startN <- index$startN # translate iter pointer to number
   endN <- index$endN
+
   if (selected != ""){## only when selected text chunk is not "", apply the color scheme.
     buffer <- widget$buffer
     if(addButton) {
-      InsertAnchor(widget,sprintf("%s<",buttonLabel),index=startN,handler=TRUE)
-      InsertAnchor(widget,sprintf(">%s",buttonLabel),index=endN + 1)
+      InsertAnchor(widget$widget,sprintf("%s<",buttonLabel),index=startN,handler=TRUE)
+      InsertAnchor(widget$widget,sprintf(">%s",buttonLabel),index=endN + 1)
     }
     startIter <- buffer$GetIterAtMark(index$startMark)$iter
     endIter <- buffer$GetIterAtMark(index$endMark)$iter
@@ -647,6 +648,7 @@ ClickHandlerFun <- function(CodeNameWidget,buttons=c("MarCodB1","UnMarB1"),codin
 
 HL_CodingWithMemo <- function(codingTable="coding"){
   if (is_projOpen(envir=.rqda,conName="qdacon")){
+    print(svalue(.rqda$.root_edit))
     SelectedFile <- tryCatch(svalue(.rqda$.root_edit),error=function(e){})
     if (!is.null(SelectedFile)) {
       SelectedFile <- enc(SelectedFile,encoding="UTF-8")
