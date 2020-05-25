@@ -18,7 +18,7 @@ matrix:
 
 # https://github.com/philipp-baumann/simplerspec/commit/c9a20f8181fd91bcff86338c4e7cfd0b0b645fc6
 before_install:
-- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get install libnlopt-dev; fi
+- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get install -qqy x11-apps libgtk-3-dev; fi
 
 notifications:
 email:
