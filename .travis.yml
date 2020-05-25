@@ -1,0 +1,26 @@
+# Travis for RQDA
+#
+# https://github.com/craigcitro/r-travis/wiki/Porting-to-native-R-support-in-Travis
+language: r
+sudo: false
+cache: packages
+
+r:
+  - oldrel
+  - devel
+
+matrix:
+  include:
+    - os: linux
+      r: release
+    - os: osx
+      r: release
+
+# https://github.com/philipp-baumann/simplerspec/commit/c9a20f8181fd91bcff86338c4e7cfd0b0b645fc6
+before_install:
+- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get install libnlopt-dev; fi
+
+notifications:
+email:
+on_success: change
+on_failure: change
