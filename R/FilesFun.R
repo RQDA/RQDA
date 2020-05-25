@@ -112,11 +112,19 @@ ViewFileFunHelper <- function(FileName,hightlight=TRUE,codingTable=.rqda$codingT
       width = getOption("widgetSize")[1], height = getOption("widgetSize")[2])
   } else {
     gw <- gwindow(title = SelectedFileName,parent = wnh, ## .rqda$.root_rqdagui,
-                width = getOption("widgetSize")[1], height = getOption("widgetSize")[2])
+                width = getOption("widgetSize")[1],
+                height = getOption("widgetSize")[2]
+                )
     }
+
+  addHandlerKeystroke(gw, function(h, ...){
+  if(h$key=="\027") dispose(gw)
+  })
+
   mainIcon <- system.file("icon", "mainIcon.png", package = "RQDA")
   gw$set_icon(mainIcon)
-  getToolkitWidget(gw)$Move(getOption("widgetCoordinate")[1],getOption("widgetCoordinate")[2])
+  # getToolkitWidget(gw)$Move(getOption("widgetCoordinate")[1],
+  #                           getOption("widgetCoordinate")[2])
   assign(".root_edit", gw, envir = .rqda)
   .root_edit <- get(".root_edit", .rqda)
   tmp <- gtext(container=.root_edit)
@@ -237,6 +245,10 @@ EditFileFun <- function(FileNameWidget=.rqda$.fnames_rqda){
       gw <- gwindow(title=SelectedFileName,parent=getOption("widgetCoordinate"),
                     width = getOption("widgetSize")[1], height = getOption("widgetSize")[2]
                     )
+
+    addHandlerKeystroke(gw, function(h, ...){
+    if(h$key=="\027") dispose(gw)
+    })
       mainIcon <- system.file("icon", "mainIcon.png", package = "RQDA")
       gw$set_icon(mainIcon)
       assign(".root_edit",gw,envir=.rqda)
@@ -659,9 +671,13 @@ viewPlainFile <- function(FileNameWidget=.rqda$.fnames_rqda){
   wnh <- size(.rqda$.root_rqdagui) ## size of the main window
   gw <- gwindow(title = SelectedFileName,parent = wnh, ## .rqda$.root_rqdagui,
                 width = getOption("widgetSize")[1], height = getOption("widgetSize")[2])
+
+    addHandlerKeystroke(gw, function(h, ...){
+    if(h$key=="\027") dispose(gw)
+    })
   mainIcon <- system.file("icon", "mainIcon.png", package = "RQDA")
   gw$set_icon(mainIcon)
-  getToolkitWidget(gw)$Move(getOption("widgetCoordinate")[1],getOption("widgetCoordinate")[2])
+  # getToolkitWidget(gw)$Move(getOption("widgetCoordinate")[1],getOption("widgetCoordinate")[2])
   tmp <- gtext(container=gw)
   font <- pangoFontDescriptionFromString(.rqda$font)
   gtkWidgetModifyFont(tmp$widget,font)

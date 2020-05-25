@@ -9,7 +9,7 @@ new_proj <- function(path, conName="qdacon",assignenv=.rqda,...){
   else{
     ## unlink(tmpNamme)
     ## deal with the ".rqda"
-    path <- paste(gsub("\\.rqda$","",path),"rqda",sep=".") 
+    path <- paste(gsub("\\.rqda$","",path),"rqda",sep=".")
     override <- FALSE
     if (fexist <- file.exists(path)) {
       ## if there exists a file, should ask; and test if have write access
@@ -21,7 +21,7 @@ new_proj <- function(path, conName="qdacon",assignenv=.rqda,...){
         override <- FALSE
         gmessage(
           gettext("You have no write permission to overwrite it.",
-                  domain = "R-RQDA"), 
+                  domain = "R-RQDA"),
           con=TRUE,icon="error")
       }
     }
@@ -41,7 +41,7 @@ new_proj <- function(path, conName="qdacon",assignenv=.rqda,...){
                                  dbname=path),envir=assignenv)
       }
       con <- get(conName,assignenv)
-      
+
       if (dbExistsTable(con,"source")) dbRemoveTable(con, "source")
       ## interview record
       rqda_exe(
@@ -59,7 +59,7 @@ new_proj <- function(path, conName="qdacon",assignenv=.rqda,...){
       ## tree-like strcuture of code (relationship between code and
       ## code-category[codecat])
       rqda_exe(
-        paste("create table treecode  (cid integer, catid integer, date text,", 
+        paste("create table treecode  (cid integer, catid integer, date text,",
               "dateM text, memo text, status integer, owner text)")
       )
       if (dbExistsTable(con,"treefile")) dbRemoveTable(con, "treefile")
@@ -78,7 +78,7 @@ new_proj <- function(path, conName="qdacon",assignenv=.rqda,...){
       if (dbExistsTable(con,"codecat")) dbRemoveTable(con, "codecat")
       ## code category
       rqda_exe(
-        paste("create table codecat  (name text, cid integer, catid integer,", 
+        paste("create table codecat  (name text, cid integer, catid integer,",
               "owner text, date text, dateM text,memo text, status integer)")
       )
       if (dbExistsTable(con,"coding")) dbRemoveTable(con, "coding")
@@ -96,7 +96,7 @@ new_proj <- function(path, conName="qdacon",assignenv=.rqda,...){
               "date text, memo text)")
       )
       if (dbExistsTable(con,"project")) dbRemoveTable(con, "project")
-      ## rqda_exe("create table project  
+      ## rqda_exe("create table project
       ## (encoding text, databaseversion text, date text,dateM text,
       ## memo text,BOM integer)")
       rqda_exe(
@@ -118,7 +118,7 @@ new_proj <- function(path, conName="qdacon",assignenv=.rqda,...){
               "selfirst real, selend real, status integer, owner text,",
               "date text, memo text)")
       )
-      
+
       if (dbExistsTable(con,"attributes")) dbRemoveTable(con, "attributes")
       rqda_exe(
         paste("create table attributes (name text, status integer, date text,",
@@ -245,7 +245,7 @@ UpgradeTables <- function(){
   if (currentVersion<"0.2.0"){
     if (dbExistsTable(.rqda$qdacon,"coding2"))
       dbRemoveTable(.rqda$qdacon, "coding2")
-    
+
     rqda_exe(
       paste("create table coding2  (cid integer, fid integer,seltext text,",
             "selfirst real, selend real, status integer, owner text,",
@@ -340,6 +340,8 @@ backup_proj <- function(con){
   }
 }
 
+# ToDo: use MemoWidget for this as well? Why are
+# there two MemoWidgets after all
 ProjectMemoWidget <- function(){
   if (is_projOpen(envir=.rqda,"qdacon")) {
     ## use enviroment, so you can refer to the same object easily, this is
@@ -349,9 +351,19 @@ ProjectMemoWidget <- function(){
     ## Close the open project memo first, then open a new one
     ## .projmemo is the container of .projmemocontent,widget for the content
     ## of memo
-    wnh <- size(.rqda$.root_rqdagui) ## size of the main window
-    gw <- gwindow(title="Project Memo", parent=c(wnh[1]+10,2),
-                  width = getOption("widgetSize")[1], height = getOption("widgetSize")[2])
+
+    # get size of root gui as width and height
+    wdh <- size(.rqda$.root_rqdagui)
+    head_s <- c( wdh["width"], wdh["height"] * .1)
+    body_s <- c( wdh["width"], wdh["height"] * .9)
+
+    gw <- gwindow(title="Project Memo",
+                  width = getOption("widgetSize")[1],
+                  height = getOption("widgetSize")[2])
+
+    addHandlerKeystroke(gw, function(h, ...){
+    if(h$key=="\027") dispose(gw)
+    })
     mainIcon <- system.file("icon", "mainIcon.png", package = "RQDA")
     gw$set_icon(mainIcon)
     assign(".projmemo", gw, envir=.rqda)
@@ -366,10 +378,10 @@ ProjectMemoWidget <- function(){
         ## Encoding(newcontent) <- "UTF-8"
         ## take care of double quote.
         newcontent <- enc(newcontent,encoding="UTF-8")
-        
+
         ## only one row is needed
         rqda_exe(
-          sprintf("update project set memo='%s' where rowid=1", 
+          sprintf("update project set memo='%s' where rowid=1",
                   newcontent)
           ## have to quote the character in the sql expression
         )
@@ -377,8 +389,10 @@ ProjectMemoWidget <- function(){
         enabled(mbut) <- FALSE ## grey out the  button
       }
     )## end of save memo button
+    size(proj_memoB) <- head_s
     assign("proj_memoB",proj_memoB,envir=button)
     tmp <- gtext(container=.projmemo2,font.attr=list(size="large"))
+    size(tmp) <- body_s
     gSignalConnect(tmp$buffer, "changed",
                    function(h,...){
                      mbut <- get("proj_memoB",envir=button)
@@ -395,15 +409,16 @@ ProjectMemoWidget <- function(){
       ## if there is no record in project table, it fails to save memo,
       ## so insert sth into it
     }
-    
+
     W <- .rqda$.projmemocontent
     Encoding(prvcontent) <- "UTF-8"
-    
+
     insert(W, prvcontent, do.newline = FALSE, where = "beginning",
            font.attr=list(size="large"))
 
     ## do.newline:do not add a \n (new line) at the beginning
     ## push the previous content to the widget.
+    size(proj_memoB) <- head_s
     enabled(proj_memoB) <- FALSE
     addHandlerUnrealize(get(".projmemo",envir=.rqda),handler <- function(h,...){
       withinWidget <- svalue(get(".projmemocontent",envir=.rqda))

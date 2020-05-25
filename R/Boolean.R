@@ -59,6 +59,10 @@ print.codingsByOne <- function (x,...)
                             })
         .gw <- gwindow(title = title, parent = getOption("widgetCoordinate"),
                        width = getOption("widgetSize")[1], height = getOption("widgetSize")[2])
+
+        addHandlerKeystroke(.gw, function(h, ...){
+        if(h$key=="\027") dispose(.gw)
+        })
         mainIcon <- system.file("icon", "mainIcon.png", package = "RQDA")
         .gw$set_icon(mainIcon)
         assign(sprintf(".codingsOf%s","codingsByone"), .gw, envir = .rqda)

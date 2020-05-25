@@ -157,10 +157,19 @@ AddNewFileFun <- function() {
       dispose(.rqda$.AddNewFileWidget)
     } ## close the widget if open
 
+    # get size of root gui as width and height
+    wdh <- size(.rqda$.root_rqdagui)
+    head_s <- c( wdh["width"], wdh["height"] * .1)
+    body_s <- c( wdh["width"], wdh["height"] * .9)
+
     gw <- gwindow(title = "Add a new file",
                   parent = getOption("widgetCoordinate"),
                   width = getOption("widgetSize")[1],
                   height = getOption("widgetSize")[2])
+
+    addHandlerKeystroke(gw, function(h, ...){
+    if(h$key=="\027") dispose(gw)
+    })
 
     mainIcon <- system.file("icon", "mainIcon.png", package = "RQDA")
     gw$set_icon(mainIcon)
@@ -207,6 +216,7 @@ AddNewFileFun <- function() {
 
     gl <- glayout(homogeneous = T,
                   container = get(".AddNewFileWidget2", envir = .rqda))
+    size(gl) <- head_s
 
     # ToDo: Make a save button and a close button, like in any other application
     AddNewFilB <- gbutton(rqda_txt("Save To Project"),
@@ -217,20 +227,10 @@ AddNewFileFun <- function() {
     enabled(AddNewFilB) <- FALSE
     assign("AddNewFilB", AddNewFilB, envir = button)
 
-    AddNewFilB2 <- gbutton(rqda_txt("Save and close"),
-                           handler = function(h, ...) {
-                             suc <- saveFileFun()
-                             if (suc) dispose(.rqda$.AddNewFileWidget)
-                             FileNamesUpdate()
-                           }
-    )
-    enabled(AddNewFilB2) <- FALSE
-    assign("AddNewFilB2", AddNewFilB2, envir = button)
-
     gl[1, 1] <- AddNewFilB
-    gl[1, 2] <- AddNewFilB2
 
     tmp <- gtext(container = get(".AddNewFileWidget2", envir = .rqda))
+    size(tmp) <- body_s
     font <- pangoFontDescriptionFromString(.rqda$font)
     gtkWidgetModifyFont(tmp$widget, font) ## set the default fontsize
     assign(".AddNewFileWidgetW", tmp, envir = .rqda)
@@ -339,10 +339,13 @@ GetFileNamesWidgetMenu <- function()
         path = gfile(
           type = "save",
           text = rqda_txt("Type a name for the exported codings and click OK."))
+        if (!identical(path, character(0)))
+        {
         if (!is.na(path)) {
           Encoding(path) <- "UTF-8"
           path <- sprintf("%s.html", path)
           exportCodedFile(file = path, getFileIds(type = "selected")[1])
+        }
         }}})
 
   FileNamesWidgetMenu[[10]] <- gaction(
