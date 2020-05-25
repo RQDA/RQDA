@@ -1,3 +1,4 @@
+#' @importFrom stringi stri_enc_detect stri_encode
 ImportFile <- function(path,encoding=.rqda$encoding,con=.rqda$qdacon,...){
   ## import a file into a DBI connection _con_.
   Fname <- gsub("\\.[[:alpha:]]*$","",basename(path))## Fname is in locale Encoding Now.
@@ -9,10 +10,17 @@ ImportFile <- function(path,encoding=.rqda$encoding,con=.rqda$qdacon,...){
     content <- readLines(file_con,warn=FALSE,encoding=encoding)
     close(file_con)
     content <- paste(content,collapse="\n")
-    content <- enc(content,encoding=Encoding(content))
-    if (Encoding(content)!="UTF-8"){
-      content <- iconv(content,to="UTF-8") ## UTF-8 file content
-    }
+    #content <- enc(content,encoding=Encoding(content))
+    
+    # detect encoding and convert
+    dtct <- stri_enc_detect(paste(content, collapse = "\n"))[[1]]
+    enc_hat <- dtct$Encoding[dtct$Confidence == max(dtct$Confidence)]
+    cat("File imported with the following encoding: ", enc_hat, "\n")
+    content <- stri_encode(content, from = enc_hat, to = "UTF-8")
+
+    # guard against single quote possibly theres more, but lets wait and see
+    content <- gsub("'", "''", content)
+
     maxid <- rqda_sel("select max(id) from source")[[1]]
     nextid <- ifelse(is.na(maxid),0+1, maxid+1)
     write <- FALSE
@@ -390,7 +398,7 @@ write.FileList <- function(FileList,encoding=.rqda$encoding,con=.rqda$qdacon,...
       FnameUTF8 <- enc(Fname, encoding=encoding)
     content <- enc(content,encoding=encoding) ## adjust encoding argument.
     if (Encoding(content)!="UTF-8"){
-      content <- iconv(content,to="UTF-8") ## UTF-8 file content
+      content <- iconv(content,to="UTF-8", sub = "byte") ## UTF-8 file content
     }
     maxid <- rqda_sel("select max(id) from source")[[1]]
     nextid <- ifelse(is.na(maxid),0+1, maxid+1)
