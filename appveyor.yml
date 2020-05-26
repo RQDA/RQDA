@@ -4,11 +4,20 @@
 init:
   ps: |
         $ErrorActionPreference = "Stop"
-        Invoke-WebRequest http://raw.github.com/krlmlr/r-appveyor/master/scripts/appveyor-tool.ps1 -OutFile "..\appveyor-tool.ps1"
+        Invoke-WebRequest https://gist.githubusercontent.com/JanMarvin/181f6fc73c2ac95691b846a740c4bf4c/raw/89588f075bc2aa576b4fc265497dbc084a79bd5b/appveyor-tool.ps1 -OutFile "..\appveyor-tool.ps1"
         Import-Module '..\appveyor-tool.ps1'
 
 install:
-  ps: Bootstrap
+  - ps: Bootstrap
+  - set PATH=C:\GTK2-Runtime\bin;%PATH%
+
+before_build:
+  cmd: |
+          curl -O http://gemmei.ftp.acc.umu.se/pub/gnome/binaries/win64/gtk+/2.22/gtk+-bundle_2.22.1-20101229_win64.zip
+          7z x -o"C:\GTK2-Runtime" gtk+-bundle_2.22.1-20101229_win64.zip
+          DEL gtk+-bundle_2.22.1-20101229_win64.zip
+          ECHO %PATH%
+
 
 cache:
   - C:\RLibrary

@@ -1,4 +1,4 @@
-# RQDA
+# RQDA [![Build Status](https://travis-ci.org/JanMarvin/RQDA.svg?branch=master)](https://travis-ci.org/JanMarvin/RQDA) [![Build status](https://ci.appveyor.com/api/projects/status/jguugf4k74kt77xp/branch/master?svg=true)](https://ci.appveyor.com/project/JanMarvin/rqda/branch/master)
 
 [RQDA](http://rqda.r-forge.r-project.org/) is computer-aided qualitative data analysis package
 
@@ -9,7 +9,7 @@ Assuming you have a working version of current release (and all dependencies).
 ```R
 install.packages("devtools") ## install it only if you haven't done it yet
 require(devtools)
-devtools::install_github("Ronggui/RQDA")
+devtools::install_github("JanMarvin/RQDA")
 ```
 
 

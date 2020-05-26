@@ -126,7 +126,7 @@ ViewFileFunHelper <- function(FileName,hightlight=TRUE,codingTable=.rqda$codingT
     }
 
   addHandlerKeystroke(gw, function(h, ...){
-  if(h$key=="\027") dispose(gw)
+    if(h$key=="\027") dispose(gw)
   })
 
   mainIcon <- system.file("icon", "mainIcon.png", package = "RQDA")
@@ -161,7 +161,9 @@ ViewFileFunHelper <- function(FileName,hightlight=TRUE,codingTable=.rqda$codingT
   buffer$createTag("underline", underline = "single")
   buffer$createTag(fore.col,foreground = fore.col)
   buffer$createTag(sprintf("%s.background",back.col),background = back.col)
-  ## create buffer tag, which is created by defualt since gwidgetRGtk2 changes its API
+
+  
+  ## create buffer tag, which is created by default since gwidgetRGtk2 changes its API
   N <- nrow(markidx)
   if (nrow(markidx)!=0){ ## make sense only when there is coding there
       for (i in 1:N){
