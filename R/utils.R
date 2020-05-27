@@ -265,7 +265,8 @@ print.Info4Widget <- function(x, ...){
         .retreivalgui$widget$SetPixelsBelowLines(5)
         .retreivalgui$widget$SetPixelsInsideWrap(5)
         buffer <- .retreivalgui$buffer
-        buffer$createTag("red", foreground = "red")
+        if(is.null(gtkTextTagTableLookup(buffer$`tag-table`, "red")))
+          buffer$createTag("red", foreground = "red")
         iter <- buffer$getIterAtOffset(0)$iter
         apply(x, 1, function(x) {
             metaData <- sprintf("%s created on %s", x[["name"]], x[["date"]])

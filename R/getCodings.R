@@ -143,7 +143,10 @@ getCodingsFromFiles <- function(Fid, order=c("fname","ftime","ctime"),
         } ## end of ComputeCallbackFun
 
         buffer <- .retreivalgui$buffer
-        buffer$createTag("red", foreground = "red")
+
+        if(is.null(gtkTextTagTableLookup(buffer$`tag-table`, "red")))
+            buffer$createTag("red", foreground = "red")
+
         iter <- buffer$getIterAtOffset(0)$iter
 
         apply(retrieval,1, function(x){
