@@ -39,49 +39,13 @@ devtools::install_github("JanMarvin/RQDA")
 $ R
 ```
 ```R
-> install.packages('RQDA', type='source')
+> devtools::install_github("JanMarvin/RQDA")
 ```
 
 7. If all steps are successful, then we can launch RQDA by the following R command:
 ```R
 > library(RQDA) 
 ```
-
-
-
-## Installation for macOS from binary package (if available on CRAN)
-
-1. Go to http://xquartz.macosforge.org/landing/, download and install XQuartz-2.7.7.dmg.
-
-2. Go to http://r.research.att.com, download and install the binary package of GTK+ 2.24.17. 
-
-3. Download and install the binary version of R.
-
-4. Launch R and install RQDA from within R:
-```R
-> install.packages('RQDA', type='binary')
-```
-
-5. If all steps are successful, then we can launch RQDA by the following R command:
-```R
-> library(RQDA) 
-```
-
-
-
-## Dockerfile for Debian 8 
-
-[DockerRQDA](https://github.com/FrdVnW/dockerqda) is a project providing a docker image for easily using RQDA under Debian 8.
-
-
-
-
-## Portable Version for Windows Users
-Download from [Dropbox Link](https://www.dropbox.com/s/5zebadz41dep09k/RQDA_0.3_1.rar?dl=0).
-
-Download from [Baidu Cloud](https://pan.baidu.com/s/1nwsRPFAKjjdbv6nMyOsctA).
-
-
 
 ## How to change the font sizes of RQDA interfacea
 1. There is a font setting interface in the Settings Tab.
