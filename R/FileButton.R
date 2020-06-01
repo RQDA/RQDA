@@ -42,21 +42,21 @@ DeleteFileButton <- function(label = rqda_txt("Delete"), container, ...) {
       for (i in SelectedFile) {
         i <- enc(i)
         fid <- rqda_sel(
-                          sprintf("select id from source where name = '%s'",
-                                  i))$id
+          sprintf("select id from source where name = '%s'",
+                  i))$id
         rqda_exe(
-                   sprintf("update source set status = 0 where name = '%s'",
-                           i))
+          sprintf("update source set status = 0 where name = '%s'",
+                  i))
         ## set the status of the selected file to 0
         rqda_exe(
-                   sprintf("update caselinkage set status = 0 where fid = %i",
-                           fid))
+          sprintf("update caselinkage set status = 0 where fid = %i",
+                  fid))
         rqda_exe(
-                   sprintf("update treefile set status = 0 where fid = %i",
-                           fid))
+          sprintf("update treefile set status = 0 where fid = %i",
+                  fid))
         rqda_exe(
-                   sprintf("update coding set status = 0 where fid = %i",
-                           fid))
+          sprintf("update coding set status = 0 where fid = %i",
+                  fid))
         ## set the status of the related case/f-cat to 0
       }
       FileNamesUpdate()
@@ -169,7 +169,7 @@ AddNewFileFun <- function() {
                   height = getOption("widgetSize")[2])
 
     addHandlerKeystroke(gw, function(h, ...){
-    if(h$key=="\027") dispose(gw)
+      if(h$key=="\027") dispose(gw)
     })
 
     mainIcon <- system.file("icon", "mainIcon.png", package = "RQDA")
@@ -188,8 +188,8 @@ AddNewFileFun <- function() {
         Ftitle <- enc(Ftitle, "UTF-8")
         if (nrow(
           rqda_sel(
-                     sprintf("select name from source where name = '%s'",
-                             Ftitle))) != 0) {
+            sprintf("select name from source where name = '%s'",
+                    Ftitle))) != 0) {
           Ftitle <- paste("New", Ftitle)
         } ## Make sure it is unique
         content <- svalue(textW)
@@ -224,7 +224,7 @@ AddNewFileFun <- function() {
                           handler = function(h, ...) {
                             saveFileFun()
                             FileNamesUpdate()
-                            })
+                          })
     enabled(AddNewFilB) <- FALSE
     assign("AddNewFilB", AddNewFilB, envir = button)
 
@@ -342,11 +342,11 @@ GetFileNamesWidgetMenu <- function()
           text = rqda_txt("Type a name for the exported codings and click OK."))
         if (!identical(path, character(0)))
         {
-        if (!is.na(path)) {
-          Encoding(path) <- "UTF-8"
-          path <- sprintf("%s.html", path)
-          exportCodedFile(file = path, getFileIds(type = "selected")[1])
-        }
+          if (!is.na(path)) {
+            Encoding(path) <- "UTF-8"
+            path <- sprintf("%s.html", path)
+            exportCodedFile(file = path, getFileIds(type = "selected")[1])
+          }
         }}})
 
   FileNamesWidgetMenu[[10]] <- gaction(
@@ -429,7 +429,7 @@ GetFileNamesWidgetMenu <- function()
         FileNamesUpdate(FileNamesWidget = .rqda$.fnames_rqda)
         FileNameWidgetUpdate(FileNamesWidget = .rqda$.fnames_rqda,
                              FileId = getFileIds(condition = "unconditional",
-                                               type = "all"))
+                                                 type = "all"))
       }
     })
 
@@ -439,7 +439,7 @@ GetFileNamesWidgetMenu <- function()
       if (is_projOpen(envir = .rqda, conName = "qdacon")) {
         FileNameWidgetUpdate(FileNamesWidget = .rqda$.fnames_rqda,
                              FileId = getFileIds(condition = "unconditional",
-                                               type = "coded"))
+                                                 type = "coded"))
       }
     })
 
@@ -449,7 +449,7 @@ GetFileNamesWidgetMenu <- function()
       if (is_projOpen(envir = .rqda, conName = "qdacon")) {
         FileNameWidgetUpdate(FileNamesWidget = .rqda$.fnames_rqda,
                              FileId = getFileIds(condition = "unconditional",
-                                               type = "uncoded"))
+                                                 type = "uncoded"))
       }
     })
 
@@ -485,7 +485,7 @@ GetFileNamesWidgetMenu <- function()
       if (is_projOpen(envir = .rqda, conName = "qdacon", message = FALSE)) {
         fileid <-
           rqda_sel(
-                     "select id from source where memo is not null")
+            "select id from source where memo is not null")
         if (nrow(fileid) != 0) {
           fileid <- fileid[[1]]
           FileNameWidgetUpdate(FileNamesWidget = .rqda$.fnames_rqda,
@@ -500,7 +500,7 @@ GetFileNamesWidgetMenu <- function()
     handler = function(h, ...) {
       if (is_projOpen(envir = .rqda, conName = "qdacon", message = FALSE)) {
         fileid <- rqda_sel(
-                             "select id from source where memo is null")
+          "select id from source where memo is null")
         if (nrow(fileid) != 0) {
           fileid <- fileid[[1]]
           FileNameWidgetUpdate(FileNamesWidget = .rqda$.fnames_rqda,
