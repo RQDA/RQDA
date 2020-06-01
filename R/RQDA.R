@@ -29,6 +29,7 @@
 #' @import gWidgets2RGtk2
 #' @import DBI
 #' @import RSQLite
+#' @importFrom graphics plot
 #' @importFrom grDevices colors
 #' @importFrom methods getFunction slot
 #' @importFrom stats reshape
