@@ -1,45 +1,49 @@
 #' @importFrom stringi stri_enc_detect stri_encode
-ImportFile <- function(path,encoding=.rqda$encoding,con=.rqda$qdacon,...){
+ImportFile <- function(paths, encoding = .rqda$encoding, con= .rqda$qdacon,...){
+
   ## import a file into a DBI connection _con_.
-  Fname <- gsub("\\.[[:alpha:]]*$","",basename(path))## Fname is in locale Encoding Now.
-  FnameUTF8 <- iconv(Fname,to="UTF-8")
-  ## remove the suffix such as .txt
-  if ( Fname!="" ) {
-    file_con <- file(path,open="r")
-    if (isTRUE(.rqda$BOM)) seek(file_con,3)
-    content <- readLines(file_con,warn=FALSE,encoding=encoding)
-    close(file_con)
-    content <- paste(content,collapse="\n")
-    #content <- enc(content,encoding=Encoding(content))
+  for (path in paths) {
+    ## Fname is in locale Encoding Now.
+    Fname <- gsub("\\.[[:alpha:]]*$","",basename(path))
+    FnameUTF8 <- iconv(Fname,to="UTF-8")
+    ## remove the suffix such as .txt
+    if ( Fname!="" ) {
+      file_con <- file(path,open="r")
+      if (isTRUE(.rqda$BOM)) seek(file_con,3)
+      content <- readLines(file_con,warn=FALSE,encoding=encoding)
+      close(file_con)
+      content <- paste(content,collapse="\n")
+      #content <- enc(content,encoding=Encoding(content))
 
-    # detect encoding and convert
-    dtct <- stri_enc_detect(paste(content, collapse = "\n"))[[1]]
-    enc_hat <- dtct$Encoding[dtct$Confidence == max(dtct$Confidence)]
-    cat("File imported with the following encoding: ", enc_hat, "\n")
-    content <- stri_encode(content, from = enc_hat, to = "UTF-8")
+      # detect encoding and convert
+      dtct <- stri_enc_detect(paste(content, collapse = "\n"))[[1]]
+      enc_hat <- dtct$Encoding[dtct$Confidence == max(dtct$Confidence)]
+      cat("File imported with the following encoding: ", enc_hat, "\n")
+      content <- stri_encode(content, from = enc_hat, to = "UTF-8")
 
-    # guard against single quote possibly theres more, but lets wait and see
-    content <- gsub("'", "''", content)
+      # guard against single quote possibly theres more, but lets wait and see
+      content <- gsub("'", "''", content)
 
-    maxid <- rqda_sel("select max(id) from source")[[1]]
-    nextid <- ifelse(is.na(maxid),0+1, maxid+1)
-    write <- FALSE
-    ## check if the content should be written into con.
-    if (nextid==1) {
-      write <- TRUE
-      ## if this is the first file, no need to worry about the duplication issue.
-    } else {
-      if (nrow(rqda_sel(sprintf("select name from source where name='%s'",FnameUTF8)))==0) {
-        ## no duplication file exists, then write.
+      maxid <- rqda_sel("select max(id) from source")[[1]]
+      nextid <- ifelse(is.na(maxid),0+1, maxid+1)
+      write <- FALSE
+      ## check if the content should be written into con.
+      if (nextid==1) {
         write <- TRUE
+        ## if this is the first file, no need to worry about the duplication issue.
       } else {
-        gmessage(gettext("A file with the same name exists in the database!", domain = "R-RQDA"))
+        if (nrow(rqda_sel(sprintf("select name from source where name='%s'",FnameUTF8)))==0) {
+          ## no duplication file exists, then write.
+          write <- TRUE
+        } else {
+          gmessage(gettext("A file with the same name exists in the database!", domain = "R-RQDA"))
+        }
       }
-    }
-    if (write ) {
-      rqda_exe(sprintf("insert into source (name, file, id, status,date,owner )
+      if (write ) {
+        rqda_exe(sprintf("insert into source (name, file, id, status,date,owner )
                              values ('%s', '%s',%i, %i, '%s', '%s')",
-                             Fname,content, nextid, 1,date(),.rqda$owner))
+                         Fname,content, nextid, 1,date(),.rqda$owner))
+      }
     }
   }
 }

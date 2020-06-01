@@ -1,15 +1,16 @@
 ImportFileButton <- function(label = rqda_txt("Import"), container, ...) {
   ImpFilB <- gbutton(label, container = container, handler = function(h, ...) {
-    path <- gfile(type = "open",
-                  filter = list("text files" =
-                                  list(mime.types = c("text/plain")),
-                                "All files" = list(patterns = c("*"))))
-    if (!identical(path, character(0)))
+    paths  <- gfile(type = "open",
+                    filter = list("text files" =
+                                    list(mime.types = c("text/plain")),
+                                  "All files" = list(patterns = c("*"))),
+                    multi = TRUE)
+    if (!identical(paths, character(0)))
     {
-      if (path != "") {
+      if (paths != "") {
         ## have to convert, otherwise, can not find the file.
-        Encoding(path) <- "UTF-8"
-        ImportFile(path, container = .rqda$qdacon)
+        Encoding(paths) <- "UTF-8"
+        ImportFile(paths, container = .rqda$qdacon)
         FileNamesUpdate()
       }
     }
