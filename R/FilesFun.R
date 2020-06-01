@@ -45,6 +45,8 @@ ImportFile <- function(paths, encoding = .rqda$encoding, con= .rqda$qdacon,...){
                          Fname,content, nextid, 1,date(),.rqda$owner))
       }
     }
+    isTRUE(.rqda$isLaunched)
+      FileNamesUpdate()
   }
 }
 
@@ -452,13 +454,16 @@ write.FileList <- function(FileList,encoding=.rqda$encoding,con=.rqda$qdacon,...
 }
 
 #' @export
-addFilesFromDir <- function(dir, pattern = "*.txt$"){
+addFilesFromDir <- function(dir, pattern = "*.txt$") {
   oldDir <- getwd()
   setwd(dir)
   Files <- list.files(pattern = pattern)
-  Contents <- lapply(Files, function(x) paste(readLines(x, warn = FALSE), collapse = "\n"))
-  names(Contents) <- Files
-  write.FileList(Contents)
+
+  cat("importing: ", length(Files), "file(s)\n")
+  cat(paste(Files, collapse = "\n"), "\n")
+
+  # FixMe: make encoding optional why do we need this anyway?
+  ImportFile(Files, .rqda$qdacon, encoding = "UTF-8")
   on.exit(setwd(oldDir))
 }
 

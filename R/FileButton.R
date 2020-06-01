@@ -11,7 +11,6 @@ ImportFileButton <- function(label = rqda_txt("Import"), container, ...) {
         ## have to convert, otherwise, can not find the file.
         Encoding(paths) <- "UTF-8"
         ImportFile(paths, container = .rqda$qdacon)
-        FileNamesUpdate()
       }
     }
   })
