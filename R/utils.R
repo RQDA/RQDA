@@ -78,6 +78,17 @@ OrderByTime <- function(date,decreasing = FALSE)
 ## sort(dd) == dd[order(dd)] ## but the order is not correct.
 ## dd[OrderByTime(dd)]
 
+save_memo <- function(W = W, dbTable = dbTable, Selected = Selected, prefix = prefix) {
+  newcontent <- svalue(W)
+  ## take care of double quote.
+  newcontent <- enc(newcontent,encoding="UTF-8")
+  rqda_exe(
+    sprintf("update %s set memo='%s' where name='%s'",
+            dbTable, newcontent, enc(Selected)))
+  mbut <- get(sprintf("buttonOf.%smemo",prefix), envir=button)
+  # size(mbut) <- head_s
+  enabled(mbut) <- FALSE
+}
 
 MemoWidget <- function(prefix,widget,dbTable){
   ## prefix of window tile. E.g. "Code" ->  tile of gwindow becomes "Code Memo:"
@@ -143,7 +154,15 @@ MemoWidget <- function(prefix,widget,dbTable){
           width = getOption("widgetSize")[1],
           height = getOption("widgetSize")[2]
         )
+
         addHandlerKeystroke(gw, function(h, ...){
+          if(h$key=="\023") {
+            print("got keystroke")
+            print(enabled(mbut))
+            save_memo(W, dbTable, Selected, prefix)
+            print(enabled(mbut))
+            print("end keystroke")
+          }
           if(h$key=="\027") dispose(gw)
         })
         mainIcon <- system.file("icon", "mainIcon.png", package = "RQDA")
@@ -157,16 +176,8 @@ MemoWidget <- function(prefix,widget,dbTable){
         mbut <- gbutton(
           rqda_txt("Save Memo"),
           container=get(sprintf(".%smemo2",prefix), envir=.rqda),
-          handler=function(h,...){
-            newcontent <- svalue(W)
-            ## take care of double quote.
-            newcontent <- enc(newcontent,encoding="UTF-8")
-            rqda_exe(
-                       sprintf("update %s set memo='%s' where name='%s'",
-                               dbTable,newcontent,enc(Selected)))
-            mbut <- get(sprintf("buttonOf.%smemo",prefix),envir=button)
-            # size(mbut) <- head_s
-            enabled(mbut) <- FALSE
+          handler=function(h, ...) {
+            save_memo(W, dbTable, Selected, prefix)
           }
         ) ## end of save memo button
         # width & height
