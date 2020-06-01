@@ -11,7 +11,7 @@ ImportFile <- function(path,encoding=.rqda$encoding,con=.rqda$qdacon,...){
     close(file_con)
     content <- paste(content,collapse="\n")
     #content <- enc(content,encoding=Encoding(content))
-    
+
     # detect encoding and convert
     dtct <- stri_enc_detect(paste(content, collapse = "\n"))[[1]]
     enc_hat <- dtct$Encoding[dtct$Confidence == max(dtct$Confidence)]
@@ -131,8 +131,8 @@ ViewFileFunHelper <- function(FileName,hightlight=TRUE,codingTable=.rqda$codingT
 
   mainIcon <- system.file("icon", "mainIcon.png", package = "RQDA")
   gw$set_icon(mainIcon)
-  # getToolkitWidget(gw)$Move(getOption("widgetCoordinate")[1],
-  #                           getOption("widgetCoordinate")[2])
+  getToolkitWidget(gw)$Move(getOption("widgetCoordinate")[1],
+                            getOption("widgetCoordinate")[2])
   assign(".root_edit", gw, envir = .rqda)
   .root_edit <- get(".root_edit", .rqda)
   tmp <- gtext(container=.root_edit)
@@ -157,14 +157,21 @@ ViewFileFunHelper <- function(FileName,hightlight=TRUE,codingTable=.rqda$codingT
   buffer <- W$buffer
   fore.col <- .rqda$fore.col
   back.col <- .rqda$back.col
-  # ToDo: Add a check if the tag exists otherwise Gtk will complain
-  buffer$createTag("underline", underline = "single")
-  buffer$createTag(fore.col,foreground = fore.col)
-  buffer$createTag(sprintf("%s.background",back.col),background = back.col)
 
-  
+
+  # checks if the tag exists otherwise Gtk will complain
+  if(is.null(gtkTextTagTableLookup(buffer$`tag-table`, "underline")))
+    buffer$createTag("underline", underline = "single")
+
+  if(is.null(gtkTextTagTableLookup(buffer$`tag-table`, fore.col)))
+    buffer$createTag(fore.col,foreground = fore.col)
+
+  if(is.null(gtkTextTagTableLookup(buffer$`tag-table`, sprintf("%s.background",back.col))))
+    buffer$createTag(sprintf("%s.background",back.col),background = back.col)
+
   ## create buffer tag, which is created by default since gwidgetRGtk2 changes its API
   N <- nrow(markidx)
+
   if (nrow(markidx)!=0){ ## make sense only when there is coding there
       for (i in 1:N){
           iter <- gtkTextBufferGetIterAtOffset(buffer, markidx[i,"selfirst"]) ## index to iter
@@ -174,6 +181,7 @@ ViewFileFunHelper <- function(FileName,hightlight=TRUE,codingTable=.rqda$codingT
           ## the second iter is used to HL coding
       }
   } ## create marks
+
   if (annotation){
       if (nrow(anno)!=0){
           for (i in 1:nrow(anno)) {
@@ -181,6 +189,7 @@ ViewFileFunHelper <- function(FileName,hightlight=TRUE,codingTable=.rqda$codingT
               buffer$CreateMark(sprintf("%s.3",anno[i,"rowid"]),where=iter$iter) ## insert marks
           }} ## creat marks for annotation
   }
+
   if (nrow(markidx)!=0){
     sapply(markidx[, "rowid"], FUN = function(x) {
       code <- markidx[markidx$rowid == x, "name"]
@@ -198,6 +207,7 @@ ViewFileFunHelper <- function(FileName,hightlight=TRUE,codingTable=.rqda$codingT
       InsertAnchor(.rqda$.openfile_gui, label = sprintf("<%s>",code), index = idx1, label.col=codeColor,
                   handler=TRUE, EndMarkName=sprintf("%s.2", x))
     }) ## end of sapply -> insert code label
+
     if (hightlight){
       idx <- sapply(markidx[, "rowid"], FUN = function(x) {
         m1 <- buffer$GetMark(sprintf("%s.1", x))
@@ -211,6 +221,7 @@ ViewFileFunHelper <- function(FileName,hightlight=TRUE,codingTable=.rqda$codingT
       idx <- t(idx)
       HL(W, idx, fore.col = .rqda$fore.col, back.col = NULL)
     }}
+
   if (annotation) {
       if (nrow(anno)!=0){
           apply(anno,1,function(x){
@@ -219,7 +230,9 @@ ViewFileFunHelper <- function(FileName,hightlight=TRUE,codingTable=.rqda$codingT
               idx <- gtkTextIterGetOffset(iter$iter)
               InsertAnnotation(index=idx,fid=IDandContent$id, rowid=x["rowid"])
           })}}
+
   buffer$PlaceCursor(buffer$getIterAtOffset(0)$iter) ## place cursor at the beginning
+
   ## gSignalConnect(tmp,"expose_event",LineNumber.expose) ## add line number to the widget
   ## does not work well yet
   enabled(button$AnnB) <- TRUE
@@ -390,7 +403,7 @@ EditFileFun <- function(FileNameWidget=.rqda$.fnames_rqda){
   }
 }
 
-#' @export 
+#' @export
 write.FileList <- function(FileList,encoding=.rqda$encoding,con=.rqda$qdacon,...){
   ## import a list of files into the source table
   ## FileList is a list of file content, with names(FileList) the name of the files.
@@ -434,7 +447,7 @@ write.FileList <- function(FileList,encoding=.rqda$encoding,con=.rqda$qdacon,...
     } else gmessage(gettext("Open a project first.", domain = "R-RQDA"), container=TRUE)
 }
 
-#' @export 
+#' @export
 addFilesFromDir <- function(dir, pattern = "*.txt$"){
   oldDir <- getwd()
   setwd(dir)
@@ -563,7 +576,7 @@ getFileIds <- function(condition=c("unconditional","case","filecategory","both")
 }
 
 
-#' @export 
+#' @export
 getFileIdsSets <- function(set=c("case","filecategory"),relation=c("union","intersect")){
   set <- match.arg(set)
   relation <- match.arg(relation)
@@ -642,7 +655,10 @@ searchWord <- function(str,widget,from=0,col="green", verbose=FALSE){
     ans <- gtkTextIterForwardSearch(Iter0,str,'GTK_TEXT_SEARCH_VISIBLE_ONLY')
     if (ans$retval) {
         gtkTextViewScrollToIter(tview$widget,ans$match.start,0.47)
-        buffer$createTag(sprintf("%s.background",col),background = col)
+
+        if(is.null(gtkTextTagTableLookup(buffer$`tag-table`, sprintf("%s.background",back.col))))
+          buffer$createTag(sprintf("%s.background",col),background = col)
+
         buffer$ApplyTagByName(sprintf("%s.background", col),ans$match.start, ans$match.end)
         ans$match.end$GetOffset()
     } else {
@@ -670,7 +686,7 @@ SearchButton <- function(widget){
 }
 
 
-#' @export 
+#' @export
 viewPlainFile <- function(FileNameWidget=.rqda$.fnames_rqda){
     if (is_projOpen(envir= .rqda, conName = "qdacon")) {
         if (length(svalue(FileNameWidget)) == 0) {

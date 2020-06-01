@@ -474,8 +474,11 @@ retrieval <- function(Fid=NULL,order=c("fname","ftime","ctime"),CodeNameWidget=.
       } ## end of ComputeUnMarkFun
 
       buffer <- .retreivalgui$buffer
-      buffer$createTag("red", foreground = "red")
-      buffer$createTag("strkthrgh", strikethrough = TRUE)
+
+      if(is.null(gtkTextTagTableLookup(buffer$`tag-table`, "red")))
+        buffer$createTag("red", foreground = "red")
+      if(is.null(gtkTextTagTableLookup(buffer$`tag-table`, "strkthrgh")))
+        buffer$createTag("strkthrgh", strikethrough = TRUE)
       iter <- buffer$getIterAtOffset(0)$iter
 
       apply(retrieval,1, function(x){
