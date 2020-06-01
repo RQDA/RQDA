@@ -665,7 +665,7 @@ searchWord <- function(str,widget,from=0,col="green", verbose=FALSE){
   if (ans$retval) {
     gtkTextViewScrollToIter(tview$widget,ans$match.start,0.47)
 
-    if(is.null(gtkTextTagTableLookup(buffer$`tag-table`, sprintf("%s.background",back.col))))
+    if(is.null(gtkTextTagTableLookup(buffer$`tag-table`, sprintf("%s.background",col))))
       buffer$createTag(sprintf("%s.background",col),background = col)
 
     buffer$ApplyTagByName(sprintf("%s.background", col),ans$match.start, ans$match.end)
