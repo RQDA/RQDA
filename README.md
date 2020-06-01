@@ -9,7 +9,7 @@ Assuming you have a working version of current release (and all dependencies).
 ```R
 install.packages("devtools") ## install it only if you haven't done it yet
 require(devtools)
-devtools::install_github("JanMarvin/RQDA")
+devtools::install_github("JanMarvin/RQDA", INSTALL_opts = "--no-multiarch")
 ```
 
 
