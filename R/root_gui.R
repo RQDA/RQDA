@@ -23,6 +23,9 @@ RQDA <- function() {
       assign("isLaunched", FALSE, envir = .rqda)
       }
     })
+    if (is.null(getOption("widgetSize")))
+      options(widgetSize = c(gdkScreenWidth()*.5,
+                             gdkScreenHeight()*.5))
 
 
     wdh <- size(.root_rqdagui)
