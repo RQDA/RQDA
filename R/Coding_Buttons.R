@@ -89,7 +89,7 @@ MarkCodeFun <- function(codeListWidget=".codes_rqda",codingTable="coding"){
   if (is_projOpen(envir=.rqda,conName="qdacon")) {
     currentFile <- tryCatch(svalue(.rqda$.root_edit),error= function(e){NULL})
     if (is.null(currentFile)) gmessage(gettext("Open a file first.", domain = "R-RQDA"),con=TRUE) else{
-      W <- .rqda$.openfile_gui
+      W <- .rqda$.openfile_gui$widget
       con <- .rqda$qdacon
       codeListWidget <- get(codeListWidget,envir=.rqda)
       idx <- sindex(.rqda$.openfile_gui,includeAnchor=FALSE,codingTable=codingTable)
@@ -242,7 +242,7 @@ UnMarkCodeFun <- function(codeListWidget=.rqda$.codes_rqda,codingTable="coding")
           for (j in rowid) {
             ClearMark(W,min=idx2$startN,max=idx2$endN)
             ## This clear all the marks in the gtext window
-            buffer <- .rqda$.openfile_gui$buffer
+            buffer <- .rqda$.openfile_gui$widget$buffer
             startIter <- buffer$GetIterAtMark(idx2$startMark)$iter
             startN <- startIter$GetOffset()
             isRemoved <- DeleteButton(.rqda$.openfile_gui,label=sprintf("<%s>",svalue(codeListWidget)),
@@ -283,7 +283,7 @@ UnMarkCodeFunByRowid <- function(codeListWidget=.rqda$.codes_rqda,codingTable="c
     ## clear mark of the selected coding
     codeName <- rqda_sel(sprintf("select name from freecode where status=1 and id = %s",coding_index$cid))$name
     Encoding(codeName) <- "UTF-8"
-    buffer <- .rqda$.openfile_gui$buffer
+    buffer <- .rqda$.openfile_gui$widget$buffer
     isRemoved <- DeleteButton(.rqda$.openfile_gui,label=sprintf("<%s>",codeName),
                               index=coding_index$selfirst+nshift,direction="backward")
     if (isRemoved) {

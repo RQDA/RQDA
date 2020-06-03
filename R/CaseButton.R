@@ -144,9 +144,9 @@ MarkCaseFun <- function(){
 CaseUnMark_Button<-function(label=gettext("Unmark", domain = "R-RQDA")){
   CasUnMarB <- gbutton(label, handler=function(h,...) {
     con <- .rqda$qdacon
-    W <- .rqda$.openfile_gui
+    W <- .rqda$.openfile_gui$widget
     ## get the widget for file display. If it does not exist, then return NULL.
-    sel_index <- tryCatch(sindex(W$widget,includeAnchor=FALSE),error=function(e) {})
+    sel_index <- tryCatch(sindex(W,includeAnchor=FALSE),error=function(e) {})
     ## if the not file is open, unmark doesn't work.
     if (!is.null(sel_index)) {
       SelectedCase <- svalue(.rqda$.CasesNamesWidget)

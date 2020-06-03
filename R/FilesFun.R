@@ -658,12 +658,12 @@ AddToFileCategory <- function(Widget=.rqda$.fnames_rqda,updateWidget=TRUE){
 
 ## library(RGtk2)
 searchWord <- function(str,widget,from=0,col="green", verbose=FALSE){
-  tview <- widget
+  tview <- widget$widget
   buffer <- tview$buffer
   Iter0 <- buffer$GetIterAtOffset(from)$iter
   ans <- gtkTextIterForwardSearch(Iter0,str,'GTK_TEXT_SEARCH_VISIBLE_ONLY')
   if (ans$retval) {
-    gtkTextViewScrollToIter(tview$widget,ans$match.start,0.47)
+    gtkTextViewScrollToIter(tview, ans$match.start, 0.47)
 
     if(is.null(gtkTextTagTableLookup(buffer$`tag-table`, sprintf("%s.background",col))))
       buffer$createTag(sprintf("%s.background",col),background = col)

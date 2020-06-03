@@ -9,7 +9,7 @@ exportCodedFile <- function(file, fid, closeAfter=TRUE){
     shift <- 0
     cidx <- rqda_sel(sprintf("select coding.rowid as rowid,selfirst,selend, freecode.name as code from coding, freecode where fid=%s and coding.status=1 and coding.cid=freecode.id",fid))
     idx <- cidx[order(cidx$selfirst),]
-    wf <- .rqda$.openfile_gui
+    wf <- .rqda$.openfile_gui$widget
     buffer <- wf$buffer
     endidx <- buffer$GetEndIter()$iter$GetOffset()
     idx <- sort(unique(c(0, endidx, cidx$selfirst,cidx$selend)))

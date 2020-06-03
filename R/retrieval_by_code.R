@@ -79,7 +79,7 @@ retrieval_by_code <- function (Fid = NULL, order = c("fname", "ftime", "ctime"),
             ComputeCallbackFun <- function(FileName, rowid) {
                 CallBackFUN <- function(widget, event, ...) {
                   ViewFileFunHelper(FileName, hightlight = FALSE)
-                  textView <- .rqda$.openfile_gui
+                  textView <- .rqda$.openfile_gui$widget
                   buffer <- textView$buffer
                   mark1 <- gtkTextBufferGetMark(buffer, sprintf("%s.1", 
                     rowid))

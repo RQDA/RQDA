@@ -146,7 +146,7 @@ HL <- function(W,index,fore.col=.rqda$fore.col,back.col=NULL){
         )
 }
 
-sindex <- function(widget=.rqda$.openfile_gui,includeAnchor=TRUE,codingTable="coding"){
+sindex <- function(widget=.rqda$.openfile_gui$widget,includeAnchor=TRUE,codingTable="coding"){
   buffer <- widget$buffer
   bounds = buffer$GetSelectionBounds()
   startI = bounds$start ## start and end iter
@@ -271,7 +271,7 @@ DeleteButton <- function(widget,label,index,direction=c("backward","forward")){
   invisible(isRemove)
 }
 
-countAnchors <- function(widget=.rqda$.openfile_gui,to,from=0){
+countAnchors <- function(widget=.rqda$.openfile_gui$widget,to,from=0){
   buffer <- widget$buffer
   iter <- gtkTextBufferGetIterAtOffset(buffer,from)$iter
   ans <- 0
@@ -399,7 +399,7 @@ retrieval <- function(Fid=NULL,order=c("fname","ftime","ctime"),CodeNameWidget=.
       ComputeCallbackFun <- function(FileName,rowid){
         CallBackFUN <- function(widget,event,...){
           ViewFileFunHelper(FileName,hightlight=FALSE)
-          textView <- .rqda$.openfile_gui
+          textView <- .rqda$.openfile_gui$widget
           buffer <- textView$buffer
           mark1 <- gtkTextBufferGetMark(buffer,sprintf("%s.1",rowid))
           if(is.null(mark1)){
@@ -408,7 +408,7 @@ retrieval <- function(Fid=NULL,order=c("fname","ftime","ctime"),CodeNameWidget=.
             gmessage(gettext("Coding not found."), type="warning")
             return(invisible(NULL))
           }
-          gtkTextViewScrollToMark(textView$widget,mark1,0)
+          gtkTextViewScrollToMark(textView,mark1,0)
           iter1 <- buffer$GetIterAtMark(mark1)$iter
           idx1 <- gtkTextIterGetOffset(iter1)
           mark2 <- buffer$GetMark(sprintf("%s.2", rowid))
@@ -661,7 +661,7 @@ HL_CodingWithMemo <- function(codingTable="coding"){
       SelectedFile <- enc(SelectedFile,encoding="UTF-8")
       currentFid <-  rqda_sel(sprintf("select id from source where name='%s'",SelectedFile))[,1]
       tryCatch({
-        widget <- .rqda$.openfile_gui
+        widget <- .rqda$.openfile_gui$widget
         idx <-  rqda_sel(sprintf("select selfirst, selend,memo from %s where fid=%i and status=1",codingTable, currentFid))
         if (nrow(idx)!=0){
           ClearMark(widget,min=0,max=max(as.numeric(idx$selend))+2*nrow(idx),clear.fore.col = TRUE, clear.back.col =FALSE)
