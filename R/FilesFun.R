@@ -690,7 +690,7 @@ SearchButton <- function(widget){
       assign("searchFrom",res,envir=.rqda)
     }},action=kwdW)
   gbutton(gettext("Restart", domain = "R-RQDA"), container = group,handler=function(h,...){
-    assign("searchFrom",0,envir=.rqda)
+    assign("searchFrom",1,envir=.rqda)
   })
 }
 
