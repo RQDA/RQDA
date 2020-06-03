@@ -420,7 +420,7 @@ ProjectMemoWidget <- function(){
     ## push the previous content to the widget.
     size(proj_memoB) <- head_s
     enabled(proj_memoB) <- FALSE
-    addHandlerUnrealize(get(".projmemo",envir=.rqda),handler <- function(h,...){
+    addHandlerUnrealize(get(".projmemo",envir=.rqda),handler = function(h,...){
       withinWidget <- svalue(get(".projmemocontent",envir=.rqda))
       InRQDA <- rqda_sel("select memo from project where rowid=1")[1, 1]
       if (isTRUE(all.equal(withinWidget,InRQDA))) {

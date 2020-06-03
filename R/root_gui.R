@@ -402,7 +402,7 @@ AddHandler <- function() {
   })
 
   ## handler for .fnames_rqda (gtable holding the file names)
-  addHandlerClicked(.rqda$.fnames_rqda, handler <- function(h, ...) {
+  addHandlerClicked(.rqda$.fnames_rqda, handler = function(h, ...) {
     if (isTRUE(.rqda$SFP))
      ShowFileProperty(focus = FALSE)
 
@@ -427,12 +427,9 @@ AddHandler <- function() {
   ## right click to add file to a case category
   addRightclickPopupMenu(.rqda$.fnames_rqda, GetFileNamesWidgetMenu())
 
-  addHandlerDoubleclick(.rqda$.fnames_rqda, handler <- function(h, ...) {
+  addHandlerDoubleclick(.rqda$.fnames_rqda, handler = function(h, ...) {
     ViewFileFun(FileNameWidget = .rqda$.fnames_rqda)
   })
-
-  ## addHandlerDoubleclick(.rqda$.fsearch_rqda, handler <- function(h, ...)
-  ##  ViewFileFun(FileNameWidget = .rqda$.fsearch_rqda))
 
   ## handler for .codes_rqda
   addHandlerDoubleclick(.rqda$.codes_rqda, handler = function(h, ...) {
@@ -449,7 +446,7 @@ AddHandler <- function() {
 
   addRightclickPopupMenu(.rqda$.codes_rqda, GetCodesNamesWidgetMenu())
 
-  addHandlerClicked(.rqda$.codes_rqda, handler <- function(h, ...) {
+  addHandlerClicked(.rqda$.codes_rqda, handler = function(h, ...) {
     ClickHandlerFun(.rqda$.codes_rqda, buttons = c("MarCodB1"),
                     codingTable = .rqda$codingTable)
     if (length(svalue(.rqda$.codes_rqda)) == 1) {
@@ -461,7 +458,7 @@ AddHandler <- function() {
   })
 
   ## handler for .CodeofCat
-  addHandlerClicked(.rqda$.CodeofCat, handler <- function(h, ...) {
+  addHandlerClicked(.rqda$.CodeofCat, handler = function(h, ...) {
     ClickHandlerFun(.rqda$.CodeofCat, buttons = c("MarCodB2", "UnMarB2"),
                     codingTable = .rqda$codingTable)
     if (length(svalue(.rqda$.CodeofCat))>0) {
@@ -474,7 +471,7 @@ AddHandler <- function() {
                .rqda$.CasesNamesWidget, "cases")
   })
 
-  addHandlerClicked(.rqda$.CasesNamesWidget, handler <- function(h, ...) {
+  addHandlerClicked(.rqda$.CasesNamesWidget, handler = function(h, ...) {
 
     SelectedCase <- svalue(.rqda$.CasesNamesWidget)
 
@@ -557,7 +554,7 @@ AddHandler <- function() {
     }
   })
 
-  addHandlerClicked(.rqda$.CodeCatWidget, handler <- function(h, ...) {
+  addHandlerClicked(.rqda$.CodeCatWidget, handler = function(h, ...) {
     if ((ncc <- length(svalue(.rqda$.CodeCatWidget))) != 0) {
       enabled(.rqda$.CodeofCat) <- TRUE
       enabled(button$DelCodCatB) <- TRUE
@@ -619,7 +616,7 @@ AddHandler <- function() {
 
   addRightclickPopupMenu(.rqda$.CodeofCat, GetCodeofCatWidgetMenu())
 
-  addHandlerClicked(.rqda$.FileCatWidget, handler <- function(h, ...) {
+  addHandlerClicked(.rqda$.FileCatWidget, handler = function(h, ...) {
 
     if (length(svalue(.rqda$.FileCatWidget))>0) {
 
@@ -638,11 +635,11 @@ AddHandler <- function() {
 
   addRightclickPopupMenu(.rqda$.FileCatWidget, GetFileCatWidgetMenu())
 
-  addHandlerDoubleclick(.rqda$.FileofCat, handler <- function(h, ...) {
+  addHandlerDoubleclick(.rqda$.FileofCat, handler = function(h, ...) {
     ViewFileFun(FileNameWidget = .rqda$.FileofCat)
   })
 
-  addHandlerClicked(.rqda$.FileofCat, handler <- function(h, ...) {
+  addHandlerClicked(.rqda$.FileofCat, handler = function(h, ...) {
     if (length(svalue(.rqda$.FileofCat))>0) {
       enabled(button$FilCatDroFromB) <- TRUE
       names(.rqda$.FileofCat) <- sprintf(rqda_txt("Selected file id is %s"),
@@ -660,14 +657,14 @@ AddHandler <- function() {
 
   addRightclickPopupMenu(.rqda$.FileofCase, GetFileofCaseWidgetMenu())
 
-  addHandlerDoubleclick(.rqda$.FileofCase, handler <- function(h, ...) {
+  addHandlerDoubleclick(.rqda$.FileofCase, handler = function(h, ...) {
     ViewFileFun(FileNameWidget = .rqda$.FileofCase)
     HL_Case()
     enabled(button$CasUnMarB) <- TRUE
     enabled(button$CasMarB) <- TRUE
   })
 
-  addHandlerClicked(.rqda$.FileofCase, handler <- function(h, ...) {
+  addHandlerClicked(.rqda$.FileofCase, handler = function(h, ...) {
     if (length(svalue(.rqda$.FileofCase))>0) {
       names(.rqda$.FileofCase) <- sprintf(rqda_txt("Selected File id is %s"),
                                           getFileIds("case", "selected"))
@@ -676,11 +673,11 @@ AddHandler <- function() {
       ShowFileProperty(Fid = getFileIds("case", "selected"), focus = FALSE)
   })
 
-  addHandlerDoubleclick(.rqda$.JournalNamesWidget, handler <- function(h, ...) {
+  addHandlerDoubleclick(.rqda$.JournalNamesWidget, handler = function(h, ...) {
     ViewJournalWidget()
   })
 
-  addHandlerClicked(.rqda$.JournalNamesWidget, handler <- function(h, ...) {
+  addHandlerClicked(.rqda$.JournalNamesWidget, handler = function(h, ...) {
     if (length(svalue(.rqda$.JournalNamesWidget))!= 0) {
       enabled(button$DelJouB) <- TRUE
       enabled(button$RenJouB) <- TRUE

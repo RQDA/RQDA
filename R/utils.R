@@ -199,7 +199,7 @@ MemoWidget <- function(prefix,widget,dbTable){
         insert(W, prvcontent, do.newline=FALSE, where = "beginning")
         addHandlerUnrealize(
           get(sprintf(".%smemo",prefix),envir=.rqda),
-          handler <- function(h,...)  {!CloseYes(Selected)})
+          handler = function(h,...)  {!CloseYes(Selected)})
         gSignalConnect(tmp$widget$buffer, "changed", function(h,...) {
           mbut <- get(sprintf("buttonOf.%smemo",prefix),envir=button)
           size(mbut) <- head_s

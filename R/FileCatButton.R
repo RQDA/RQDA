@@ -337,21 +337,7 @@ GetFileofCatWidgetMenu <- function()
         }
       }}
   })
-  
- 
-  ## FileofCatWidgetMenu[[gettext("Show ...", domain = "R-RQDA")]][[gettext("Show Uncoded Files Only Sorted By Imported Time", domain = "R-RQDA")]]$handler <- function(h,...){
-  ##  if (is_projOpen(envir =.rqda,conName="qdacon")) {
-  ##    fid <- getFileIds(condition="filecategory",type="uncoded")
-  ##    FileNameWidgetUpdate(FileNamesWidget=.rqda$.FileofCat,FileId=fid)
-  ##  }
-  ## }
-  ## FileofCatWidgetMenu[[gettext("Show ...", domain = "R-RQDA")]][[gettext("Show Coded Files Only Sorted By Imported Time", domain = "R-RQDA")]]$handler <- function(h,...){
-  ##   if (is_projOpen(envir =.rqda,conName="qdacon")) {
-  ##     fid <- getFileIds(condition="filecategory",type="coded")
-  ##     FileNameWidgetUpdate(FileNamesWidget=.rqda$.FileofCat,FileId=fid)
-  ##   }
-  ## }
-  
+    
   show_lst <- vector("list", 3)
   
   show_lst[[1]] <- gaction(gettext("Show All By Imported Time", domain = "R-RQDA"), handler =function(h, ...) {

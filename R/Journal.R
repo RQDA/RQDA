@@ -164,7 +164,7 @@ ViewJournalWidget <- function(prefix="Journal",widget=.rqda$.JournalNamesWidget,
         addHandlerKeystroke(tmp,handler=function(h,...){
             enabled(button$saveJournalB) <- TRUE
         })
-        addHandlerUnrealize(get(sprintf(".%smemo",prefix),envir=.rqda),handler <- function(h,...){
+        addHandlerUnrealize(get(sprintf(".%smemo",prefix),envir=.rqda),handler = function(h,...){
             withinWidget <- svalue(get(sprintf(".%smemoW",prefix),envir=.rqda))
             InRQDA <- rqda_sel( sprintf("select journal from %s where name='%s'",dbTable, enc(Selected)))[1, 1]
             if (isTRUE(all.equal(withinWidget,InRQDA))) {
