@@ -157,11 +157,11 @@ MemoWidget <- function(prefix,widget,dbTable){
 
         addHandlerKeystroke(gw, function(h, ...){
           if(h$key=="\023") {
-            print("got keystroke")
-            print(enabled(mbut))
+            #print("got keystroke")
+            #print(enabled(mbut))
             save_memo(W, dbTable, Selected, prefix)
-            print(enabled(mbut))
-            print("end keystroke")
+            #print(enabled(mbut))
+            #print("end keystroke")
           }
           if(h$key=="\027") dispose(gw)
         })
