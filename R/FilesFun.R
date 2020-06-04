@@ -641,7 +641,7 @@ AddToFileCategory <- function(Widget=.rqda$.fnames_rqda,updateWidget=TRUE){
           ## write only when the selected file associated with specific f-cat is not there
           DAT <- data.frame(fid=fid[!fid %in% exist$fid], catid=Fcatid, date=date(),dateM=date(),memo='',status=1,owner=.rqda$owner)
           ## should pay attention to the var order of DAT, must be the same as that of treefile table
-          success <- dbWriteTable(.rqda$qdacon,"treefile",DAT,row.name=FALSE,append=TRUE)
+          success <- rqda_wrt("treefile", DAT)
           ## write to caselinkage table
           if (success && updateWidget) {
             UpdateFileofCatWidget()

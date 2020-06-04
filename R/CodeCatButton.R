@@ -149,7 +149,7 @@ CodeCatAddToButton <- function(label=gettext("Add To", domain = "R-RQDA"),Widget
                 cid <- codeoutofcat[codeoutofcat$name %in% Selected,"id"]
                 Dat <- data.frame(cid=cid,catid=catid,date=date(),dateM=date(),memo="",status=1,owner=.rqda$owner)
                 ## Push selected codeList to table treecode
-                dbWriteTable(.rqda$qdacon,"treecode",Dat,row.names=FALSE,append=TRUE)
+                rqda_wrt("treecode", Dat)
                 ## update .CodeofCat Widget
                 UpdateCodeofCatWidget()
             }
@@ -280,7 +280,7 @@ GetCodeCatWidgetMenu <- function()
           Dat <- data.frame(cid=cid,catid=catid,date=date(),dateM=date(),memo="",
                             status=1, owner=.rqda$owner)
           ## Push selected codeList to table treecode
-          ok <- dbWriteTable(.rqda$qdacon,"treecode",Dat,row.names=FALSE,append=TRUE)
+          ok <- rqda_wrt("treecode", Dat)
           if (ok) {
             ## update .CodeofCat Widget
             UpdateCodeofCatWidget()

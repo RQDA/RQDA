@@ -680,6 +680,17 @@ rqda_sel <- function(sql){
   } else (cat("open a project first\n."))
 }
 
+#' Wrapper for dbWriteTable
+#' @param what character
+#' @param obj object
+#' @export
+rqda_wrt <- function(what, obj) {
+  if (is_projOpen()) {
+    dbWriteTable(.rqda$qdacon, what, obj, row.name=FALSE,append=TRUE)
+  } else (cat("open a project first\n."))
+
+}
+
 #' Wrapper for dbExecute
 #' @param sql sql-text
 #' @export

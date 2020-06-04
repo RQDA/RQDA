@@ -127,7 +127,7 @@ FileCatAddToButton <- function(label=gettext("AddTo", domain = "R-RQDA"),Widget=
         ## Selected <- iconv(Selected,to="UTF-8") ## already Encoded as UTF-8.
         fid <- fileoutofcat[fileoutofcat$name %in% Selected,"id"]
         Dat <- data.frame(fid=fid,catid=catid,date=date(),dateM=date(),memo=NA,status=1,owner=.rqda$owner)
-        dbWriteTable(.rqda$qdacon,"treefile",Dat,row.names=FALSE,append=TRUE)
+        rqda_wrt("treefile", Dat)
         UpdateFileofCatWidget()
       }
     }
@@ -165,41 +165,6 @@ FileCatDropFromButton <- function(label=gettext("DropFrom", domain = "R-RQDA"),W
   enabled(ans) <- FALSE
   return(ans)
 }
-
-
-
-## AddToFileCategory<- function(){
-## moved to FilesFun.R
-##   ## filenames -> fid -> selfirst=0; selend=nchar(filesource)
-##   filename <- svalue(.rqda$.fnames_rqda)
-##   Encoding(filename) <- "unknown"
-##   query <- rqda_sel(sprintf("select id, file from source where name in(%s) and status=1",paste("'",filename,"'",sep="",collapse=","))) ## multiple fid
-##   fid <- query$id
-##   Encoding(query$file) <- "UTF-8"
-
-##   ## select a F-cat name -> F-cat id
-##   Fcat <- rqda_sel("select catid, name from filecat where status=1")
-##   if (nrow(Fcat)==0){gmessage(gettext("Add File Category first.", domain = "R-RQDA"),con=TRUE)} else{
-##     Encoding(Fcat$name) <- "UTF-8"
-##     ##ans <- select.list(Fcat$name,multiple=FALSE)
-##     CurrentFrame <- sys.frame(sys.nframe())
-##     RunOnSelected(Fcat$name,multiple=TRUE,enclos=CurrentFrame,expr={
-##     if (Selected!=""){ ## must use Selected to represent the value of selected items. see RunOnSelected() for info.
-##       Selected <- iconv(Selected,to="UTF-8")
-##       Fcatid <- Fcat$catid[Fcat$name %in% Selected]
-##       exist <- rqda_sel(sprintf("select fid from treefile where status=1 and fid in (%s) and catid=%i",paste("'",fid,"'",sep="",collapse=","),Fcatid))
-##     if (nrow(exist)!=length(fid)){
-##     ## write only when the selected file associated with specific f-cat is not there
-##       DAT <- data.frame(fid=fid[!fid %in% exist$fid], catid=Fcatid, date=date(),dateM=date(),memo='',status=1)
-##       ## should pay attention to the var order of DAT, must be the same as that of treefile table
-##       success <- dbWriteTable(.rqda$qdacon,"treefile",DAT,row.name=FALSE,append=TRUE)
-##       ## write to caselinkage table
-##       if (success) {
-##       UpdateFileofCatWidget()
-##       }
-##       if (!success) gmessage(gettext("Fail to write to database.", domain = "R-RQDA"))
-##     }}})}}
-
 
 GetFileCatWidgetMenu <- function()
 {
