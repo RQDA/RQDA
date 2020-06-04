@@ -87,7 +87,7 @@ CodeCat_RenameButton <- function(label=gettext("Rename", domain = "R-RQDA"),Widg
       else {
           ## get the new file names
           NewName <- ginput(gettext("Enter new Category name. ", domain = "R-RQDA"), text=OldName, icon="info")
-          
+
           if (!identical(NewName, character(0)))
           {
           if (!is.na(NewName)) {
@@ -261,10 +261,10 @@ where coding2.status=1 and source.status=1 and freecode.status=1 and coding2.cid
 GetCodeCatWidgetMenu <- function()
 {
   CodeCatWidgetMenu <- list()
-  
-  CodeCatWidgetMenu[[1]] <- gaction(gettext("Add New Code to Selected Category", domain = "R-RQDA"), handler = function(h, ...){
+
+  CodeCatWidgetMenu[[1]] <- gaction(rqda_txt("Add New Code to Selected Category"), handler = function(h, ...){
     if (is_projOpen(envir=.rqda,conName="qdacon")) {
-      codename <- ginput(gettext("Enter new code. ", domain = "R-RQDA"), icon="info")
+      codename <- ginput(rqda_txt("Enter new code."), icon="info")
       if (!identical(codename, character(0)))
       {
       if (!is.na(codename)){
@@ -274,7 +274,7 @@ GetCodeCatWidgetMenu <- function()
         cid <- rqda_sel(sprintf("select id from freecode where status=1 and name='%s'",codename))$id
         ## end of add a new code to free code.
         SelectedCodeCat <- svalue(.rqda$.CodeCatWidget)
-        if (length(SelectedCodeCat)==0) {gmessage(gettext("Select a code category first.", domain = "R-RQDA"),container=TRUE)} else{
+        if (length(SelectedCodeCat)==0) {gmessage(rqda_txt("Select a code category first."),container=TRUE)} else{
           catid <- rqda_sel(sprintf("select catid from codecat where status=1 and name='%s'",SelectedCodeCat))[,1]
           ## CodeList and the id (table freecode): sql -> name and id where status==1
           Dat <- data.frame(cid=cid,catid=catid,date=date(),dateM=date(),memo="",
@@ -284,48 +284,41 @@ GetCodeCatWidgetMenu <- function()
           if (ok) {
             ## update .CodeofCat Widget
             UpdateCodeofCatWidget()
-          } else gmessage(gettext("Failed to assign code category", domain = "R-RQDA"))
+          } else gmessage(rqda_txt("Failed to assign code category"))
         }
       }
       }
     }
   })
-  
-  CodeCatWidgetMenu[[2]] <- gaction(gettext("Codings of selected category", domain = "R-RQDA"), handler = function(h, ...){
+
+  CodeCatWidgetMenu[[2]] <- gaction(rqda_txt("Codings of selected category"), handler = function(h, ...){
     if (is_projOpen(envir=.rqda,conName="qdacon")) {
       ct <- getCodingsByCategory(fid=getFileIds(condition=.rqda$TOR))
       print.codingsByOne(ct)
     }
   })
-  
-  CodeCatWidgetMenu[[3]] <- gaction(gettext("Memo", domain = "R-RQDA"), handler = function(h, ...){
+
+  CodeCatWidgetMenu[[3]] <- gaction(rqda_txt("Memo"), handler = function(h, ...){
     if (is_projOpen(envir=.rqda,conName="qdacon")) {
       MemoWidget("Code Category",.rqda$.CodeCatWidget,"codecat")
     }
   })
-  
-  ##psccFun <- function(h,...){
-  ##    plotCodeCategory()
-  ##}
-  ##psccItem <- gaction("Plot Selected Code Category", handler=psccFun,toolkit=guiToolkit("RGtk2"))
-  ## need to manually set the toolkit
-  ##CodeCatWidgetMenu$"Plot Selected Code Category" <- psccItem
-  
-  CodeCatWidgetMenu[[4]] <- gaction(gettext("Plot Selected Code Categories", domain = "R-RQDA"), handler = function(h, ...){
+
+  CodeCatWidgetMenu[[4]] <- gaction(rqda_txt("Plot Selected Code Categories"), handler = function(h, ...){
     plotCodeCategory()
   })
-  
-  CodeCatWidgetMenu[[5]] <- gaction(gettext("Plot Selected Code Categories with d3", domain = "R-RQDA"), handler = function(h, ...){
+
+  CodeCatWidgetMenu[[5]] <- gaction(rqda_txt("Plot Selected Code Categories with d3"), handler = function(h, ...){
     d3CodeCategory()
   })
-  
-  CodeCatWidgetMenu[[6]] <- gaction(gettext("Plot Selected Code Categories with d3", domain = "R-RQDA"), handler = function(h, ...){
+
+  CodeCatWidgetMenu[[6]] <- gaction(rqda_txt("Sort by created time"), handler = function(h, ...){
     if (is_projOpen(envir=.rqda,conName="qdacon")) {
       UpdateTableWidget(Widget=.rqda$.CodeCatWidget,FromdbTable="codecat")
       ## UpdateCodeofCatWidget() ## wrong function
     }
   })
-  
+
   CodeCatWidgetMenu
 }
 
@@ -334,7 +327,7 @@ GetCodeCatWidgetMenu <- function()
 GetCodeofCatWidgetMenu <- function()
 {
   CodeofCatWidgetMenu <- list()
-  
+
   CodeofCatWidgetMenu[[1]] <- gaction(gettext("Rename Selected Code", domain = "R-RQDA"), handler = function(h, ...){
     selectedCodeName <- svalue(.rqda$.CodeofCat)
     if (length(selectedCodeName)==0){
@@ -354,13 +347,13 @@ GetCodeofCatWidgetMenu <- function()
     }
     }
   })
-  
+
   CodeofCatWidgetMenu[[2]] <- gaction(gettext("Code Memo", domain = "R-RQDA"), handler = function(h, ...){
     if (is_projOpen(envir = .rqda, conName = "qdacon", message = FALSE)) {
       MemoWidget(gettext("Code", domain = "R-RQDA"),.rqda$.CodeofCat,"freecode")
     }
   })
-  
+
   CodeofCatWidgetMenu[[3]] <- gaction(gettext("Sort by created time", domain = "R-RQDA"), handler = function(h, ...){
     if (is_projOpen(envir=.rqda,conName="qdacon")) {
       UpdateCodeofCatWidget()
