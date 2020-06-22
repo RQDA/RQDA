@@ -122,10 +122,10 @@ ViewFileFunHelper <- function(FileName,hightlight=TRUE,codingTable=.rqda$codingT
   SelectedFileName <- FileName
   wnh <- size(.rqda$.root_rqdagui)
   if (grepl("apple", R.version$platform)) {
-    gw <- gwindow(title = SelectedFileName,parent = c(0, 0),
+    gw <- gwindow(title = SelectedFileName, parent = c(0, 0),
                   width = getOption("widgetSize")[1], height = getOption("widgetSize")[2])
   } else {
-    gw <- gwindow(title = SelectedFileName,parent = wnh, ## .rqda$.root_rqdagui,
+    gw <- gwindow(title = SelectedFileName, parent = wnh, ## .rqda$.root_rqdagui,
                   width = getOption("widgetSize")[1],
                   height = getOption("widgetSize")[2]
     )
@@ -137,8 +137,8 @@ ViewFileFunHelper <- function(FileName,hightlight=TRUE,codingTable=.rqda$codingT
 
   mainIcon <- system.file("icon", "mainIcon.png", package = "RQDA")
   gw$set_icon(mainIcon)
-  getToolkitWidget(gw)$Move(getOption("widgetCoordinate")[1],
-                            getOption("widgetCoordinate")[2])
+  # getToolkitWidget(gw)$Move(getOption("widgetCoordinate")[1],
+  #                           getOption("widgetCoordinate")[2])
   assign(".root_edit", gw, envir = .rqda)
   .root_edit <- get(".root_edit", .rqda)
   tmp <- gtext(container=.root_edit)
