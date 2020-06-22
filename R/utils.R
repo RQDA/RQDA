@@ -686,7 +686,7 @@ rqda_sel <- function(sql){
 #' @export
 rqda_wrt <- function(what, obj) {
   if (is_projOpen()) {
-    dbWriteTable(.rqda$qdacon, what, obj, row.name=FALSE,append=TRUE)
+    dbWriteTable(.rqda$qdacon, what, obj, row.names=FALSE,append=TRUE)
   } else (cat("open a project first\n."))
 
 }
