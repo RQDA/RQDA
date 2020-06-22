@@ -271,7 +271,7 @@ EditFileFun <- function(FileNameWidget=.rqda$.fnames_rqda){
     }
     else {
       tryCatch(dispose(.rqda$.root_edit),error=function(e) {})
-      gw <- gwindow(title=SelectedFileName,parent=getOption("widgetCoordinate"),
+      gw <- gwindow(title=SelectedFileName, #parent=getOption("widgetCoordinate"),
                     width = getOption("widgetSize")[1], height = getOption("widgetSize")[2]
       )
 
@@ -356,6 +356,21 @@ EditFileFun <- function(FileNameWidget=.rqda$.fnames_rqda){
       W <- get(".openfile_gui", .rqda)
       insert(W, content)
       buffer <- W$buffer ## get text buffer.
+
+      fore.col <- .rqda$fore.col
+      back.col <- .rqda$back.col
+
+      # checks if the tag exists otherwise Gtk will complain
+      if(is.null(gtkTextTagTableLookup(buffer$`tag-table`, "underline")))
+        buffer$createTag("underline", underline = "single")
+
+      if(is.null(gtkTextTagTableLookup(buffer$`tag-table`, fore.col)))
+        buffer$createTag(fore.col,foreground = fore.col)
+
+      if(is.null(gtkTextTagTableLookup(buffer$`tag-table`, sprintf("%s.background",back.col))))
+        buffer$createTag(sprintf("%s.background",back.col),background = back.col)
+
+
       mark_index <- rqda_sel(sprintf("select selfirst,selend,rowid from coding where fid=%i and status=1",
                                      IDandContent$id))
       if (nrow(mark_index)!=0){## make sense only when there is coding there
