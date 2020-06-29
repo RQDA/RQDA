@@ -7,7 +7,7 @@ ImportFileButton <- function(label = rqda_txt("Import"), container, ...) {
                     multi = TRUE)
     if (!identical(paths, character(0)))
     {
-      if (paths != "") {
+      if (all(paths != "")) {
         ## have to convert, otherwise, can not find the file.
         Encoding(paths) <- "UTF-8"
         ImportFile(paths, container = .rqda$qdacon)
@@ -58,8 +58,8 @@ DeleteFileButton <- function(label = rqda_txt("Delete"), container, ...) {
                   fid))
         ## set the status of the related case/f-cat to 0
       }
-      FileNamesUpdate()
       UpdateWidget(".fnames_rqda", from = SelectedFile, to = NULL)
+      # FileNamesUpdate()
     }
   }, action = list(envir = .rqda, conName = "qdacon")
   )
