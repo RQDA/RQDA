@@ -673,6 +673,7 @@ rqda_sel(sql)
 
 #' Wrapper for dbGetQuery
 #' @param sql sql-text
+#' @importFrom DBI dbGetQuery
 #' @export
 rqda_sel <- function(sql){
   if (is_projOpen()) {
@@ -683,6 +684,7 @@ rqda_sel <- function(sql){
 #' Wrapper for dbWriteTable
 #' @param what character
 #' @param obj object
+#' @importFrom DBI dbWriteTable
 #' @export
 rqda_wrt <- function(what, obj) {
   if (is_projOpen()) {
@@ -693,6 +695,7 @@ rqda_wrt <- function(what, obj) {
 
 #' Wrapper for dbExecute
 #' @param sql sql-text
+#' @importFrom DBI dbExecute
 #' @export
 rqda_exe <- function(sql){
   if (is_projOpen()) {

@@ -27,7 +27,6 @@
 #' @import RGtk2
 #' @import gWidgets2
 #' @import gWidgets2RGtk2
-#' @import DBI
 #' @import RSQLite
 #' @importFrom graphics plot
 #' @importFrom grDevices colors
