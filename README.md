@@ -1,20 +1,46 @@
 # RQDA [![Build Status](https://travis-ci.org/JanMarvin/RQDA.svg?branch=master)](https://travis-ci.org/JanMarvin/RQDA) [![Build status](https://ci.appveyor.com/api/projects/status/jguugf4k74kt77xp/branch/master?svg=true)](https://ci.appveyor.com/project/JanMarvin/rqda/branch/master)
 
-[RQDA](http://rqda.r-forge.r-project.org/) is computer-aided qualitative data analysis package
+[RQDA](http://rqda.r-forge.r-project.org/) is an R package for computer-aided qualitative data analysis package
 
 ## Installation of Devel Version
 
 Assuming you have a working version of current release (and all dependencies).
 
 ```R
-install.packages("devtools") ## install it only if you haven't done it yet
-require(devtools)
+#install.packages("devtools") ## install it only if you haven't done it yet
 devtools::install_github("JanMarvin/RQDA", INSTALL_opts = "--no-multiarch")
 ```
 
 
+## Installation for Linux users from source package
 
-## Installation for macOS from source package
+```{R}
+# packages you need to run and build RQDA
+pkgs <- c("RSQLite", "gWidgets2RGtk2", "DBI",
+          "stringi", "RGtk2", "igraph", "gWidgets2", "devtools")
+install.packages(pkgs)
+
+devtools::install_github("JanMarvin/RQDA")
+```
+
+
+## Installation for Windows users from source package
+
+```{R}
+# packages you need to run and build RQDA
+pkgs <- c("RSQLite", "gWidgets2RGtk2", "DBI",
+          "stringi", "RGtk2", "igraph", "gWidgets2", "devtools")
+install.packages(pkgs)
+
+# run this once and click OK when asked to install Gtk2
+library(RGtk2)
+
+# RGtk2 installs only i686 or x86_64 files therefore no-mutliarch is required
+devtools::install_github("JanMarvin/RQDA", INSTALL_opts = "--no-multiarch")
+```
+
+
+## Installation for macOS from source package (untested)
 
 1. Install Xocde from App store, launch Xcode and follow the instruction to install all the components. In addition, open a Terminal and run the following command to install command line tools: 
    ```
@@ -46,6 +72,7 @@ $ R
 ```R
 > library(RQDA) 
 ```
+
 
 ## How to change the font sizes of RQDA interfacea
 1. There is a font setting interface in the Settings Tab.
