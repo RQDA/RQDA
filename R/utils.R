@@ -15,26 +15,36 @@ rename <- function(from,to,table=c("source","freecode","cases","codecat","fileca
   }
 }
 
-UpdateWidget <- function(widget,from,to=NULL){
+UpdateWidget <- function(widget, from, to=NULL) {
   ## widget is character of length 1.
-  items <- eval(parse(text=sprintf(".rqda$%s[]",widget)))
-  if (length(items)!= 0){
+  items <- eval(parse(text=sprintf(".rqda$%s[]", widget)))
+
+  if (length(items) != 0) {
     Encoding(items) <- "UTF-8"
-    idx <- as.character(which(items %in%  from[1])) ## note the position, before manipulation of items
+
+    ## note the position, before manipulation of items
+    idx <- as.character(which(items %in%  from[1]))
+
     if (is.null(to)) {
       items <- items[! items %in% from]
     } else {
       if (length(from) == length(to))
         items[items %in% from] <- to
     }
+
+
     ## eval(parse(text=sprintf(".rqda$%s[] <- items",widget)))
     tryCatch(eval(parse(text = sprintf(".rqda$%s[] <- items", widget))),
              error = function(e) cat("warning msg from the replacement.\n"))
-    if (length(idx)>0) {
-    path <-gtkTreePathNewFromString(idx)
-    gtkTreeViewScrollToCell(get(widget, envir=.rqda)$widget,
-                            path,use.align=TRUE,row.align = 0.07)
-  }}
+
+
+    # was length > 0 which will throw an error
+    if ( length(idx) > 1 ) {
+      path <- gtkTreePathNewFromString(idx)
+
+      gtkTreeViewScrollToCell(get(widget, envir=.rqda)$widget,
+                              path,use.align=TRUE,row.align = 0.07)
+    }}
 }
 
 ScrollToItem <- function(widget,item=svalue(widget)){
