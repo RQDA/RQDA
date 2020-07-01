@@ -425,15 +425,18 @@ print.summaryCodings <- function(x,...){
 #'
 #' @examples
 #' \dontrun{
-#'  searchFiles("file like '\%keyword\%'"\)
 #'  ## search for files who contain the word of "keyword"
-#'  searchFiles("file like 'keyword\%'"\)
+#'  searchFiles("file like '%keyword%'")
+#'
 #'  ## search for files whose content begin with the word of "keyword"
-#'  searchFiles("name like '\%keyword'"\)
+#'  searchFiles("file like 'keyword%'")
+#'
 #'  ## search for files whose name end with the word of "keyword"
-#'  searchFiles("name like '\%keyword one' and file like '\%keyword tow\%'"\)
+#'  searchFiles("name like '%keyword'")
+#'
 #'  ## combined conditions
-#' }
+#'  searchFiles("name like '%keyword one' and file like '%keyword tow%'")
+#'  }
 #' @export
 searchFiles <- function(pattern,content=FALSE,Fid=NULL,Widget=NULL,is.UTF8=FALSE){
 ##searchFiles("file like '%Xin Min Wan Bao%'")
