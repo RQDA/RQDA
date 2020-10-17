@@ -146,39 +146,71 @@ UpdateCodeofCatWidget <- function(con=.rqda$qdacon,Widget=.rqda$.CodeofCat,sort=
     tryCatch(Widget[] <- items,error=function(e){})
 }
 
-CodeCatAddToButton <- function(label=gettext("Add To", domain = "R-RQDA"),Widget=.rqda$.CodeCatWidget,...)
-{
-    ans <- gbutton(label,handler=function(h,...) {
-        ## SelectedCodeCat and its id (table codecat): svalue()-> Name; sql->catid
-        SelectedCodeCat <- svalue(.rqda$.CodeCatWidget)
-        catid <- rqda_sel(sprintf("select catid from codecat where status=1 and name='%s'",enc(SelectedCodeCat)))[,1]
-        ## CodeList and the id (table freecode): sql -> name and id where status=1
-        freecode <-  rqda_sel("select name, id from freecode where status=1")
-        if (nrow(freecode) == 0){
-            gmessage(gettext("No free codes yet.", domain = "R-RQDA"),cont=.rqda$.CodeCatWidget)
-        } else {
-            Encoding(SelectedCodeCat) <- Encoding(freecode[['name']]) <- "UTF-8"
-            ## Get CodeList already in the category (table treecode): sql -> cid where catid==catid
-            codeofcat <- rqda_sel(sprintf("select cid from treecode where status=1 and catid=%i",catid))
-            if (nrow(codeofcat)!=0){
-                ## compute those not in the category, then push them to select.list()
-                codeoutofcat <- subset(freecode,!(freecode$id %in% codeofcat$cid))
-            } else  codeoutofcat <- freecode
-            Selected <- gselect.list(codeoutofcat[['name']],multiple=TRUE, x=getOption("widgetCoordinate")[1])
-            if (length(Selected) >1 || Selected != ""){
-                ## Selected <- iconv(Selected,to="UTF-8")
-                cid <- codeoutofcat[codeoutofcat$name %in% Selected,"id"]
-                Dat <- data.frame(cid=cid,catid=catid,date=date(),dateM=date(),memo="",status=1,owner=.rqda$owner)
-                ## Push selected codeList to table treecode
-                rqda_wrt("treecode", Dat)
-                ## update .CodeofCat Widget
-                UpdateCodeofCatWidget()
-            }
-        }})
-    gtkWidgetSetTooltipText(getToolkitWidget(ans),gettext("Add code(s) to the selected code category.", domain = "R-RQDA"))
-    assign("CodCatAddToB",ans, envir=button)
-    enabled(ans) <- FALSE
-    return(ans)
+CodeCatAddToButton <- function(label = rqda_txt("Add To"),
+                               Widget = .rqda$.CodeCatWidget, ...) {
+
+  ans <- gbutton(label, handler = function(h, ...) {
+
+    SelectedCodeCat <- svalue(.rqda$.CodeCatWidget)
+    if (identicial (SelectedCodeCat, character(0))) {
+      gmessage(rqda_txt("Select a Code Category first."),
+               icon = "error", container = TRUE)
+      return(invisible(NULL))
+    }
+
+    catid <- rqda_sel(
+      sprintf("select catid from codecat where status=1 and name='%s'",
+              enc(SelectedCodeCat)))[ , 1]
+
+    freecode <-  rqda_sel("select name, id from freecode where status=1")
+
+    if (nrow(freecode) == 0){
+      gmessage(rqda_txt("No free codes yet."),
+               cont = .rqda$.CodeCatWidget)
+
+    } else {
+      Encoding(SelectedCodeCat) <- Encoding(freecode[['name']]) <- "UTF-8"
+
+      codeofcat <- rqda_sel(
+        sprintf("select cid from treecode where status=1 and catid=%i",
+                catid))
+
+      if (nrow(codeofcat) != 0){
+
+        codeoutofcat <- subset(freecode,
+                               !(freecode$id %in% codeofcat$cid))
+      } else {
+        codeoutofcat <- freecode
+      }
+
+      Selected <- gselect.list(codeoutofcat[['name']],
+                               multiple = TRUE,
+                               x = getOption("widgetCoordinate")[1])
+
+      if (length(Selected) >1 || Selected != ""){
+
+        cid <- codeoutofcat[codeoutofcat$name %in% Selected,"id"]
+        Dat <- data.frame(cid = cid,
+                          catid = catid,
+                          date = date(),
+                          dateM = date(),
+                          memo = "",
+                          status = 1,
+                          owner = .rqda$owner)
+
+        ## Push selected codeList to table treecode
+        rqda_wrt("treecode", Dat)
+
+        UpdateCodeofCatWidget()
+      }
+    }})
+  gtkWidgetSetTooltipText(
+    getToolkitWidget(ans),
+    rqda_txt("Add code(s) to the selected code category."))
+
+  assign("CodCatAddToB",ans, envir=button)
+  enabled(ans) <- FALSE
+  return(ans)
 }
 
   ## update .rqda$.CodeofCat[] by click handler on .rqda$.CodeCatWidget
