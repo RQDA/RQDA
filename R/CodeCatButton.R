@@ -35,18 +35,18 @@ AddTodbTable <- function(item,dbTable,Id="id",field="name",con=.rqda$qdacon,...)
 
 
 #################
-AddCodeCatButton <- function(label=gettext("Add", domain = "R-RQDA")){
-    AddCodCatB <- gbutton(label,handler=function(h,...) {
-        item <- ginput(gettext("Enter new Code Category. ", domain = "R-RQDA"), icon="info")
-        if (!identical(item, character(0))){
-            Encoding(item) <- "UTF-8"
-            AddTodbTable(item,"codecat",Id="catid") ## CODE CATegory
-            UpdateTableWidget(Widget=.rqda$.CodeCatWidget,FromdbTable="codecat")
-        }
-    })
-    assign("AddCodCatB",AddCodCatB,envir=button)
-    enabled(AddCodCatB) <- FALSE
-    AddCodCatB
+AddCodeCatButton <- function(label = rqda_txt("Add")) {
+  AddCodCatB <- gbutton(label, handler = function(h, ...) {
+    item <- ginput(rqda_txt("Enter new Code Category. "), icon="info")
+    if (!identical(item, character(0))) {
+      Encoding(item) <- "UTF-8"
+      AddTodbTable(item, "codecat", Id = "catid") ## CODE CATegory
+      UpdateTableWidget(Widget = .rqda$.CodeCatWidget, FromdbTable = "codecat")
+    }
+  })
+  assign("AddCodCatB", AddCodCatB, envir = button)
+  enabled(AddCodCatB) <- FALSE
+  AddCodCatB
 }
 
 
@@ -57,7 +57,7 @@ DeleteCodeCatButton <- function(label=rqda_txt("Delete"))
     del <- gconfirm(rqda_txt("Really delete the Code Category?"),
                     icon="question")
     Selected <- svalue(.rqda$.CodeCatWidget)
-    if (identicial (Selected, character(0))) {
+    if (identical (Selected, character(0))) {
       gmessage(rqda_txt("Select a Code Category first."),
                icon = "error", container = TRUE)
       return(invisible(NULL))
@@ -152,7 +152,7 @@ CodeCatAddToButton <- function(label = rqda_txt("Add To"),
   ans <- gbutton(label, handler = function(h, ...) {
 
     SelectedCodeCat <- svalue(.rqda$.CodeCatWidget)
-    if (identicial (SelectedCodeCat, character(0))) {
+    if (identical (SelectedCodeCat, character(0))) {
       gmessage(rqda_txt("Select a Code Category first."),
                icon = "error", container = TRUE)
       return(invisible(NULL))
