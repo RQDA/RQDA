@@ -51,10 +51,10 @@ AddCodeCatButton <- function(label = rqda_txt("Add")) {
 
 
 
-DeleteCodeCatButton <- function(label=rqda_txt("Delete"))
+DeleteCodeCatButton <- function(label = rqda_txt("Delete"))
 {
 
-  DelCodCatB <- gbutton(label, handler=function(h,...) {
+  DelCodCatB <- gbutton(label, handler=function(h, ...) {
 
     Selected <- svalue(.rqda$.CodeCatWidget)
     Encoding(Selected) <- "UTF-8"
@@ -71,7 +71,7 @@ DeleteCodeCatButton <- function(label=rqda_txt("Delete"))
     if (isTRUE(del)) {
       catid <- rqda_sel(
         sprintf("select catid from codecat where status=1 and name='%s'",
-                enc(Selected)))[,1]
+                enc(Selected)))[ , 1]
       if (length(catid) == 1 ){
         rqda_exe(
           sprintf("update codecat set status=0 where name='%s'",
