@@ -38,7 +38,7 @@ AddTodbTable <- function(item,dbTable,Id="id",field="name",con=.rqda$qdacon,...)
 AddCodeCatButton <- function(label=gettext("Add", domain = "R-RQDA")){
     AddCodCatB <- gbutton(label,handler=function(h,...) {
         item <- ginput(gettext("Enter new Code Category. ", domain = "R-RQDA"), icon="info")
-        if (!is.na(item)){
+        if (!identical(item, character(0))){
             Encoding(item) <- "UTF-8"
             AddTodbTable(item,"codecat",Id="catid") ## CODE CATegory
             UpdateTableWidget(Widget=.rqda$.CodeCatWidget,FromdbTable="codecat")
