@@ -51,28 +51,49 @@ AddCodeCatButton <- function(label=gettext("Add", domain = "R-RQDA")){
 
 
 
-DeleteCodeCatButton <- function(label=gettext("Delete", domain = "R-RQDA"))
+DeleteCodeCatButton <- function(label=rqda_txt("Delete"))
 {
-    DelCodCatB <- gbutton(label, handler=function(h,...) {
-        del <- gconfirm(gettext("Really delete the Code Category?", domain = "R-RQDA"),icon="question")
-        if (isTRUE(del)){
-            Selected <- svalue(.rqda$.CodeCatWidget)
-            Encoding(Selected) <- "UTF-8"
-            catid <- rqda_sel(sprintf("select catid from codecat where status=1 and name='%s'",enc(Selected)))[,1]
-            if (length(catid) ==1){
-                rqda_exe(sprintf("update codecat set status=0 where name='%s'",enc(Selected)))
-                ## set status in table freecode to 0
-                UpdateTableWidget(Widget=.rqda$.CodeCatWidget,FromdbTable="codecat")
-                tryCatch(rqda_exe(sprintf("update treecode set status=0 where catid='%s'",catid)),error=function(e){})
-                ## should delete all the related codelists
-                UpdateCodeofCatWidget() ## update the code of cat widget
-            } else gmessage(gettext("The Category Name is not unique.", domain = "R-RQDA"),container=TRUE)
-        }
+  DelCodCatB <- gbutton(label, handler=function(h,...) {
+    del <- gconfirm(rqda_txt("Really delete the Code Category?"),
+                    icon="question")
+    Selected <- svalue(.rqda$.CodeCatWidget)
+    if (identicial (Selected, character(0))) {
+      gmessage(rqda_txt("Select a Code Category first."),
+               icon = "error", container = TRUE)
+      return(invisible(NULL))
     }
-                          )
-    assign("DelCodCatB",DelCodCatB,envir=button)
-    enabled(DelCodCatB) <- FALSE
-    DelCodCatB
+
+    if (isTRUE(del)) {
+      Encoding(Selected) <- "UTF-8"
+      catid <- rqda_sel(
+        sprintf("select catid from codecat where status=1 and name='%s'",
+                enc(Selected)))[,1]
+      if (length(catid) == 1 ){
+        rqda_exe(
+          sprintf("update codecat set status=0 where name='%s'",
+                  enc(Selected)))
+        ## set status in table freecode to 0
+        UpdateTableWidget(Widget = .rqda$.CodeCatWidget,
+                          FromdbTable = "codecat")
+        tryCatch(
+          rqda_exe(
+            sprintf("update treecode set status=0 where catid='%s'",
+                    catid)),
+          error=function(e){})
+
+        ## should delete all the related codelists
+        UpdateCodeofCatWidget() ## update the code of cat widget
+      } else {
+        gmessage(rqda_txt("The Category Name is not unique."),
+                 container = TRUE)
+      }
+
+    }
+  }
+  )
+  assign("DelCodCatB", DelCodCatB, envir = button)
+  enabled(DelCodCatB) <- FALSE
+  DelCodCatB
 }
 
 
