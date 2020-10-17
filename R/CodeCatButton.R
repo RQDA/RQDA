@@ -53,18 +53,22 @@ AddCodeCatButton <- function(label = rqda_txt("Add")) {
 
 DeleteCodeCatButton <- function(label=rqda_txt("Delete"))
 {
+
   DelCodCatB <- gbutton(label, handler=function(h,...) {
-    del <- gconfirm(rqda_txt("Really delete the Code Category?"),
-                    icon="question")
+
     Selected <- svalue(.rqda$.CodeCatWidget)
+    Encoding(Selected) <- "UTF-8"
+
     if (identical (Selected, character(0))) {
       gmessage(rqda_txt("Select a Code Category first."),
                icon = "error", container = TRUE)
       return(invisible(NULL))
     }
 
+    del <- gconfirm(rqda_txt("Really delete the Code Category?"),
+                    icon="question")
+
     if (isTRUE(del)) {
-      Encoding(Selected) <- "UTF-8"
       catid <- rqda_sel(
         sprintf("select catid from codecat where status=1 and name='%s'",
                 enc(Selected)))[,1]
