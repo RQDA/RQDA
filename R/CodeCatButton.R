@@ -1,16 +1,26 @@
-### UpdateTableWidget() and AddTodbTable() are generall version of the previous functions
-UpdateTableWidget <- function(Widget,FromdbTable,con=.rqda$qdacon,sortByTime=FALSE,decreasing=FALSE,...)
+### UpdateTableWidget() and AddTodbTable() are general versions of the previous
+### functions
+UpdateTableWidget <- function(Widget, FromdbTable, con = .rqda$qdacon,
+                              sortByTime = FALSE, decreasing = FALSE, ...)
 {
-  if (is_projOpen()){
-  items <- rqda_sel(sprintf("select name,date from %s where status=1",FromdbTable))
-  if (nrow(items)!=0) {
-    Encoding(items$name) <- "UTF-8"
-    if (!sortByTime) {items <- sort(items$name,decreasing=decreasing)} else {
-      items <- items$name[OrderByTime(items$date,decreasing=decreasing)]
+  if (is_projOpen()) {
+    items <- rqda_sel(sprintf("select name,date from %s where status=1",
+                              FromdbTable))
+    if (nrow(items) != 0) {
+      Encoding(items$name) <- "UTF-8"
+      if (!sortByTime) {
+        items <- sort(items$name, decreasing = decreasing)
+      } else {
+        items <- items$name[OrderByTime(items$date, decreasing = decreasing)]
+      }
+    } else {
+      items <- NULL
     }
-  } else items <- NULL
-  tryCatch(eval(substitute(W[] <- items,list(W=quote(Widget)))), error=function(e){})
-}}
+    tryCatch(eval(substitute(W[] <- items,
+                             list(W = quote(Widget)))),
+             error=function(e){})
+  }
+}
 
 
 AddTodbTable <- function(item,dbTable,Id="id",field="name",con=.rqda$qdacon,...) {
@@ -130,24 +140,43 @@ CodeCat_RenameButton <- function(label=gettext("Rename", domain = "R-RQDA"),Widg
 
 UpdateCodeofCatWidget <- function(con=.rqda$qdacon,Widget=.rqda$.CodeofCat,sort=TRUE)
 {
-    SelectedCodeCat <- svalue(.rqda$.CodeCatWidget)
-    if (length(SelectedCodeCat)!=0){
-        ## if code cat is selected, then continue
-        Encoding(SelectedCodeCat) <- "UTF-8"
-        catid <- rqda_sel(sprintf("select catid from codecat where status=1 and name='%s'",
-                                                 enc(SelectedCodeCat)))[,1]
-        Total_cid <- rqda_sel(sprintf("select cid from treecode where status=1 and catid=%i",catid))
-        if (nrow(Total_cid)!=0){
-        items <- rqda_sel("select name,id,date from freecode where status=1")
-        if (nrow(items)!=0) {
-            items <- items[items$id %in% Total_cid$cid,c("name","date")]
-            items <- items$name[OrderByTime(items$date)] ## sort accoding to date
-            Encoding(items) <- "UTF-8"
-            if (sort) items <- sort(items)
-        } else items <- NULL
-    } else items <- NULL
-    } else items <- NULL
-    tryCatch(Widget[] <- items,error=function(e){})
+  SelectedCodeCat <- svalue(.rqda$.CodeCatWidget)
+  # print(SelectedCodeCat)
+  # print(length(SelectedCodeCat))
+
+  if (length(SelectedCodeCat) != 0) {
+    ## if code cat is selected, then continue
+    Encoding(SelectedCodeCat) <- "UTF-8"
+    catid <- rqda_sel(
+      sprintf("select catid from codecat where status=1 and name='%s'",
+              enc(SelectedCodeCat)))[ , 1]
+
+    Total_cid <- rqda_sel(
+      sprintf("select cid from treecode where status=1 and catid=%i",
+              catid))
+
+    if (nrow(Total_cid) != 0) {
+      items <- rqda_sel("select name,id,date from freecode where status=1")
+
+      if (nrow(items) != 0) {
+        items <- items[items$id %in% Total_cid$cid, c("name","date")]
+        items <- items$name[OrderByTime(items$date)] ## sort accoding to date
+
+        Encoding(items) <- "UTF-8"
+        if (sort)
+          items <- sort(items)
+
+      } else {
+        items <- NULL
+      }
+    } else {
+      items <- NULL
+    }
+  } else {
+    items <- NULL
+  }
+
+  tryCatch(Widget[] <- items, error=function(e){})
 }
 
 CodeCatAddToButton <- function(label = rqda_txt("Add To"),
@@ -224,7 +253,7 @@ CodeCatDropFromButton <- function(label=gettext("Drop From", domain = "R-RQDA"),
     ans <- gbutton(label,handler=function(h,...) {
         ## Get CodeList already in the category (table treecode): svalue()
         CodeOfCat <- svalue(Widget)
-        if ((NumofSelected <- length(CodeOfCat)) ==0) {
+        if ((NumofSelected <- length(CodeOfCat)) == 0) {
             gmessage(gettext("Please select the Codes you want to delete.", domain = "R-RQDA"),container=TRUE)
         } else {
             ## Give a confirm msg
@@ -265,16 +294,29 @@ CodeCatMemoButton <- function(label=gettext("Memo", domain = "R-RQDA"),...){
 ## MemoWidget() is moved to utils.R
 
 plotCodeCategory <-function(parent=NULL){
-    if (is.null(parent)) parent <- svalue(.rqda$.CodeCatWidget)
-    ans <- rqda_sel(sprintf("select codecat.name as parent,freecode.name as child from treecode, codecat,freecode
-where treecode.status=1 and codecat.status=1 and freecode.status=1
-and treecode.catid=codecat.catid and freecode.id=treecode.cid and codecat.name in (%s)",paste(shQuote(parent),collapse=",")))
-    Encoding(ans$parent) <- "UTF-8"
-    Encoding(ans$child) <- "UTF-8"
-    g <- igraph::graph.data.frame(ans)
-    tryCatch(igraph::tkplot(g,vertex.label=igraph::V(g)$name),error=function(e){
-        igraph::plot.igraph(g,vertex.label=igraph::V(g)$name)
-    })
+  if (is.null(parent))
+    parent <- svalue(.rqda$.CodeCatWidget)
+  ans <- rqda_sel(
+  sprintf("select
+            codecat.name as parent,
+            freecode.name as child from treecode,
+            codecat,freecode
+            where treecode.status=1 and
+                  codecat.status=1 and
+                  freecode.status=1 and
+                  treecode.catid = codecat.catid and
+                  freecode.id = treecode.cid and
+                  codecat.name in (%s)",
+          paste(shQuote(parent), collapse=",")))
+
+  Encoding(ans$parent) <- "UTF-8"
+  Encoding(ans$child) <- "UTF-8"
+
+  g <- igraph::graph.data.frame(ans)
+  tryCatch(
+    igraph::tkplot(g, vertex.label = igraph::V(g)$name), error=function(e) {
+    igraph::plot.igraph(g,vertex.label=igraph::V(g)$name)
+  })
 }
 
 d3CodeCategory <-function(parent=NULL){

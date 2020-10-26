@@ -555,24 +555,36 @@ AddHandler <- function() {
   })
 
   addHandlerClicked(.rqda$.CodeCatWidget, handler = function(h, ...) {
-    if ((ncc <- length(svalue(.rqda$.CodeCatWidget))) != 0) {
-      enabled(.rqda$.CodeofCat) <- TRUE
-      enabled(button$DelCodCatB) <- TRUE
-      enabled(button$CodCatMemB) <- TRUE
-      enabled(button$CodCatRenB) <- TRUE
+
+    Selected <- svalue(.rqda$.CodeCatWidget)
+    if (identical (Selected, character(0))) {
+      return(invisible(NULL))
+    }
+
+    if ((ncc <- length(Selected)) != 0) {
+      enabled(.rqda$.CodeofCat)    <- TRUE
+      enabled(button$DelCodCatB)   <- TRUE
+      enabled(button$CodCatMemB)   <- TRUE
+      enabled(button$CodCatRenB)   <- TRUE
       enabled(button$CodCatAddToB) <- TRUE
-      enabled(button$MarCodB2) <- FALSE
-      enabled(button$UnMarB2) <- FALSE
-      catid <- rqda_sel(sprintf("select catid from codecat where name = '%s'",
-                                 enc(svalue(.rqda$.CodeCatWidget))
-      )
-      )$catid
+      enabled(button$MarCodB2)     <- FALSE
+      enabled(button$UnMarB2)      <- FALSE
+
+      # obtain one or more category ids
+      sql <- paste0("select catid from codecat where name in ('",
+                   paste(enc(Selected), collapse = "', '"), "')")
+
+      catid <- rqda_sel(sql)$catid
+
       if (!is.null(catid) && length(catid) == 1) {
         names(.rqda$.CodeCatWidget) <- sprintf(
           rqda_txt("Selected category id is %s"), catid)
-      }}
 
-    UpdateCodeofCatWidget(con = .rqda$qdacon, Widget = .rqda$.CodeofCat)
+        UpdateCodeofCatWidget(con = .rqda$qdacon, Widget = .rqda$.CodeofCat)
+      }
+
+    }
+
 
     ## if (ncc>1) {
     ##     psccItem <- CodeCatWidgetMenu$"Plot Selected Code Category"
