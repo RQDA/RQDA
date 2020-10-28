@@ -1,4 +1,4 @@
-# RQDA [![Build Status](https://travis-ci.org/JanMarvin/RQDA.svg?branch=master)](https://travis-ci.org/JanMarvin/RQDA) [![Build status](https://ci.appveyor.com/api/projects/status/jguugf4k74kt77xp/branch/master?svg=true)](https://ci.appveyor.com/project/JanMarvin/rqda/branch/master)
+# RQDA [![Build Status](https://travis-ci.org/RQDA/RQDA.svg?branch=master)](https://travis-ci.org/RQDA/RQDA) [![Build status](https://ci.appveyor.com/api/projects/status/jguugf4k74kt77xp/branch/master?svg=true)](https://ci.appveyor.com/project/JanMarvin/rqda/branch/master)
 
 [RQDA](http://rqda.r-forge.r-project.org/) is an R package for computer-aided qualitative data analysis package
 
