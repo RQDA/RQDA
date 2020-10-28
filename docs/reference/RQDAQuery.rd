@@ -112,7 +112,7 @@
     <p>Submits and executes an arbitrary SQL statement on the open *.rqda file.</p>
     </div>
 
-    <pre class="usage"><span class='fu'><a href='RQDAQuery.rd.html'>RQDAQuery</a></span>(<span class='no'>sql</span>)</pre>
+    <pre class="usage"><span class='fu'>RQDAQuery</span><span class='op'>(</span><span class='va'>sql</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -132,14 +132,18 @@
     <p>The same of <code><a href='https://dbi.r-dbi.org/reference/dbSendStatement.html'>dbSendStatement</a></code>, possible NULL (for the side effects of
   sql on the *.rqda file) or a data.frame with the output (if any) of
   the query.</p>
+    <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
+
+    <p>HUANG Ronggui</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p>See Also as <code><a href='https://dbi.r-dbi.org/reference/dbSendStatement.html'>dbSendStatement</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
-<span class='fu'><a href='rqda_sel.html'>rqda_sel</a></span>(<span class='st'>"select name from source where status=1"</span>)
-}</div></pre>
+    <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
+<span class='fu'><a href='rqda_sel.html'>rqda_sel</a></span><span class='op'>(</span><span class='st'>"select name from source where status=1"</span><span class='op'>)</span>
+<span class='op'>}</span>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -155,7 +159,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

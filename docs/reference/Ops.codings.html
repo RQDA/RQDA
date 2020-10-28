@@ -112,11 +112,11 @@
     <p>Return the result codings of the Boolean operation.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>and</span>(<span class='no'>CT1</span>, <span class='no'>CT2</span>)
+    <pre class="usage"><span class='fu'>and</span><span class='op'>(</span><span class='va'>CT1</span>, <span class='va'>CT2</span><span class='op'>)</span>
 
-<span class='fu'>or</span>(<span class='no'>CT1</span>, <span class='no'>CT2</span>)
+<span class='fu'>or</span><span class='op'>(</span><span class='va'>CT1</span>, <span class='va'>CT2</span><span class='op'>)</span>
 
-<span class='fu'>not</span>(<span class='no'>CT1</span>, <span class='no'>CT2</span>)</pre>
+<span class='fu'>not</span><span class='op'>(</span><span class='va'>CT1</span>, <span class='va'>CT2</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -137,7 +137,7 @@
   returned value of <code>getCodingsByOne</code>. In former situation, only
   columns of "index1", "index2","fid","filename" from CT1 and CT2 are 
   used by this function.</p>
-<p>These functions are the same as <code>%and%</code>, <code>%or%</code>, <code>%not%</code>.</p>
+<p>These functions are the same as <code><a href='Ops.RQDA.html'>%and%</a></code>, <code><a href='Ops.RQDA.html'>%or%</a></code>, <code><a href='Ops.RQDA.html'>%not%</a></code>.</p>
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>An object of class "codingsByOne" and "data.frame". It consists:</p>
@@ -148,27 +148,31 @@
   <dt>rowid</dt><dd><p></p></dd>
   <dt>coding</dt><dd><p>The codings, or the text segments.</p></dd>
 
+    <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
+
+    <p>Ronggui HUANG</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='relation.rd.html'>relation</a></code>, <code><a href='getCodingTable.rd.html'>getCodingTable</a></code>, <code><a href='Ops.RQDA.rd.html'>%and%</a></code></p></div>
+    <div class='dont-index'><p><code><a href='relation.html'>relation</a></code>, <code><a href='getCodingTable.html'>getCodingTable</a></code>, <code><a href='Ops.RQDA.html'>%and%</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
-<span class='no'>a</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='getCodingTable.rd.html'>getCodingTable</a></span>()
-<span class='no'>c1</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span>(<span class='no'>a</span>,<span class='no'>cid</span><span class='kw'>==</span><span class='fl'>6</span>)
-<span class='no'>c2</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span>(<span class='no'>a</span>,<span class='no'>cid</span><span class='kw'>==</span><span class='fl'>24</span>)
-<span class='no'>ans</span> <span class='kw'>&lt;-</span> <span class='fu'>and</span>(<span class='no'>c1</span>, <span class='no'>c2</span>)
-<span class='no'>ans</span> <span class='co'>## put it into a widget for inspection</span>
+    <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
+<span class='va'>a</span> <span class='op'>&lt;-</span> <span class='fu'><a href='getCodingTable.html'>getCodingTable</a></span><span class='op'>(</span><span class='op'>)</span>
+<span class='va'>c1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span><span class='op'>(</span><span class='va'>a</span>,<span class='va'>cid</span><span class='op'>==</span><span class='fl'>6</span><span class='op'>)</span>
+<span class='va'>c2</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span><span class='op'>(</span><span class='va'>a</span>,<span class='va'>cid</span><span class='op'>==</span><span class='fl'>24</span><span class='op'>)</span>
+<span class='va'>ans</span> <span class='op'>&lt;-</span> <span class='fu'>and</span><span class='op'>(</span><span class='va'>c1</span>, <span class='va'>c2</span><span class='op'>)</span>
+<span class='va'>ans</span> <span class='co'>## put it into a widget for inspection</span>
 
 <span class='co'>## another way to do the same</span>
-<span class='fu'>and</span>(<span class='fu'><a href='getCodingsByOne.html'>getCodingsByOne</a></span>(<span class='fl'>6</span>), <span class='fu'><a href='getCodingsByOne.html'>getCodingsByOne</a></span>(<span class='fl'>24</span>))
+<span class='fu'>and</span><span class='op'>(</span><span class='fu'><a href='getCodingsByOne.html'>getCodingsByOne</a></span><span class='op'>(</span><span class='fl'>6</span><span class='op'>)</span>, <span class='fu'><a href='getCodingsByOne.html'>getCodingsByOne</a></span><span class='op'>(</span><span class='fl'>24</span><span class='op'>)</span><span class='op'>)</span>
 
 <span class='co'>## or operator</span>
-<span class='fu'>or</span>(<span class='fu'><a href='getCodingsByOne.html'>getCodingsByOne</a></span>(<span class='fl'>6</span>), <span class='fu'><a href='getCodingsByOne.html'>getCodingsByOne</a></span>(<span class='fl'>24</span>))
+<span class='fu'>or</span><span class='op'>(</span><span class='fu'><a href='getCodingsByOne.html'>getCodingsByOne</a></span><span class='op'>(</span><span class='fl'>6</span><span class='op'>)</span>, <span class='fu'><a href='getCodingsByOne.html'>getCodingsByOne</a></span><span class='op'>(</span><span class='fl'>24</span><span class='op'>)</span><span class='op'>)</span>
 
 <span class='co'>## not operator</span>
-<span class='fu'>not</span>(<span class='fu'><a href='getCodingsByOne.html'>getCodingsByOne</a></span>(<span class='fl'>6</span>), <span class='fu'><a href='getCodingsByOne.html'>getCodingsByOne</a></span>(<span class='fl'>24</span>))
-}</div></pre>
+<span class='fu'>not</span><span class='op'>(</span><span class='fu'><a href='getCodingsByOne.html'>getCodingsByOne</a></span><span class='op'>(</span><span class='fl'>6</span><span class='op'>)</span>, <span class='fu'><a href='getCodingsByOne.html'>getCodingsByOne</a></span><span class='op'>(</span><span class='fl'>24</span><span class='op'>)</span><span class='op'>)</span>
+<span class='op'>}</span>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -184,7 +188,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

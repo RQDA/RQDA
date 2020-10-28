@@ -61,15 +61,16 @@
   <div class="contents col-md-9">
 <div id="rqda-build-status-build-status" class="section level1">
 <div class="page-header"><h1 class="hasAnchor">
-<a href="#rqda-build-status-build-status" class="anchor"></a>RQDA <a href="https://travis-ci.org/JanMarvin/RQDA"><img src="https://travis-ci.org/JanMarvin/RQDA.svg?branch=master" alt="Build Status"></a> <a href="https://ci.appveyor.com/project/JanMarvin/rqda/branch/master"><img src="https://ci.appveyor.com/api/projects/status/jguugf4k74kt77xp/branch/master?svg=true" alt="Build status"></a>
+<a href="#rqda-build-status-build-status" class="anchor"></a>RQDA <a href="https://travis-ci.org/RQDA/RQDA"><img src="https://travis-ci.org/RQDA/RQDA.svg?branch=master" alt="Build Status"></a> <a href="https://ci.appveyor.com/project/JanMarvin/rqda-o82mk/branch/master"><img src="https://ci.appveyor.com/api/projects/status/vuklwf9pdesqm874/branch/master?svg=true" alt="Build status"></a>
 </h1></div>
 <p><a href="http://rqda.r-forge.r-project.org/">RQDA</a> is an R package for computer-aided qualitative data analysis package</p>
 <div id="installation-of-devel-version" class="section level2">
 <h2 class="hasAnchor">
 <a href="#installation-of-devel-version" class="anchor"></a>Installation of Devel Version</h2>
 <p>Assuming you have a working version of current release (and all dependencies).</p>
-<div class="sourceCode" id="cb1"><pre class="r"><span class="co">#install.packages("devtools") ## install it only if you haven't done it yet</span>
-<span class="kw pkg">devtools</span><span class="kw ns">::</span><span class="fu"><a href="https://devtools.r-lib.org//reference/remote-reexports.html">install_github</a></span>(<span class="st">"JanMarvin/RQDA"</span>, <span class="kw">INSTALL_opts</span> <span class="kw">=</span> <span class="st">"--no-multiarch"</span>)</pre></div>
+<div class="sourceCode" id="cb1"><pre class="downlit">
+<span class="co">#install.packages("devtools") ## install it only if you haven't done it yet</span>
+<span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org//reference/remote-reexports.html">install_github</a></span><span class="op">(</span><span class="st">"RQDA/RQDA"</span>, INSTALL_opts <span class="op">=</span> <span class="st">"--no-multiarch"</span><span class="op">)</span></pre></div>
 </div>
 <div id="installation-for-linux-users-from-source-package" class="section level2">
 <h2 class="hasAnchor">
@@ -79,7 +80,7 @@ pkgs &lt;- c("RSQLite", "gWidgets2RGtk2", "DBI",
           "stringi", "RGtk2", "igraph", "gWidgets2", "devtools")
 install.packages(pkgs)
 
-devtools::install_github("JanMarvin/RQDA")</code></pre>
+devtools::install_github("RQDA/RQDA")</code></pre>
 </div>
 <div id="installation-for-windows-users-from-source-package" class="section level2">
 <h2 class="hasAnchor">
@@ -93,7 +94,7 @@ install.packages(pkgs)
 library(RGtk2)
 
 # RGtk2 installs only i686 or x86_64 files therefore no-mutliarch is required
-devtools::install_github("JanMarvin/RQDA", INSTALL_opts = "--no-multiarch")</code></pre>
+devtools::install_github("RQDA/RQDA", INSTALL_opts = "--no-multiarch")</code></pre>
 </div>
 <div id="installation-for-macos-from-source-package-untested" class="section level2">
 <h2 class="hasAnchor">
@@ -114,15 +115,15 @@ $ sudo port install gtk2</code></pre>
 <li><p>If the above step is successful, launch terminal to invoke R and install RQDA from within R:</p></li>
 </ol>
 <pre class="terminal"><code>$ R</code></pre>
-<div class="sourceCode" id="cb7"><pre class="r">&gt; devtools::install_github("JanMarvin/RQDA")</pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="sc">&gt;</span> devtools<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">"RQDA/RQDA"</span>)</span></code></pre></div>
 <ol>
 <li>If all steps are successful, then we can launch RQDA by the following R command:</li>
 </ol>
-<div class="sourceCode" id="cb8"><pre class="r">&gt; library(RQDA) </pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="sc">&gt;</span> <span class="fu">library</span>(RQDA) </span></code></pre></div>
 </div>
-<div id="how-to-change-the-font-sizes-of-rqda-interfacea" class="section level2">
+<div id="how-to-change-the-font-sizes-of-rqda-interface" class="section level2">
 <h2 class="hasAnchor">
-<a href="#how-to-change-the-font-sizes-of-rqda-interfacea" class="anchor"></a>How to change the font sizes of RQDA interfacea</h2>
+<a href="#how-to-change-the-font-sizes-of-rqda-interface" class="anchor"></a>How to change the font sizes of RQDA interface</h2>
 <ol>
 <li><p>There is a font setting interface in the Settings Tab.</p></li>
 <li><p>This can be achived by modifying ~/gtkrc-2.0 (create on if not exists), for instance:</p></li>
@@ -176,7 +177,7 @@ gtk-enable-mnemonics = 0</code></pre>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

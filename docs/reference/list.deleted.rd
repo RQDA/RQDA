@@ -122,14 +122,14 @@
   <code>undelete</code> removes the temporarily deletion mark to reuse the temporarily deleted data.</p>
     </div>
 
-    <pre class="usage"><span class='fu'><a href='list.deleted.rd.html'>list.deleted</a></span>(<span class='kw'>type</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"file"</span>,<span class='st'>"code"</span>,<span class='st'>"case"</span>,<span class='st'>"codecategory"</span>,<span class='st'>"filecategory"</span>))
+    <pre class="usage"><span class='fu'>list.deleted</span><span class='op'>(</span>type<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"file"</span>,<span class='st'>"code"</span>,<span class='st'>"case"</span>,<span class='st'>"codecategory"</span>,<span class='st'>"filecategory"</span><span class='op'>)</span><span class='op'>)</span>
 
-<span class='fu'><a href='list.deleted.rd.html'>pdelete</a></span>(<span class='kw'>type</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"file"</span>,<span class='st'>"code"</span>,<span class='st'>"case"</span>,<span class='st'>"codecategory"</span>,<span class='st'>"filecategory"</span>,<span class='st'>"coding"</span>),
-        <span class='kw'>ask</span><span class='kw'>=</span><span class='fl'>FALSE</span>)
+<span class='fu'>pdelete</span><span class='op'>(</span>type<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"file"</span>,<span class='st'>"code"</span>,<span class='st'>"case"</span>,<span class='st'>"codecategory"</span>,<span class='st'>"filecategory"</span>,<span class='st'>"coding"</span><span class='op'>)</span>,
+        ask<span class='op'>=</span><span class='cn'>FALSE</span><span class='op'>)</span>
 
-<span class='fu'><a href='list.deleted.rd.html'>CleanProject</a></span>(<span class='kw'>ask</span><span class='kw'>=</span><span class='fl'>FALSE</span>)
+<span class='fu'>CleanProject</span><span class='op'>(</span>ask<span class='op'>=</span><span class='cn'>FALSE</span><span class='op'>)</span>
 
-<span class='fu'><a href='list.deleted.rd.html'>undelete</a></span>(<span class='kw'>type</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"file"</span>,<span class='st'>"code"</span>,<span class='st'>"case"</span>,<span class='st'>"codecategory"</span>,<span class='st'>"filecategory"</span>),<span class='kw'>ask</span><span class='kw'>=</span><span class='fl'>TRUE</span>)</pre>
+<span class='fu'>undelete</span><span class='op'>(</span>type<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"file"</span>,<span class='st'>"code"</span>,<span class='st'>"case"</span>,<span class='st'>"codecategory"</span>,<span class='st'>"filecategory"</span><span class='op'>)</span>,ask<span class='op'>=</span><span class='cn'>TRUE</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -177,6 +177,9 @@ while the latter with status = -1.</p>
 temporarily deletion mark for the specified type.
 For <code>pdelete</code>, <code>CleanProject</code> and <code>undelete</code>, no value is return. These
 functions are used for the side-effects.</p>
+    <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
+
+    <p>Ronggui HUANG</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -193,7 +196,7 @@ functions are used for the side-effects.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

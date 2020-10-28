@@ -112,9 +112,9 @@
     <p>Give a summary of codings of current project.</p>
     </div>
 
-    <pre class="usage"><span class='fu'><a href='summaryCodings.rd.html'>summaryCodings</a></span>(<span class='kw'>byFile</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='no'>...</span>)
+    <pre class="usage"><span class='fu'>summaryCodings</span><span class='op'>(</span>byFile <span class='op'>=</span> <span class='cn'>FALSE</span>, <span class='va'>...</span><span class='op'>)</span>
 <span class='co'># S3 method for summaryCodings</span>
-<span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='no'>x</span>, <span class='no'>...</span>)</pre>
+<span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>...</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -144,15 +144,19 @@ each code.</p></dd>
 	<dt>CodingOfFile</dt><dd><p>Number of codings for each file. Returns NULL if 
 byFile is FALSE.</p></dd>
 
+    <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
+
+    <p>HUANG Ronggui</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='getFiles.rd.html'>getFileIds</a></code> and <code><a href='getCodingTable.rd.html'>getCodingTable</a></code></p></div>
+    <div class='dont-index'><p><code><a href='getFiles.html'>getFileIds</a></code> and <code><a href='getCodingTable.html'>getCodingTable</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
-<span class='fu'><a href='summaryCodings.rd.html'>summaryCodings</a></span>()
-<span class='fu'><a href='summaryCodings.rd.html'>summaryCodings</a></span>(<span class='fl'>FALSE</span>)
- }</div></pre>
+    <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
+<span class='fu'>summaryCodings</span><span class='op'>(</span><span class='op'>)</span>
+<span class='fu'>summaryCodings</span><span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span>
+ <span class='op'>}</span>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -168,7 +172,7 @@ byFile is FALSE.</p></dd>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

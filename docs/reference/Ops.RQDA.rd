@@ -112,11 +112,11 @@
     <p>Binary operations of RQDA.vector or codingsByOne.</p>
     </div>
 
-    <pre class="usage"><span class='no'>e1</span> <span class='kw'>%and%</span> <span class='no'>e2</span>
+    <pre class="usage"><span class='va'>e1</span> <span class='op'>%and%</span> <span class='va'>e2</span>
 
-<span class='no'>e1</span> <span class='kw'>%or%</span> <span class='no'>e2</span>
+<span class='va'>e1</span> <span class='op'>%or%</span> <span class='va'>e2</span>
 
-<span class='no'>e1</span> <span class='kw'>%not%</span> <span class='no'>e2</span></pre>
+<span class='va'>e1</span> <span class='op'>%not%</span> <span class='va'>e2</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -138,18 +138,22 @@
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>an object with the same structure and class of e1 and e2.</p>
+    <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
+
+    <p>HUANG Ronggui</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p><code><a href='https://rdrr.io/r/base/sets.html'>intersect</a></code>, <code><a href='https://rdrr.io/r/base/sets.html'>union</a></code>, <code><a href='https://rdrr.io/r/base/sets.html'>setdiff</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
-<span class='fu'>filesCodeByAnd</span>(<span class='fl'>1</span>:<span class='fl'>2</span>) <span class='kw'>%and%</span> <span class='fu'>filesCodeByAnd</span>(<span class='fl'>3</span>) <span class='co'>## files coded by 1 and 2 as well as 3</span>
-<span class='fu'>filesCodeByAnd</span>(<span class='fl'>1</span>:<span class='fl'>2</span>) <span class='kw'>%or%</span> <span class='fu'>filesCodeByAnd</span>(<span class='fl'>3</span>) <span class='co'>## files coded by 1 and 2 or 3</span>
-<span class='fu'>filesCodeByAnd</span>(<span class='fl'>1</span>:<span class='fl'>2</span>) <span class='kw'>%not%</span> <span class='fu'>filesCodeByAnd</span>(<span class='fl'>3</span>) <span class='co'>## files coded by 1 and 2 but not 3</span>
+    <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
+<span class='fu'>filesCodeByAnd</span><span class='op'>(</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>2</span><span class='op'>)</span> <span class='op'>%and%</span> <span class='fu'>filesCodeByAnd</span><span class='op'>(</span><span class='fl'>3</span><span class='op'>)</span> <span class='co'>## files coded by 1 and 2 as well as 3</span>
+<span class='fu'>filesCodeByAnd</span><span class='op'>(</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>2</span><span class='op'>)</span> <span class='op'>%or%</span> <span class='fu'>filesCodeByAnd</span><span class='op'>(</span><span class='fl'>3</span><span class='op'>)</span> <span class='co'>## files coded by 1 and 2 or 3</span>
+<span class='fu'>filesCodeByAnd</span><span class='op'>(</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>2</span><span class='op'>)</span> <span class='op'>%not%</span> <span class='fu'>filesCodeByAnd</span><span class='op'>(</span><span class='fl'>3</span><span class='op'>)</span> <span class='co'>## files coded by 1 and 2 but not 3</span>
 
-<span class='fu'><a href='getCodingsByOne.html'>getCodingsByOne</a></span>(<span class='fl'>1</span>) <span class='kw'>%or%</span> <span class='fu'><a href='getCodingsByOne.html'>getCodingsByOne</a></span>(<span class='fl'>2</span>) <span class='co'>## codings of 1 or 2.</span>
-}</div></pre>
+<span class='fu'><a href='getCodingsByOne.html'>getCodingsByOne</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>)</span> <span class='op'>%or%</span> <span class='fu'><a href='getCodingsByOne.html'>getCodingsByOne</a></span><span class='op'>(</span><span class='fl'>2</span><span class='op'>)</span> <span class='co'>## codings of 1 or 2.</span>
+<span class='op'>}</span>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -165,7 +169,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

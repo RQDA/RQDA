@@ -118,9 +118,9 @@ be used to import a batch of files into the source table in the *.rqda file. <co
 all files from a directory into *.rqda.</p>
     </div>
 
-    <pre class="usage"><span class='fu'><a href='write.FileList.rd.html'>write.FileList</a></span>(<span class='no'>FileList</span>, <span class='kw'>encoding</span> <span class='kw'>=</span> <span class='no'>.rqda</span>$<span class='no'>encoding</span>, <span class='kw'>con</span> <span class='kw'>=</span> <span class='no'>.rqda</span>$<span class='no'>qdacon</span>, <span class='no'>...</span>)
+    <pre class="usage"><span class='fu'>write.FileList</span><span class='op'>(</span><span class='va'>FileList</span>, encoding <span class='op'>=</span> <span class='va'>.rqda</span><span class='op'>$</span><span class='va'>encoding</span>, con <span class='op'>=</span> <span class='va'>.rqda</span><span class='op'>$</span><span class='va'>qdacon</span>, <span class='va'>...</span><span class='op'>)</span>
 
-<span class='fu'><a href='write.FileList.rd.html'>addFilesFromDir</a></span>(<span class='no'>dir</span>, <span class='kw'>pattern</span> <span class='kw'>=</span> <span class='st'>"*.txt$"</span>)</pre>
+<span class='fu'>addFilesFromDir</span><span class='op'>(</span><span class='va'>dir</span>, pattern <span class='op'>=</span> <span class='st'>"*.txt$"</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -162,13 +162,17 @@ files.</p>
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>This function is used for the side-effects. No value is return.</p>
+    <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
+
+    <p>Huang Ronggui</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
-<span class='no'>Files</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='st'>"File name one"</span><span class='kw'>=</span><span class='st'>"content of first File."</span>,
-              <span class='st'>"File name two"</span><span class='kw'>=</span><span class='st'>"content of the second File."</span>)
-<span class='fu'><a href='write.FileList.rd.html'>write.FileList</a></span>(<span class='no'>Files</span>) <span class='co'>## Please launch RQDA(), and open a project first.</span>
-}</div></pre>
+    <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
+<span class='va'>Files</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='st'>"File name one"</span><span class='op'>=</span><span class='st'>"content of first File."</span>,
+              <span class='st'>"File name two"</span><span class='op'>=</span><span class='st'>"content of the second File."</span><span class='op'>)</span>
+<span class='fu'>write.FileList</span><span class='op'>(</span><span class='va'>Files</span><span class='op'>)</span> <span class='co'>## Please launch RQDA(), and open a project first.</span>
+<span class='op'>}</span>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -184,7 +188,7 @@ files.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

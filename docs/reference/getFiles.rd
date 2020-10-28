@@ -112,13 +112,13 @@
     <p>Get the ids or names of files list.</p>
     </div>
 
-    <pre class="usage"><span class='fu'><a href='getFiles.rd.html'>getFileIds</a></span>(<span class='kw'>condition</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"unconditional"</span>, <span class='st'>"case"</span>, <span class='st'>"filecategory"</span>,<span class='st'>"both"</span>),
-          <span class='kw'>type</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"all"</span>, <span class='st'>"coded"</span>, <span class='st'>"uncoded"</span>,<span class='st'>"selected"</span>))
+    <pre class="usage"><span class='fu'>getFileIds</span><span class='op'>(</span>condition <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"unconditional"</span>, <span class='st'>"case"</span>, <span class='st'>"filecategory"</span>,<span class='st'>"both"</span><span class='op'>)</span>, 
+          type <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"all"</span>, <span class='st'>"coded"</span>, <span class='st'>"uncoded"</span>,<span class='st'>"selected"</span><span class='op'>)</span><span class='op'>)</span>
 
-<span class='fu'><a href='getFiles.rd.html'>getFileNames</a></span>(<span class='kw'>fid</span> <span class='kw'>=</span> <span class='fu'><a href='getFiles.rd.html'>getFileIds</a></span>())
+<span class='fu'>getFileNames</span><span class='op'>(</span>fid <span class='op'>=</span> <span class='fu'>getFileIds</span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span>
 
-<span class='fu'><a href='getFiles.rd.html'>getFiles</a></span>(<span class='kw'>condition</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"unconditional"</span>, <span class='st'>"case"</span>, <span class='st'>"filecategory"</span>, <span class='st'>"both"</span>),
-         <span class='kw'>type</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"all"</span>, <span class='st'>"coded"</span>, <span class='st'>"uncoded"</span>, <span class='st'>"selected"</span>), <span class='kw'>names</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
+<span class='fu'>getFiles</span><span class='op'>(</span>condition <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"unconditional"</span>, <span class='st'>"case"</span>, <span class='st'>"filecategory"</span>, <span class='st'>"both"</span><span class='op'>)</span>,
+         type <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"all"</span>, <span class='st'>"coded"</span>, <span class='st'>"uncoded"</span>, <span class='st'>"selected"</span><span class='op'>)</span>, names <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -156,18 +156,22 @@
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>Normally, it is a numeric vector of file id. If condition is "case" or "filecategory" but no case or file category is selected, it returns NULL.</p>
-<p><code><a href='getFiles.rd.html'>getFiles</a></code> returns a vector of file IDs (with class of "RQDA.vector" and "fileId") when names is FALSE, and a vector of file names ((with class of "RQDA.vector" and "fileName") when names is TRUE.</p>
+<p><code>getFiles</code> returns a vector of file IDs (with class of "RQDA.vector" and "fileId") when names is FALSE, and a vector of file names ((with class of "RQDA.vector" and "fileName") when names is TRUE.</p>
+    <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
+
+    <p>HUANG Ronggui</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='retrieval.html'>retrieval</a></code>, <code><a href='getFileIdSets.html'>getFileIdsSets</a></code></p></div>
+    <div class='dont-index'><p><code><a href='retrieval.html'>retrieval</a></code>, <code><a href='getFileIdsSets.html'>getFileIdsSets</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
-<span class='fu'><a href='getFiles.rd.html'>getFileIds</a></span>() <span class='co'>## Id of all files</span>
-<span class='fu'><a href='getFiles.rd.html'>getFileIds</a></span>(<span class='st'>"unconditional"</span>,<span class='st'>"coded"</span>) <span class='co'>## id of all coded files.</span>
-<span class='fu'><a href='getFiles.rd.html'>getFileIds</a></span>(<span class='st'>"case"</span>,<span class='st'>"uncoded"</span>) <span class='co'>## id of uncoded files for the selected case.</span>
-<span class='fu'><a href='getFiles.rd.html'>getFileIds</a></span>(<span class='st'>"filecategory"</span>,<span class='st'>"all"</span>) <span class='co'>## id of all files in the selected file category.</span>
-}</div></pre>
+    <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
+<span class='fu'>getFileIds</span><span class='op'>(</span><span class='op'>)</span> <span class='co'>## Id of all files</span>
+<span class='fu'>getFileIds</span><span class='op'>(</span><span class='st'>"unconditional"</span>,<span class='st'>"coded"</span><span class='op'>)</span> <span class='co'>## id of all coded files.</span>
+<span class='fu'>getFileIds</span><span class='op'>(</span><span class='st'>"case"</span>,<span class='st'>"uncoded"</span><span class='op'>)</span> <span class='co'>## id of uncoded files for the selected case.</span>
+<span class='fu'>getFileIds</span><span class='op'>(</span><span class='st'>"filecategory"</span>,<span class='st'>"all"</span><span class='op'>)</span> <span class='co'>## id of all files in the selected file category.</span>
+<span class='op'>}</span>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -183,7 +187,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

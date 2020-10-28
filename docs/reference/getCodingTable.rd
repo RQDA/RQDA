@@ -112,7 +112,7 @@
     <p>Get the information of codings.</p>
     </div>
 
-    <pre class="usage"><span class='fu'><a href='getCodingTable.rd.html'>getCodingTable</a></span>()</pre>
+    <pre class="usage"><span class='fu'>getCodingTable</span><span class='op'>(</span><span class='op'>)</span></pre>
 
 
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
@@ -129,6 +129,9 @@
   <dt>index1</dt><dd><p>beginning index of a coding</p></dd>
   <dt>index2</dt><dd><p>end index of a coding</p></dd>
 
+    <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
+
+    <p>HUANG Ronggui</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -145,7 +148,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

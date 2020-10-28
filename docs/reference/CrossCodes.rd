@@ -112,10 +112,10 @@
     <p>Return a matrix, give a summary of inter-codes relationship.</p>
     </div>
 
-    <pre class="usage"><span class='fu'><a href='CrossCodes.rd.html'>crossCodes</a></span>(<span class='kw'>relation</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"overlap"</span>,<span class='st'>"inclusion"</span>,<span class='st'>"exact"</span>,<span class='st'>"proximity"</span>),<span class='kw'>codeList</span><span class='kw'>=</span><span class='kw'>NULL</span>,
-          <span class='kw'>data</span><span class='kw'>=</span><span class='fu'><a href='getCodingTable.rd.html'>getCodingTable</a></span>(),<span class='kw'>print</span><span class='kw'>=</span><span class='fl'>TRUE</span>,<span class='no'>...</span>)
+    <pre class="usage"><span class='fu'>crossCodes</span><span class='op'>(</span>relation<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"overlap"</span>,<span class='st'>"inclusion"</span>,<span class='st'>"exact"</span>,<span class='st'>"proximity"</span><span class='op'>)</span>,codeList<span class='op'>=</span><span class='cn'>NULL</span>,
+          data<span class='op'>=</span><span class='fu'><a href='getCodingTable.html'>getCodingTable</a></span><span class='op'>(</span><span class='op'>)</span>,print<span class='op'>=</span><span class='cn'>TRUE</span>,<span class='va'>...</span><span class='op'>)</span>
 
-<span class='fu'><a href='CrossCodes.rd.html'>crossTwoCodes</a></span>(<span class='no'>cid1</span>,<span class='no'>cid2</span>,<span class='no'>data</span>,<span class='kw'>relation</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"overlap"</span>,<span class='st'>"inclusion"</span>,<span class='st'>"exact"</span>,<span class='st'>"proximity"</span>),<span class='no'>...</span>)</pre>
+<span class='fu'>crossTwoCodes</span><span class='op'>(</span><span class='va'>cid1</span>,<span class='va'>cid2</span>,<span class='va'>data</span>,relation<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"overlap"</span>,<span class='st'>"inclusion"</span>,<span class='st'>"exact"</span>,<span class='st'>"proximity"</span><span class='op'>)</span>,<span class='va'>...</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -170,12 +170,13 @@ codes.</p>
 <p>For <code>crossCodes</code>, it is a numeric vector.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='relation.rd.html'>relation</a></code></p></div>
+    <div class='dont-index'><p><code><a href='relation.html'>relation</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
-<span class='fu'><a href='CrossCodes.rd.html'>crossCodes</a></span>()
-}</div></pre>
+    <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
+<span class='fu'>crossCodes</span><span class='op'>(</span><span class='op'>)</span>
+<span class='op'>}</span>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -191,7 +192,7 @@ codes.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>
