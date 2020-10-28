@@ -8,7 +8,7 @@ Assuming you have a working version of current release (and all dependencies).
 
 ```R
 #install.packages("devtools") ## install it only if you haven't done it yet
-devtools::install_github("JanMarvin/RQDA", INSTALL_opts = "--no-multiarch")
+devtools::install_github("RQDA/RQDA", INSTALL_opts = "--no-multiarch")
 ```
 
 
@@ -20,7 +20,7 @@ pkgs <- c("RSQLite", "gWidgets2RGtk2", "DBI",
           "stringi", "RGtk2", "igraph", "gWidgets2", "devtools")
 install.packages(pkgs)
 
-devtools::install_github("JanMarvin/RQDA")
+devtools::install_github("RQDA/RQDA")
 ```
 
 
@@ -36,7 +36,7 @@ install.packages(pkgs)
 library(RGtk2)
 
 # RGtk2 installs only i686 or x86_64 files therefore no-mutliarch is required
-devtools::install_github("JanMarvin/RQDA", INSTALL_opts = "--no-multiarch")
+devtools::install_github("RQDA/RQDA", INSTALL_opts = "--no-multiarch")
 ```
 
 
@@ -65,7 +65,7 @@ devtools::install_github("JanMarvin/RQDA", INSTALL_opts = "--no-multiarch")
 $ R
 ```
 ```R
-> devtools::install_github("JanMarvin/RQDA")
+> devtools::install_github("RQDA/RQDA")
 ```
 
 7. If all steps are successful, then we can launch RQDA by the following R command:
@@ -74,7 +74,7 @@ $ R
 ```
 
 
-## How to change the font sizes of RQDA interfacea
+## How to change the font sizes of RQDA interface
 1. There is a font setting interface in the Settings Tab.
 
 2. This can be achived by modifying ~/gtkrc-2.0 (create on if not exists), for instance:
