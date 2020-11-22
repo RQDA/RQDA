@@ -77,6 +77,12 @@ jobs:
           ECHO %PATH%
         shell: bash
 
+      - name: Install Linux dependencies
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get install -qqy x11-apps libgtk2.0-dev
+        shell: bash
+
       - name: Session info
         run: |
           options(width = 100)
