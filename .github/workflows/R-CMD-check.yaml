@@ -116,8 +116,7 @@ jobs:
         run: |
           dir.create("build")
           remotes::install_cran("devtools")
-          options(devtools.install.args = "--no-multiarch")
-          devtools::build(path = "build", binary = TRUE)
+          devtools::build(path = "build", binary = TRUE, args = "--no-multiarch")
         shell: Rscript {0}
 
       - name: Upload build results

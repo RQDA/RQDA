@@ -1,11 +1,11 @@
-# RQDA 
+# RQDA ![R-CMD-check](https://github.com/RQDA/RQDA/workflows/R-CMD-check/badge.svg)
 
 
-[RQDA](http://rqda.r-forge.r-project.org/) is an R package for computer-aided qualitative data analysis package
+[RQDA](http://rqda.r-forge.r-project.org/) is an R package for computer-aided qualitative data analysis
 
 ## Installation of Devel Version
 
-Assuming you have a working version of current release (and all dependencies).
+Assuming you have a working version of the current release (and all its dependencies).
 
 ```R
 #install.packages("devtools") ## install it only if you haven't done it yet
@@ -43,7 +43,7 @@ devtools::install_github("RQDA/RQDA", INSTALL_opts = "--no-multiarch")
 
 ## Installation for macOS from source package (untested)
 
-1. Install Xocde from App store, launch Xcode and follow the instruction to install all the components. In addition, open a Terminal and run the following command to install command line tools: 
+1. Install Xocde from the App store, launch Xcode and follow the instruction to install all the components. In addition, open a Terminal and run the following command to install the command line tools: 
    ```
    $ sudo xcode-select --install
    ```
@@ -75,10 +75,10 @@ $ R
 ```
 
 
-## How to change the font sizes of RQDA interface
+## How to change the font sizes of the RQDA interface
 1. There is a font setting interface in the Settings Tab.
 
-2. This can be achived by modifying ~/gtkrc-2.0 (create on if not exists), for instance:
+2. This can be achived by modifying ~/.gtkrc-2.0 (create on if not exists), for instance:
 
 ```
 style "user-font" {
