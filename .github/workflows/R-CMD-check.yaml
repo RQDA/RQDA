@@ -59,7 +59,7 @@ jobs:
           curl -O http://gemmei.ftp.acc.umu.se/pub/gnome/binaries/win64/gtk+/2.22/gtk+-bundle_2.22.1-20101229_win64.zip
           7z x -o"C:\GTK2-Runtime" gtk+-bundle_2.22.1-20101229_win64.zip
           DEL gtk+-bundle_2.22.1-20101229_win64.zip
-          setx PATH=C:\GTK2-Runtime\bin;%PATH%
+          setx PATH "C:\GTK2-Runtime\bin;%PATH%"
           ECHO %PATH%
         shell: cmd
 
