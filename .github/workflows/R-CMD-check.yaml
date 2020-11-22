@@ -58,9 +58,10 @@ jobs:
         run: |
           curl -O http://gemmei.ftp.acc.umu.se/pub/gnome/binaries/win64/gtk+/2.22/gtk+-bundle_2.22.1-20101229_win64.zip
           7z x -o"C:\GTK2-Runtime" gtk+-bundle_2.22.1-20101229_win64.zip
-          rm -rf gtk+-bundle_2.22.1-20101229_win64.zip
-          echo %PATH%
-        shell: bash
+          DEL gtk+-bundle_2.22.1-20101229_win64.zip
+          ECHO %PATH%
+          set PATH=C:\GTK2-Runtime\bin;%PATH%
+        shell: powershell
 
       - name: Install Linux dependencies
         if: runner.os == 'Linux'
