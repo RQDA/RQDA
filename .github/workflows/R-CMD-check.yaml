@@ -53,11 +53,11 @@ jobs:
           writeLines(sprintf("R-%i.%i", getRversion()$major, getRversion()$minor), ".github/R-version")
         shell: Rscript {0}
 
-      - name: Windows: Set PATH
+      - name: Windows - Set PATH
         if: runner.os == 'Windows'
         run: echo "C:\GTK2-Runtime\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
 
-      - name: Windows: Install dependencies
+      - name: Windows - Install dependencies
         if: runner.os == 'Windows'
         run: |
           curl -O http://gemmei.ftp.acc.umu.se/pub/gnome/binaries/win64/gtk+/2.22/gtk+-bundle_2.22.1-20101229_win64.zip
@@ -66,7 +66,7 @@ jobs:
           ECHO %PATH%
         shell: cmd
 
-      - name: Linux: Install dependencies
+      - name: Linux - Install dependencies
         if: runner.os == 'Linux'
         run: sudo apt-get install -qqy x11-apps libgtk2.0-dev
         shell: bash
