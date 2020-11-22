@@ -56,11 +56,11 @@ jobs:
       - name: Install Windows dependencies
         if: runner.os == 'Windows'
         run: |
-          curl -O http://gemmei.ftp.acc.umu.se/pub/gnome/binaries/win64/gtk+/2.22/gtk+-bundle_2.22.1-20101229_win64.zip
+          Invoke-WebRequest -Uri http://gemmei.ftp.acc.umu.se/pub/gnome/binaries/win64/gtk+/2.22/gtk+-bundle_2.22.1-20101229_win64.zip -OutFile gtk+-bundle_2.22.1-20101229_win64.zip
           7z x -o"C:\GTK2-Runtime" gtk+-bundle_2.22.1-20101229_win64.zip
           DEL gtk+-bundle_2.22.1-20101229_win64.zip
-          ECHO %PATH%
           set PATH=C:\GTK2-Runtime\bin;%PATH%
+          ECHO %PATH%
         shell: powershell
 
       - name: Install Linux dependencies
