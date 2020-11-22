@@ -93,7 +93,7 @@ jobs:
       - name: Check
         env:
           _R_CHECK_CRAN_INCOMING_: false
-        run: rcmdcheck::rcmdcheck(args = c("--no-manual", "--as-cran"), error_on = "warning", check_dir = "check")
+        run: rcmdcheck::rcmdcheck(args = c("--no-manual", "--as-cran", "--no-multiarch"), error_on = "warning", check_dir = "check")
         shell: Rscript {0}
 
       - name: Show testthat output
@@ -113,6 +113,7 @@ jobs:
         run: |
           dir.create("build")
           remotes::install_cran("devtools")
+          options(devtools.install.args = "--no-multiarch")
           devtools::build(path = "build", binary = TRUE)
         shell: Rscript {0}
 
