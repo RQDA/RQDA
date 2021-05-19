@@ -48,7 +48,7 @@ devtools::install_github("RQDA/RQDA", INSTALL_opts = "--no-multiarch")
    $ sudo xcode-select --install
    ```
 
-2. Go to http://xquartz.macosforge.org/landing/, download and install XQuartz-2.7.7.dmg.
+2. Go to https://www.xquartz.org/, download and install XQuartz-2.8.1.dmg.
 
 3. Go to https://www.macports.org/install.php, download and install macport (Install MacPorts for your version of OS X, e.g Sierra). If you had a working MacPorts and updated the OS, they you need to migrate a MacPorts installation by following these [instructions](https://trac.macports.org/wiki/Migration). 
 
@@ -61,7 +61,6 @@ devtools::install_github("RQDA/RQDA", INSTALL_opts = "--no-multiarch")
 5. Download and install the binary version of R.
 
 6. If the above step is successful, launch terminal to invoke R and install RQDA from within R:
-
 ```terminal
 $ R
 ```
