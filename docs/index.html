@@ -39,7 +39,7 @@
       <ul class="nav navbar-nav">
 <li>
   <a href="index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -59,18 +59,18 @@
 
       </header><div class="row">
   <div class="contents col-md-9">
-<div id="rqda-build-status-build-status" class="section level1">
+<div id="rqda-r-cmd-check" class="section level1">
 <div class="page-header"><h1 class="hasAnchor">
-<a href="#rqda-build-status-build-status" class="anchor"></a>RQDA <a href="https://travis-ci.org/RQDA/RQDA"><img src="https://travis-ci.org/RQDA/RQDA.svg?branch=master" alt="Build Status"></a> <a href="https://ci.appveyor.com/project/JanMarvin/rqda-o82mk/branch/master"><img src="https://ci.appveyor.com/api/projects/status/vuklwf9pdesqm874/branch/master?svg=true" alt="Build status"></a>
+<a href="#rqda-r-cmd-check" class="anchor"></a>RQDA <img src="https://github.com/RQDA/RQDA/workflows/R-CMD-check/badge.svg" alt="R-CMD-check">
 </h1></div>
-<p><a href="http://rqda.r-forge.r-project.org/">RQDA</a> is an R package for computer-aided qualitative data analysis package</p>
+<p><a href="http://rqda.r-forge.r-project.org/">RQDA</a> is an R package for computer-aided qualitative data analysis</p>
 <div id="installation-of-devel-version" class="section level2">
 <h2 class="hasAnchor">
 <a href="#installation-of-devel-version" class="anchor"></a>Installation of Devel Version</h2>
-<p>Assuming you have a working version of current release (and all dependencies).</p>
-<div class="sourceCode" id="cb1"><pre class="downlit">
-<span class="co">#install.packages("devtools") ## install it only if you haven't done it yet</span>
-<span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org//reference/remote-reexports.html">install_github</a></span><span class="op">(</span><span class="st">"RQDA/RQDA"</span>, INSTALL_opts <span class="op">=</span> <span class="st">"--no-multiarch"</span><span class="op">)</span></pre></div>
+<p>Assuming you have a working version of the current release (and all its dependencies).</p>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co">#install.packages("devtools") ## install it only if you haven't done it yet</span>
+<span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org//reference/remote-reexports.html">install_github</a></span><span class="op">(</span><span class="st">"RQDA/RQDA"</span>, INSTALL_opts <span class="op">=</span> <span class="st">"--no-multiarch"</span><span class="op">)</span></code></pre></div>
 </div>
 <div id="installation-for-linux-users-from-source-package" class="section level2">
 <h2 class="hasAnchor">
@@ -101,10 +101,10 @@ devtools::install_github("RQDA/RQDA", INSTALL_opts = "--no-multiarch")</code></p
 <a href="#installation-for-macos-from-source-package-untested" class="anchor"></a>Installation for macOS from source package (untested)</h2>
 <ol>
 <li>
-<p>Install Xocde from App store, launch Xcode and follow the instruction to install all the components. In addition, open a Terminal and run the following command to install command line tools:</p>
+<p>Install Xocde from the App store, launch Xcode and follow the instruction to install all the components. In addition, open a Terminal and run the following command to install the command line tools:</p>
 <pre><code>$ sudo xcode-select --install</code></pre>
 </li>
-<li><p>Go to <a href="http://xquartz.macosforge.org/landing/" class="uri">http://xquartz.macosforge.org/landing/</a>, download and install XQuartz-2.7.7.dmg.</p></li>
+<li><p>Go to <a href="https://www.xquartz.org/" class="uri">https://www.xquartz.org/</a>, download and install XQuartz-2.8.1.dmg.</p></li>
 <li><p>Go to <a href="https://www.macports.org/install.php" class="uri">https://www.macports.org/install.php</a>, download and install macport (Install MacPorts for your version of OS X, e.g Sierra). If you had a working MacPorts and updated the OS, they you need to migrate a MacPorts installation by following these <a href="https://trac.macports.org/wiki/Migration">instructions</a>.</p></li>
 <li>
 <p>Open a Terminal and run the following commands:</p>
@@ -121,12 +121,12 @@ $ sudo port install gtk2</code></pre>
 </ol>
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="sc">&gt;</span> <span class="fu">library</span>(RQDA) </span></code></pre></div>
 </div>
-<div id="how-to-change-the-font-sizes-of-rqda-interface" class="section level2">
+<div id="how-to-change-the-font-sizes-of-the-rqda-interface" class="section level2">
 <h2 class="hasAnchor">
-<a href="#how-to-change-the-font-sizes-of-rqda-interface" class="anchor"></a>How to change the font sizes of RQDA interface</h2>
+<a href="#how-to-change-the-font-sizes-of-the-rqda-interface" class="anchor"></a>How to change the font sizes of the RQDA interface</h2>
 <ol>
 <li><p>There is a font setting interface in the Settings Tab.</p></li>
-<li><p>This can be achived by modifying ~/gtkrc-2.0 (create on if not exists), for instance:</p></li>
+<li><p>This can be achived by modifying ~/.gtkrc-2.0 (create on if not exists), for instance:</p></li>
 </ol>
 <pre><code>style "user-font" {
     font_name = "Lucida Grande 14"
