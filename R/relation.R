@@ -74,7 +74,7 @@ crossTwoCodes <- function(cid1, cid2, data, relation = c("overlap", "inclusion",
   for (fid in fidList) {
     tmpdat1 <- data[data$fid == fid & data$cid == cid1, , drop = FALSE]
     tmpdat2 <- data[data$fid == fid & data$cid == cid2, , drop = FALSE]
-    if (nrow(tmpdat2)>0 && nrow(tmpdat1)>0) {
+    if (nrow(tmpdat2) > 0 && nrow(tmpdat1) > 0) {
       for(i in seq_len(nrow(tmpdat1))) {
         for(j in seq_len(nrow(tmpdat2))) {
           Relation <- relation(unlist(tmpdat2[j, c("index1", "index2")]), unlist(tmpdat1[i, c("index1", "index2")]))
@@ -116,7 +116,7 @@ crossCodes <- CrossCode <- function(relation = c("overlap", "inclusion", "exact"
         }
       }
       class(ans) <- "crossCodes"
-      if (print) {print(ans, na.print="")}
+      if (print) {print(ans, na.print = "")}
       invisible(ans)
     }
   }
@@ -128,7 +128,7 @@ crossCodes <- CrossCode <- function(relation = c("overlap", "inclusion", "exact"
 plot.crossCodes <- function(x, ...) {
     colnames(x) <- rownames(x)
     if (all(x == 0, na.rm = T)) x <- x + 0.5
-    cmG <- igraph::graph.adjacency(x, mode="upper", diag = FALSE, weighted = TRUE)
+    cmG <- igraph::graph.adjacency(x, mode = "upper", diag = FALSE, weighted = TRUE)
     ew <- igraph::get.edge.attribute(cmG, "weight")
     igraph::set.edge.attribute(cmG, "color", V(cmG)[ew == 1], "green")
     igraph::set.edge.attribute(cmG, "color", V(cmG)[ew == 2], "yellow")

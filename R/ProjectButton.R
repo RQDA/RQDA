@@ -1,20 +1,20 @@
 NewProjectButton <- function(container) {
   gbutton(rqda_txt("New Project"), container = container, handler = function(h, ...) {
-    path = gfile(type="save", text = rqda_txt("Type a name for the new project and click OK."))
+    path = gfile(type = "save", text = rqda_txt("Type a name for the new project and click OK."))
     if (!identical(path, character(0)))
     {
     if (Encoding(path) != "UTF-8") {
       Encoding(path) <- "UTF-8"
     }
     if (path != "") {
-      ## if path="", then click "cancel".
+      ## if path = "", then click "cancel".
       new_proj(path, assignenv=.rqda)
       path <- .rqda$qdacon@dbname
       Encoding(path) <- "UTF-8" ## path created by gfile is in utf8 encoding
       path <- gsub("\\\\", "/", path, fixed = TRUE)
       path <- gsub("/", "/ ", path, fixed = TRUE)
       svalue(.rqda$.currentProj) <- gsub("/ ", "/",
-                                         paste(strwrap(path, 60), collapse="\n"),
+                                         paste(strwrap(path, 60), collapse = "\n"),
                                          fixed = TRUE)
       gtkWidgetSetSensitive(button$cloprob$widget, TRUE)
       gtkWidgetSetSensitive(button$BacProjB$widget, TRUE)
@@ -48,7 +48,7 @@ OpenProjectButton <- function(container) {
           container = container, handler = function(h, ...) {
     path <- gfile(
       text = rqda_txt("Select a *.rqda file and click OK."),
-      type="open", filter = list("rqda"=list(patterns = c("*.rqda")),
+      type = "open", filter = list("rqda"=list(patterns = c("*.rqda")),
                                "All files" = list(patterns = c("*"))))
     if (!identical(path, character(0)))
     {
@@ -94,12 +94,12 @@ openProject <- function(path, updateGUI = FALSE) {
     tryCatch(CaseNamesUpdate(), error = function(e) {
 })
     tryCatch(UpdateTableWidget(Widget=.rqda$.CodeCatWidget,
-                               FromdbTable="codecat"), error = function(e) {
+                               FromdbTable = "codecat"), error = function(e) {
 })
     tryCatch(UpdateCodeofCatWidget(), error = function(e) {
 })
     tryCatch(UpdateTableWidget(Widget=.rqda$.FileCatWidget,
-                               FromdbTable="filecat"), error = function(e) {
+                               FromdbTable = "filecat"), error = function(e) {
 })
     tryCatch(UpdateFileofCatWidget(), error = function(e) {
 })
@@ -112,7 +112,7 @@ openProject <- function(path, updateGUI = FALSE) {
     path <- gsub("\\\\", "/", path)
     path <- gsub("/", "/ ", path)
     svalue(.rqda$.currentProj) <- gsub("/ ", "/", paste(strwrap(path, 50),
-                                                      collapse="\n"))
+                                                      collapse = "\n"))
     gtkWidgetSetSensitive(button$cloprob$widget, TRUE)
     gtkWidgetSetSensitive(button$BacProjB$widget, TRUE)
     enabled(button$saveAsB) <- TRUE

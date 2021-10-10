@@ -34,13 +34,13 @@ exportCodedFile <- function(file, fid, closeAfter = TRUE) {
         code <- cidx$code[pos]
         Encoding(code) <- "UTF-8"
         b <- grep(".1$", rowids)
-        code[b] <- paste("<b><font color='#FF0000'>&lt&lt ", code[b], "</font></b>", sep="")
+        code[b] <- paste("<b><font color='#FF0000'>&lt&lt ", code[b], "</font></b>", sep = "")
         e <- grep(".2$", rowids)
-        code[e] <- paste("<u><font color='#FF0000'><i>", code[e], " &gt&gt</font></u></i>", sep="")
+        code[e] <- paste("<u><font color='#FF0000'><i>", code[e], " &gt&gt</font></u></i>", sep = "")
         ans <- c(ans, code)
         shift <- shift + nincrease
     } ## end of loop over i
-    ans <- paste(ans, collapse="|", sep="")
+    ans <- paste(ans, collapse = "|", sep = "")
     ans <-gsub("\n", "<br>", ans)
     file <- file(file, open = "w", encoding = "UTF-8")
     cat("<HEAD><META HTTP-EQUIV='CONTENT-TYPE' CONTENT='text/html; charset = UTF-8'><TITLE>Coded file exported by RQDA.</TITLE><META NAME='AUTHOR' CONTENT='RQDA'>",

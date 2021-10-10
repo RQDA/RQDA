@@ -126,7 +126,7 @@ and <- function(CT1, CT2)
             tmp <- andHelper(subset(CT1, fid == j, c("index1", "index2")),
                                     subset(CT2, fid == j, c("index1", "index2"))
                                     )
-            if (nrow(tmp)>0) {
+            if (nrow(tmp) > 0) {
             tmp <- cbind(tmp, fid = j, filename = CT1$filename[which(CT1$fid == j)[1]])
             rid1 <- match(tmp$index1, CT1$index1)
             rid1NA <- is.na(rid1)
@@ -176,7 +176,7 @@ or <- function(CT1, CT2)
             tmp <- orHelper(subset(CT1, fid == j, c("index1", "index2")),
                             subset(CT2, fid == j, c("index1", "index2"))
                             )
-            if (nrow(tmp)>0) {
+            if (nrow(tmp) > 0) {
                 tmp <- cbind(tmp, fid = j, filename = CT1$filename[which(CT1$fid == j)[1]], stringsAsFactors = FALSE)
                 tmp$filename[is.na(tmp$filename)] <- CT2$filename[which(CT2$fid == j)[1]]
                 rid1 <- match(tmp$index1, CT1$index1)
@@ -228,7 +228,7 @@ not <- function(CT1, CT2)
             tmp <- notHelper(subset(CT1, fid == j, c("index1", "index2")),
                              subset(CT2, fid == j, c("index1", "index2"))
                             )
-            if (nrow(tmp)>0) {
+            if (nrow(tmp) > 0) {
                 tmp <- cbind(tmp, fid = j, filename = CT1$filename[which(CT1$fid == j)[1]], stringsAsFactors = FALSE)
                 rid1 <- match(tmp$index1, CT1$index1)
                 rid1NA <- is.na(rid1)
@@ -300,7 +300,7 @@ not <- function(CT1, CT2)
 ## and <- function(CT1, CT2, showCoding = TRUE, method= c("overlap", "exact", "inclusion")) {
 ##   ## CT1 and CT2 is from getCodingTable, each for one code only
 ##   fid <- intersect(CT1$fid, CT2$fid)
-##   if (length(fid)>0) {
+##   if (length(fid) > 0) {
 ##     ans <- lapply(fid, FUN = function(x) {
 ##       and_helper(CT1 = subset(CT1, fid == x), CT2 = subset(CT2, fid == x), method = method)
 ##     }
@@ -347,18 +347,18 @@ not <- function(CT1, CT2)
 ##           ## take care of proximity with distance of 0.
 ##           ## (a not b) or (b) == a
 ##           dis <- sapply(Relations, function(x) x$Distance)
-##           if (all(dis>0)) {
+##           if (all(dis > 0)) {
 ##             ## if there are no overlap in any kind, the result is From + Exist
 ##             ans <- rbind(From[, c("rowid", "fid", "filename", "index1", "index2", "coding"), drop = FALSE],
 ##                          Exist[, c("rowid", "fid", "filename", "index1", "index2", "coding"), drop = FALSE])
 ##           } else {
 ##             idx0 <- which(dis == 0)
 ##             index3 <- unlist(c(From[, c("index1", "index2")], Exist[idx0, c("index1", "index2")]))
-##             From["coding"] <- paste(Exist$coding[idx0][rank(Exist$index1[idx0])], collapse="")
+##             From["coding"] <- paste(Exist$coding[idx0][rank(Exist$index1[idx0])], collapse = "")
 ##             From["index1"] <- min(index3)
 ##             From["index2"] <- max(index3)
 ##             ans <- rbind(From[, c("rowid", "fid", "filename", "index1", "index2", "coding"), drop = FALSE],
-##                          Exist[which(dis>0),
+##                          Exist[which(dis > 0),
 ##                                c("rowid", "fid", "filename", "index1", "index2", "coding"), drop = FALSE]
 ##                          )
 ##           }
@@ -496,7 +496,7 @@ not <- function(CT1, CT2)
 
 ## not <- function(CT1, CT2, showCoding = FALSE) {
 ##   fid <- unique(CT1$fid)
-##   if (length(fid)>0) {
+##   if (length(fid) > 0) {
 ##     ans <- lapply(fid, FUN = function(x) not_helper(CT1 = subset(CT1, fid == x), CT2 = subset(CT2, fid == x)))
 ##     ans <- do.call(rbind, ans)
 ##     if (showCoding && !is.null(ans)) {

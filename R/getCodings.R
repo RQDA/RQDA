@@ -5,7 +5,7 @@ getCodingsOfCodes <- function(fid = NULL, codingTable = c("coding", "coding2")) 
     selected <- enc(selected)
     cid <- rqda_sel(sprintf(
         "select id from freecode where status = 1 and name in (%s)",
-        paste(paste("'", selected, "'", sep=""), collapse = ", ")))$id
+        paste(paste("'", selected, "'", sep = ""), collapse = ", ")))$id
 
     codingTable <- match.arg(codingTable)
 
@@ -21,7 +21,7 @@ getCodingsOfCodes <- function(fid = NULL, codingTable = c("coding", "coding2")) 
                 "left join source on (coding.fid = source.id)",
                 "where coding.status = 1 and source.status = 1 and",
                 "freecode.status = 1 and coding.cid in (%s)"),
-                paste(cid, collapse=", ")))
+                paste(cid, collapse = ", ")))
     }
 
     if (codingTable == "coding2") {
@@ -36,7 +36,7 @@ getCodingsOfCodes <- function(fid = NULL, codingTable = c("coding", "coding2")) 
                 "left join source on (coding2.fid = source.id)",
                 "where coding2.status = 1 and source.status = 1 and",
                 "freecode.status = 1 and coding2.cid in (%s)"),
-                paste(cid, collapse=", ")))
+                paste(cid, collapse = ", ")))
     }
     if (nrow(ct) != 0) {
         Encoding(ct$codename) <- Encoding(ct$filename) <-
@@ -48,14 +48,14 @@ getCodingsOfCodes <- function(fid = NULL, codingTable = c("coding", "coding2")) 
 }
 
 getCodingsFromFiles <- function(Fid, order = c("fname", "ftime", "ctime"),
-                                codingTable="coding")
+                                codingTable = "coding")
 {
     order <- match.arg(order)
     order <- switch(
         order,
-        fname="order by freecode.name, source.name, selfirst, selend ASC",
-        ftime="order by freecode.name, source.id, selfirst, selend ASC",
-        ctime="")
+        fname = "order by freecode.name, source.name, selfirst, selend ASC",
+        ftime = "order by freecode.name, source.id, selfirst, selend ASC",
+        ctime = "")
 
     retrieval <- rqda_sel(
         sprintf(paste("select cid, freecode.name as code, fid, selfirst, ",
@@ -63,7 +63,7 @@ getCodingsFromFiles <- function(Fid, order = c("fname", "ftime", "ctime"),
                        "from %s, source, freecode where %s.status = 1 and",
                        "source.id = fid and freecode.id=%s.cid and fid in",
                        "(%s) %s"), codingTable, codingTable, codingTable,
-                 codingTable, paste(Fid, collapse=", "), order))
+                 codingTable, paste(Fid, collapse = ", "), order))
 
     if (nrow(retrieval) == 0) {
         gmessage(rqda_txt("No Coding associated with the selected code."),

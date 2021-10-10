@@ -417,7 +417,7 @@ AddHandler <- function() {
       ## dynamically change the label of attribute(s)
       if ((nattr <- length(.rqda$.AttrNamesWidget[])) !=  0) {
         enabled(button$FileAttrB) <- TRUE
-        if (length(svalue(.rqda$.AttrNamesWidget))>1 || nattr>1) {
+        if (length(svalue(.rqda$.AttrNamesWidget)) > 1 || nattr > 1) {
           svalue(button$FileAttrB) <- rqda_txt("Attributes")
         }
       }
@@ -434,7 +434,7 @@ AddHandler <- function() {
   ## handler for .codes_rqda
   addHandlerDoubleclick(.rqda$.codes_rqda, handler = function(h, ...) {
     if (is_projOpen(envir = .rqda, conName = "qdacon")) {
-      if (length(Fid <- getFileIds(condition = .rqda$TOR, type = "coded"))>0) {
+      if (length(Fid <- getFileIds(condition = .rqda$TOR, type = "coded")) > 0) {
         retrieval(Fid = Fid, CodeNameWidget = .rqda$.codes_rqda)
       } else {
         gmessage(
@@ -461,7 +461,7 @@ AddHandler <- function() {
   addHandlerClicked(.rqda$.CodeofCat, handler = function(h, ...) {
     ClickHandlerFun(.rqda$.CodeofCat, buttons = c("MarCodB2", "UnMarB2"),
                     codingTable = .rqda$codingTable)
-    if (length(svalue(.rqda$.CodeofCat))>0) {
+    if (length(svalue(.rqda$.CodeofCat)) > 0) {
       enabled(button$CodCatADroFromB) <- TRUE
       }
   })
@@ -481,7 +481,7 @@ AddHandler <- function() {
       enabled(button$profmatB) <- TRUE
       if ((nattr <- length(.rqda$.AttrNamesWidget[])) !=  0) {
         enabled(button$CasAttrB) <- TRUE
-        if (length(svalue(.rqda$.AttrNamesWidget))>1 || nattr>1) {
+        if (length(svalue(.rqda$.AttrNamesWidget)) > 1 || nattr > 1) {
           svalue(button$CasAttrB) <- rqda_txt("Attributes")
         }
       }
@@ -525,13 +525,13 @@ AddHandler <- function() {
           sprintf("select max(selend) from caselinkage where fid = %i",
                   currentFid))[1, 1]
 
-        if (!is.null(allidx) && length(allidx)>0)
+        if (!is.null(allidx) && length(allidx) > 0)
           Maxindex <- Maxindex + sum(allidx<= Maxindex)
 
         ClearMark(.rqda$.openfile_gui, min = 0, max = Maxindex,
                   clear.fore.col = FALSE, clear.back.col = TRUE)
 
-        if (nrow(sel_index)>0) {
+        if (nrow(sel_index) > 0) {
           if (!is.null(allidx)) {
             sel_index[, "selfirst"] <- sapply(
               sel_index[, "selfirst"], FUN = function(x) {
@@ -586,7 +586,7 @@ AddHandler <- function() {
     }
 
 
-    ## if (ncc>1) {
+    ## if (ncc > 1) {
     ##     psccItem <- CodeCatWidgetMenu$"Plot Selected Code Category"
     ##     svalue(psccItem) <- "Plot Selected Code Categories"
     ## }
@@ -603,7 +603,7 @@ AddHandler <- function() {
       enabled(button$RenAttB) <- TRUE
       enabled(button$AttMemB) <- TRUE
       enabled(button$SetAttClsB) <- TRUE
-      if (length(svalue(.rqda$.AttrNamesWidget))>1) {
+      if (length(svalue(.rqda$.AttrNamesWidget)) > 1) {
         svalue(button$CasAttrB) <-
           svalue(button$FileAttrB) <-
           rqda_txt("Attributes")
@@ -630,7 +630,7 @@ AddHandler <- function() {
 
   addHandlerClicked(.rqda$.FileCatWidget, handler = function(h, ...) {
 
-    if (length(svalue(.rqda$.FileCatWidget))>0) {
+    if (length(svalue(.rqda$.FileCatWidget)) > 0) {
 
       UpdateFileofCatWidget2(con = .rqda$qdacon, Widget = .rqda$.FileofCat)
 
@@ -652,7 +652,7 @@ AddHandler <- function() {
   })
 
   addHandlerClicked(.rqda$.FileofCat, handler = function(h, ...) {
-    if (length(svalue(.rqda$.FileofCat))>0) {
+    if (length(svalue(.rqda$.FileofCat)) > 0) {
       enabled(button$FilCatDroFromB) <- TRUE
       names(.rqda$.FileofCat) <- sprintf(rqda_txt("Selected file id is %s"),
                                          getFileIds("filecat", "selected"))
@@ -677,7 +677,7 @@ AddHandler <- function() {
   })
 
   addHandlerClicked(.rqda$.FileofCase, handler = function(h, ...) {
-    if (length(svalue(.rqda$.FileofCase))>0) {
+    if (length(svalue(.rqda$.FileofCase)) > 0) {
       names(.rqda$.FileofCase) <- sprintf(rqda_txt("Selected File id is %s"),
                                           getFileIds("case", "selected"))
     }

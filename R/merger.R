@@ -16,13 +16,13 @@ mergeCodes <- function(cid1, cid2) { ## cid1 and cid2 are two code IDs.
         Exist$End <- sapply(Relations, FUN = function(x)x$UnionIndex[2])
         if (all(Exist$Relation == "proximity")) { ## if there are no overlap in any kind, just write to database
             dis <- sapply(Relations, function(x) x$Distance)
-            if (all(dis>0)) {
+            if (all(dis > 0)) {
                 success <- rqda_wrt("coding", From)
                 if (!success) gmessage(gettext("Fail to write to database.", domain = "R-RQDA"))
             } else {
                 idx0 <- which(dis == 0)
                 index3 <- unlist(c(From[, c("selfirst", "selend")], Exist[idx0, c("selfirst", "selend")]))
-                From["seltext"] <- paste(Exist$coding[idx0][rank(Exist$selfirst[idx0])], collapse="")
+                From["seltext"] <- paste(Exist$coding[idx0][rank(Exist$selfirst[idx0])], collapse = "")
                 From["selfirst"] <- min(index3)
                 From["selend"] <- max(index3)
                 ## DAT <- From[, c("rowid", "fid", "filename", "index1", "index2", "coding"), drop = FALSE] ## write to coding
@@ -38,10 +38,10 @@ mergeCodes <- function(cid1, cid2) { ## cid1 and cid2 are two code IDs.
           if (any(del)) {
             ## no rowid in Exist by sql of select, so add rowid to it (That is ToDat data frame).
             To_memo <- rqda_sel(sprintf("select memo from coding where rowid in (%s)", 
-                                                    paste(Exist$rowid[del], collapse=", ", sep="")))$memo
-            memo <- paste(c(To_memo, From$memo), collapse="\n", sep="") ## merge the To_memo from From
+                                                    paste(Exist$rowid[del], collapse = ", ", sep = "")))$memo
+            memo <- paste(c(To_memo, From$memo), collapse = "\n", sep = "") ## merge the To_memo from From
             rqda_exe(sprintf("delete from coding where rowid in (%s)", 
-                                            paste(Exist$rowid[del], collapse=", ", sep=""))) ## delete codings
+                                            paste(Exist$rowid[del], collapse = ", ", sep = ""))) ## delete codings
             tt <-   rqda_sel(sprintf("select file from source where id='%i'", From$fid))[1, 1]
             Encoding(tt) <- "UTF-8"  ## fulltext of the file
             Sel <- c(min(Exist$Start[del]), max(Exist$End[del])) ## index to get the new coding
@@ -119,7 +119,7 @@ erger2 <- function(cid1, cid2, data)
             idx1 <- sort(unlist(apply(tmpdat1[, 3:4], 1, function(x) expand(x[1], x[2]))))
             idx2 <- sort(unlist(apply(tmpdat2[, 3:4], 1, function(x) expand(x[1], x[2]))))
             idx <- unique(intersect(idx1, idx2))
-            if (length(idx)>1) {
+            if (length(idx) > 1) {
                 res <- findConsecutive(idx)
                 res <- data.frame(fid = fid, cid = tmpdat1$cid[1], index1 = res$first, index2 = res$end + 1)
                 ans <- rbind(ans, res)

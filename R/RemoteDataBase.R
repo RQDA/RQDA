@@ -106,11 +106,11 @@
 })
 ##         tryCatch(CaseNamesUpdate(), error = function(e) {
 })
-##         tryCatch(UpdateTableWidget(Widget=.rqda$.CodeCatWidget, FromdbTable="codecat"), error = function(e) {
+##         tryCatch(UpdateTableWidget(Widget=.rqda$.CodeCatWidget, FromdbTable = "codecat"), error = function(e) {
 })
 ##         tryCatch(UpdateCodeofCatWidget(), error = function(e) {
 })
-##         tryCatch(UpdateTableWidget(Widget=.rqda$.FileCatWidget, FromdbTable="filecat"), error = function(e) {
+##         tryCatch(UpdateTableWidget(Widget=.rqda$.FileCatWidget, FromdbTable = "filecat"), error = function(e) {
 })
 ##         tryCatch(UpdateFileofCatWidget(), error = function(e) {
 })
@@ -120,7 +120,7 @@
 })
 ##         path <- gsub("\\\\", "/", dbGetInfo(.rqda$qdacon)$dbname)
 ##         path <- gsub("/", "/ ", path)
-##         svalue(.rqda$.currentProj) <- gsub("/ ", "/", paste(strwrap(path, 50), collapse="\n"))
+##         svalue(.rqda$.currentProj) <- gsub("/ ", "/", paste(strwrap(path, 50), collapse = "\n"))
 ##         gtkWidgetSetSensitive(button$cloprob$widget, TRUE)
 ##         gtkWidgetSetSensitive(button$BacProjB$widget, TRUE)
 ##         gtkWidgetSetSensitive(button$proj_memo$widget, TRUE)

@@ -129,7 +129,7 @@ addSettingGUI <- function(container, width = 12) {
 
     })}
 
-setFont <- function(default="Sans 11") {
+setFont <- function(default = "Sans 11") {
     font <- gtkFontButtonNew()
     gtkFontButtonSetFontName(font, default)
     gw <- gwindow(width=(gdkScreenWidth()/10),

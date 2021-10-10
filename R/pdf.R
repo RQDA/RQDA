@@ -1,6 +1,6 @@
-importPDFHL <- function(file, type = c("Highlight"), engine="rjpod") {
+importPDFHL <- function(file, type = c("Highlight"), engine = "rjpod") {
     if (missing(file)) {
-        file <- gfile(text="select a pdf file", type="open", filter = list("PDF"=list(patterns = c("*.PDF"))))
+        file <- gfile(text = "select a pdf file", type = "open", filter = list("PDF"=list(patterns = c("*.PDF"))))
     }
     fileName <- basename(file)
     fileName <- enc(fileName)
@@ -24,7 +24,7 @@ importPDFHL <- function(file, type = c("Highlight"), engine="rjpod") {
             finfo <-  rjpod::pdfXMP(file, jabrefOnly = TRUE)
             cat("XMP extracted\n")
             finfo <- gsub("^bibtex/", "", finfo)
-            finfo <- paste(sort(finfo), collapse=", \n")
+            finfo <- paste(sort(finfo), collapse = ", \n")
         }
         rqda_exe(sprintf("insert into source (name, file, id, status, date, owner, memo)
                              values ('%s', '%s', %i, %i, '%s', '%s', '%s')",

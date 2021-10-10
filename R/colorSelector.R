@@ -1,4 +1,4 @@
-setColor <- function(currentColor="gold") {
+setColor <- function(currentColor = "gold") {
   currentColor <- gdkColorParse(currentColor)$color
   colorDA <- gtkDrawingAreaNew()
   colorDA$modifyBg("normal", currentColor)

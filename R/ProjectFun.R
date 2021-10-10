@@ -1,28 +1,28 @@
-new_proj <- function(path, conName="qdacon", assignenv=.rqda, ...) {
+new_proj <- function(path, conName = "qdacon", assignenv=.rqda, ...) {
   ## success <- file.create(tmpNamme <- tempfile(pattern = "file"
   ## , tmpdir = dirname(path)))
   success <- (file.access(names = dirname(path), mode = 2) == 0)
   if (!success) {
     gmessage(gettext("No write permission.", domain = "R-RQDA"),
-             icon="error", container = TRUE)
+             icon = "error", container = TRUE)
   }
   else{
     ## unlink(tmpNamme)
     ## deal with the ".rqda"
-    path <- paste(gsub("\\.rqda$", "", path), "rqda", sep=".")
+    path <- paste(gsub("\\.rqda$", "", path), "rqda", sep = ".")
     override <- FALSE
     if (fexist <- file.exists(path)) {
       ## if there exists a file, should ask; and test if have write access
       ## to overwrite it.
       override <- gconfirm(
         gettext("Overwrite existing project?", domain = "R-RQDA"),
-        icon="warning")
+        icon = "warning")
       if (file.access(path, 2) != 0 && override) {
         override <- FALSE
         gmessage(
           gettext("You have no write permission to overwrite it.",
                   domain = "R-RQDA"),
-          con = TRUE, icon="error")
+          con = TRUE, icon = "error")
       }
     }
     if (!fexist | override) {
@@ -169,7 +169,7 @@ UpgradeTables <- function() {
   }
   currentVersion <- rqda_sel("select databaseversion from project")[[1]]
   if (currentVersion == "0.1.5") {
-    ##from="0.1.5"
+    ##from = "0.1.5"
     rqda_exe(
       paste("create table caseAttr (variable text, value text, caseID integer, ",
             "date text, dateM text, owner text)"))
@@ -260,7 +260,7 @@ UpgradeTables <- function() {
   }
 }
 
-open_proj <- function(path, conName="qdacon", assignenv=.rqda, ...) {
+open_proj <- function(path, conName = "qdacon", assignenv=.rqda, ...) {
   tryCatch({ con <- get(conName, assignenv)
   pkg <- attr(attr(con, "class"), 'package')
   Open <- getFunction("dbIsValid",
@@ -281,17 +281,17 @@ open_proj <- function(path, conName="qdacon", assignenv=.rqda, ...) {
     gmessage(
       gettext(paste("You don't have write access to the *.rqda file.",
                     "You can only read the project."), domain = "R-RQDA"),
-      container = TRUE, icon="warning")
+      container = TRUE, icon = "warning")
   } else {
     gmessage(
       gettext("You don't have read access to the *.rqda file. Fail to open.",
-              domain = "R-RQDA"), container = TRUE, icon="error")
+              domain = "R-RQDA"), container = TRUE, icon = "error")
   }
 }
 
 
 
-closeProject <- function(conName="qdacon", assignenv=.rqda, ...) {
+closeProject <- function(conName = "qdacon", assignenv=.rqda, ...) {
   tryCatch({
     con <- get(conName, assignenv)
     if (is_projOpen(message = FALSE)) {
@@ -299,14 +299,14 @@ closeProject <- function(conName="qdacon", assignenv=.rqda, ...) {
 })
       tryCatch(dispose(.rqda$.root_edit), error = function(e) {
 })
-      WidgetList <- ls(envir = .rqda, pattern="^[.]codingsOf", all.names = TRUE)
+      WidgetList <- ls(envir = .rqda, pattern = "^[.]codingsOf", all.names = TRUE)
       for (i in WidgetList)
         tryCatch(dispose(get(i, envir = .rqda)), error = function(e) {
 })
       closeProjBF() ## update all widgets
       if (!dbDisconnect(con)) {
         gmessage(gettext("Closing project failed.", domain = "R-RQDA"),
-                 icon="waring", container = TRUE)
+                 icon = "waring", container = TRUE)
       }
     }
   } , error = function(e) {
@@ -315,7 +315,7 @@ closeProject <- function(conName="qdacon", assignenv=.rqda, ...) {
 
 
 
-is_projOpen <- function(envir = .rqda, conName="qdacon", message = TRUE) {
+is_projOpen <- function(envir = .rqda, conName = "qdacon", message = TRUE) {
   ## test if any project is open.
   open <- FALSE
   tryCatch({
@@ -326,7 +326,7 @@ is_projOpen <- function(envir = .rqda, conName="qdacon", message = TRUE) {
   } , error = function(e) {
 })
   if (!open & message) gmessage(gettext("No Project is Open.",
-                                        domain = "R-RQDA"), icon="warning",
+                                        domain = "R-RQDA"), icon = "warning",
                                 container = TRUE)
   return(open)
 }
@@ -340,10 +340,10 @@ backup_proj <- function(con) {
   success <- file.copy(from = dbname, to = backupname , overwrite = FALSE)
   if (success) {
     gmessage(gettext("Succeeded!", domain = "R-RQDA"),
-             container = TRUE, icon="info")
+             container = TRUE, icon = "info")
   } else{
     gmessage(gettext("Fail to back up the project.", domain = "R-RQDA"),
-             container = TRUE, icon="error")
+             container = TRUE, icon = "error")
   }
 }
 
@@ -365,7 +365,7 @@ ProjectMemoWidget <- function() {
     head_s <- c(wdh["width"], wdh["height"] * .1)
     body_s <- c(wdh["width"], wdh["height"] * .9)
 
-    gw <- gwindow(title="Project Memo",
+    gw <- gwindow(title = "Project Memo",
                   width = getOption("widgetSize")[1],
                   height = getOption("widgetSize")[2])
 
@@ -385,7 +385,7 @@ ProjectMemoWidget <- function() {
         newcontent <- svalue(W)
         ## Encoding(newcontent) <- "UTF-8"
         ## take care of double quote.
-        newcontent <- enc(newcontent, encoding="UTF-8")
+        newcontent <- enc(newcontent, encoding = "UTF-8")
 
         ## only one row is needed
         rqda_exe(
@@ -399,7 +399,7 @@ ProjectMemoWidget <- function() {
     )## end of save memo button
     size(proj_memoB) <- head_s
     assign("proj_memoB", proj_memoB, envir = button)
-    tmp <- gtext(container=.projmemo2, font.attr = list(size="large"))
+    tmp <- gtext(container=.projmemo2, font.attr = list(size = "large"))
     size(tmp) <- body_s
     gSignalConnect(tmp$buffer, "changed",
                    function(h, ...) {
@@ -422,7 +422,7 @@ ProjectMemoWidget <- function() {
     Encoding(prvcontent) <- "UTF-8"
 
     insert(W, prvcontent, do.newline = FALSE, where = "beginning",
-           font.attr = list(size="large"))
+           font.attr = list(size = "large"))
 
     ## do.newline:do not add a \n (new line) at the beginning
     ## push the previous content to the widget.
@@ -445,7 +445,7 @@ ProjectMemoWidget <- function() {
 }
 
 close_AllCodings <- function() {
-  obj <- ls(.rqda, all.names = TRUE, pattern="^.codingsOf")
+  obj <- ls(.rqda, all.names = TRUE, pattern = "^.codingsOf")
   if (length(obj) != 0) {
     for (i in obj) {tryCatch(dispose(get(i, envir = .rqda)), error = function(e) {
 })

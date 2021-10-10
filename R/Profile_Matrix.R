@@ -8,7 +8,7 @@ prof_mat <- function(unit = c("coding", "file"), case_ids = NULL, case_names = N
     case_names <- getCaseNames(case_ids)
   } else {
     case_ids <- rqda_sel(sprintf("select id from cases where name in (%s)",
-                                 paste(shQuote(case_names), collapse=", ")))$id
+                                 paste(shQuote(case_names), collapse = ", ")))$id
   }
 
   codes <- rqda_sel(paste("select name, id, cid from freecode, coding where",

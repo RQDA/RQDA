@@ -14,7 +14,7 @@ ViewImage <- function(file, width = 800, height = 600, ...) {
   imgW <- img$GetWidth()
   imgH <- img$GetHeight()
   scale <- min(c(width/imgW, height/imgH))
-  scale <- ifelse(scale>1, 1, scale)
+  scale <- ifelse(scale > 1, 1, scale)
   width <- imgW*scale
   height <-imgH*scale
   img <- img$ScaleSimple(width, height, 'bilinear')
@@ -34,7 +34,7 @@ AddRectangle <- function(obj, x = 10, y = 10, width = 100, height = 100, ...) {
  dgc <- gdkGCNew(obj)
  ##gdkGCSetForeground(dgc, "red")
  ##gdkGCSetBackground(dgc, "white")
- gdkGCSetLineAttributes(dgc, line.width = 3, line.style="double-dash", "round", "round")
+ gdkGCSetLineAttributes(dgc, line.width = 3, line.style = "double-dash", "round", "round")
  gdkDrawRectangle(obj, dgc, FALSE, x, x, width, height)
  TRUE
 }

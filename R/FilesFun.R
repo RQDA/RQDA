@@ -5,14 +5,14 @@ ImportFile <- function(paths, encoding = .rqda$encoding, con= .rqda$qdacon, ...)
   for (path in paths) {
     ## Fname is in locale Encoding Now.
     Fname <- gsub("\\.[[:alpha:]]*$", "", basename(path))
-    FnameUTF8 <- iconv(Fname, to="UTF-8")
+    FnameUTF8 <- iconv(Fname, to = "UTF-8")
     ## remove the suffix such as .txt
     if (Fname != "" ) {
-      file_con <- file(path, open="r")
+      file_con <- file(path, open = "r")
       if (isTRUE(.rqda$BOM)) seek(file_con, 3)
       content <- readLines(file_con, warn = FALSE, encoding = encoding)
       close(file_con)
-      content <- paste(content, collapse="\n")
+      content <- paste(content, collapse = "\n")
       #content <- enc(content, encoding = Encoding(content))
 
       # detect encoding and convert
@@ -432,11 +432,11 @@ write.FileList <- function(FileList, encoding=.rqda$encoding, con=.rqda$qdacon, 
   ## FileList is a list of file content, with names(FileList) the name of the files.
   WriteToTable <- function(Fname, content) {
     ## helper function
-    ## FnameUTF8 <- iconv(Fname, to="UTF-8")
+    ## FnameUTF8 <- iconv(Fname, to = "UTF-8")
     FnameUTF8 <- enc(Fname, encoding = encoding)
     content <- enc(content, encoding = encoding) ## adjust encoding argument.
     if (Encoding(content) != "UTF-8") {
-      content <- iconv(content, to="UTF-8", sub = "byte") ## UTF-8 file content
+      content <- iconv(content, to = "UTF-8", sub = "byte") ## UTF-8 file content
     }
     maxid <- rqda_sel("select max(id) from source")[[1]]
     nextid <- ifelse(is.na(maxid), 0 + 1, maxid + 1)
@@ -519,7 +519,7 @@ getFileIds <- function(condition = c("unconditional", "case", "filecategory", "b
       selected <- svalue(.rqda$.fnames_rqda)
       ans <- rqda_sel(
         sprintf("select id from source where status = 1 and name in (%s)",
-                paste(paste("'", enc(selected), "'", sep=""), collapse=", ")
+                paste(paste("'", enc(selected), "'", sep = ""), collapse = ", ")
         ))$id
     } else {
       allfid <- rqda_sel("select id from source where status = 1 group by id")$id
@@ -542,23 +542,23 @@ getFileIds <- function(condition = c("unconditional", "case", "filecategory", "b
       selected <- svalue(.rqda$.FileofCase)
       ans <- rqda_sel(
         sprintf("select id from source where status = 1 and name in (%s)",
-                paste(paste("'", enc(selected), "'", sep=""), collapse=", ")
+                paste(paste("'", enc(selected), "'", sep = ""), collapse = ", ")
         ))$id
     } else {
       Selected <- svalue(.rqda$.CasesNamesWidget)
       if (length(Selected) == 0) {
         ans <- NULL
       } else {
-        if (length(Selected)>1) {gmessage(gettext("select one file category only.", domain = "R-RQDA"), container = TRUE)
+        if (length(Selected) > 1) {gmessage(gettext("select one file category only.", domain = "R-RQDA"), container = TRUE)
           stop("more than one file categories are selected", domain = "R-RQDA")
         }
         caseid <- rqda_sel(sprintf("select id from cases where status = 1 and name='%s'",
                                    enc(Selected)))$id
         fidofcase <- rqda_sel(sprintf("select fid from caselinkage where status = 1 and caseid=%i", caseid))$fid
         ##         caseid <- rqda_sel(sprintf("select id from cases where status = 1 and name in (%s)",
-        ##                                                  paste(paste("'", Selected, "'", sep=""), collapse=", ")))$id
+        ##                                                  paste(paste("'", Selected, "'", sep = ""), collapse = ", ")))$id
         ##         fidofcase <- rqda_sel(sprintf("select fid from caselinkage where status == 1 and caseid in (%s)",
-        ##                                                     paste(paste("'", caseid, "'", sep=""), collapse=", ")))$fid
+        ##                                                     paste(paste("'", caseid, "'", sep = ""), collapse = ", ")))$fid
         ## roll back to rev 90
         allfid <-  unconditionalFun(type = type)
         ans <- intersect(fidofcase, allfid)
@@ -572,12 +572,12 @@ getFileIds <- function(condition = c("unconditional", "case", "filecategory", "b
       selected <- svalue(.rqda$.FileofCat)
       ans <- rqda_sel(
         sprintf("select id from source where status = 1 and name in (%s)",
-                paste(paste("'", enc(selected), "'", sep=""), collapse=", ")
+                paste(paste("'", enc(selected), "'", sep = ""), collapse = ", ")
         ))$id
     }
     allfid <- getFileIdsSets("filecategory", "intersect")
     if (type == "all") {ans <- allfid} else {
-      codedfid <- rqda_sel(sprintf("select fid from coding where status = 1 and fid in (%s) group by fid", paste(shQuote(allfid), collapse=", ")))$fid
+      codedfid <- rqda_sel(sprintf("select fid from coding where status = 1 and fid in (%s) group by fid", paste(shQuote(allfid), collapse = ", ")))$fid
       if (type == "coded") {ans <- codedfid}
       if (type == "uncoded") { ans <-  setdiff(allfid, codedfid)}
     }
@@ -614,9 +614,9 @@ getFileIdsSets <- function(set = c("case", "filecategory"), relation = c("union"
     } else {
       Selected <- gsub("'", "''", Selected)
       if (relation == "union") {
-        ans <- rqda_sel(sprintf("select fid from caselinkage where status = 1 and caseid in (select id from cases where status = 1 and name in (%s)) group by fid", paste(paste("'", Selected, "'", sep=""), collapse=", ")))$fid
+        ans <- rqda_sel(sprintf("select fid from caselinkage where status = 1 and caseid in (select id from cases where status = 1 and name in (%s)) group by fid", paste(paste("'", Selected, "'", sep = ""), collapse = ", ")))$fid
       } else if (relation == "intersect") {
-        ans <- rqda_sel(sprintf("select fid, count(fid) as n from caselinkage where status = 1 and caseid in (select id from cases where status = 1 and name in (%s)) group by fid having n= %i", paste(paste("'", Selected, "'", sep=""), collapse=", "), length(Selected)))$fid
+        ans <- rqda_sel(sprintf("select fid, count(fid) as n from caselinkage where status = 1 and caseid in (select id from cases where status = 1 and name in (%s)) group by fid having n= %i", paste(paste("'", Selected, "'", sep = ""), collapse = ", "), length(Selected)))$fid
       }
     }
   }## end of set == "case"
@@ -627,9 +627,9 @@ getFileIdsSets <- function(set = c("case", "filecategory"), relation = c("union"
     } else {
       Selected <- gsub("'", "''", Selected)
       if (relation == "union") {
-        ans <- rqda_sel(sprintf("select fid from treefile where status = 1 and catid in (select catid from filecat where status = 1 and name in (%s)) group by fid", paste(paste("'", Selected, "'", sep=""), collapse=", ")))$fid
+        ans <- rqda_sel(sprintf("select fid from treefile where status = 1 and catid in (select catid from filecat where status = 1 and name in (%s)) group by fid", paste(paste("'", Selected, "'", sep = ""), collapse = ", ")))$fid
       } else if (relation == "intersect") {
-        ans <- rqda_sel(sprintf("select fid, count(fid) as n from treefile where status = 1 and catid in (select catid from filecat where status = 1 and name in (%s)) group by fid having n= %i", paste(paste("'", Selected, "'", sep=""), collapse=", "), length(Selected)))$fid
+        ans <- rqda_sel(sprintf("select fid, count(fid) as n from treefile where status = 1 and catid in (select catid from filecat where status = 1 and name in (%s)) group by fid having n= %i", paste(paste("'", Selected, "'", sep = ""), collapse = ", "), length(Selected)))$fid
       }
     }
   } ## end of set == "filecategory"
@@ -642,7 +642,7 @@ AddToFileCategory <- function(Widget=.rqda$.fnames_rqda, updateWidget = TRUE) {
   ## filenames -> fid -> selfirst = 0; selend = nchar(filesource)
   filename <- svalue(Widget)
   Encoding(filename) <- "unknown"
-  query <- rqda_sel(sprintf("select id, file from source where name in(%s) and status = 1", paste("'", enc(filename), "'", sep="", collapse=", "))) ## multiple fid
+  query <- rqda_sel(sprintf("select id, file from source where name in(%s) and status = 1", paste("'", enc(filename), "'", sep = "", collapse = ", "))) ## multiple fid
   fid <- query$id
   Encoding(query$file) <- "UTF-8"
   ## select a F-cat name -> F-cat id
@@ -650,11 +650,11 @@ AddToFileCategory <- function(Widget=.rqda$.fnames_rqda, updateWidget = TRUE) {
   if (nrow(Fcat) == 0) {gmessage(gettext("Add File Category first.", domain = "R-RQDA"), container = TRUE)} else{
     Encoding(Fcat$name) <- "UTF-8"
     Selecteds <- gselect.list(Fcat$name, multiple = TRUE)
-    if (length(Selecteds)>0 && Selecteds != "") {
+    if (length(Selecteds) > 0 && Selecteds != "") {
       Encoding(Selecteds) <- "UTF-8"
       for (Selected in Selecteds) {
         Fcatid <- Fcat$catid[Fcat$name %in% Selected]
-        exist <- rqda_sel(sprintf("select fid from treefile where status = 1 and fid in (%s) and catid=%i", paste("'", fid, "'", sep="", collapse=", "), Fcatid))
+        exist <- rqda_sel(sprintf("select fid from treefile where status = 1 and fid in (%s) and catid=%i", paste("'", fid, "'", sep = "", collapse = ", "), Fcatid))
         if (nrow(exist) != length(fid)) {
           ## write only when the selected file associated with specific f-cat is not there
           DAT <- data.frame(fid = fid[!fid %in% exist$fid], catid = Fcatid, date = date(), dateM = date(), memo='', status = 1, owner=.rqda$owner)
@@ -675,7 +675,7 @@ AddToFileCategory <- function(Widget=.rqda$.fnames_rqda, updateWidget = TRUE) {
 
 
 ## library(RGtk2)
-searchWord <- function(str, widget, from = 0, col="green", verbose = FALSE) {
+searchWord <- function(str, widget, from = 0, col = "green", verbose = FALSE) {
   tview <- widget$widget
   buffer <- tview$buffer
   Iter0 <- buffer$GetIterAtOffset(from)$iter
@@ -698,7 +698,7 @@ SearchButton <- function(widget) {
   ## widget=.rqda$.openfile_gui)
   assign("searchFrom", 0, envir = .rqda)
   group <- ggroup(horizontal = FALSE, container = gwindow(
-    width = getOption("widgetSize")[1], height = getOption("widgetSize")[2], title="Search a word"))
+    width = getOption("widgetSize")[1], height = getOption("widgetSize")[2], title = "Search a word"))
   kwdW <- gedit("", container = group)
   gbutton(gettext("Search next", domain = "R-RQDA"), container = group, handler = function(h, ...) {
     if (!is.null(.rqda$searchFrom)) {

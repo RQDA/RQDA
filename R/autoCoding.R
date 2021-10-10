@@ -1,5 +1,5 @@
 AutoCoding <- function(KeyWord, expansion = 6) {
-  Files <- searchFiles(paste("%", KeyWord, "%", collapse=""), content = TRUE)
+  Files <- searchFiles(paste("%", KeyWord, "%", collapse = ""), content = TRUE)
   AnsIndex <- gregexpr(KeyWord, Files$file)
   AnsIndex2 <- lapply(AnsIndex, FUN = function(x) {
     begin <- x-expansion
@@ -40,9 +40,9 @@ insertCoding <- function(fid, cid, start, end, fulltext) {
         del <- (del1 | del2)
         if (any(del)) {
           Sel <- c(min(Exist$Start[del]), max(Exist$End[del]))
-          memo <- rqda_sel(sprintf("select memo from coding where rowid in (%s)", paste(Exist$rowid[del], collapse=", ", sep="")))$memo
-          memo <- paste(memo, collapse="", sep="")
-          rqda_exe(sprintf("delete from coding where rowid in (%s)", paste(Exist$rowid[del], collapse=", ", sep="")))
+          memo <- rqda_sel(sprintf("select memo from coding where rowid in (%s)", paste(Exist$rowid[del], collapse = ", ", sep = "")))$memo
+          memo <- paste(memo, collapse = "", sep = "")
+          rqda_exe(sprintf("delete from coding where rowid in (%s)", paste(Exist$rowid[del], collapse = ", ", sep = "")))
           DAT <- data.frame(cid = cid, fid = fid, seltext = substr(fulltext, Sel[1] + 1, Sel[2]), selfirst = Sel[1], selend = Sel[2], status = 1, owner = .rqda$owner, date = date(), memo = memo, stringsAsFactors = FALSE)
           DAT$seltext <- enc(DAT$seltext)
           rowid <- NextRowId("coding")
@@ -86,7 +86,7 @@ codingBySearchOneFile <- function(pattern, fid, cid, seperator, concatenate, ...
 }
 
 #' @export
-codingBySearch <- function(pattern, fid = getFileIds(), cid, seperator="\n", concatenate = FALSE, ...) {
+codingBySearch <- function(pattern, fid = getFileIds(), cid, seperator = "\n", concatenate = FALSE, ...) {
     if (length(fid)> 0) {
         for (i in fid) {
             codingBySearchOneFile(pattern, fid = i, cid = cid, seperator = seperator, concatenate = concatenate, ...)

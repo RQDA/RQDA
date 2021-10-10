@@ -17,7 +17,7 @@ saveAs <- function(newpath = NULL) {
         Encoding(oldpath) <- "UTF-8"
 
     if (is.null(newpath)) {
-        newpath <- gfile(type="save",
+        newpath <- gfile(type = "save",
                          text = rqda_txt("Type a new file name and click OK."),
                          filter = list("RQDA" = list(patterns = c("*.rqda$"))))
 
@@ -34,11 +34,11 @@ saveAs <- function(newpath = NULL) {
     override <- TRUE
     if (fexist <- file.exists(newpath)) {
         override <- gconfirm(rqda_txt("Overwrite existing project?"),
-                             icon="warning")
+                             icon = "warning")
         if (file.access(newpath, 2) != 0 && override) {
             override <- FALSE
             gmessage(rqda_txt("You have no write permission to overwrite it."),
-                     container = TRUE, icon="error")
+                     container = TRUE, icon = "error")
         }
     }
 
@@ -48,7 +48,7 @@ saveAs <- function(newpath = NULL) {
 
     if (!succeeded)
         gmessage(rqda_txt("Failed to save the project to the new location."),
-                 container = TRUE, icon="error")
+                 container = TRUE, icon = "error")
 
     closeProjBF()
     ## this must be placed before closeProject() because .fnames_rqda[] <- NULL

@@ -20,7 +20,7 @@ CaseNamesUpdate <- function(CaseNamesWidget=.rqda$.CasesNamesWidget,
 
 #################
 ###############
-AddCase <- function(name, conName="qdacon", assignenv=.rqda, ...) {
+AddCase <- function(name, conName = "qdacon", assignenv=.rqda, ...) {
   if (name != "") {
     con <- get(conName, assignenv)
     maxid <- rqda_sel("select max(id) from cases")[[1]]
@@ -46,7 +46,7 @@ AddFileToCaselinkage <- function(Widget=.rqda$.fnames_rqda) {
   filename <- svalue(Widget)
   ## Encoding(filename) <- "unknown"
   query <- rqda_sel(sprintf("select id, file from source where name in (%s) and status = 1", 
-                                           paste("'", enc(filename), "'", sep="", collapse=", ")
+                                           paste("'", enc(filename), "'", sep = "", collapse = ", ")
                                            ))
   fid <- query$id
   Encoding(query$file) <- "UTF-8"
@@ -57,11 +57,11 @@ AddFileToCaselinkage <- function(Widget=.rqda$.fnames_rqda) {
   if (nrow(cases) != 0) {
       Encoding(cases$name) <- "UTF-8"
       Selected <- gselect.list(cases$name, multiple = TRUE, x = getOption("widgetCoordinate")[1])
-      if (length(Selected)>0 && Selected != "") {
+      if (length(Selected) > 0 && Selected != "") {
           Encoding(Selected) <- "UTF-8"
           caseid <- cases$id[cases$name %in% Selected]
           for (i in caseid) {
-              exist <- rqda_sel(sprintf("select fid from caselinkage where status = 1 and fid in (%s) and caseid=%i", paste("'", fid, "'", sep="", collapse=", "), i))
+              exist <- rqda_sel(sprintf("select fid from caselinkage where status = 1 and fid in (%s) and caseid=%i", paste("'", fid, "'", sep = "", collapse = ", "), i))
               if (nrow(exist) != length(fid)) {
                   ## write only when the selected file associated with specific case is not in the caselinkage table
                   DAT <- data.frame(caseid = caseid, fid = fid[!fid %in% exist$fid], selfirst = 0, selend = selend[!fid %in% exist$fid], status = 1, owner=.rqda$owner, date = date(), memo='')
@@ -100,7 +100,7 @@ UpdateFileofCaseWidget <- function(con=.rqda$qdacon, Widget=.rqda$.FileofCase, s
 }
 
 HL_Case <- function() {
-  if (is_projOpen(envir = .rqda, conName="qdacon")) {
+  if (is_projOpen(envir = .rqda, conName = "qdacon")) {
     SelectedFile <- svalue(.rqda$.root_edit)
     currentFid <-  rqda_sel(sprintf("select id from source where name='%s'", 
                                      enc(SelectedFile)))[, 1]
