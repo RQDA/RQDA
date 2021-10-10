@@ -18,8 +18,7 @@ getCodingsByOne <- function(cid, fid = NULL, codingTable = c("coding", "coding2"
 
 #' @method print codingsByOne
 #' @export
-print.codingsByOne <- function(x, ...)
-{
+print.codingsByOne <- function(x, ...) {
     ComputeCallbackFun <- function(FileName, rowid) {
         CallBackFUN <- function(widget, event, ...) {
             ViewFileFunHelper(FileName, hightlight = FALSE)
@@ -115,10 +114,9 @@ andHelper <- function(d1, d2) {
 }
 
 #' @export
-and <- function(CT1, CT2)
+and <- function(CT1, CT2) {
 ### much faster than previous version of and()
 ### can extend to andSmart to handle more codes at the same time
-{
     ans <- data.frame()
     fid <- unique(intersect(CT1$fid, CT2$fid))
     if (length(fid) > 0) {
@@ -167,8 +165,7 @@ orHelper <- function(d1, d2) {
 }
 
 #' @export
-or <- function(CT1, CT2)
-{
+or <- function(CT1, CT2) {
     ans <- data.frame(stringsAsFactors = FALSE)
     fid <- unique(union(CT1$fid, CT2$fid))
     if (length(fid) > 0) {
@@ -205,7 +202,7 @@ or <- function(CT1, CT2)
 
 notHelper <- function(d1, d2) {
     da11 <- sort(unlist(apply(d1, 1, function(i)seq(i[1], i[2]))))
-    da22 <- sort(unlist(apply(d2, 1, function(i)seq(i[1] + 1, i[2]-1))))
+    da22 <- sort(unlist(apply(d2, 1, function(i)seq(i[1] + 1, i[2] - 1))))
     daAll <- setdiff(da11, da22)
     x <- sort(unique(daAll))
     vnl <- rle(diff(x))
@@ -219,8 +216,7 @@ notHelper <- function(d1, d2) {
 }
 
 #' @export
-not <- function(CT1, CT2)
-{
+not <- function(CT1, CT2) {
     ans <- data.frame(stringsAsFactors = FALSE)
     fid <- unique(CT1$fid)
     if (length(fid) > 0) {
@@ -516,5 +512,3 @@ not <- function(CT1, CT2)
 ##   class(ans) <- c("codingsByOne", "data.frame")
 ##   ans
 ## }
-
-
