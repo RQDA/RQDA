@@ -21,7 +21,7 @@ saveAs <- function(newpath = NULL) {
                          text = rqda_txt("Type a new file name and click OK."),
                          filter = list("RQDA" = list(patterns = c("*.rqda$"))))
 
-        # if no file selected, return nothing
+                                        # if no file selected, return nothing
         if (identical(newpath, character(0)))
             return(0)
 

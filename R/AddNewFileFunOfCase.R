@@ -16,7 +16,7 @@ AddNewFileFunOfCase <- function() {
     mainIcon <- system.file("icon", "mainIcon.png", package = "RQDA")
     gw$set_icon(mainIcon)
     addHandlerKeystroke(gw, function(h, ...) {
-    if (h$key == "\027") dispose(gw)
+        if (h$key == "\027") dispose(gw)
     })
     gp <- gpanedgroup(horizontal = FALSE, container = gw)
 
@@ -32,7 +32,7 @@ AddNewFileFunOfCase <- function() {
             maxid <- rqda_sel("select max(id) from source")[[1]]
             nextid <- ifelse(is.na(maxid), 0 + 1, maxid + 1)
             ans <- rqda_exe(sprintf("insert into source (name, file, id, status, date, owner) values ('%s', '%s', %i, %i, '%s', '%s')",
-                                                    Ftitle, content, nextid, 1, date(), .rqda$owner))
+                                    Ftitle, content, nextid, 1, date(), .rqda$owner))
             if (is.null(ans)) {
                 svalue(textW) <- ""
                 FileNamesUpdate()

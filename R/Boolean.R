@@ -2,15 +2,15 @@
 getCodingsByOne <- function(cid, fid = NULL, codingTable = c("coding", "coding2")) {
     if (length(cid) != 1) stop("cid should be length-1 integer vector.", domain = "R-RQDA")
     codingTable <- match.arg(codingTable)
-     if (codingTable == "coding") {
-    ct <- rqda_sel(sprintf("select coding.rowid as rowid, coding.cid, coding.fid, freecode.name as codename, source.name as filename, coding.selfirst as index1, coding.selend as index2, coding.seltext as coding, coding.selend - coding.selfirst as CodingLength from coding left join freecode on (coding.cid = freecode.id) left join source on (coding.fid = source.id) where coding.status = 1 and source.status = 1 and freecode.status = 1 and coding.cid=%s", cid))
-     }
-     if (codingTable == "coding2") {
-    ct <- rqda_sel(sprintf("select coding2.rowid as rowid, coding2.cid, coding2.fid, freecode.name as codename, source.name as filename, coding2.selfirst as index1, coding2.selend as index2, coding2.seltext as coding, coding2.selend - coding2.selfirst as CodingLength from coding2 left join freecode on (coding2.cid = freecode.id) left join source on (coding2.fid = source.id) where coding2.status = 1 and source.status = 1 and freecode.status = 1 and coding2.cid=%s", cid))
-     }
+    if (codingTable == "coding") {
+        ct <- rqda_sel(sprintf("select coding.rowid as rowid, coding.cid, coding.fid, freecode.name as codename, source.name as filename, coding.selfirst as index1, coding.selend as index2, coding.seltext as coding, coding.selend - coding.selfirst as CodingLength from coding left join freecode on (coding.cid = freecode.id) left join source on (coding.fid = source.id) where coding.status = 1 and source.status = 1 and freecode.status = 1 and coding.cid=%s", cid))
+    }
+    if (codingTable == "coding2") {
+        ct <- rqda_sel(sprintf("select coding2.rowid as rowid, coding2.cid, coding2.fid, freecode.name as codename, source.name as filename, coding2.selfirst as index1, coding2.selend as index2, coding2.seltext as coding, coding2.selend - coding2.selfirst as CodingLength from coding2 left join freecode on (coding2.cid = freecode.id) left join source on (coding2.fid = source.id) where coding2.status = 1 and source.status = 1 and freecode.status = 1 and coding2.cid=%s", cid))
+    }
     if (nrow(ct) != 0) {
         Encoding(ct$codename) <- Encoding(ct$filename) <- Encoding(ct$coding) <- "UTF-8"
-     if (!is.null(fid)) ct <- ct[ct$fid %in% fid, ]
+        if (!is.null(fid)) ct <- ct[ct$fid %in% fid, ]
     }
     class(ct) <- c("codingsByOne", "data.frame")
     ct
@@ -38,7 +38,7 @@ print.codingsByOne <- function(x, ...) {
     }
 
     if (nrow(x) == 0)
-      gmessage(gettext("No Codings.", domain = "R-RQDA"), container = TRUE)
+        gmessage(gettext("No Codings.", domain = "R-RQDA"), container = TRUE)
     else {
         x <- x[order(x$fid, x$index1, x$index2), ]
         fid <- unique(x$fid)
@@ -54,13 +54,13 @@ print.codingsByOne <- function(x, ...) {
                                       "%i codings from %i files", domain = "R-RQDA"), Ncodings, Nfiles)
         }
         tryCatch(eval(parse(text = sprintf("dispose(.rqda$.codingsOf%s)",
-                            "codingsByone"))), error = function(e) {
-                            })
+                                           "codingsByone"))), error = function(e) {
+                                           })
         .gw <- gwindow(title = title, parent = getOption("widgetCoordinate"),
                        width = getOption("widgetSize")[1], height = getOption("widgetSize")[2])
 
         addHandlerKeystroke(.gw, function(h, ...) {
-        if (h$key == "\027") dispose(.gw)
+            if (h$key == "\027") dispose(.gw)
         })
         mainIcon <- system.file("icon", "mainIcon.png", package = "RQDA")
         .gw$set_icon(mainIcon)
@@ -122,17 +122,17 @@ and <- function(CT1, CT2) {
     if (length(fid) > 0) {
         for (j in fid) {
             tmp <- andHelper(subset(CT1, fid == j, c("index1", "index2")),
-                                    subset(CT2, fid == j, c("index1", "index2"))
-                                    )
+                             subset(CT2, fid == j, c("index1", "index2"))
+                             )
             if (nrow(tmp) > 0) {
-            tmp <- cbind(tmp, fid = j, filename = CT1$filename[which(CT1$fid == j)[1]])
-            rid1 <- match(tmp$index1, CT1$index1)
-            rid1NA <- is.na(rid1)
-            tmp$rowid[!rid1NA] <- CT1$rowid[rid1[!rid1NA]]
-            rid2 <- match(tmp$index1[rid1NA], CT2$index1)
-            tmp$rowid[rid1NA] <- CT2$rowid[rid2]
-            ## add rowid so the summary method will work
-            ans <- rbind(ans, tmp)
+                tmp <- cbind(tmp, fid = j, filename = CT1$filename[which(CT1$fid == j)[1]])
+                rid1 <- match(tmp$index1, CT1$index1)
+                rid1NA <- is.na(rid1)
+                tmp$rowid[!rid1NA] <- CT1$rowid[rid1[!rid1NA]]
+                rid2 <- match(tmp$index1[rid1NA], CT2$index1)
+                tmp$rowid[rid1NA] <- CT2$rowid[rid2]
+                ## add rowid so the summary method will work
+                ans <- rbind(ans, tmp)
             }
         }
         if (nrow(ans) != 0) {
@@ -223,7 +223,7 @@ not <- function(CT1, CT2) {
         for (j in fid) {
             tmp <- notHelper(subset(CT1, fid == j, c("index1", "index2")),
                              subset(CT2, fid == j, c("index1", "index2"))
-                            )
+                             )
             if (nrow(tmp) > 0) {
                 tmp <- cbind(tmp, fid = j, filename = CT1$filename[which(CT1$fid == j)[1]], stringsAsFactors = FALSE)
                 rid1 <- match(tmp$index1, CT1$index1)
@@ -258,13 +258,13 @@ not <- function(CT1, CT2) {
 #' @method %or% codingsByOne
 #' @export
 "%or%.codingsByOne" <- function(e1, e2) {
-  or(e1, e2)
+    or(e1, e2)
 }
 
 #' @method %not% codingsByOne
 #' @export
 "%not%.codingsByOne" <- function(e1, e2) {
-  not(e1, e2)
+    not(e1, e2)
 }
 
 

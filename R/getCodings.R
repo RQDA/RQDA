@@ -59,15 +59,15 @@ getCodingsFromFiles <- function(Fid, order = c("fname", "ftime", "ctime"),
 
     retrieval <- rqda_sel(
         sprintf(paste("select cid, freecode.name as code, fid, selfirst, ",
-                       "selend, seltext, %s.rowid, source.name, source.id",
-                       "from %s, source, freecode where %s.status = 1 and",
-                       "source.id = fid and freecode.id=%s.cid and fid in",
-                       "(%s) %s"), codingTable, codingTable, codingTable,
-                 codingTable, paste(Fid, collapse = ", "), order))
+                      "selend, seltext, %s.rowid, source.name, source.id",
+                      "from %s, source, freecode where %s.status = 1 and",
+                      "source.id = fid and freecode.id=%s.cid and fid in",
+                      "(%s) %s"), codingTable, codingTable, codingTable,
+                codingTable, paste(Fid, collapse = ", "), order))
 
     if (nrow(retrieval) == 0) {
         gmessage(rqda_txt("No Coding associated with the selected code."),
-                  container = TRUE)
+                 container = TRUE)
     } else {
         fid <- unique(retrieval$fid)
         Nfiles <- length(fid)
@@ -85,15 +85,15 @@ getCodingsFromFiles <- function(Fid, order = c("fname", "ftime", "ctime"),
                                       domain = "R-RQDA"), Ncodings, Nfiles)
         }
         wnh <- size(.rqda$.root_rqdagui$widget) ## size of the main window
-        # parent = c(wnh[1] + 10, 2), FixMe: ???
+                                        # parent = c(wnh[1] + 10, 2), FixMe: ???
         .gw <- gwindow(title = title,
                        width = getOption("widgetSize")[1],
                        height = getOption("widgetSize")[2]
-        )
+                       )
 
-    addHandlerKeystroke(.gw, function(h, ...) {
-    if (h$key == "\027") dispose(.gw)
-    })
+        addHandlerKeystroke(.gw, function(h, ...) {
+            if (h$key == "\027") dispose(.gw)
+        })
         mainIcon <- system.file("icon", "mainIcon.png", package = "RQDA")
         .gw$set_icon(mainIcon)
         .retreivalgui <- gtext(container = .gw)

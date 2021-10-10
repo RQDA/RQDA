@@ -28,7 +28,7 @@ importPDFHL <- function(file, type = c("Highlight"), engine = "rjpod") {
         }
         rqda_exe(sprintf("insert into source (name, file, id, status, date, owner, memo)
                              values ('%s', '%s', %i, %i, '%s', '%s', '%s')",
-                          fileName, enc(ans), nextid, 1, date(), .rqda$owner, enc(finfo)))
+                         fileName, enc(ans), nextid, 1, date(), .rqda$owner, enc(finfo)))
         FileNamesUpdate()
     }
 }
