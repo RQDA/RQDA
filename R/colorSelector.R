@@ -3,7 +3,7 @@ setColor <- function(currentColor="gold") {
   colorDA <- gtkDrawingAreaNew()
   colorDA$modifyBg("normal", currentColor)
   g <-glayout(container=gwindow(
-    width = getOption("widgetSize")[1], height = getOption("widgetSize")[2], 
+    width = getOption("widgetSize")[1], height = getOption("widgetSize")[2],
     parent=getOption("widgetCoordinate")), homogeneous=TRUE, title=gettext("Change color.", domain = "R-RQDA"))
   g[1, 1:3] <- colorDA
   g[2, 1] <- gbutton(gettext("Select Color", domain = "R-RQDA"), handler=function(h, ...) {

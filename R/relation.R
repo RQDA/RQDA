@@ -1,4 +1,4 @@
-#' @export 
+#' @export
 relation <- function(index1, index2) {
   ## index1 and index2 are length-2 numeric vectors
   ## results:
@@ -61,7 +61,7 @@ relation <- function(index1, index2) {
   }
 }
 
-#' @export 
+#' @export
 crossTwoCodes <- function(cid1, cid2, data, relation=c("overlap", "inclusion", "exact", "proximity"), ...)
 {
   ## cid1 and cid2 is length-1 numeric, represents the id of codes
@@ -108,7 +108,7 @@ crossCodes <- CrossCode <- function(relation=c("overlap", "inclusion", "exact", 
       cidList <- Cid_Name$cid[match(codeList, Cid_Name$codename)]
       relation <- match.arg(relation)
       ans <- matrix(nrow=length(codeList), ncol=length(codeList), dimnames=list(
-                                                                 sprintf("%s(%s)", codeList, cidList), 
+                                                                 sprintf("%s(%s)", codeList, cidList),
                                                                  cidList))
       for (i in 1:length(codeList)) {
         for (j in i:length(codeList)) {
@@ -122,7 +122,7 @@ crossCodes <- CrossCode <- function(relation=c("overlap", "inclusion", "exact", 
   }
 }
 
-#' @importFrom igraph V 
+#' @importFrom igraph V
 #' @method plot crossCodes
 #' @export
 plot.crossCodes <- function(x, ...) {
@@ -134,8 +134,8 @@ plot.crossCodes <- function(x, ...) {
     igraph::set.edge.attribute(cmG, "color", V(cmG)[ew == 2], "yellow")
     igraph::set.edge.attribute(cmG, "color", V(cmG)[ew == 3], "orange")
     igraph::set.edge.attribute(cmG, "color", V(cmG)[ew>3], "red")
-    tryCatch(igraph::tkplot(cmG, edge.width=sqrt(igraph::get.edge.attribute(cmG, "weight")), 
-                             vertex.label=igraph::get.vertex.attribute(cmG, "name"), 
+    tryCatch(igraph::tkplot(cmG, edge.width=sqrt(igraph::get.edge.attribute(cmG, "weight")),
+                             vertex.label=igraph::get.vertex.attribute(cmG, "name"),
                              edge.label=floor(igraph::get.edge.attribute(cmG, "weight"))
                              ), error=function(e) {
         plot(cmG, edge.width=sqrt(igraph::E(cmG)$weight), vertex.label=igraph::V(cmG)$CodeName)

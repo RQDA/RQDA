@@ -11,7 +11,7 @@ addcode <- function(name, conName="qdacon", assignenv=.rqda, ...) {
       if (nrow(dup) == 0) write <- TRUE
     }
     if (write ) {
-      rqda_exe(sprintf("insert into freecode (name, id, status, date, owner) values ('%s', %i, %i, %s, %s)", 
+      rqda_exe(sprintf("insert into freecode (name, id, status, date, owner) values ('%s', %i, %i, %s, %s)",
                              name, nextid, 1, shQuote(date()), shQuote(.rqda$owner)))
     }
   }
@@ -107,7 +107,7 @@ markRange <- function(widget, from, to, rowid, fore.col=.rqda$fore.col, back.col
       buffer$CreateMark(sprintf("%s.2", rowid), where=endIter)
       buffer <- widget$buffer
       if(addButton) {
-        InsertAnchor(widget, sprintf("<%s>", buttonLabel), index=from, label.col=buttonCol, 
+        InsertAnchor(widget, sprintf("<%s>", buttonLabel), index=from, label.col=buttonCol,
                      handler=TRUE, EndMarkName=sprintf("%s.2", rowid))
       }
       m1 <- buffer$GetMark(sprintf("%s.1", rowid))
@@ -162,11 +162,11 @@ sindex <- function(widget=.rqda$.openfile_gui$widget, includeAnchor=TRUE, coding
     ##startN <- startN - countAnchors(widget, from=0, to=startN)
     ##endN <- endN - countAnchors(widget, from=0, to=endN)
   }
-  return(list(startI=startI, endI=endI, startN=startN, endN=endN, 
+  return(list(startI=startI, endI=endI, startN=startN, endN=endN,
               startMark=startMark, endMark=endMark, seltext=selected))
 }
 
-InsertAnchor <- function(widget, label, index, label.col="gray90", 
+InsertAnchor <- function(widget, label, index, label.col="gray90",
                          handler=FALSE, EndMarkName=NULL) {
     ## EndMarkName is a gtk mark for end position of highlight
     lab <- gtkLabelNew(label)
@@ -206,7 +206,7 @@ InsertAnchor <- function(widget, label, index, label.col="gray90",
                   tryCatch(dispose(.rqda$.codingmemo), error=function(e) {})
                   ## Close the coding memo first, then open a new one
                   title <- sprintf("Coding Memo:%s", codeName)
-                  .codingmemo <- gwindow(title=title, getOption("widgetCoordinate"), 
+                  .codingmemo <- gwindow(title=title, getOption("widgetCoordinate"),
                   width = getOption("widgetSize")[1], height = getOption("widgetSize")[2])
                   assign(".codingmemo", .codingmemo, envir=.rqda)
                   .codingmemo <- get(".codingmemo", envir=.rqda)
@@ -224,9 +224,9 @@ InsertAnchor <- function(widget, label, index, label.col="gray90",
                   Encoding(prvcontent) <- "UTF-8"
                   if (prvcontent == "") assign("NewCodingMemo", TRUE, envir=.rqda)
                   W <- get(".cdmemocontent", envir=.rqda)
-                  insert(W, prvcontent, do.newline = FALSE, where = "beginning", 
+                  insert(W, prvcontent, do.newline = FALSE, where = "beginning",
                          font.attr=list(size="large"))
-                  gSignalConnect(W$buffer, "changed", 
+                  gSignalConnect(W$buffer, "changed",
                                  function(h, ...) {
                                  enabled(.rqda$".codingMemoSaveButton") <- TRUE
                                  })
@@ -314,7 +314,7 @@ countAnchorsWithFileName <- function(to, fileName=enc(svalue(.rqda$.root_edit), 
 #'
 #' To retrieve the codings of a selected code from specific set of files.
 #' @usage
-#' retrieval(Fid = NULL, order = c("fname", "ftime", "ctime"), 
+#' retrieval(Fid = NULL, order = c("fname", "ftime", "ctime"),
 #' CodeNameWidget = .rqda$.codes_rqda, codingTable="coding")
 #'
 #' @param Fid Numeric vector, the file id.
@@ -342,9 +342,9 @@ retrieval <- function(Fid=NULL, order=c("fname", "ftime", "ctime"), CodeNameWidg
     Encoding(currentCode2) <- "UTF-8"
     currentCid <- rqda_sel(sprintf("select id from freecode where name= '%s' ", currentCode))[1, 1]
     order <- match.arg(order)
-    order <- switch(order, 
-                    fname="order by source.name", 
-                    ftime="order by source.id", 
+    order <- switch(order,
+                    fname="order by source.name",
+                    ftime="order by source.id",
                     ctime="")
     if (is.null(Fid)) {
       retrieval <- rqda_sel(sprintf("select cid, fid, selfirst, selend, seltext, %s.rowid, source.name, source.id from %s, source where %s.status=1 and cid=%i and source.id=fid %s", codingTable, codingTable, codingTable, currentCid, order))
@@ -357,18 +357,18 @@ retrieval <- function(Fid=NULL, order=c("fname", "ftime", "ctime"), CodeNameWidg
       Nfiles <- length(fid)
       Ncodings <- nrow(retrieval)
       if(Ncodings == 1) {
-          title <- sprintf(ngettext(Nfiles, 
-                                    "1 retrieved coding: \"%s\" from %i file", 
-                                    "1 retrieved coding: \"%s\" from %i files", domain = "R-RQDA"), 
+          title <- sprintf(ngettext(Nfiles,
+                                    "1 retrieved coding: \"%s\" from %i file",
+                                    "1 retrieved coding: \"%s\" from %i files", domain = "R-RQDA"),
                            currentCode2, Nfiles)
       } else {
-          title <- sprintf(ngettext(Nfiles, 
-                                    "%i retrieved codings: \"%s\" from %i file", 
-                                    "%i retrieved codings: \"%s\" from %i files", domain = "R-RQDA"), 
+          title <- sprintf(ngettext(Nfiles,
+                                    "%i retrieved codings: \"%s\" from %i file",
+                                    "%i retrieved codings: \"%s\" from %i files", domain = "R-RQDA"),
                            Ncodings, currentCode2, Nfiles)
       }
       tryCatch(eval(parse(text=sprintf("dispose(.rqda$.codingsOf%s)", currentCid))), error=function(e) {})
-      .gw <- gwindow(title=title, , 
+      .gw <- gwindow(title=title, ,
                      width = getOption("widgetSize")[1], height = getOption("widgetSize")[2])
       mainIcon <- system.file("icon", "mainIcon.png", package = "RQDA")
       .gw$set_icon(mainIcon)
@@ -439,8 +439,8 @@ retrieval <- function(Fid=NULL, order=c("fname", "ftime", "ctime"), CodeNameWidg
           DAT$seltext <- enc(DAT$seltext)
           Exists <- rqda_sel(sprintf("select * from coding where cid=%s and selfirst=%s and selend=%s and status=1", currentCid, DAT$selfirst, DAT$selend))
           if (nrow(Exists) == 0) {
-            success <- is.null(try(rqda_exe(sprintf("insert into %s (cid, fid, seltext, selfirst, selend, status, owner, date) values (%s, %s, '%s', %s, %s, %s, '%s', '%s') ", 
-                                                     codingTable, currentCid, DAT$fid, DAT$seltext, DAT$selfirst, DAT$selend, 1, .rqda$owner, 
+            success <- is.null(try(rqda_exe(sprintf("insert into %s (cid, fid, seltext, selfirst, selend, status, owner, date) values (%s, %s, '%s', %s, %s, %s, '%s', '%s') ",
+                                                     codingTable, currentCid, DAT$fid, DAT$seltext, DAT$selfirst, DAT$selend, 1, .rqda$owner,
                                                      as.character(date()))), silent=TRUE))
             if (success) {
               gmessage(sprintf(gettext("Code \"%s\" applied to this text segment.\n"), SelectedCode2))
@@ -448,7 +448,7 @@ retrieval <- function(Fid=NULL, order=c("fname", "ftime", "ctime"), CodeNameWidg
               gmessage(gettext("Cannot recode this text segment."), type="warning")
             }
           } else {
-            gmessage(sprintf(gettext("Text segment already coded as \"%s\""), 
+            gmessage(sprintf(gettext("Text segment already coded as \"%s\""),
                              SelectedCode2), type="warning")          }
         }
       }
@@ -462,8 +462,8 @@ retrieval <- function(Fid=NULL, order=c("fname", "ftime", "ctime"), CodeNameWidg
         # Better than striking through the text would be to reload the Codings
         # View widget and put the cursor at the same position because the
         # "Back", "Recode" and "Unmark" buttons would be recomputed.
-        buffer$ApplyTagByName("strkthrgh", 
-                              buffer$GetIterAtOffset(sO)$iter, 
+        buffer$ApplyTagByName("strkthrgh",
+                              buffer$GetIterAtOffset(sO)$iter,
                               buffer$GetIterAtOffset(sO + nB)$iter)
 
         freq <- rqda_sel(sprintf("select count(cid) as freq from coding where status=1 and cid=%s", currentCid))$freq
@@ -497,7 +497,7 @@ retrieval <- function(Fid=NULL, order=c("fname", "ftime", "ctime"), CodeNameWidg
         lab <- gtkLabelNew(gettext("Back", domain = "R-RQDA"))
         widget <- gtkEventBoxNew()
         widget$Add(lab)
-        gSignalConnect(widget, "button-press-event", 
+        gSignalConnect(widget, "button-press-event",
                        ComputeCallbackFun(x[["fname"]], as.numeric(x[["rowid"]])))
         .retreivalgui$widget$addChildAtAnchor(widget, anchor)
         iter$ForwardChar()
@@ -508,7 +508,7 @@ retrieval <- function(Fid=NULL, order=c("fname", "ftime", "ctime"), CodeNameWidg
         lab_recode <- gtkLabelNew(gettext("Recode", domain = "R-RQDA"))
         widget_recode <- gtkEventBoxNew()
         widget_recode$Add(lab_recode)
-        gSignalConnect(widget_recode, "button-press-event", 
+        gSignalConnect(widget_recode, "button-press-event",
                        ComputeRecodeFun(as.numeric(x[["rowid"]])))
         .retreivalgui$widget$addChildAtAnchor(widget_recode, anchor_recode)
         iter$ForwardChar()
@@ -519,7 +519,7 @@ retrieval <- function(Fid=NULL, order=c("fname", "ftime", "ctime"), CodeNameWidg
         lab_unmark<- gtkLabelNew(gettext("Unmark", domain = "R-RQDA"))
         widget_unmark <- gtkEventBoxNew()
         widget_unmark$Add(lab_unmark)
-        gSignalConnect(widget_unmark, "button-press-event", 
+        gSignalConnect(widget_unmark, "button-press-event",
                        ComputeUnMarkFun(as.numeric(x[["rowid"]]), sOffset, nBytes))
         .retreivalgui$widget$addChildAtAnchor(widget_unmark, anchor_unmark)
         widget$showAll()
@@ -541,9 +541,9 @@ exportCodingsOfOneCode <- function(file, currentCode, Fid, order=c("fname", "fti
   if (length(currentCode) != 0) {
     currentCid <- rqda_sel(sprintf("select id from freecode where name= '%s' ", enc(currentCode)))[1, 1]
     order <- match.arg(order)
-    order <- switch(order, 
-                    fname="order by source.name", 
-                    ftime="order by source.id", 
+    order <- switch(order,
+                    fname="order by source.name",
+                    ftime="order by source.id",
                     ctime="")
     ##if (is.null(Fid)) {
     ##  retrieval <- rqda_sel(sprintf("select coding.cid, coding.fid, coding.selfirst, ##coding.selend, coding.seltext, coding.rowid, source.name, source.id from coding, source where coding.status=1 and coding.cid=%i and source.id=coding.fid %s", currentCid, order))
@@ -567,18 +567,18 @@ exportCodingsOfOneCode <- function(file, currentCode, Fid, order=c("fname", "fti
       Ncodings <- nrow(retrieval)
       Encoding(retrieval$seltext) <- "UTF-8"
       if (nrow(retrieval) == 1) {
-       cat("<hr><p align='center'><b><font color='blue' size=' + 2'>", 
-           sprintf(ngettext(Nfiles, 
-                            "%i Coding of <a id='%s'>\"%s\"</a> from %s file.", 
-                            "%i Coding of <a id='%s'>\"%s\"</a> from %s files.", domain = "R-RQDA"), 
-                   Ncodings, currentCode, currentCode, Nfiles), 
+       cat("<hr><p align='center'><b><font color='blue' size=' + 2'>",
+           sprintf(ngettext(Nfiles,
+                            "%i Coding of <a id='%s'>\"%s\"</a> from %s file.",
+                            "%i Coding of <a id='%s'>\"%s\"</a> from %s files.", domain = "R-RQDA"),
+                   Ncodings, currentCode, currentCode, Nfiles),
            "</b></font><hr><p align='left'>", sep="", file=file, append=append)
      } else {
-       cat("<hr><p align='center'><b><font color='blue' size=' + 2'>", 
-           sprintf(ngettext(Nfiles, 
-                            "%i Codings of <a id='%s'>\"%s\"</a> from %s file.", 
-                            "%i Codings of <a id='%s'>\"%s\"</a> from %s files.", domain = "R-RQDA"), 
-                   Ncodings, currentCode, currentCode, Nfiles), 
+       cat("<hr><p align='center'><b><font color='blue' size=' + 2'>",
+           sprintf(ngettext(Nfiles,
+                            "%i Codings of <a id='%s'>\"%s\"</a> from %s file.",
+                            "%i Codings of <a id='%s'>\"%s\"</a> from %s files.", domain = "R-RQDA"),
+                   Ncodings, currentCode, currentCode, Nfiles),
            "</b></font><hr><p align='left'>", sep="", file=file, append=append)
       }
       retrieval$seltext <- gsub("\\n", "<p>", retrieval$seltext)
@@ -592,8 +592,8 @@ exportCodingsOfOneCode <- function(file, currentCode, Fid, order=c("fname", "fti
     }}}## end of export helper function
 
 if (is.null(Fid)) Fid <- getFileIds(type="coded")
-allcodes <- rqda_sel(sprintf("select freecode.name from freecode, %s where freecode.status=1 and freecode.id=%s.cid and %s.status=1 and %s.fid in (%s) group by freecode.name", 
-codingTable, codingTable, codingTable, codingTable, 
+allcodes <- rqda_sel(sprintf("select freecode.name from freecode, %s where freecode.status=1 and freecode.id=%s.cid and %s.status=1 and %s.fid in (%s) group by freecode.name",
+codingTable, codingTable, codingTable, codingTable,
 paste(shQuote(Fid), collapse=", ")))$name
 if (!is.null(allcodes)) {
     Encoding(allcodes) <- "UTF-8"
@@ -643,7 +643,7 @@ ClickHandlerFun <- function(CodeNameWidget, buttons=c("MarCodB1", "UnMarB1"), co
                 ##allidx <- unlist(idx2)
                 anno <- rqda_sel(sprintf("select position from annotation where status=1 and fid=%s", currentFid))$position
                 allidx <- c(idx2[, 1], anno) ## since 0.2-0, only one code label is added to file widget.
-                addidx <-  data.frame(selfirst=apply(outer(allidx, idx1$selfirst, "<="), 2, sum), 
+                addidx <-  data.frame(selfirst=apply(outer(allidx, idx1$selfirst, "<="), 2, sum),
                                       selend=apply(outer(allidx, idx1$selend, "<="), 2, sum))
                 idx1 <- idx1 + addidx
                 HL(.rqda$.openfile_gui, index=idx1, fore.col=.rqda$fore.col, back.col=NULL)
@@ -668,7 +668,7 @@ HL_CodingWithMemo <- function(codingTable="coding") {
           anno <- rqda_sel(sprintf("select position from annotation where status=1 and fid=%s", currentFid))$position
           ## allidx <- unlist(idx[, c("selfirst", "selend")])
           allidx <- c(idx[, c("selfirst")], anno)
-          addidx <-  data.frame(selfirst=apply(outer(allidx, idx$selfirst, "<="), 2, sum), 
+          addidx <-  data.frame(selfirst=apply(outer(allidx, idx$selfirst, "<="), 2, sum),
                                 selend=apply(outer(allidx, idx$selend, "<="), 2, sum))
           idx[, c("selfirst", "selend")] <- idx[, c("selfirst", "selend")] + addidx
           idx1 <- idx[(idx$memo != "") & (!is.na(idx$memo)), c("selfirst", "selend")]
@@ -789,13 +789,13 @@ openAnnotation <- function(New=TRUE, pos, fid, rowid, AnchorPos=NULL) {
     if (is.null(prvcontent) || is.na(prvcontent)) prvcontent <- ""
     Encoding(prvcontent) <- "UTF-8"
     W <- get(".annotationContent", envir=.rqda)
-    gSignalConnect(W$buffer, "changed", 
+    gSignalConnect(W$buffer, "changed",
                    function(h, ...) {
                        mbut <- get("savAnnB", envir=button)
                        enabled(mbut) <- TRUE
                    }
                    )##
-    insert(W, prvcontent, do.newline = FALSE, where = "beginning", 
+    insert(W, prvcontent, do.newline = FALSE, where = "beginning",
            font.attr=list(size="large"))
 }
 
@@ -818,7 +818,7 @@ Annotation <- function(...) {
   }
 }
 
-CodeWithCoding <- function(condition = c("unconditional", "case", "filecategory", "both"), 
+CodeWithCoding <- function(condition = c("unconditional", "case", "filecategory", "both"),
                            codingTable="coding") {
     if (is_projOpen(envir=.rqda, conName="qdacon")) {
         condition <- match.arg(condition)
@@ -830,14 +830,14 @@ CodeWithCoding <- function(condition = c("unconditional", "case", "filecategory"
             invisible(ans)
         }}}
 
-CodeWithoutCoding <- function(condition = c("unconditional", "case", "filecategory", "both"), 
+CodeWithoutCoding <- function(condition = c("unconditional", "case", "filecategory", "both"),
                               codingTable="coding") {
     if (is_projOpen(envir=.rqda, conName="qdacon")) {
         condition <- match.arg(condition)
         fid <- getFileIds(condition, "coded")
         if (length(fid) != 0) {
             ans <- unlist(rqda_sel(sprintf("select name from freecode where status=1 and id not in
-(select cid from %s where status=1 and fid in (%s) group by cid)", 
+(select cid from %s where status=1 and fid in (%s) group by cid)",
 codingTable, paste(shQuote(fid), collapse=", "))))
             Encoding(ans) <- "UTF-8"
             .rqda$.codes_rqda[] <- ans
@@ -850,7 +850,7 @@ AddToCodeCategory <- function(Widget = .rqda$.codes_rqda, updateWidget = TRUE)
 {
   codename2 <- svalue(Widget)
   codename <- enc(codename2)
-  query <- rqda_sel(sprintf("select id, name from freecode where name in(%s) and status=1", 
+  query <- rqda_sel(sprintf("select id, name from freecode where name in(%s) and status=1",
                                             paste("'", codename, "'", sep = "", collapse = ", ")))
   cid <- query$id
   Encoding(query$name) <- "UTF-8"
@@ -867,15 +867,15 @@ AddToCodeCategory <- function(Widget = .rqda$.codes_rqda, updateWidget = TRUE)
         CodeCatid <- CodeCat$catid[CodeCat$name %in% Selected]
         exist <- rqda_sel(sprintf("select cid from treecode where status=1 and cid in (%s) and catid=%i", paste("'", cid, "'", sep = "", collapse = ", "), CodeCatid)) ## this check is unnecessary
         if (nrow(exist) != length(cid)) {
-          DAT <- data.frame(cid = cid[!cid %in% exist$cid], 
-                            catid = CodeCatid, date = date(), dateM = date(), 
+          DAT <- data.frame(cid = cid[!cid %in% exist$cid],
+                            catid = CodeCatid, date = date(), dateM = date(),
                             memo = "", status = 1, owner=.rqda$owner)
           success <- rqda_wrt("treecode", DAT)
           if (success && updateWidget) {
             UpdateCodeofCatWidget()
           }
           if (!success)
-            gmessage(sprintf(gettext("Fail to write to code category of %s", domain = "R-RQDA"), 
+            gmessage(sprintf(gettext("Fail to write to code category of %s", domain = "R-RQDA"),
                              Selected))
         }
       }
@@ -915,7 +915,7 @@ AddToCodeCategory <- function(Widget = .rqda$.codes_rqda, updateWidget = TRUE)
 ## }}}
 
 
-## InsertAnchor <- function(widget, label, index, handler=FALSE, label.col="gray90", 
+## InsertAnchor <- function(widget, label, index, handler=FALSE, label.col="gray90",
 ##                          forward=TRUE) { ## forward is used only when handler is TRUE
 ##   ## rev 233
 ##     lab <- gtkLabelNew(label)

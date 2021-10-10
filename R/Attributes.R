@@ -19,8 +19,8 @@ EditVarWidget <- function(ExistingItems=NULL, container=NULL, title=NULL, ID=NUL
         for (i in 1:length(articles))
           {
             iter <- model$append()$iter
-            model$set(iter, COLUMN["Variable"], articles[[i]]$Variable, 
-                      COLUMN["Value"], articles[[i]]$Value, 
+            model$set(iter, COLUMN["Variable"], articles[[i]]$Variable,
+                      COLUMN["Value"], articles[[i]]$Value,
                       COLUMN["editable"], articles[[i]]$editable)
           }
       }
@@ -228,7 +228,7 @@ AddAttrNames <- function(name, ...) {
     con <- .rqda$qdacon
     dup <- rqda_sel(sprintf("select name from attributes where name='%s'", name))
     if (nrow(dup) == 0) {
-      rqda_exe(sprintf("insert into attributes (name, status, date, owner) values ('%s', %i, %s, %s)", 
+      rqda_exe(sprintf("insert into attributes (name, status, date, owner) values ('%s', %i, %s, %s)",
                              name, 1, shQuote(date()), shQuote(.rqda$owner)))
     }
   }
@@ -266,7 +266,7 @@ DeleteAttrButton <- function(label=rqda_txt("Delete")) {
   DelAttB <- gbutton(label, handler=function(h, ...) {
 
     del <- gconfirm(
-      rqda_txt("Really delete the Attribute?"), 
+      rqda_txt("Really delete the Attribute?"),
       icon="question")
 
     if (isTRUE(del)) {
@@ -286,7 +286,7 @@ DeleteAttrButton <- function(label=rqda_txt("Delete")) {
 
 
       if (nrow(found) > 0 )
-        rqda_exe(sprintf("update fileAttr set status=0 where variable='%s'", 
+        rqda_exe(sprintf("update fileAttr set status=0 where variable='%s'",
                          sel))
 
       AttrNamesUpdate()
@@ -373,8 +373,8 @@ viewFileAttr <- function() {
 #' @title attributes
 #' @description Get the attributes of case or file.
 #' @usage
-#' getAttr(type = c("case", "file"), 
-#'         attrs = svalue(.rqda$.AttrNamesWidget), 
+#' getAttr(type = c("case", "file"),
+#'         attrs = svalue(.rqda$.AttrNamesWidget),
 #'         subset)
 #' showSubset(x, ...)
 #'
@@ -476,7 +476,7 @@ SetAttrClsButton <- function(label=gettext("Class", domain = "R-RQDA")) {
 
 setAttrType <- function() {
     Selected <- enc(svalue(.rqda$.AttrNamesWidget), encoding="UTF-8")
-    oldCls <- tryCatch(rqda_sel(sprintf("select class from attributes where status=1 and name='%s'", Selected))[1, 1], 
+    oldCls <- tryCatch(rqda_sel(sprintf("select class from attributes where status=1 and name='%s'", Selected))[1, 1],
                        error=function(e) {
                          rqda_exe("alter table attributes add column class text")
                          rqda_sel(sprintf("select class from attributes where status=1 and name='%s'", Selected))[1, 1]

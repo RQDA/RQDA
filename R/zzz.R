@@ -13,7 +13,7 @@
   ## cordinate of ViewFunWidget
 
   # if (is.null(getOption("widgetSize")))
-  #   options(widgetSize = c(gdkScreenWidth()*.5, 
+  #   options(widgetSize = c(gdkScreenWidth()*.5,
   #                          gdkScreenHeight()*.5))
 
 

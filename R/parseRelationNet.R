@@ -14,7 +14,7 @@
      mapDF$relation <- relation
      map <- igraph::graph.data.frame(mapDF)
      if (plot) {
-         igraph::tkplot(map, vertex.label=igraph::get.vertex.attribute(map, "name"), vertex.size=10, 
+         igraph::tkplot(map, vertex.label=igraph::get.vertex.attribute(map, "name"), vertex.size=10,
                          edge.label=igraph::get.edge.attribute(map, "relation"), edge.label.cex=0.8)
      }
      map

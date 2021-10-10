@@ -41,7 +41,7 @@ ImportFile <- function(paths, encoding = .rqda$encoding, con= .rqda$qdacon, ...)
       }
       if (write ) {
         rqda_exe(sprintf("insert into source (name, file, id, status, date, owner )
-                             values ('%s', '%s', %i, %i, '%s', '%s')", 
+                             values ('%s', '%s', %i, %i, '%s', '%s')",
                          Fname, content, nextid, 1, date(), .rqda$owner))
       }
     }
@@ -122,11 +122,11 @@ ViewFileFunHelper <- function(FileName, hightlight=TRUE, codingTable=.rqda$codin
   SelectedFileName <- FileName
   wnh <- size(.rqda$.root_rqdagui)
   if (grepl("apple", R.version$platform)) {
-    gw <- gwindow(title = SelectedFileName, parent = c(0, 0), 
+    gw <- gwindow(title = SelectedFileName, parent = c(0, 0),
                   width = getOption("widgetSize")[1], height = getOption("widgetSize")[2])
   } else {
-    gw <- gwindow(title = SelectedFileName, parent = wnh, ## .rqda$.root_rqdagui, 
-                  width = getOption("widgetSize")[1], 
+    gw <- gwindow(title = SelectedFileName, parent = wnh, ## .rqda$.root_rqdagui,
+                  width = getOption("widgetSize")[1],
                   height = getOption("widgetSize")[2]
     )
   }
@@ -137,7 +137,7 @@ ViewFileFunHelper <- function(FileName, hightlight=TRUE, codingTable=.rqda$codin
 
   mainIcon <- system.file("icon", "mainIcon.png", package = "RQDA")
   gw$set_icon(mainIcon)
-  # getToolkitWidget(gw)$Move(getOption("widgetCoordinate")[1], 
+  # getToolkitWidget(gw)$Move(getOption("widgetCoordinate")[1],
   #                           getOption("widgetCoordinate")[2])
   assign(".root_edit", gw, envir = .rqda)
   .root_edit <- get(".root_edit", .rqda)
@@ -148,7 +148,7 @@ ViewFileFunHelper <- function(FileName, hightlight=TRUE, codingTable=.rqda$codin
   tmp$widget$SetPixelsInsideWrap(5) ## so the text looks more confortable.
   assign(".openfile_gui", tmp, envir= .rqda)
   Encoding(SelectedFileName) <- "unknown"
-  IDandContent <- rqda_sel(sprintf("select id, file from source where name='%s'", 
+  IDandContent <- rqda_sel(sprintf("select id, file from source where name='%s'",
                                    enc(SelectedFileName))
   )
   content <- IDandContent$file
@@ -210,7 +210,7 @@ ViewFileFunHelper <- function(FileName, hightlight=TRUE, codingTable=.rqda$codin
       m2 <- buffer$GetMark(sprintf("%s.2", x))
       iter2 <- buffer$GetIterAtMark(m2)
       idx2 <- gtkTextIterGetOffset(iter2$iter)
-      InsertAnchor(.rqda$.openfile_gui, label = sprintf("<%s>", code), index = idx1, label.col=codeColor, 
+      InsertAnchor(.rqda$.openfile_gui, label = sprintf("<%s>", code), index = idx1, label.col=codeColor,
                    handler=TRUE, EndMarkName=sprintf("%s.2", x))
     }) ## end of sapply -> insert code label
 
@@ -271,7 +271,7 @@ EditFileFun <- function(FileNameWidget=.rqda$.fnames_rqda) {
     }
     else {
       tryCatch(dispose(.rqda$.root_edit), error=function(e) {})
-      gw <- gwindow(title=SelectedFileName, #parent=getOption("widgetCoordinate"), 
+      gw <- gwindow(title=SelectedFileName, #parent=getOption("widgetCoordinate"),
                     width = getOption("widgetSize")[1], height = getOption("widgetSize")[2]
       )
 
@@ -284,7 +284,7 @@ EditFileFun <- function(FileNameWidget=.rqda$.fnames_rqda) {
       assign(".root_edit2", gpanedgroup(horizontal = FALSE, container=.rqda$.root_edit), envir=.rqda)
       EdiFilB <- gbutton(gettext("Save File", domain = "R-RQDA"), container=.rqda$.root_edit2, handler=function(h, ...) {
         content <-  svalue(.rqda$.openfile_gui)
-        rqda_exe(sprintf("update source set file='%s', dateM='%s' where name='%s'", 
+        rqda_exe(sprintf("update source set file='%s', dateM='%s' where name='%s'",
                          enc(content, "UTF-8"), date(), enc(svalue(.rqda$.root_edit), "UTF-8"))) ## update source table
         if (nrow(mark_index) != 0) { ## only manipulate the coding when there is one.
           idx <- apply(mark_index, 1, FUN = function(x) {
@@ -299,7 +299,7 @@ EditFileFun <- function(FileNameWidget=.rqda$.fnames_rqda) {
           apply(idx, 2, FUN=function(x) {
             if (x[1] == x[2])  rqda_exe(sprintf("update coding set status=0 where rowid=%i", x[3])) else {
               Encoding(content) <- "UTF-8"
-              rqda_exe(sprintf("update coding set seltext='%s', selfirst=%i, selend=%i where rowid=%i", 
+              rqda_exe(sprintf("update coding set seltext='%s', selfirst=%i, selend=%i where rowid=%i",
                                enc(substr(content, x[1], x[2]), "UTF-8"), x[1], x[2], x[3]))
             }
           })## update the coding table (seltext, selfirst, selend), on the rowid (use rowid to name the marks)
@@ -318,7 +318,7 @@ EditFileFun <- function(FileNameWidget=.rqda$.fnames_rqda) {
           apply(idxS, 2, FUN=function(x) {
             if (x[1] == x[2])  rqda_exe(sprintf("update coding2 set status=0 where rowid=%i", x[3])) else {
               Encoding(content) <- "UTF-8"
-              rqda_exe(sprintf("update coding2 set seltext='%s', selfirst=%i, selend=%i where rowid=%i", 
+              rqda_exe(sprintf("update coding2 set seltext='%s', selfirst=%i, selend=%i where rowid=%i",
                                enc(substr(content, x[1], x[2]), "UTF-8"), x[1], x[2], x[3]))
             }
           })
@@ -371,7 +371,7 @@ EditFileFun <- function(FileNameWidget=.rqda$.fnames_rqda) {
         buffer$createTag(sprintf("%s.background", back.col), background = back.col)
 
 
-      mark_index <- rqda_sel(sprintf("select selfirst, selend, rowid from coding where fid=%i and status=1", 
+      mark_index <- rqda_sel(sprintf("select selfirst, selend, rowid from coding where fid=%i and status=1",
                                      IDandContent$id))
       if (nrow(mark_index) != 0) {## make sense only when there is coding there
         ClearMark(W , 0 , max(mark_index$selend), TRUE, FALSE)
@@ -397,7 +397,7 @@ EditFileFun <- function(FileNameWidget=.rqda$.fnames_rqda) {
         }) ## end of apply
       }
 
-      mark_idx_case<- rqda_sel(sprintf("select selfirst, selend, rowid from caselinkage where fid=%i and status=1", 
+      mark_idx_case<- rqda_sel(sprintf("select selfirst, selend, rowid from caselinkage where fid=%i and status=1",
                                        IDandContent$id))
       if (nrow(mark_idx_case) != 0) {
         ClearMark(W , 0 , max(mark_idx_case$selend), FALSE, TRUE)
@@ -411,7 +411,7 @@ EditFileFun <- function(FileNameWidget=.rqda$.fnames_rqda) {
           gtkTextMarkSetVisible(mark, TRUE)
         }) ## end of apply
       }
-      gSignalConnect(.rqda$.openfile_gui$buffer, "changed", 
+      gSignalConnect(.rqda$.openfile_gui$buffer, "changed",
                      function(h, ...) {
                        enabled(button$EdiFilB) <- TRUE
                      })
@@ -453,7 +453,7 @@ write.FileList <- function(FileList, encoding=.rqda$encoding, con=.rqda$qdacon, 
     }
     if (write ) {
       rqda_exe(sprintf("insert into source (name, file, id, status, date, owner )
-                             values ('%s', '%s', %i, %i, '%s', '%s')", 
+                             values ('%s', '%s', %i, %i, '%s', '%s')",
                        FnameUTF8, content, nextid, 1, date(), .rqda$owner))
     }
   }
@@ -515,7 +515,7 @@ getFileIds <- function(condition=c("unconditional", "case", "filecategory", "bot
     if (type == "selected") {
       selected <- svalue(.rqda$.fnames_rqda)
       ans <- rqda_sel(
-        sprintf("select id from source where status=1 and name in (%s)", 
+        sprintf("select id from source where status=1 and name in (%s)",
                 paste(paste("'", enc(selected), "'", sep=""), collapse=", ")
         ))$id
     } else {
@@ -538,7 +538,7 @@ getFileIds <- function(condition=c("unconditional", "case", "filecategory", "bot
     if (type == "selected") {
       selected <- svalue(.rqda$.FileofCase)
       ans <- rqda_sel(
-        sprintf("select id from source where status=1 and name in (%s)", 
+        sprintf("select id from source where status=1 and name in (%s)",
                 paste(paste("'", enc(selected), "'", sep=""), collapse=", ")
         ))$id
     } else {
@@ -549,12 +549,12 @@ getFileIds <- function(condition=c("unconditional", "case", "filecategory", "bot
         if (length(Selected)>1) {gmessage(gettext("select one file category only.", domain = "R-RQDA"), container=TRUE)
           stop("more than one file categories are selected", domain = "R-RQDA")
         }
-        caseid <- rqda_sel(sprintf("select id from cases where status=1 and name='%s'", 
+        caseid <- rqda_sel(sprintf("select id from cases where status=1 and name='%s'",
                                    enc(Selected)))$id
         fidofcase <- rqda_sel(sprintf("select fid from caselinkage where status=1 and caseid=%i", caseid))$fid
-        ##         caseid <- rqda_sel(sprintf("select id from cases where status=1 and name in (%s)", 
+        ##         caseid <- rqda_sel(sprintf("select id from cases where status=1 and name in (%s)",
         ##                                                  paste(paste("'", Selected, "'", sep=""), collapse=", ")))$id
-        ##         fidofcase <- rqda_sel(sprintf("select fid from caselinkage where status == 1 and caseid in (%s)", 
+        ##         fidofcase <- rqda_sel(sprintf("select fid from caselinkage where status == 1 and caseid in (%s)",
         ##                                                     paste(paste("'", caseid, "'", sep=""), collapse=", ")))$fid
         ## roll back to rev 90
         allfid <-  unconditionalFun(type=type)
@@ -568,7 +568,7 @@ getFileIds <- function(condition=c("unconditional", "case", "filecategory", "bot
     if (type == "selected") {
       selected <- svalue(.rqda$.FileofCat)
       ans <- rqda_sel(
-        sprintf("select id from source where status=1 and name in (%s)", 
+        sprintf("select id from source where status=1 and name in (%s)",
                 paste(paste("'", enc(selected), "'", sep=""), collapse=", ")
         ))$id
     }
@@ -588,10 +588,10 @@ getFileIds <- function(condition=c("unconditional", "case", "filecategory", "bot
 
   condition <- match.arg(condition)
   type <- match.arg(type)
-  fid <- switch(condition, 
-                unconditional=unconditionalFun(type=type), 
-                case=FidOfCaseFun(type=type), 
-                filecategory=FidOfCatFun(type=type), 
+  fid <- switch(condition,
+                unconditional=unconditionalFun(type=type),
+                case=FidOfCaseFun(type=type),
+                filecategory=FidOfCatFun(type=type),
                 both=bothFun(type=type)
   )
   if (is.null(fid)) fid <- integer(0)
@@ -719,7 +719,7 @@ viewPlainFile <- function(FileNameWidget=.rqda$.fnames_rqda) {
       SelectedFileName <- svalue(FileNameWidget)
 
       wnh <- size(.rqda$.root_rqdagui) ## size of the main window
-      gw <- gwindow(title = SelectedFileName, parent = wnh, ## .rqda$.root_rqdagui, 
+      gw <- gwindow(title = SelectedFileName, parent = wnh, ## .rqda$.root_rqdagui,
                     width = getOption("widgetSize")[1], height = getOption("widgetSize")[2])
 
       addHandlerKeystroke(gw, function(h, ...) {
@@ -734,7 +734,7 @@ viewPlainFile <- function(FileNameWidget=.rqda$.fnames_rqda) {
       tmp$widget$SetPixelsBelowLines(5) ## set the spacing
       tmp$widget$SetPixelsInsideWrap(5) ## so the text looks more confortable.
       Encoding(SelectedFileName) <- "unknown"
-      IDandContent <- rqda_sel(sprintf("select id, file from source where name='%s'", 
+      IDandContent <- rqda_sel(sprintf("select id, file from source where name='%s'",
                                        enc(SelectedFileName))
       )
       content <- IDandContent$file

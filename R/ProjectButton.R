@@ -13,8 +13,8 @@ NewProjectButton <- function(container) {
       Encoding(path) <- "UTF-8" ## path created by gfile is in utf8 encoding
       path <- gsub("\\\\", "/", path, fixed=TRUE)
       path <- gsub("/", "/ ", path, fixed=TRUE)
-      svalue(.rqda$.currentProj) <- gsub("/ ", "/", 
-                                         paste(strwrap(path, 60), collapse="\n"), 
+      svalue(.rqda$.currentProj) <- gsub("/ ", "/",
+                                         paste(strwrap(path, 60), collapse="\n"),
                                          fixed=TRUE)
       gtkWidgetSetSensitive(button$cloprob$widget, TRUE)
       gtkWidgetSetSensitive(button$BacProjB$widget, TRUE)
@@ -44,11 +44,11 @@ NewProjectButton <- function(container) {
 }
 
 OpenProjectButton <- function(container) {
-  gbutton(rqda_txt("Open Project"), 
+  gbutton(rqda_txt("Open Project"),
           container=container, handler=function(h, ...) {
     path <- gfile(
-      text = rqda_txt("Select a *.rqda file and click OK."), 
-      type="open", filter=list("rqda"=list(patterns = c("*.rqda")), 
+      text = rqda_txt("Select a *.rqda file and click OK."),
+      type="open", filter=list("rqda"=list(patterns = c("*.rqda")),
                                "All files" = list(patterns = c("*"))))
     if (!identical(path, character(0)))
     {
@@ -80,10 +80,10 @@ openProject <- function(path, updateGUI=FALSE) {
     tryCatch(CodeNamesUpdate(sortByTime=FALSE), error=function(e) {})
     tryCatch(FileNamesUpdate(sortByTime=FALSE), error=function(e) {})
     tryCatch(CaseNamesUpdate(), error=function(e) {})
-    tryCatch(UpdateTableWidget(Widget=.rqda$.CodeCatWidget, 
+    tryCatch(UpdateTableWidget(Widget=.rqda$.CodeCatWidget,
                                FromdbTable="codecat"), error=function(e) {})
     tryCatch(UpdateCodeofCatWidget(), error=function(e) {})
-    tryCatch(UpdateTableWidget(Widget=.rqda$.FileCatWidget, 
+    tryCatch(UpdateTableWidget(Widget=.rqda$.FileCatWidget,
                                FromdbTable="filecat"), error=function(e) {})
     tryCatch(UpdateFileofCatWidget(), error=function(e) {})
     tryCatch(AttrNamesUpdate(), error=function(e) {})
@@ -92,7 +92,7 @@ openProject <- function(path, updateGUI=FALSE) {
     Encoding(path) <- "UTF-8"
     path <- gsub("\\\\", "/", path)
     path <- gsub("/", "/ ", path)
-    svalue(.rqda$.currentProj) <- gsub("/ ", "/", paste(strwrap(path, 50), 
+    svalue(.rqda$.currentProj) <- gsub("/ ", "/", paste(strwrap(path, 50),
                                                       collapse="\n"))
     gtkWidgetSetSensitive(button$cloprob$widget, TRUE)
     gtkWidgetSetSensitive(button$BacProjB$widget, TRUE)
@@ -201,7 +201,7 @@ closeProjBF <- function() {
 }
 
 CloseProjectButton <- function(container) {
-  cloprob <- gbutton(rqda_txt("Close Project"), 
+  cloprob <- gbutton(rqda_txt("Close Project"),
                      container=container, handler=function(h, ...) {
     closeProjBF()
     closeProject(assignenv=.rqda)
@@ -212,7 +212,7 @@ CloseProjectButton <- function(container) {
 }
 
 BackupProjectButton <- function(container) {
-  BacProjB <- gbutton(rqda_txt("Backup Project"), 
+  BacProjB <- gbutton(rqda_txt("Backup Project"),
                       container=container, handler=function(h, ...) {
     backup_proj(con=.rqda$qdacon)
   }
@@ -223,7 +223,7 @@ BackupProjectButton <- function(container) {
 
 
 Proj_MemoButton <- function(label=rqda_txt("Project Memo"), container, ...) {
-  ## Each button a separate function -> more easy to debug, 
+  ## Each button a separate function -> more easy to debug,
   ## and the main function root_gui is shorter.
   ## The memo in dataset is UTF-8
   ## label of button
@@ -246,7 +246,7 @@ CleanProjButton <- function(label=rqda_txt("Clean Project"), container, ...) {
   gtkWidgetSetSensitive(button$CleProB$widget, FALSE)
 }
 
-CloseAllCodingsButton <- function(label=rqda_txt("Close All Codings"), 
+CloseAllCodingsButton <- function(label=rqda_txt("Close All Codings"),
                                   container, ...) {
 
   CloAllCodB <- gbutton(label, container=container, handler=function(h, ...) {

@@ -9,7 +9,7 @@ AddCaseButton <- function(label=gettext("Add", domain = "R-RQDA")) {
       idx <- as.character(which(.rqda$.CasesNamesWidget[] %in%  CaseName) -1)
       ## note the position, before manipulation of items
       path <-gtkTreePathNewFromString(idx)
-      gtkTreeViewScrollToCell(.rqda$.CasesNamesWidget$widget, 
+      gtkTreeViewScrollToCell(.rqda$.CasesNamesWidget$widget,
                               path, use.align=TRUE, row.align = 0.05)
     }
   }
@@ -26,9 +26,9 @@ DeleteCaseButton <- function(label=gettext("Delete", domain = "R-RQDA")) {
     if (isTRUE(del)) {
       SelectedCase <- svalue(.rqda$.CasesNamesWidget)
       Encoding(SelectedCase) <- "UTF-8"
-      caseid <- rqda_sel(sprintf("select id from cases where name='%s'", 
+      caseid <- rqda_sel(sprintf("select id from cases where name='%s'",
                                                 enc(SelectedCase)))$id
-      rqda_exe(sprintf("update cases set status=0 where name='%s'", 
+      rqda_exe(sprintf("update cases set status=0 where name='%s'",
                                       enc(SelectedCase)))
       ## set status in table freecode to 0
       rqda_exe(sprintf("update caselinkage set status=0 where caseid=%i", caseid))
@@ -87,17 +87,17 @@ MarkCaseFun <- function() {
         ## when selected no text, makes on sense to do anything.
         SelectedCase <- svalue(.rqda$.CasesNamesWidget)
         SelectedCase <- enc(SelectedCase, encoding="UTF-8")
-        currentCid <-  rqda_sel(sprintf("select id from cases where name='%s'", 
+        currentCid <-  rqda_sel(sprintf("select id from cases where name='%s'",
                                               SelectedCase))[, 1]
         SelectedFile <- svalue(.rqda$.root_edit)
         ##Encoding(SelectedFile) <- "UTF-8"
         SelectedFile <- enc(SelectedFile, encoding="UTF-8")
-        currentFid <-  rqda_sel(sprintf("select id from source where name='%s'", 
+        currentFid <-  rqda_sel(sprintf("select id from source where name='%s'",
                                               SelectedFile))[, 1]
         ## Query of caselinkage
         ExistLinkage <-  rqda_sel(sprintf("select rowid, selfirst, selend, status from caselinkage where caseid=%i and fid=%i and status=1", currentCid, currentFid))
-        DAT <- data.frame(caseid=currentCid, fid=currentFid, 
-                          selfirst=ans$start, selend=ans$end, status=1, 
+        DAT <- data.frame(caseid=currentCid, fid=currentFid,
+                          selfirst=ans$start, selend=ans$end, status=1,
                           owner=.rqda$owner, date=date(), memo="")
         if (nrow(ExistLinkage) == 0) {
           ## if there are no relevant caselinkage, write the caselinkage table
@@ -120,13 +120,13 @@ MarkCaseFun <- function() {
               del <- (del1 | del2)
               if (any(del)) {
                 Sel <- c(min(ExistLinkage$Start[del]), max(ExistLinkage$End[del]))
-                memo <- rqda_sel(sprintf("select memo from caselinkage where rowid in (%s)", 
+                memo <- rqda_sel(sprintf("select memo from caselinkage where rowid in (%s)",
                                                         paste(ExistLinkage$rowid[del], collapse=", ", sep="")))$memo
                 memo <- paste(memo, collapse="", sep="")
-                rqda_exe(sprintf("delete from caselinkage where rowid in (%s)", 
+                rqda_exe(sprintf("delete from caselinkage where rowid in (%s)",
                                                 paste(ExistLinkage$rowid[del], collapse=", ", sep="")))
-                DAT <- data.frame(caseid=currentCid, fid=currentFid, 
-                                  selfirst=Sel[1], selend=Sel[2], status=1, 
+                DAT <- data.frame(caseid=currentCid, fid=currentFid,
+                                  selfirst=Sel[1], selend=Sel[2], status=1,
                                   owner=.rqda$owner, date=date(), memo=memo)
                 success <- rqda_wrt("caselinkage", DAT)
                 if (!success) gmessage(gettext("Fail to write to database.", domain = "R-RQDA"))
@@ -207,7 +207,7 @@ prof_mat_Button <- function(label="prof_mat") {
 GetCaseNamesWidgetMenu <- function()
 {
   CaseNamesWidgetMenu <- list()
-  
+
   CaseNamesWidgetMenu[[1]] <- gaction(gettext("Add File(s)", domain = "R-RQDA"), handler =function(h, ...) {
     if (is_projOpen(envir = .rqda, conName = "qdacon", message = FALSE)) {
       SelectedCase <- svalue(.rqda$.CasesNamesWidget)
@@ -237,18 +237,18 @@ GetCaseNamesWidgetMenu <- function()
       }
     }
   })
-  
+
   CaseNamesWidgetMenu[[2]] <- gaction(gettext("Add New File to Selected Case", domain = "R-RQDA"), handler =function(h, ...) {
     AddNewFileFunOfCase()
   })
-  
+
   CaseNamesWidgetMenu[[3]] <- gaction(gettext("Case Memo", domain = "R-RQDA"), handler =function(h, ...) {
     if (is_projOpen(envir=.rqda, conName="qdacon")) {
       MemoWidget(gettext("Case", domain = "R-RQDA"), .rqda$.CasesNamesWidget, "cases")
       ## see CodeCatButton.R  for definition of MemoWidget
     }
   })
-  
+
   CaseNamesWidgetMenu[[4]] <- gaction(gettext("Show Cases with Memo Only", domain = "R-RQDA"), handler =function(h, ...) {
     if (is_projOpen(envir=.rqda, conName="qdacon")) {
       cnames <- rqda_sel("select name from cases where memo is not null")$name
@@ -256,7 +256,7 @@ GetCaseNamesWidgetMenu <- function()
       .rqda$.CasesNamesWidget[] <- cnames
     }
   })
-  
+
   CaseNamesWidgetMenu[[5]] <- gaction(gettext("Add/modify Attributes...", domain = "R-RQDA"), handler =function(h, ...) {
     if (is_projOpen(envir=.rqda, conName="qdacon")) {
       SelectedCase <- svalue(.rqda$.CasesNamesWidget)
@@ -267,13 +267,13 @@ GetCaseNamesWidgetMenu <- function()
       }
     }
   })
-  
+
   CaseNamesWidgetMenu[[6]] <- gaction(gettext("View Attributes", domain = "R-RQDA"), handler =function(h, ...) {
     if (is_projOpen(envir=.rqda, conName="qdacon")) {
       viewCaseAttr()
     }
   })
-  
+
   CaseNamesWidgetMenu[[7]] <- gaction(gettext("Export Case Attributes", domain = "R-RQDA"), handler =function(h, ...) {
     if (is_projOpen(envir=.rqda, conName="qdacon")) {
       fName <- gfile(type='save', filter=list("csv"=list(pattern=c("*.csv"))))
@@ -282,13 +282,13 @@ GetCaseNamesWidgetMenu <- function()
       write.csv(getAttr("case"), row.names=FALSE, file=fName, na="")
     }
   })
-  
+
   CaseNamesWidgetMenu[[8]] <- gaction(gettext("Sort All by Created Time", domain = "R-RQDA"), handler =function(h, ...) {
     CaseNamesUpdate(.rqda$.CasesNamesWidget, sortByTime = TRUE)
   })
-  
+
   search_lst <- vector("list", 4)
-  
+
   search_lst[[1]] <- gaction("Google", handler =function(h, ...) {
     KeyWord <- svalue(.rqda$.CasesNamesWidget)
     if (length(KeyWord) != 0) {
@@ -296,7 +296,7 @@ GetCaseNamesWidgetMenu <- function()
       browseURL(sprintf("http://www.google.com/search?q=%s", KeyWord))
     }
   })
-  
+
   search_lst[[2]] <- gaction("Yahoo", handler =function(h, ...) {
     KeyWord <- svalue(.rqda$.CasesNamesWidget)
     if (length(KeyWord) != 0) {
@@ -305,7 +305,7 @@ GetCaseNamesWidgetMenu <- function()
                         , KeyWord))
     }
   })
-  
+
   search_lst[[3]] <- gaction("Baidu", handler =function(h, ...) {
     KeyWord <- svalue(.rqda$.CasesNamesWidget)
     if (length(KeyWord) != 0) {
@@ -313,8 +313,8 @@ GetCaseNamesWidgetMenu <- function()
       browseURL(sprintf("http://www.baidu.com/s?wd=%s", paste("%", paste(charToRaw(KeyWord), sep="", collapse="%"), sep="", collapse="")))
     }
   })
-  
-  
+
+
   search_lst[[4]] <- gaction("Sogou", handler =function(h, ...) {
     KeyWord <- svalue(.rqda$.CasesNamesWidget)
     if (length(KeyWord) != 0) {
@@ -322,9 +322,9 @@ GetCaseNamesWidgetMenu <- function()
       browseURL(sprintf("http://www.sogou.com/sohu?query=%s", paste("%", paste(charToRaw(KeyWord), sep="", collapse="%"), sep="", collapse="")))
     }
   })
-  
+
   CaseNamesWidgetMenu[[gettext("Web Search", domain = "R-RQDA")]] <- search_lst
-  
+
   CaseNamesWidgetMenu
 }
 
@@ -333,13 +333,13 @@ GetCaseNamesWidgetMenu <- function()
 GetFileofCaseWidgetMenu <- function()
 {
   FileofCaseWidgetMenu <- list() ## not used yet.
-  
+
   FileofCaseWidgetMenu[[1]] <- gaction(gettext("Add To File Category ...", domain = "R-RQDA"), handler =function(h, ...) {
     if (is_projOpen(envir = .rqda, conName = "qdacon", message = FALSE)) {
       AddToFileCategory(Widget=.rqda$.FileofCase, updateWidget=FALSE)
     }
   })
-  
+
   FileofCaseWidgetMenu[[2]] <- gaction(gettext("Drop Selected File(s)", domain = "R-RQDA"), handler =function(h, ...) {
     if (is_projOpen(envir = .rqda, conName = "qdacon", message = FALSE)) {
       FileOfCat <- svalue(.rqda$.FileofCase)
@@ -364,7 +364,7 @@ GetFileofCaseWidgetMenu <- function()
         }
     }
   })
-  
+
   FileofCaseWidgetMenu[[3]] <- gaction(gettext("Delete Selected File(s)", domain = "R-RQDA"), handler =function(h, ...) {
     if (is_projOpen(envir=.rqda, conName="qdacon")) {
       SelectedFile <- svalue(.rqda$.FileofCase)
@@ -379,15 +379,15 @@ GetFileofCaseWidgetMenu <- function()
       .rqda$.FileofCase[] <- setdiff(.rqda$.FileofCase[], SelectedFile)
     }
   })
-  
+
   FileofCaseWidgetMenu[[4]] <- gaction(gettext("Edit Selected File", domain = "R-RQDA"), handler =function(h, ...) {
     EditFileFun(FileNameWidget=.rqda$.FileofCase)
   })
-  
+
   FileofCaseWidgetMenu[[5]] <- gaction(gettext("File Memo", domain = "R-RQDA"), handler =function(h, ...) {
     MemoWidget(gettext("File", domain = "R-RQDA"), .rqda$.FileofCase, "source")
   })
-  
+
   FileofCaseWidgetMenu[[6]] <- gaction(gettext("Rename selected File", domain = "R-RQDA"), handler =function(h, ...) {
     if (is_projOpen(envir=.rqda, conName="qdacon")) {
       selectedFN <- svalue(.rqda$.FileofCase)
@@ -405,7 +405,7 @@ GetFileofCaseWidgetMenu <- function()
         }
       }}
   })
-  
+
   FileofCaseWidgetMenu[[7]] <- gaction(gettext("Search Files within Selected Case", domain = "R-RQDA"), handler =function(h, ...) {
     if (is_projOpen(envir = .rqda, conName = "qdacon", message = FALSE)) {
       pattern <- ifelse(is.null(.rqda$lastsearch), "file like '%%'", .rqda$lastsearch)
@@ -417,9 +417,9 @@ GetFileofCaseWidgetMenu <- function()
       }
     }
   })
-  
+
   show_lst <- vector("list", 3)
-  
+
   show_lst[[1]] <- gaction(gettext("Show All by Sorted by Imported Time", domain = "R-RQDA"), handler =function(h, ...) {
     ## UpdateFileofCaseWidget()
     if (is_projOpen(envir=.rqda, conName="qdacon")) {
@@ -427,29 +427,29 @@ GetFileofCaseWidgetMenu <- function()
       FileNameWidgetUpdate(FileNamesWidget=.rqda$.FileofCase, FileId=fid)
     }
   })
-  
+
   show_lst[[2]] <- gaction(gettext("Show Coded Files Only (sorted)", domain = "R-RQDA"), handler =function(h, ...) {
     if (is_projOpen(envir=.rqda, conName="qdacon")) {
       fid <- getFileIds(condition="case", type="coded")
       FileNameWidgetUpdate(FileNamesWidget=.rqda$.FileofCase, FileId=fid)
     }
   })
-  
+
   show_lst[[3]] <- gaction(gettext("Show Uncoded Files Only (sorted)", domain = "R-RQDA"), handler =function(h, ...) {
     if (is_projOpen(envir=.rqda, conName="qdacon")) {
       fid <- getFileIds(condition="case", type="uncoded")
       FileNameWidgetUpdate(FileNamesWidget=.rqda$.FileofCase, FileId=fid)
     }
   })
-  
+
   FileofCaseWidgetMenu[[gettext("Show ...", domain = "R-RQDA")]] <- show_lst
-  
+
   FileofCaseWidgetMenu[[9]] <- gaction(gettext("Show Selected File Property", domain = "R-RQDA"), handler =function(h, ...) {
     if (is_projOpen(envir = .rqda, conName = "qdacon", message = FALSE)) {
       ShowFileProperty(Fid=getFileIds("case", "selected"))
     }
   })
-  
+
   FileofCaseWidgetMenu
 }
 

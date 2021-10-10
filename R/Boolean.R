@@ -17,7 +17,7 @@ getCodingsByOne <- function(cid, fid=NULL, codingTable=c("coding", "coding2")) {
 }
 
 #' @method print codingsByOne
-#' @export 
+#' @export
 print.codingsByOne <- function(x, ...)
 {
     ComputeCallbackFun <- function(FileName, rowid) {
@@ -46,18 +46,18 @@ print.codingsByOne <- function(x, ...)
         Nfiles <- length(fid)
         Ncodings <- nrow(x)
         if(Ncodings == 1) {
-            title <- sprintf(ngettext(Nfiles, 
-                                      "1 coding from %i file", 
+            title <- sprintf(ngettext(Nfiles,
+                                      "1 coding from %i file",
                                       "1 coding from %i files", domain = "R-RQDA"), Nfiles)
         } else {
-            title <- sprintf(ngettext(Nfiles, 
-                                      "%i codings from %i file", 
+            title <- sprintf(ngettext(Nfiles,
+                                      "%i codings from %i file",
                                       "%i codings from %i files", domain = "R-RQDA"), Ncodings, Nfiles)
         }
-        tryCatch(eval(parse(text = sprintf("dispose(.rqda$.codingsOf%s)", 
+        tryCatch(eval(parse(text = sprintf("dispose(.rqda$.codingsOf%s)",
                             "codingsByone"))), error = function(e) {
                             })
-        .gw <- gwindow(title = title, parent = getOption("widgetCoordinate"), 
+        .gw <- gwindow(title = title, parent = getOption("widgetCoordinate"),
                        width = getOption("widgetSize")[1], height = getOption("widgetSize")[2])
 
         addHandlerKeystroke(.gw, function(h, ...) {
@@ -85,7 +85,7 @@ print.codingsByOne <- function(x, ...)
             lab <- gtkLabelNew(gettext("Back", domain = "R-RQDA"))
             widget <- gtkEventBoxNew()
             widget$Add(lab)
-            gSignalConnect(widget, "button-press-event", 
+            gSignalConnect(widget, "button-press-event",
                            ComputeCallbackFun(x[["filename"]], as.numeric(x[["rowid"]])))
             .retreivalgui$widget$addChildAtAnchor(widget, anchor)
             widget$showAll()
@@ -114,7 +114,7 @@ andHelper <- function(d1, d2) {
     ans
 }
 
-#' @export 
+#' @export
 and <- function(CT1, CT2)
 ### much faster than previous version of and()
 ### can extend to andSmart to handle more codes at the same time
@@ -123,7 +123,7 @@ and <- function(CT1, CT2)
     fid <- unique(intersect(CT1$fid, CT2$fid))
     if (length(fid) > 0) {
         for (j in fid) {
-            tmp <- andHelper(subset(CT1, fid == j, c("index1", "index2")), 
+            tmp <- andHelper(subset(CT1, fid == j, c("index1", "index2")),
                                     subset(CT2, fid == j, c("index1", "index2"))
                                     )
             if (nrow(tmp)>0) {
@@ -166,14 +166,14 @@ orHelper <- function(d1, d2) {
     ans
 }
 
-#' @export 
+#' @export
 or <- function(CT1, CT2)
 {
     ans <- data.frame(stringsAsFactors=FALSE)
     fid <- unique(union(CT1$fid, CT2$fid))
     if (length(fid) > 0) {
         for (j in fid) {
-            tmp <- orHelper(subset(CT1, fid == j, c("index1", "index2")), 
+            tmp <- orHelper(subset(CT1, fid == j, c("index1", "index2")),
                             subset(CT2, fid == j, c("index1", "index2"))
                             )
             if (nrow(tmp)>0) {
@@ -218,14 +218,14 @@ notHelper <- function(d1, d2) {
     ans
 }
 
-#' @export 
+#' @export
 not <- function(CT1, CT2)
 {
     ans <- data.frame(stringsAsFactors=FALSE)
     fid <- unique(CT1$fid)
     if (length(fid) > 0) {
         for (j in fid) {
-            tmp <- notHelper(subset(CT1, fid == j, c("index1", "index2")), 
+            tmp <- notHelper(subset(CT1, fid == j, c("index1", "index2")),
                              subset(CT2, fid == j, c("index1", "index2"))
                             )
             if (nrow(tmp)>0) {
@@ -318,8 +318,8 @@ not <- function(CT1, CT2)
 ##   }
 
 ##   if ((length(fid) == 0) || is.null(ans)) {
-##     ans <- data.frame("rowid"=integer(0), "fid"=integer(0), 
-##                       "filename"=character(0), "index1"=integer(0), 
+##     ans <- data.frame("rowid"=integer(0), "fid"=integer(0),
+##                       "filename"=character(0), "index1"=integer(0),
 ##                       "index2"=integer(0), "coding"=character(0))
 ##   }
 ##   class(ans) <- c("codingsByOne", "data.frame")
@@ -349,7 +349,7 @@ not <- function(CT1, CT2)
 ##           dis <- sapply(Relations, function(x) x$Distance)
 ##           if (all(dis>0)) {
 ##             ## if there are no overlap in any kind, the result is From + Exist
-##             ans <- rbind(From[, c("rowid", "fid", "filename", "index1", "index2", "coding"), drop=FALSE], 
+##             ans <- rbind(From[, c("rowid", "fid", "filename", "index1", "index2", "coding"), drop=FALSE],
 ##                          Exist[, c("rowid", "fid", "filename", "index1", "index2", "coding"), drop=FALSE])
 ##           } else {
 ##             idx0 <- which(dis == 0)
@@ -357,8 +357,8 @@ not <- function(CT1, CT2)
 ##             From["coding"] <- paste(Exist$coding[idx0][rank(Exist$index1[idx0])], collapse="")
 ##             From["index1"] <- min(index3)
 ##             From["index2"] <- max(index3)
-##             ans <- rbind(From[, c("rowid", "fid", "filename", "index1", "index2", "coding"), drop=FALSE], 
-##                          Exist[which(dis>0), 
+##             ans <- rbind(From[, c("rowid", "fid", "filename", "index1", "index2", "coding"), drop=FALSE],
+##                          Exist[which(dis>0),
 ##                                c("rowid", "fid", "filename", "index1", "index2", "coding"), drop=FALSE]
 ##                          )
 ##           }
@@ -376,8 +376,8 @@ not <- function(CT1, CT2)
 ##             tt <-   rqda_sel(sprintf("select file from source where id == '%i'", From$fid))[1, 1]
 ##             Encoding(tt) <- "UTF-8"  ## fulltext of the file
 ##             Sel <- c(min(Exist$Start[del]), max(Exist$End[del])) ## index to get the new coding
-##             ans <- rbind(ExistN, 
-##                          data.frame(rowid=From$rowid, fid=From$fid, filename=From$filename, 
+##             ans <- rbind(ExistN,
+##                          data.frame(rowid=From$rowid, fid=From$fid, filename=From$filename,
 ##                                     index1=Sel[1], index2=Sel[2], coding=substr(tt, Sel[1], Sel[2])
 ##                                     )
 ##                          )
@@ -432,7 +432,7 @@ not <- function(CT1, CT2)
 ##     } else { ## else1
 ##       for (i in 1:nrow(CT1)) {
 ##         relAll <- apply(CT2, 1, function(x)
-##                         relation(CT1[i, c("index1", "index2"), drop=TRUE], 
+##                         relation(CT1[i, c("index1", "index2"), drop=TRUE],
 ##                                  as.numeric(x[c("index1", "index2")]))
 ##                         ) ## end of apply
 ##         Relation <- sapply(relAll, function(x) x$Relation)
@@ -509,8 +509,8 @@ not <- function(CT1, CT2)
 ##       ans$coding <- txt
 ##     }
 ##   } else {
-##     ans <- data.frame("rowid"=integer(0), "fid"=integer(0), 
-##                       "filename"=character(0), "index1"=integer(0), 
+##     ans <- data.frame("rowid"=integer(0), "fid"=integer(0),
+##                       "filename"=character(0), "index1"=integer(0),
 ##                       "index2"=integer(0), "coding"=character(0))
 ##   }
 ##   class(ans) <- c("codingsByOne", "data.frame")

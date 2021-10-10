@@ -16,7 +16,7 @@ insertCoding <- function(fid, cid, start, end, fulltext) {
   DAT$seltext <- enc(DAT$seltext)
 
   if (nrow(Exist1) == 0) {
-    try(rqda_exe(sprintf("insert into coding (cid, fid, seltext, selfirst, selend, status, owner, date) values (%s, %s, '%s', %s, %s, %s, '%s', '%s') ", 
+    try(rqda_exe(sprintf("insert into coding (cid, fid, seltext, selfirst, selend, status, owner, date) values (%s, %s, '%s', %s, %s, %s, '%s', '%s') ",
                            DAT$cid, DAT$fid, DAT$seltext, DAT$selfirst, DAT$selend, 1, .rqda$owner, as.character(date()))), silent=TRUE)
   } else {
     Exist <- Exist1[, c("selfirst", "selend", "rowid")]
@@ -29,7 +29,7 @@ insertCoding <- function(fid, cid, start, end, fulltext) {
       Exist$End <- sapply(Relations, FUN=function(x)x$UnionIndex[2])
       if (all(Exist$Relation == "proximity")) {
         rowid <- NextRowId("coding")
-        try(rqda_exe(sprintf("insert into coding (cid, fid, seltext, selfirst, selend, status, owner, date) values (%s, %s, '%s', %s, %s, %s, '%s', '%s') ", 
+        try(rqda_exe(sprintf("insert into coding (cid, fid, seltext, selfirst, selend, status, owner, date) values (%s, %s, '%s', %s, %s, %s, '%s', '%s') ",
                               DAT$cid, DAT$fid, DAT$seltext, DAT$selfirst, DAT$selend, 1, .rqda$owner, as.character(date()))), silent=TRUE)
       } else {
         del1 <-(Exist$Relation == "inclusion" & (is.na(Exist$WhichMin) | Exist$WhichMin == 2))
@@ -46,14 +46,14 @@ insertCoding <- function(fid, cid, start, end, fulltext) {
           DAT <- data.frame(cid=cid, fid=fid, seltext=substr(fulltext, Sel[1] + 1, Sel[2]), selfirst=Sel[1], selend=Sel[2], status=1, owner=.rqda$owner, date=date(), memo=memo, stringsAsFactors=FALSE)
           DAT$seltext <- enc(DAT$seltext)
           rowid <- NextRowId("coding")
-          try(rqda_exe(sprintf("insert into coding (cid, fid, seltext, selfirst, selend, status, owner, date, memo) values (%s, %s, '%s', %s, %s, %s, '%s', '%s', '%s') ", 
+          try(rqda_exe(sprintf("insert into coding (cid, fid, seltext, selfirst, selend, status, owner, date, memo) values (%s, %s, '%s', %s, %s, %s, '%s', '%s', '%s') ",
                                 DAT$cid, DAT$fid, DAT$seltext, DAT$selfirst, DAT$selend, 1, .rqda$owner, as.character(date()), DAT$memo)), silent=TRUE)
         }
       }
     }
   }
 }
-  
+
 codingBySearchOneFile <- function(pattern, fid, cid, seperator, concatenate, ...) {
   ## auto coding: when seperator is \n, each paragraph is a analysis unit
   ## by providing approperiate seperator, it allows flexible control on the unit of autocoding
@@ -70,7 +70,7 @@ codingBySearchOneFile <- function(pattern, fid, cid, seperator, concatenate, ...
             removeidx <- which(diff(idx) == 1)
         else
             removeidx <- NULL
-        
+
         if (length(removeidx) > 0) {
           selfirst = idx1[idx[-(removeidx + 1)]]
           elend   = idx2[idx[-removeidx]]
@@ -78,7 +78,7 @@ codingBySearchOneFile <- function(pattern, fid, cid, seperator, concatenate, ...
           selfirst = idx1[idx]
           selend   = idx2[idx]
         }
-        
+
         for (c in cid)
           for (i in (1:length(selfirst)))
             insertCoding (fid=fid, cid=c, start=selfirst[i], end=selend[i], txt)

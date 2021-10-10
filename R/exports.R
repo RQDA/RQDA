@@ -43,7 +43,7 @@ exportCodedFile <- function(file, fid, closeAfter=TRUE) {
     ans <- paste(ans, collapse="|", sep="")
     ans <-gsub("\n", "<br>", ans)
     file <- file(file, open = "w", encoding = "UTF-8")
-    cat("<HEAD><META HTTP-EQUIV='CONTENT-TYPE' CONTENT='text/html; charset=UTF-8'><TITLE>Coded file exported by RQDA.</TITLE><META NAME='AUTHOR' CONTENT='RQDA'>", 
+    cat("<HEAD><META HTTP-EQUIV='CONTENT-TYPE' CONTENT='text/html; charset=UTF-8'><TITLE>Coded file exported by RQDA.</TITLE><META NAME='AUTHOR' CONTENT='RQDA'>",
         file = file, append = FALSE)
      cat(sprintf("Created by <a href='http://rqda.r-forge.r-project.org/'>RQDA</a> at %s<br><br>\n", Sys.time()), file=file, append=TRUE)
     cat(ans, file=file, append=TRUE)

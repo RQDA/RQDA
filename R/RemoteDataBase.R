@@ -5,55 +5,55 @@
 ##     assign("qdacon", con , envir=.rqda)
 ##     if (dbExistsTable(con, "source")) dbRemoveTable(con, "source")
 ##     ## interview record
-##     rqda_exe("create table source (name text, id integer, 
-##                                            file text, memo text, 
+##     rqda_exe("create table source (name text, id integer,
+##                                            file text, memo text,
 ##                                            owner text, date text, dateM text, status integer, rowid integer NOT NULL primary key AUTO_INCREMENT)")
 ##     ## dateM means modified date
 ##     if (dbExistsTable(con, "freecode")) dbRemoveTable(con, "freecode")
 ##     ## list of free codes
-##     rqda_exe("create table freecode  (name text, memo text, 
-##                                               owner text, date text, dateM text, 
+##     rqda_exe("create table freecode  (name text, memo text,
+##                                               owner text, date text, dateM text,
 ##                                               id integer, status integer, color text, rowid integer NOT NULL primary key AUTO_INCREMENT)")
 ##     if (dbExistsTable(con, "treecode")) dbRemoveTable(con, "treecode")
 ##     ## tree-like strcuture of code (relationship between code and code-category[codecat])
-##     rqda_exe("create table treecode  (cid integer, catid integer, 
-##                                               date text, dateM text, 
+##     rqda_exe("create table treecode  (cid integer, catid integer,
+##                                               date text, dateM text,
 ##                                               memo text, status integer, owner text, rowid integer NOT NULL primary key AUTO_INCREMENT)")
 ##     if (dbExistsTable(con, "treefile")) dbRemoveTable(con, "treefile")
 ##     ## tree-like structure of interview record  (relationship between file and file category [filecat])
-##     rqda_exe("create table treefile  (fid integer, catid integer, 
-##                                               date text, dateM text, 
+##     rqda_exe("create table treefile  (fid integer, catid integer,
+##                                               date text, dateM text,
 ##                                               memo text, status integer, owner text, rowid integer NOT NULL primary key AUTO_INCREMENT)")
 ##     if (dbExistsTable(con, "filecat")) dbRemoveTable(con, "filecat")
 ##     ## file category
-##     rqda_exe("create table filecat  (name text, fid integer, catid integer, owner text, 
+##     rqda_exe("create table filecat  (name text, fid integer, catid integer, owner text,
 ##                                              date text, dateM text, memo text, status integer, rowid integer NOT NULL primary key AUTO_INCREMENT)")
 ##     if (dbExistsTable(con, "codecat")) dbRemoveTable(con, "codecat")
 ##     ## code category
-##     rqda_exe("create table codecat  (name text, cid integer, catid integer, owner text, date text, 
+##     rqda_exe("create table codecat  (name text, cid integer, catid integer, owner text, date text,
 ##                                              dateM text, memo text, status integer, rowid integer NOT NULL primary key AUTO_INCREMENT)")
 ##     if (dbExistsTable(con, "coding")) dbRemoveTable(con, "coding")
 ##     ## coding: code and its coded text chunks
-##     rqda_exe("create table coding  (cid integer, fid integer, seltext text, 
-##                                             selfirst real, selend real, status integer, 
+##     rqda_exe("create table coding  (cid integer, fid integer, seltext text,
+##                                             selfirst real, selend real, status integer,
 ##                                             owner text, date text, memo text, rowid integer NOT NULL primary key AUTO_INCREMENT)")
 ##     if (dbExistsTable(con, "coding2")) dbRemoveTable(con, "coding2")
 ##     ## second coding
-##     rqda_exe("create table coding2  (cid integer, fid integer, seltext text, 
-##                                             selfirst real, selend real, status integer, 
+##     rqda_exe("create table coding2  (cid integer, fid integer, seltext text,
+##                                             selfirst real, selend real, status integer,
 ##                                             owner text, date text, memo text, rowid integer NOT NULL primary key AUTO_INCREMENT)")
 ##     if (dbExistsTable(con, "project")) dbRemoveTable(con, "project")
-##     rqda_exe("create table project  (databaseversion text, date text, dateM text, 
+##     rqda_exe("create table project  (databaseversion text, date text, dateM text,
 ##                                              memo text, about text, imageDir text, rowid integer NOT NULL primary key AUTO_INCREMENT)")
-##     rqda_exe(sprintf("insert into project (databaseversion, date, about, memo) values ('0.2.2', '%s', 
+##     rqda_exe(sprintf("insert into project (databaseversion, date, about, memo) values ('0.2.2', '%s',
 ##                             'Database created by RQDA (http://rqda.r-forge.r-project.org/)', '')", date()))
 ##     if (dbExistsTable(con, "cases")) dbRemoveTable(con, "cases")
-##     rqda_exe("create table cases  (name text, memo text, 
-##                                            owner text, date text, dateM text, 
+##     rqda_exe("create table cases  (name text, memo text,
+##                                            owner text, date text, dateM text,
 ##                                            id integer, status integer, rowid integer NOT NULL primary key AUTO_INCREMENT)")
 ##     if (dbExistsTable(con, "caselinkage")) dbRemoveTable(con, "caselinkage")
-##     rqda_exe("create table caselinkage  (caseid integer, fid integer, 
-##                                                 selfirst real, selend real, status integer, 
+##     rqda_exe("create table caselinkage  (caseid integer, fid integer,
+##                                                 selfirst real, selend real, status integer,
 ##                                             owner text, date text, memo text, rowid integer NOT NULL primary key AUTO_INCREMENT)")
 
 ##     if (dbExistsTable(con, "attributes")) dbRemoveTable(con, "attributes")
