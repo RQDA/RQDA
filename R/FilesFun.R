@@ -7,7 +7,7 @@ ImportFile <- function(paths, encoding = .rqda$encoding, con= .rqda$qdacon,...) 
     Fname <- gsub("\\.[[:alpha:]]*$","",basename(path))
     FnameUTF8 <- iconv(Fname,to="UTF-8")
     ## remove the suffix such as .txt
-    if ( Fname != "" ) {
+    if (Fname != "" ) {
       file_con <- file(path,open="r")
       if (isTRUE(.rqda$BOM)) seek(file_con,3)
       content <- readLines(file_con,warn=FALSE,encoding=encoding)
@@ -55,7 +55,7 @@ FileNamesUpdate <- function(FileNamesWidget=.rqda$.fnames_rqda,sortByTime=TRUE,d
   ##update file names list in the FileNamesWidget
   wopt <- options(warn=-2)
   on.exit(options(wopt))
-  source <- rqda_sel( "select name, date, id from source where status=1 order by lower(name)")
+  source <- rqda_sel("select name, date, id from source where status=1 order by lower(name)")
   if (nrow(source) != 0) {
     fnames <- source$name
     Encoding(fnames) <- "UTF-8"
@@ -350,7 +350,7 @@ EditFileFun <- function(FileNameWidget=.rqda$.fnames_rqda) {
       gtkWidgetModifyFont(tmp$widget,font)
       assign(".openfile_gui", tmp, envir= .rqda)
       Encoding(SelectedFileName) <- "unknown"
-      IDandContent <- rqda_sel( sprintf("select id, file from source where name='%s'",enc(SelectedFileName)))
+      IDandContent <- rqda_sel(sprintf("select id, file from source where name='%s'",enc(SelectedFileName)))
       content <- IDandContent$file
       Encoding(content) <- "UTF-8"
       W <- get(".openfile_gui", .rqda)
@@ -486,7 +486,7 @@ FileNameWidgetUpdate <- function(FileNamesWidget=.rqda$.fnames_rqda,sort=TRUE,de
   ##update file names list in the FileNamesWidget
   wopt <- options(warn=-2)
   on.exit(options(wopt))
-  source <- rqda_sel( "select name, date, id from source where status=1")
+  source <- rqda_sel("select name, date, id from source where status=1")
   if (nrow(source) == 0) {
     fnames <- NULL
   } else {

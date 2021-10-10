@@ -260,7 +260,7 @@ UpgradeTables <- function() {
 }
 
 open_proj <- function(path,conName="qdacon",assignenv=.rqda,...) {
-  tryCatch( { con <- get(conName,assignenv)
+  tryCatch({ con <- get(conName,assignenv)
   pkg <- attr(attr(con,"class"),'package')
   Open <- getFunction("dbIsValid",
                       where=sprintf("package:%s",pkg))(con)
@@ -354,8 +354,8 @@ ProjectMemoWidget <- function() {
 
     # get size of root gui as width and height
     wdh <- size(.rqda$.root_rqdagui)
-    head_s <- c( wdh["width"], wdh["height"] * .1)
-    body_s <- c( wdh["width"], wdh["height"] * .9)
+    head_s <- c(wdh["width"], wdh["height"] * .1)
+    body_s <- c(wdh["width"], wdh["height"] * .9)
 
     gw <- gwindow(title="Project Memo",
                   width = getOption("widgetSize")[1],

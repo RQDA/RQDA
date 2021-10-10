@@ -60,7 +60,7 @@ OpenJournalButton <- function(label=gettext("Open", domain = "R-RQDA"))
 JournalNamesUpdate <- function(Widget=.rqda$.JournalNamesWidget,decreasing=FALSE,...)
 {
   if (is_projOpen()) {
-    journal <- rqda_sel( "select name from journal where status=1")
+    journal <- rqda_sel("select name from journal where status=1")
     if (nrow(journal) == 0) {
       journal <- NULL
     } else {
@@ -85,8 +85,8 @@ AddNewJournalFun <- function() {
         
         # get size of root gui as width and height
         wdh <- size(.rqda$.root_rqdagui)
-        head_s <- c( wdh["width"], wdh["height"] * .1)
-        body_s <- c( wdh["width"], wdh["height"] * .9)
+        head_s <- c(wdh["width"], wdh["height"] * .1)
+        body_s <- c(wdh["width"], wdh["height"] * .9)
 
         mainIcon <- system.file("icon", "mainIcon.png", package = "RQDA")
         gw$set_icon(mainIcon)
@@ -156,7 +156,7 @@ ViewJournalWidget <- function(prefix="Journal",widget=.rqda$.JournalNamesWidget,
         font <- pangoFontDescriptionFromString(.rqda$font)
         gtkWidgetModifyFont(tmp$widget,font)## set the default fontsize
         assign(sprintf(".%smemoW",prefix),tmp,envir=.rqda)
-        prvcontent <- rqda_sel( sprintf("select journal from %s where name='%s'",dbTable,enc(Selected)))[1,1]
+        prvcontent <- rqda_sel(sprintf("select journal from %s where name='%s'",dbTable,enc(Selected)))[1,1]
         if (is.na(prvcontent)) prvcontent <- ""
         Encoding(prvcontent) <- "UTF-8"
         W <- get(sprintf(".%smemoW",prefix),envir=.rqda)
@@ -166,7 +166,7 @@ ViewJournalWidget <- function(prefix="Journal",widget=.rqda$.JournalNamesWidget,
         })
         addHandlerUnrealize(get(sprintf(".%smemo",prefix),envir=.rqda),handler = function(h,...) {
             withinWidget <- svalue(get(sprintf(".%smemoW",prefix),envir=.rqda))
-            InRQDA <- rqda_sel( sprintf("select journal from %s where name='%s'",dbTable, enc(Selected)))[1, 1]
+            InRQDA <- rqda_sel(sprintf("select journal from %s where name='%s'",dbTable, enc(Selected)))[1, 1]
             if (isTRUE(all.equal(withinWidget,InRQDA))) {
                 return(FALSE) } else {
                     val <- gconfirm(gettext("The Journal has been changed. Close anyway?", domain = "R-RQDA"),container=TRUE)

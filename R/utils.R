@@ -5,12 +5,12 @@ rename <- function(from,to,table=c("source","freecode","cases","codecat","fileca
   ## source is the file name, freecode is the free code name
   table <- match.arg(table)
   if (to != "") { ## if to is "", makes no sense to rename
-      exists <- rqda_sel( sprintf("select * from %s where name = '%s' ",table, enc(to)))
+      exists <- rqda_sel(sprintf("select * from %s where name = '%s' ",table, enc(to)))
       ## should check it there is any dupliation in the table
       if (nrow(exists) > 0) {
           gmessage(gettext("The new name is duplicated. Please use another new name.", domain = "R-RQDA"),container=TRUE)
       } else {
-          rqda_exe( sprintf("update '%s' set name = '%s' where name = '%s' ",table, enc(to), enc(from)))
+          rqda_exe(sprintf("update '%s' set name = '%s' where name = '%s' ",table, enc(to), enc(from)))
       }
   }
 }
@@ -39,7 +39,7 @@ UpdateWidget <- function(widget, from, to=NULL) {
 
 
     # was length > 0 which will throw an error
-    if ( length(idx) > 1 ) {
+    if (length(idx) > 1 ) {
       path <- gtkTreePathNewFromString(idx)
 
       gtkTreeViewScrollToCell(get(widget, envir=.rqda)$widget,
@@ -113,8 +113,8 @@ MemoWidget <- function(prefix,widget,dbTable) {
 
       # get size of root gui as width and height
       wdh <- size(.rqda$.root_rqdagui)
-      head_s <- c( wdh["width"], wdh["height"] * .1)
-      body_s <- c( wdh["width"], wdh["height"] * .9)
+      head_s <- c(wdh["width"], wdh["height"] * .1)
+      body_s <- c(wdh["width"], wdh["height"] * .9)
 
 
       CloseYes <- function(currentCode) {
@@ -153,7 +153,7 @@ MemoWidget <- function(prefix,widget,dbTable) {
         IfCont <- CloseYes(currentCode=prvSelected)}
 
       ## if not open or the same.
-      if ( inherits(IsOpen,"simpleError") || IfCont) {
+      if (inherits(IsOpen,"simpleError") || IfCont) {
         tryCatch(
           eval(parse(text=sprintf("dispose(.rqda$.%smemo)",prefix))),
           error=function(e) {})
@@ -317,7 +317,7 @@ print.Info4Widget <- function(x, ...) {
 getCodingTable <- function() {
   ## test when any table is empty
   ## http://archives.postgresql.org/pgsql-sql/2004-01/msg00160.php
-  if ( is_projOpen()) {
+  if (is_projOpen()) {
    ## Codings <- rqda_sel("select freecode.name as codename, freecode.id as cid,
    ##         coding.cid as cid2,coding.fid as fid,source.id as fid2, source.name as filename,
    ##         coding.selend - coding.selfirst as CodingLength,coding.selend, coding.selfirst
@@ -343,7 +343,7 @@ getCodingTable <- function() {
 
 #' @export
 summaryCodings <-function(byFile=FALSE,...) {
-  if ( is_projOpen() ) {
+  if (is_projOpen() ) {
     Codings <- getCodingTable()
     if (nrow(Codings)>0) {
       NumOfCoding <- table(Codings$codename,...) ## how many coding for each code
@@ -442,7 +442,7 @@ searchFiles <- function(pattern,content=FALSE,Fid=NULL,Widget=NULL,is.UTF8=FALSE
 ##searchFiles("file like '%Xin Min Wan Bao%'")
 ##searchFiles("name like '%Wu Quan Fa%'")
 ##searchFiles("file like '%Xin Min Wan Bao%'", Widget=.rqda$.fnames_rqda)
-    if ( is_projOpen() ) {
+    if (is_projOpen() ) {
         if(!is.UTF8) { pattern <- iconv(pattern,to="UTF-8")}
         Encoding(pattern) <- "unknown"
         if (!is.null(Fid)) pattern <- sprintf("(%s) and id in (%s)",pattern,paste(shQuote(Fid),collapse=","))

@@ -2,8 +2,8 @@ CaseNamesUpdate <- function(CaseNamesWidget=.rqda$.CasesNamesWidget,
                             sortByTime=FALSE,decreasing=FALSE,...)
 {
   if (is_projOpen()) {
-    ## CaseName <- rqda_sel( "select name, id,date from cases where status=1 order by lower(name)")
-    CaseName <- rqda_sel( "select name, id,date from cases where status=1")
+    ## CaseName <- rqda_sel("select name, id,date from cases where status=1 order by lower(name)")
+    CaseName <- rqda_sel("select name, id,date from cases where status=1")
     if (nrow(CaseName) == 0) {
       case <- NULL
     } else {

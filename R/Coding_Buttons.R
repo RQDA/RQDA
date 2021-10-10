@@ -123,7 +123,7 @@ MarkCodeFun <- function(codeListWidget=".codes_rqda",codingTable="coding") {
           DAT$seltext <- enc(DAT$seltext)
           if (nrow(Exist1) == 0) {
             rowid <- NextRowId(codingTable)
-            success <- try(rqda_exe( sprintf("insert into %s (cid,fid, seltext, selfirst, selend, status, owner, date) values (%s, %s, '%s', %s, %s, %s, '%s', '%s') ",
+            success <- try(rqda_exe(sprintf("insert into %s (cid,fid, seltext, selfirst, selend, status, owner, date) values (%s, %s, '%s', %s, %s, %s, '%s', '%s') ",
                                                            codingTable,DAT$cid, DAT$fid,DAT$seltext, DAT$selfirst, DAT$selend, 1, .rqda$owner, as.character(date()))),silent=TRUE) > 0
             if (success) {
               markRange(widget=.rqda$.openfile_gui,from=ans$start,to=ans$end,rowid=rowid,addButton=TRUE,buttonLabel=SelectedCode,buttonCol=codeCol,codingTable=codingTable)}
@@ -141,7 +141,7 @@ MarkCodeFun <- function(codeListWidget=".codes_rqda",codingTable="coding") {
               Exist$End <- sapply(Relations,FUN= function(x)x$UnionIndex[2])
               if (all(Exist$Relation == "proximity")) {
                 rowid <- NextRowId(codingTable)
-                success <- try(rqda_exe( sprintf("insert into %s (cid,fid, seltext, selfirst, selend, status, owner, date) values (%s, %s, '%s', %s, %s, %s, '%s', '%s') ",
+                success <- try(rqda_exe(sprintf("insert into %s (cid,fid, seltext, selfirst, selend, status, owner, date) values (%s, %s, '%s', %s, %s, %s, '%s', '%s') ",
                                                                codingTable,DAT$cid, DAT$fid, DAT$seltext, DAT$selfirst, DAT$selend, 1, .rqda$owner, as.character(date()))),silent=TRUE) > 0
                 if (success) {
                   markRange(widget=.rqda$.openfile_gui,from=ans$start,to=ans$end,rowid=rowid,addButton=TRUE,
@@ -209,7 +209,7 @@ UnMarkCodeFun <- function(codeListWidget=.rqda$.codes_rqda,codingTable="coding")
   ## this function is superseded by MarkCodeFunByRowid
   if (is_projOpen(envir=.rqda,conName="qdacon")) {
     con <- .rqda$qdacon
-    W <- tryCatch( get(".openfile_gui",envir=.rqda), error= function(e) {})
+    W <- tryCatch(get(".openfile_gui",envir=.rqda), error= function(e) {})
     ## get the widget for file display. If it does not exist, then return NULL.
     idx1 <- tryCatch(sindex(W,includeAnchor=FALSE,codingTable=codingTable),error= function(e) {})
     idx2 <- tryCatch(sindex(W,includeAnchor=TRUE,codingTable=codingTable),error= function(e) {})
@@ -265,7 +265,7 @@ UnMarkCodeFun <- function(codeListWidget=.rqda$.codes_rqda,codingTable="coding")
 
 
 UnMarkCodeFunByRowid <- function(codeListWidget=.rqda$.codes_rqda,codingTable="coding") {
-  W <- tryCatch( get(".openfile_gui",envir=.rqda), error= function(e) {})
+  W <- tryCatch(get(".openfile_gui",envir=.rqda), error= function(e) {})
   ## get the widget for file display. If it does not exist, then return NULL.
   if (!is.null(W)) {
     rowid <- .codingEnv$selectedRowid
@@ -365,7 +365,7 @@ CodingMemoButton <- function(label=gettext("C2Memo", domain = "R-RQDA"))
   c2memobutton <- gbutton(label, handler= function(h,...) {
     con <- .rqda$qdacon
     if (is_projOpen(envir=.rqda,conName="qdacon")) {
-      W <- tryCatch( get(".openfile_gui",envir=.rqda), error= function(e) {})
+      W <- tryCatch(get(".openfile_gui",envir=.rqda), error= function(e) {})
       ## get the widget for file display. If it does not exist, then return NULL.
       sel_index <- tryCatch(sindex(W,includeAnchor=FALSE),error= function(e) {})
       AnchorPos <- tryCatch(sindex(W,includeAnchor=TRUE)$startN,error= function(e) {})

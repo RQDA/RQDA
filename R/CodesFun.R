@@ -39,7 +39,7 @@ CodeNamesWidgetUpdate <- function(CodeNamesWidget=.rqda$.codes_rqda,sortByTime=T
   ## CodeNamesWidgetUpdate is the alternative function of CodeNamesUpdate, should be used afterwards
 {
   if (is_projOpen()) {
-    freecode <- rqda_sel( "select name, id,date from freecode where status=1 order by lower(name)")
+    freecode <- rqda_sel("select name, id,date from freecode where status=1 order by lower(name)")
     if (nrow(freecode) != 0) {
       if (!is.null(CodeId)) {freecode <- freecode[freecode$id %in% CodeId,]}
       codeName <- freecode$name
@@ -426,7 +426,7 @@ retrieval <- function(Fid=NULL,order=c("fname","ftime","ctime"),CodeNameWidget=.
         if (length(SelectedCode) != 0) {
           Encoding(SelectedCode) <- "UTF-8"
           SelectedCode2 <- enc(SelectedCode, encoding="UTF-8")
-          currentCid <-  rqda_sel( sprintf("select id from freecode where name='%s'",SelectedCode2))$id
+          currentCid <-  rqda_sel(sprintf("select id from freecode where name='%s'",SelectedCode2))$id
           DAT <- rqda_sel(sprintf("select * from coding where rowid=%s", rowid))
 
           ## DAT will be empty if the user has Unmarked the coding and clicked
@@ -801,7 +801,7 @@ openAnnotation <- function(New=TRUE,pos,fid,rowid,AnchorPos=NULL) {
 
 Annotation <- function(...) {
   if (is_projOpen(envir=.rqda,conName="qdacon")) {
-    W <- tryCatch( get(".openfile_gui",envir=.rqda), error=function(e) {})
+    W <- tryCatch(get(".openfile_gui",envir=.rqda), error=function(e) {})
     ## get the widget for file display. If it does not exist, then return NULL.
     pos <- tryCatch(sindex(W,includeAnchor=FALSE),error=function(e) {}) ## if the not file is open, it doesn't work.
     if (is.null(pos)) {gmessage(gettext("Open a file first!", domain = "R-RQDA"),container=TRUE)}
@@ -850,7 +850,7 @@ AddToCodeCategory <- function (Widget = .rqda$.codes_rqda, updateWidget = TRUE)
 {
   codename2 <- svalue(Widget)
   codename <- enc(codename2)
-  query <- rqda_sel( sprintf("select id, name from freecode where name in(%s) and status=1",
+  query <- rqda_sel(sprintf("select id, name from freecode where name in(%s) and status=1",
                                             paste("'", codename, "'", sep = "", collapse = ",")))
   cid <- query$id
   Encoding(query$name) <- "UTF-8"
@@ -865,7 +865,7 @@ AddToCodeCategory <- function (Widget = .rqda$.codes_rqda, updateWidget = TRUE)
       Encoding(Selecteds) <- "UTF-8"
       for (Selected in Selecteds) {
         CodeCatid <- CodeCat$catid[CodeCat$name %in% Selected]
-        exist <- rqda_sel( sprintf("select cid from treecode where status=1 and cid in (%s) and catid=%i", paste("'", cid, "'", sep = "", collapse = ","), CodeCatid)) ## this check is unnecessary
+        exist <- rqda_sel(sprintf("select cid from treecode where status=1 and cid in (%s) and catid=%i", paste("'", cid, "'", sep = "", collapse = ","), CodeCatid)) ## this check is unnecessary
         if (nrow(exist) != length(cid)) {
           DAT <- data.frame(cid = cid[!cid %in% exist$cid],
                             catid = CodeCatid, date = date(), dateM = date(),

@@ -7,7 +7,7 @@ relation <- function(index1,index2) {
   ## WhichMax: which argument containts max(c(index1,index2))
   ## Distance: The distance between to index when Relation is proximity
   ## the index of the overlap of index1 and index2.
-  if ( !is.vector(index1) || !is.vector(index1) ) stop("index1 and index2 must be vector.", domain = "R-RQDA")
+  if (!is.vector(index1) || !is.vector(index1) ) stop("index1 and index2 must be vector.", domain = "R-RQDA")
   index1 <- as.numeric(index1)
   index2 <- as.numeric(index2)
   if (any(is.na(c(index1,index2)))) stop("index1 or index2 should not have any NA.", domain = "R-RQDA")

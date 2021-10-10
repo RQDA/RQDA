@@ -181,10 +181,10 @@ GetFileCatWidgetMenu <- function()
     if (is_projOpen(envir =.rqda,conName="qdacon")) {
       fid <- getFileIds("file")
       if (length(fid)>0) {
-        rqda_exe( sprintf("update source set status=0 where id in (%s)",paste(shQuote(fid),collapse=",")))
-        rqda_exe( sprintf("update coding set status=0 where fid in (%s)",paste(shQuote(fid),collapse=",")))
-        rqda_exe( sprintf("update caselinkage set status=0 where fid in (%s)",paste(shQuote(fid),collapse=",")))
-        rqda_exe( sprintf("update treefile set status=0 where fid in (%s)",paste(shQuote(fid),collapse=",")))
+        rqda_exe(sprintf("update source set status=0 where id in (%s)",paste(shQuote(fid),collapse=",")))
+        rqda_exe(sprintf("update coding set status=0 where fid in (%s)",paste(shQuote(fid),collapse=",")))
+        rqda_exe(sprintf("update caselinkage set status=0 where fid in (%s)",paste(shQuote(fid),collapse=",")))
+        rqda_exe(sprintf("update treefile set status=0 where fid in (%s)",paste(shQuote(fid),collapse=",")))
         UpdateFileofCatWidget()
       }
     }
@@ -268,11 +268,11 @@ GetFileofCatWidgetMenu <- function()
       Encoding(SelectedFile) <- "UTF-8"
       for (i in SelectedFile) {
         i <- enc(i)
-        fid <- rqda_sel( sprintf("select id from source where name='%s'",i))$id
-        rqda_exe( sprintf("update source set status=0 where name='%s'",i))
-        rqda_exe( sprintf("update caselinkage set status=0 where fid=%i",fid))
-        rqda_exe( sprintf("update treefile set status=0 where fid=%i",fid))
-        rqda_exe( sprintf("update coding set status=0 where fid=%i",fid))
+        fid <- rqda_sel(sprintf("select id from source where name='%s'",i))$id
+        rqda_exe(sprintf("update source set status=0 where name='%s'",i))
+        rqda_exe(sprintf("update caselinkage set status=0 where fid=%i",fid))
+        rqda_exe(sprintf("update treefile set status=0 where fid=%i",fid))
+        rqda_exe(sprintf("update coding set status=0 where fid=%i",fid))
       }
       ## UpdateFileofCatWidget()
       ## .rqda$.FileofCat[] <- setdiff(.rqda$.FileofCat[],SelectedFile)

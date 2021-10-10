@@ -29,8 +29,8 @@ RQDA <- function() {
 
 
     wdh <- size(.root_rqdagui)
-    head_s <- c( wdh["width"], wdh["height"] * .1)
-    body_s <- c( wdh["width"], wdh["height"] * .9)
+    head_s <- c(wdh["width"], wdh["height"] * .1)
+    body_s <- c(wdh["width"], wdh["height"] * .9)
 
     mainIcon <- system.file("icon", "mainIcon.png", package = "RQDA")
     .root_rqdagui$set_icon(mainIcon)
@@ -160,11 +160,11 @@ RQDA <- function() {
 
     .codes_button[1, 1] <- AddCodeButton()
     .codes_button[1, 2] <- DeleteCodeButton()
-    .codes_button[1, 3] <- FreeCode_RenameButton( label = rqda_txt("Rename"),
+    .codes_button[1, 3] <- FreeCode_RenameButton(label = rqda_txt("Rename"),
                                                   CodeNamesWidget = .codes_rqda)
-    .codes_button[1, 4] <- CodeMemoButton( label = rqda_txt("Memo"))
-    .codes_button[2, 1] <- AnnotationButton( rqda_txt("Anno"))
-    .codes_button[2, 2] <- RetrievalButton( rqda_txt("Coding"))
+    .codes_button[1, 4] <- CodeMemoButton(label = rqda_txt("Memo"))
+    .codes_button[2, 1] <- AnnotationButton(rqda_txt("Anno"))
+    .codes_button[2, 2] <- RetrievalButton(rqda_txt("Coding"))
     .codes_button[2, 3] <- Unmark_Button(name = "UnMarB1")
     .codes_button[2, 4] <- Mark_Button(name = "MarCodB1")
 
@@ -181,7 +181,7 @@ RQDA <- function() {
     size(.codecat_buttons) <- head_s
     size(.Ccat_PW)         <- body_s
 
-    ".CodeCatWidget" <- gtable( character(0), container = .Ccat_PW,
+    ".CodeCatWidget" <- gtable(character(0), container = .Ccat_PW,
                                 expand = TRUE, multiple = TRUE)
     names(.CodeCatWidget)<- rqda_txt("Code Category")
 
@@ -189,16 +189,16 @@ RQDA <- function() {
                            expand = TRUE, multiple = TRUE)
     names(.CodeofCat)<-rqda_txt("Codes of This Category")
 
-    .codecat_buttons[1, 1] <- AddCodeCatButton( rqda_txt("Add"))
-    .codecat_buttons[1, 2] <- DeleteCodeCatButton( rqda_txt("Delete"))
-    .codecat_buttons[1, 3] <- CodeCat_RenameButton( rqda_txt("Rename"))
-    .codecat_buttons[2, 1] <- CodeCatAddToButton( rqda_txt("Add To"))
-    .codecat_buttons[2, 2] <- CodeCatDropFromButton( rqda_txt("Drop From"))
+    .codecat_buttons[1, 1] <- AddCodeCatButton(rqda_txt("Add"))
+    .codecat_buttons[1, 2] <- DeleteCodeCatButton(rqda_txt("Delete"))
+    .codecat_buttons[1, 3] <- CodeCat_RenameButton(rqda_txt("Rename"))
+    .codecat_buttons[2, 1] <- CodeCatAddToButton(rqda_txt("Add To"))
+    .codecat_buttons[2, 2] <- CodeCatDropFromButton(rqda_txt("Drop From"))
     .codecat_buttons[1, 4] <- CodeCatMemoButton()
-    .codecat_buttons[2, 3] <- Unmark_Button( label = rqda_txt("UnMark"),
+    .codecat_buttons[2, 3] <- Unmark_Button(label = rqda_txt("UnMark"),
                                              codeListWidget = .rqda$.CodeofCat,
                                              name = "UnMarB2")
-    .codecat_buttons[2, 4] <- Mark_Button( label = rqda_txt("Mark"),
+    .codecat_buttons[2, 4] <- Mark_Button(label = rqda_txt("Mark"),
                                            codeListWidget = ".CodeofCat",
                                            name = "MarCodB2")
 
@@ -226,10 +226,10 @@ RQDA <- function() {
     .case_buttons[1, 1] <- AddCaseButton()
     .case_buttons[1, 2] <- DeleteCaseButton()
     .case_buttons[1, 3] <- Case_RenameButton()
-    .case_buttons[1, 4] <- CaseUnMark_Button( rqda_txt("Unlink"))
-    .case_buttons[1, 5] <- CaseMark_Button( rqda_txt(" Link "))
-    .case_buttons[2, 1] <- CaseAttribute_Button( rqda_txt("Attribute"))
-    .case_buttons[2, 2] <- prof_mat_Button( rqda_txt("Profile"))
+    .case_buttons[1, 4] <- CaseUnMark_Button(rqda_txt("Unlink"))
+    .case_buttons[1, 5] <- CaseMark_Button(rqda_txt(" Link "))
+    .case_buttons[2, 1] <- CaseAttribute_Button(rqda_txt("Attribute"))
+    .case_buttons[2, 2] <- prof_mat_Button(rqda_txt("Profile"))
 
 
     ### GUI for Attributes #####################################################

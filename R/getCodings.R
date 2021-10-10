@@ -5,13 +5,13 @@ getCodingsOfCodes <- function(fid = NULL, codingTable = c("coding", "coding2")) 
     selected <- enc(selected)
     cid <- rqda_sel(sprintf(
         "select id from freecode where status=1 and name in (%s)",
-        paste( paste("'", selected, "'", sep=""), collapse = ",")))$id
+        paste(paste("'", selected, "'", sep=""), collapse = ",")))$id
 
     codingTable <- match.arg(codingTable)
 
     if (codingTable == "coding") {
         ct <- rqda_sel(
-            sprintf( paste(
+            sprintf(paste(
                 "select coding.rowid as rowid, coding.cid, coding.fid,",
                 "freecode.name as codename, source.name as filename,",
                 "coding.selfirst as index1, coding.selend as index2,",
@@ -26,7 +26,7 @@ getCodingsOfCodes <- function(fid = NULL, codingTable = c("coding", "coding2")) 
 
     if (codingTable == "coding2") {
         ct <- rqda_sel(
-            sprintf( paste(
+            sprintf(paste(
                 "select coding.rowid as rowid, coding.cid, coding.fid,",
                 "freecode.name as codename, source.name as filename,",
                 "coding2.selfirst as index1, coding2.selend as index2,",
@@ -58,7 +58,7 @@ getCodingsFromFiles <- function(Fid, order=c("fname","ftime","ctime"),
         ctime="")
 
     retrieval <- rqda_sel(
-        sprintf( paste("select cid, freecode.name as code, fid, selfirst,",
+        sprintf(paste("select cid, freecode.name as code, fid, selfirst,",
                        "selend, seltext, %s.rowid, source.name, source.id",
                        "from %s, source, freecode where %s.status=1 and",
                        "source.id=fid and freecode.id=%s.cid and fid in",
@@ -66,7 +66,7 @@ getCodingsFromFiles <- function(Fid, order=c("fname","ftime","ctime"),
                  codingTable, paste(Fid,collapse=","), order))
 
     if (nrow(retrieval) == 0) {
-        gmessage( rqda_txt("No Coding associated with the selected code."),
+        gmessage(rqda_txt("No Coding associated with the selected code."),
                   container=TRUE)
     } else {
         fid <- unique(retrieval$fid)

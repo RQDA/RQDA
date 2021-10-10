@@ -370,11 +370,11 @@ GetFileofCaseWidgetMenu <- function()
       SelectedFile <- svalue(.rqda$.FileofCase)
       Encoding(SelectedFile) <- "UTF-8"
       for (i in SelectedFile) {
-        fid <- rqda_sel( sprintf("select id from source where name='%s'",i))$id
-        rqda_exe( sprintf("update source set status=0 where name='%s'",i))
-        rqda_exe( sprintf("update caselinkage set status=0 where fid=%i",fid))
-        rqda_exe( sprintf("update treefile set status=0 where fid=%i",fid))
-        rqda_exe( sprintf("update coding set status=0 where fid=%i",fid))
+        fid <- rqda_sel(sprintf("select id from source where name='%s'",i))$id
+        rqda_exe(sprintf("update source set status=0 where name='%s'",i))
+        rqda_exe(sprintf("update caselinkage set status=0 where fid=%i",fid))
+        rqda_exe(sprintf("update treefile set status=0 where fid=%i",fid))
+        rqda_exe(sprintf("update coding set status=0 where fid=%i",fid))
       }
       .rqda$.FileofCase[] <- setdiff(.rqda$.FileofCase[],SelectedFile)
     }

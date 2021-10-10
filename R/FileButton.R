@@ -159,8 +159,8 @@ AddNewFileFun <- function() {
 
     # get size of root gui as width and height
     wdh <- size(.rqda$.root_rqdagui)
-    head_s <- c( wdh["width"], wdh["height"] * .1)
-    body_s <- c( wdh["width"], wdh["height"] * .9)
+    head_s <- c(wdh["width"], wdh["height"] * .1)
+    body_s <- c(wdh["width"], wdh["height"] * .9)
 
     gw <- gwindow(title = "Add a new file",
                   parent = getOption("widgetCoordinate"),
@@ -194,7 +194,7 @@ AddNewFileFun <- function() {
         content <- svalue(textW)
         content <- enc(content, encoding = "UTF-8")
         ## the current one
-        maxid <- rqda_sel( "select max(id) from source")[[1]]
+        maxid <- rqda_sel("select max(id) from source")[[1]]
         ## the new one/ for the new file
         nextid <- ifelse(is.na(maxid), 0+1, maxid+1)
         ans <- rqda_exe(
@@ -383,7 +383,7 @@ GetFileNamesWidgetMenu <- function()
     rqda_txt("Open Previous Coded File"), handler = function(h, ...) {
       if (is_projOpen(envir = .rqda, conName = "qdacon", message = FALSE)) {
         fname <- rqda_sel(
-          paste("select name from source where id in ( select fid from",
+          paste("select name from source where id in (select fid from",
                 "coding where rowid in (select max(rowid) from coding",
                 "where status = 1))"))$name
         if (length(fname) != 0)  fname <- enc(fname, "UTF-8")

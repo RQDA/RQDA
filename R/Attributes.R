@@ -11,7 +11,7 @@ EditVarWidget <- function(ExistingItems=NULL,container=NULL,title=NULL,ID=NULL,s
       ## create the array of data
       articles <<- list()
       ##  create list store
-      model <- gtkListStoreNew( "gchararray", "gchararray", "gboolean")
+      model <- gtkListStoreNew("gchararray", "gchararray", "gboolean")
       ## add item from ExistingItems
       ## needs modification
       if (!is.null(ExistingItems)) {
@@ -313,13 +313,13 @@ RenameAttrButton <- function(label=gettext("Rename", domain = "R-RQDA")) {
       if (invalid) {
         gmessage(gettext("Attribute should NOT contain '.", domain = "R-RQDA"),container=TRUE)
       } else {
-        exists <- rqda_sel( sprintf("select * from attributes where name = '%s' ",NewName))
+        exists <- rqda_sel(sprintf("select * from attributes where name = '%s' ",NewName))
         if (nrow(exists) > 0 ) {
           gmessage(gettext("Name duplicated. Please use another name.", domain = "R-RQDA"),cont=TRUE)
         } else {
-          rqda_exe( sprintf("update attributes set name = '%s' where name = '%s' ",NewName,selected))
-          rqda_exe( sprintf("update caseAttr set variable = '%s' where variable = '%s' ",NewName,selected))
-          rqda_exe( sprintf("update fileAttr set variable = '%s' where variable = '%s' ",NewName,selected))
+          rqda_exe(sprintf("update attributes set name = '%s' where name = '%s' ",NewName,selected))
+          rqda_exe(sprintf("update caseAttr set variable = '%s' where variable = '%s' ",NewName,selected))
+          rqda_exe(sprintf("update fileAttr set variable = '%s' where variable = '%s' ",NewName,selected))
           AttrNamesUpdate()
         }
       }
@@ -478,7 +478,7 @@ setAttrType <- function() {
     Selected <- enc(svalue(.rqda$.AttrNamesWidget),encoding="UTF-8")
     oldCls <- tryCatch(rqda_sel(sprintf("select class from attributes where status=1 and name='%s'",Selected))[1,1],
                        error=function(e) {
-                         rqda_exe( "alter table attributes add column class text")
+                         rqda_exe("alter table attributes add column class text")
                          rqda_sel(sprintf("select class from attributes where status=1 and name='%s'",Selected))[1,1]
                        })
     if (is.null(oldCls)||is.na(oldCls)) {
