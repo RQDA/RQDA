@@ -102,7 +102,7 @@ expand <- function(first, end) {
 ## res2 <- unlist(apply(res,1,function(x) expand(x[1],x[2])))
 ## identical(sort(x),res2)
 
-erger2 <- function (cid1, cid2, data)
+erger2 <- function(cid1, cid2, data)
 {## cid1 and cid2
     data <- data[data$cid %in% c(cid1, cid2), c("cid", "fid",
                                                 "index1", "index2")]

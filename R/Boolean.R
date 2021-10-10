@@ -18,7 +18,7 @@ getCodingsByOne <- function(cid, fid=NULL,codingTable=c("coding","coding2")) {
 
 #' @method print codingsByOne
 #' @export 
-print.codingsByOne <- function (x,...)
+print.codingsByOne <- function(x,...)
 {
     ComputeCallbackFun <- function(FileName,rowid) {
         CallBackFUN <- function(widget,event,...) {
@@ -115,7 +115,7 @@ andHelper <- function(d1,d2) {
 }
 
 #' @export 
-and <- function (CT1, CT2)
+and <- function(CT1, CT2)
 ### much faster than previous version of and()
 ### can extend to andSmart to handle more codes at the same time
 {
@@ -167,7 +167,7 @@ orHelper <- function(d1,d2) {
 }
 
 #' @export 
-or <- function (CT1, CT2)
+or <- function(CT1, CT2)
 {
     ans <- data.frame(stringsAsFactors=FALSE)
     fid <- unique(union(CT1$fid, CT2$fid))
@@ -219,7 +219,7 @@ notHelper <- function(d1,d2) {
 }
 
 #' @export 
-not <- function (CT1, CT2)
+not <- function(CT1, CT2)
 {
     ans <- data.frame(stringsAsFactors=FALSE)
     fid <- unique(CT1$fid)

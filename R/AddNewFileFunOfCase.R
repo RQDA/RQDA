@@ -1,4 +1,4 @@
-AddNewFileFunOfCase <- function ()
+AddNewFileFunOfCase <- function()
 {
     updateCaseLink <- function(fid) {
         SelectedCase <- svalue(.rqda$.CasesNamesWidget)

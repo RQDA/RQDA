@@ -306,7 +306,7 @@ CodeMemoButton <- function(label=gettext("C-Memo", domain = "R-RQDA"),...) {
 CodingMemoButton <- function(label=gettext("C2Memo", domain = "R-RQDA"))
 {
 
-  InsertCodingMemoAnchor <- function (index,rowid,label=gettext("[Coding Memo]", domain = "R-RQDA"),title)
+  InsertCodingMemoAnchor <- function(index,rowid,label=gettext("[Coding Memo]", domain = "R-RQDA"),title)
   {
     ## don't use this function.
     ## use Annotation to add anno to a file.

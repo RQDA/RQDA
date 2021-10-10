@@ -709,7 +709,7 @@ NextRowId <- function(table) {
   ans
 }
 
-InsertAnnotation <- function (index,fid,rowid,label=gettext("[Annotation]", domain = "R-RQDA"),AnchorPos=NULL)
+InsertAnnotation <- function(index,fid,rowid,label=gettext("[Annotation]", domain = "R-RQDA"),AnchorPos=NULL)
   {
     widget=.rqda$.openfile_gui
     lab <- gtkLabelNew(label)
@@ -846,7 +846,7 @@ codingTable, paste(shQuote(fid),collapse=","))))
 }
 }
 
-AddToCodeCategory <- function (Widget = .rqda$.codes_rqda, updateWidget = TRUE)
+AddToCodeCategory <- function(Widget = .rqda$.codes_rqda, updateWidget = TRUE)
 {
   codename2 <- svalue(Widget)
   codename <- enc(codename2)
