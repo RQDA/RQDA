@@ -1,4 +1,4 @@
- parseRelationNet <- function(mapStr, plot=FALSE){
+ parseRelationNet <- function(mapStr, plot=FALSE) {
      mapStr <- strsplit(mapStr, "\n")[[1]]
      mapStr <- gsub("(^[[:space:]]{1,})|([[:space:]]{1,}$)", "", mapStr) ## strip white space
      mapStr <- mapStr[!grepl("^#", mapStr)] ## strip comment lines

@@ -1,4 +1,4 @@
-AddCaseButton <- function(label=gettext("Add", domain = "R-RQDA")){
+AddCaseButton <- function(label=gettext("Add", domain = "R-RQDA")) {
   AddCasB <- gbutton(label,handler=function(h,...) {
     CaseName <- ginput(gettext("Enter new Case Name. ", domain = "R-RQDA"), icon="info")
     if (!is.na(CaseName)) {
@@ -20,10 +20,10 @@ AddCaseButton <- function(label=gettext("Add", domain = "R-RQDA")){
 }
 
 
-DeleteCaseButton <- function(label=gettext("Delete", domain = "R-RQDA")){
+DeleteCaseButton <- function(label=gettext("Delete", domain = "R-RQDA")) {
   DelCasB <- gbutton(label, handler=function(h,...) {
     del <- gconfirm(gettext("Really delete the Case?", domain = "R-RQDA"),icon="question")
-    if (isTRUE(del)){
+    if (isTRUE(del)) {
       SelectedCase <- svalue(.rqda$.CasesNamesWidget)
       Encoding(SelectedCase) <- "UTF-8"
       caseid <- rqda_sel(sprintf("select id from cases where name='%s'",
@@ -54,7 +54,7 @@ Case_RenameButton <- function(label=gettext("Rename", domain = "R-RQDA"),CaseNam
 
     if (!identical(NewName, character(0)))
     {
-    if (!is.na(NewName)){
+    if (!is.na(NewName)) {
       rename(selectedCaseName,NewName,"cases")
       CaseNamesUpdate()
     }
@@ -67,7 +67,7 @@ Case_RenameButton <- function(label=gettext("Rename", domain = "R-RQDA"),CaseNam
 }
 
 
-CaseMark_Button<-function(label=gettext("Mark", domain = "R-RQDA")){
+CaseMark_Button<-function(label=gettext("Mark", domain = "R-RQDA")) {
   CasMarB <- gbutton(label,handler=function(h,...) {
     MarkCaseFun()
     UpdateFileofCaseWidget()
@@ -78,12 +78,12 @@ CaseMark_Button<-function(label=gettext("Mark", domain = "R-RQDA")){
   CasMarB
 }
 
-MarkCaseFun <- function(){
+MarkCaseFun <- function() {
   if (is_projOpen(envir=.rqda,conName="qdacon")) {
     con <- .rqda$qdacon
     tryCatch({
       ans <- mark(get(".openfile_gui",envir=.rqda),fore.col=NULL,back.col=.rqda$back.col,addButton=FALSE)
-      if (ans$start != ans$end){
+      if (ans$start != ans$end) {
         ## when selected no text, makes on sense to do anything.
         SelectedCase <- svalue(.rqda$.CasesNamesWidget)
         SelectedCase <- enc(SelectedCase,encoding="UTF-8")
@@ -99,26 +99,26 @@ MarkCaseFun <- function(){
         DAT <- data.frame(caseid=currentCid,fid=currentFid,
                           selfirst=ans$start,selend=ans$end,status=1,
                           owner=.rqda$owner,date=date(),memo="")
-        if (nrow(ExistLinkage)==0){
+        if (nrow(ExistLinkage)==0) {
           ## if there are no relevant caselinkage, write the caselinkage table
           success <- rqda_wrt("caselinkage", DAT)
           if (!success) gmessage(gettext("Fail to write to database.", domain = "R-RQDA"))
         } else {
           Relations <- apply(ExistLinkage,1,FUN=function(x) relation(x[c("selfirst","selend")],c(ans$start,ans$end)))
           ExistLinkage$Relation <- sapply(Relations,FUN=function(x)x$Relation)
-          if (!any(ExistLinkage$Relation=="exact")){
+          if (!any(ExistLinkage$Relation=="exact")) {
             ## if there are exact caselinkage, skip; if no exact linkage then continue
             ExistLinkage$WhichMin <- sapply(Relations,FUN=function(x)x$WhichMin)
             ExistLinkage$Start <- sapply(Relations,FUN=function(x)x$UnionIndex[1])
             ExistLinkage$End <- sapply(Relations,FUN=function(x)x$UnionIndex[2])
-            if (all(ExistLinkage$Relation=="proximity")){
+            if (all(ExistLinkage$Relation=="proximity")) {
               success <- rqda_wrt("caselinkage", DAT)
               if (!success) gmessage(gettext("Fail to write to database.", domain = "R-RQDA"))
             } else {
               del1 <- ExistLinkage$WhichMin==2 & ExistLinkage$Relation =="inclusion"; del1[is.na(del1)] <- FALSE
               del2 <- ExistLinkage$Relation =="overlap"; del2[is.na(del2)] <- FALSE
               del <- (del1 | del2)
-              if (any(del)){
+              if (any(del)) {
                 Sel <- c(min(ExistLinkage$Start[del]), max(ExistLinkage$End[del]))
                 memo <- rqda_sel(sprintf("select memo from caselinkage where rowid in (%s)",
                                                         paste(ExistLinkage$rowid[del],collapse=",",sep="")))$memo
@@ -135,13 +135,13 @@ MarkCaseFun <- function(){
           }
         }
       }
-    },error=function(e){}
+    },error=function(e) {}
     )
   }
 }
 
 
-CaseUnMark_Button<-function(label=gettext("Unmark", domain = "R-RQDA")){
+CaseUnMark_Button<-function(label=gettext("Unmark", domain = "R-RQDA")) {
   CasUnMarB <- gbutton(label, handler=function(h,...) {
     con <- .rqda$qdacon
     W <- .rqda$.openfile_gui$widget
@@ -166,7 +166,7 @@ CaseUnMark_Button<-function(label=gettext("Unmark", domain = "R-RQDA")){
         coding.idx <- rqda_sel(sprintf("select selfirst,selend from coding where fid=%i and status=1",currentFid))
         anno.idx <- rqda_sel(sprintf("select position from annotation where fid=%i and status=1",currentFid))$position
         allidx <- unlist(coding.idx,anno.idx)
-        if (!is.null(allidx)){
+        if (!is.null(allidx)) {
           startN<- sel_index$startN +  sum(allidx <= sel_index$startN)
           endN <- sel_index$endN +  sum(allidx <= sel_index$endN)
         }
@@ -183,10 +183,10 @@ CaseUnMark_Button<-function(label=gettext("Unmark", domain = "R-RQDA")){
   CasUnMarB
 }
 
-CaseAttribute_Button <- function(label=gettext("Attribute", domain = "R-RQDA")){
+CaseAttribute_Button <- function(label=gettext("Attribute", domain = "R-RQDA")) {
   CasAttrB <- gbutton(text=label, handler = function(h, ...) {
     SelectedCase <- svalue(.rqda$.CasesNamesWidget)
-    if (length(SelectedCase!=0)){
+    if (length(SelectedCase!=0)) {
       SelectedCase <- enc(SelectedCase,"UTF-8")
       caseid <- rqda_sel(sprintf("select id from cases where status=1 and name='%s'",SelectedCase))[,1]
       CaseAttrFun(caseId=caseid,title=SelectedCase)
@@ -196,7 +196,7 @@ CaseAttribute_Button <- function(label=gettext("Attribute", domain = "R-RQDA")){
   CasAttrB
 }
 
-prof_mat_Button <- function(label="prof_mat"){
+prof_mat_Button <- function(label="prof_mat") {
   profmatB <- gbutton(text=label, handler = function(h, ...) {
     prof_mat(case_names = gselect.list(.rqda$.CasesNamesWidget[], multiple = TRUE, x= getOption("widgetCoordinate")[1]))
   })
@@ -216,7 +216,7 @@ GetCaseNamesWidgetMenu <- function()
       freefile <-  rqda_sel("select name, id, file from source where status=1")
       fileofcase <- rqda_sel(sprintf("select fid from caselinkage where status=1 and caseid=%i",caseid))
       Encoding(freefile[['name']]) <- Encoding(freefile[['file']]) <- "UTF-8"
-      if (nrow(fileofcase)!=0){
+      if (nrow(fileofcase)!=0) {
         fileoutofcase <- subset(freefile,!(freefile$id %in% fileofcase$fid))
       } else  fileoutofcase <- freefile
       if (length(fileoutofcase[['name']])==0) gmessage(gettext("All files are linked with this case.", domain = "R-RQDA"), cont=TRUE) else {
@@ -260,7 +260,7 @@ GetCaseNamesWidgetMenu <- function()
   CaseNamesWidgetMenu[[5]] <- gaction(gettext("Add/modify Attributes...", domain = "R-RQDA"), handler =function(h, ...) {
     if (is_projOpen(envir=.rqda,conName="qdacon")) {
       SelectedCase <- svalue(.rqda$.CasesNamesWidget)
-      if (length(SelectedCase!=0)){
+      if (length(SelectedCase!=0)) {
         SelectedCase <- enc(SelectedCase,"UTF-8")
         caseid <- rqda_sel(sprintf("select id from cases where status=1 and name='%s'",SelectedCase))[,1]
         CaseAttrFun(caseId=caseid,title=SelectedCase)
@@ -291,7 +291,7 @@ GetCaseNamesWidgetMenu <- function()
   
   search_lst[[1]] <- gaction("Google", handler =function(h, ...) {
     KeyWord <- svalue(.rqda$.CasesNamesWidget)
-    if (length(KeyWord)!=0){
+    if (length(KeyWord)!=0) {
       KeyWord <- iconv(KeyWord, from="UTF-8")
       browseURL(sprintf("http://www.google.com/search?q=%s",KeyWord))
     }
@@ -299,7 +299,7 @@ GetCaseNamesWidgetMenu <- function()
   
   search_lst[[2]] <- gaction("Yahoo", handler =function(h, ...) {
     KeyWord <- svalue(.rqda$.CasesNamesWidget)
-    if (length(KeyWord)!=0){
+    if (length(KeyWord)!=0) {
       KeyWord <- iconv(KeyWord, from="UTF-8")
       browseURL(sprintf("http://search.yahoo.com/search;_ylt=A0oGkmFV.CZJNssAOK.l87UF?p=%s&ei=UTF-8&iscqry=&fr=sfp&fr2=sfp"
                         ,KeyWord))
@@ -308,7 +308,7 @@ GetCaseNamesWidgetMenu <- function()
   
   search_lst[[3]] <- gaction("Baidu", handler =function(h, ...) {
     KeyWord <- svalue(.rqda$.CasesNamesWidget)
-    if (length(KeyWord)!=0){
+    if (length(KeyWord)!=0) {
       KeyWord <- iconv(KeyWord, from="UTF-8",to="CP936") ## should be in CP936 to work properly.
       browseURL(sprintf("http://www.baidu.com/s?wd=%s",paste("%",paste(charToRaw(KeyWord),sep="",collapse="%"),sep="",collapse="")))
     }
@@ -317,7 +317,7 @@ GetCaseNamesWidgetMenu <- function()
   
   search_lst[[4]] <- gaction("Sogou", handler =function(h, ...) {
     KeyWord <- svalue(.rqda$.CasesNamesWidget)
-    if (length(KeyWord)!=0){
+    if (length(KeyWord)!=0) {
       KeyWord <- iconv(KeyWord, from="UTF-8",to="CP936")## should be in CP936 to work properly.
       browseURL(sprintf("http://www.sogou.com/sohu?query=%s",paste("%",paste(charToRaw(KeyWord),sep="",collapse="%"),sep="",collapse="")))
     }
@@ -348,13 +348,13 @@ GetFileofCaseWidgetMenu <- function()
         {
           ## Give a confirm msg
           del <- gconfirm(sprintf(gettext("Delete %i file(s) from this category. Are you sure?", domain = "R-RQDA"),NumofSelected),con=TRUE,icon="question")
-          if (isTRUE(del)){
+          if (isTRUE(del)) {
             SelectedCase <- svalue(.rqda$.CasesNamesWidget)
             ## Encoding(SelectedCase) <- Encoding(FileOfCat)<- "UTF-8"
             SelectedCase <- enc(SelectedCase,"UTF-8")
             FileOfCat <- enc(FileOfCat,"UTF-8")
             caseid <- rqda_sel(sprintf("select id from cases where status=1 and name='%s'",SelectedCase))[,1]
-            for (i in FileOfCat){
+            for (i in FileOfCat) {
               fid <- rqda_sel(sprintf("select id from source where status=1 and name='%s'",i))[,1]
               rqda_exe(sprintf("update caselinkage set status=0 where caseid=%i and fid=%i",caseid,fid))
             }
@@ -369,7 +369,7 @@ GetFileofCaseWidgetMenu <- function()
     if (is_projOpen(envir=.rqda,conName="qdacon")) {
       SelectedFile <- svalue(.rqda$.FileofCase)
       Encoding(SelectedFile) <- "UTF-8"
-      for (i in SelectedFile){
+      for (i in SelectedFile) {
         fid <- rqda_sel( sprintf("select id from source where name='%s'",i))$id
         rqda_exe( sprintf("update source set status=0 where name='%s'",i))
         rqda_exe( sprintf("update caselinkage set status=0 where fid=%i",fid))
@@ -391,7 +391,7 @@ GetFileofCaseWidgetMenu <- function()
   FileofCaseWidgetMenu[[6]] <- gaction(gettext("Rename selected File", domain = "R-RQDA"), handler =function(h, ...) {
     if (is_projOpen(envir=.rqda,conName="qdacon")) {
       selectedFN <- svalue(.rqda$.FileofCase)
-      if (length(selectedFN)==0){
+      if (length(selectedFN)==0) {
         gmessage(gettext("Select a file first.", domain = "R-RQDA"),icon="error",con=TRUE)
       }
       else {
@@ -410,7 +410,7 @@ GetFileofCaseWidgetMenu <- function()
     if (is_projOpen(envir = .rqda, conName = "qdacon", message = FALSE)) {
       pattern <- ifelse(is.null(.rqda$lastsearch),"file like '%%'",.rqda$lastsearch)
       pattern <- ginput(gettext("Please input a search pattern.", domain = "R-RQDA"),text=pattern)
-      if (!is.na(pattern)){
+      if (!is.na(pattern)) {
         Fid <- getFileIds("case")
         tryCatch(searchFiles(pattern,Fid=Fid,Widget=".FileofCase",is.UTF8=TRUE),error=function(e) gmessage(gettext("Error~~~.", domain = "R-RQDA")),con=TRUE)
         assign("lastsearch",pattern,envir=.rqda)

@@ -1,6 +1,6 @@
 AddNewFileFunOfCase <- function ()
 {
-    updateCaseLink <- function(fid){
+    updateCaseLink <- function(fid) {
         SelectedCase <- svalue(.rqda$.CasesNamesWidget)
         SelectedCase <- enc(SelectedCase,"UTF-8")
         caseid <- rqda_sel(sprintf("select id from cases where status=1 and name='%s'",SelectedCase))$id
@@ -16,7 +16,7 @@ AddNewFileFunOfCase <- function ()
                   width = getOption("widgetSize")[1], height = getOption("widgetSize")[2])
     mainIcon <- system.file("icon", "mainIcon.png", package = "RQDA")
     gw$set_icon(mainIcon)
-    addHandlerKeystroke(gw, function(h, ...){
+    addHandlerKeystroke(gw, function(h, ...) {
     if(h$key=="\027") dispose(gw)
     })
     gp <- gpanedgroup(horizontal = FALSE, container=gw)

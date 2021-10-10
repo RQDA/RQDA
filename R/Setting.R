@@ -1,4 +1,4 @@
-addSettingGUI <- function(container,width=12){
+addSettingGUI <- function(container,width=12) {
   colorsList <- colors()
   if (Sys.info()["user"]!="") assign("owner",Sys.info()["user"],envir=.rqda)
   
@@ -86,27 +86,27 @@ addSettingGUI <- function(container,width=12){
     else if(out["TOR"] == gettext("both", domain = "R-RQDA"))
       out["TOR"] <- "both"
     
-    tryCatch(ClearMark(.rqda$.root_edit,0,nchar(svalue(.rqda$.openfile_gui)),TRUE,TRUE),error=function(e){})
+    tryCatch(ClearMark(.rqda$.root_edit,0,nchar(svalue(.rqda$.openfile_gui)),TRUE,TRUE),error=function(e) {})
     for (i in names(out)) assign(i,out[[i]],envir=.rqda)
   })
   
   addHandlerChanged(resetButton, function(h,...) {
     tryCatch(ClearMark(.rqda$.root_edit,0,
                        nchar(svalue(.rqda$.openfile_gui)),TRUE,TRUE),
-             error=function(e){})
+             error=function(e) {})
 
         sfl <- svalue(SettingFL)
 
-    tryCatch(svalue(SettingFL)[[byto]] <- FALSE, error=function(e){})
-    tryCatch(svalue(SettingFL)[[swfp]] <- FALSE, error=function(e){})
-    tryCatch(svalue(SettingFL)[[fenc]] <- "unknown", error=function(e){})
-    tryCatch(svalue(SettingFL)[[name]] <- "default", error=function(e){})
-    tryCatch(svalue(SettingFL)[[casc]] <- "gold", error=function(e){})
-    tryCatch(svalue(SettingFL)[[colc]] <- "blue", error=function(e){})
-    tryCatch(svalue(SettingFL)[[codt]] <- "coding", error=function(e){})
+    tryCatch(svalue(SettingFL)[[byto]] <- FALSE, error=function(e) {})
+    tryCatch(svalue(SettingFL)[[swfp]] <- FALSE, error=function(e) {})
+    tryCatch(svalue(SettingFL)[[fenc]] <- "unknown", error=function(e) {})
+    tryCatch(svalue(SettingFL)[[name]] <- "default", error=function(e) {})
+    tryCatch(svalue(SettingFL)[[casc]] <- "gold", error=function(e) {})
+    tryCatch(svalue(SettingFL)[[colc]] <- "blue", error=function(e) {})
+    tryCatch(svalue(SettingFL)[[codt]] <- "coding", error=function(e) {})
     tryCatch(svalue(SettingFL)[[typr]] <- gettext("unconditional",
                                                 domain = "R-RQDA"), 
-                                                error=function(e){})
+                                                error=function(e) {})
     assign("BOM",FALSE,envir=.rqda)
     assign("SFP",FALSE,envir=.rqda)
     assign("encoding","unknown",envir=.rqda)
@@ -119,18 +119,18 @@ addSettingGUI <- function(container,width=12){
     
   })}
 
-setFont <- function(default="Sans 11"){
+setFont <- function(default="Sans 11") {
   font <- gtkFontButtonNew()
   gtkFontButtonSetFontName(font,default)
   gw <- gwindow(width=(gdkScreenWidth()/10),
                 height=(gdkScreenHeight()/10),
                 parent=getOption("widgetCoordinate"))
-  addHandlerKeystroke(gw, function(h, ...){
+  addHandlerKeystroke(gw, function(h, ...) {
       if(h$key=="\027") dispose(gw)
   })
   g <-glayout(container=gw, homogeneous=TRUE)
   g[1,1:2] <- font
-  g[2,1] <- gbutton("Ok",handler=function(h,...){
+  g[2,1] <- gbutton("Ok",handler=function(h,...) {
     ans <- font$GetFontName()
     assign("font",ans, envir=.rqda)
     dispose(g)

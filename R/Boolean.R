@@ -1,11 +1,11 @@
 #' @export
-getCodingsByOne <- function(cid, fid=NULL,codingTable=c("coding","coding2")){
+getCodingsByOne <- function(cid, fid=NULL,codingTable=c("coding","coding2")) {
     if (length(cid)!=1) stop("cid should be length-1 integer vector.", domain = "R-RQDA")
     codingTable <- match.arg(codingTable)
-     if (codingTable=="coding"){
+     if (codingTable=="coding") {
     ct <- rqda_sel(sprintf("select coding.rowid as rowid, coding.cid, coding.fid, freecode.name as codename, source.name as filename, coding.selfirst as index1, coding.selend as index2, coding.seltext as coding, coding.selend - coding.selfirst as CodingLength from coding left join freecode on (coding.cid=freecode.id) left join source on (coding.fid=source.id) where coding.status=1 and source.status=1 and freecode.status=1 and coding.cid=%s",cid))
      }
-     if (codingTable=="coding2"){
+     if (codingTable=="coding2") {
     ct <- rqda_sel(sprintf("select coding2.rowid as rowid, coding2.cid, coding2.fid, freecode.name as codename, source.name as filename, coding2.selfirst as index1, coding2.selend as index2, coding2.seltext as coding, coding2.selend - coding2.selfirst as CodingLength from coding2 left join freecode on (coding2.cid=freecode.id) left join source on (coding2.fid=source.id) where coding2.status=1 and source.status=1 and freecode.status=1 and coding2.cid=%s",cid))
      }
     if (nrow(ct) != 0) {
@@ -20,8 +20,8 @@ getCodingsByOne <- function(cid, fid=NULL,codingTable=c("coding","coding2")){
 #' @export 
 print.codingsByOne <- function (x,...)
 {
-    ComputeCallbackFun <- function(FileName,rowid){
-        CallBackFUN <- function(widget,event,...){
+    ComputeCallbackFun <- function(FileName,rowid) {
+        CallBackFUN <- function(widget,event,...) {
             ViewFileFunHelper(FileName,hightlight=FALSE)
             textView <- .rqda$.openfile_gui$widget
             buffer <- textView$buffer
@@ -45,7 +45,7 @@ print.codingsByOne <- function (x,...)
         fid <- unique(x$fid)
         Nfiles <- length(fid)
         Ncodings <- nrow(x)
-        if(Ncodings == 1){
+        if(Ncodings == 1) {
             title <- sprintf(ngettext(Nfiles,
                                       "1 coding from %i file",
                                       "1 coding from %i files", domain = "R-RQDA"), Nfiles)
@@ -60,7 +60,7 @@ print.codingsByOne <- function (x,...)
         .gw <- gwindow(title = title, parent = getOption("widgetCoordinate"),
                        width = getOption("widgetSize")[1], height = getOption("widgetSize")[2])
 
-        addHandlerKeystroke(.gw, function(h, ...){
+        addHandlerKeystroke(.gw, function(h, ...) {
         if(h$key=="\027") dispose(.gw)
         })
         mainIcon <- system.file("icon", "mainIcon.png", package = "RQDA")
@@ -98,7 +98,7 @@ print.codingsByOne <- function (x,...)
     }
 }
 
-andHelper <- function(d1,d2){
+andHelper <- function(d1,d2) {
     da11 <- sort(unlist(apply(d1,1,function(i)seq(i[1],i[2]))))
     da22 <- sort(unlist(apply(d2,1,function(i)seq(i[1],i[2]))))
     daAll <- c(da11,da22)
@@ -137,8 +137,8 @@ and <- function (CT1, CT2)
             ans <- rbind(ans,tmp)
             }
         }
-        if (nrow(ans) != 0){
-            txt <- apply(ans,1,function(x){
+        if (nrow(ans) != 0) {
+            txt <- apply(ans,1,function(x) {
                 txt <- rqda_sel(sprintf("select file from source where id=%s",x[["fid"]]))[1,1]
                 Encoding(txt) <- "UTF-8"
                 ans <- substr(txt, as.numeric(x[["index1"]])+1, as.numeric(x[["index2"]]))
@@ -151,7 +151,7 @@ and <- function (CT1, CT2)
     ans
 }
 
-orHelper <- function(d1,d2){
+orHelper <- function(d1,d2) {
     da11 <- sort(unlist(apply(d1,1,function(i)seq(i[1],i[2]))))
     da22 <- sort(unlist(apply(d2,1,function(i)seq(i[1],i[2]))))
     daAll <- c(da11,da22)
@@ -188,8 +188,8 @@ or <- function (CT1, CT2)
                 ans <- rbind(ans,tmp)
             }
         }
-        if (nrow(ans) != 0){
-            txt <- apply(ans,1,function(x){
+        if (nrow(ans) != 0) {
+            txt <- apply(ans,1,function(x) {
                 txt <- rqda_sel(sprintf("select file from source where id=%s",x[["fid"]]))[1,1]
                 Encoding(txt) <- "UTF-8"
                 ans <- substr(txt, as.numeric(x[["index1"]])+1, as.numeric(x[["index2"]]))
@@ -203,7 +203,7 @@ or <- function (CT1, CT2)
 }
 
 
-notHelper <- function(d1,d2){
+notHelper <- function(d1,d2) {
     da11 <- sort(unlist(apply(d1,1,function(i)seq(i[1],i[2]))))
     da22 <- sort(unlist(apply(d2,1,function(i)seq(i[1]+1,i[2]-1))))
     daAll <- setdiff(da11,da22)
@@ -238,8 +238,8 @@ not <- function (CT1, CT2)
                 ans <- rbind(ans,tmp)
             }
         }
-        if (nrow(ans) != 0){
-            txt <- apply(ans,1,function(x){
+        if (nrow(ans) != 0) {
+            txt <- apply(ans,1,function(x) {
                 txt <- rqda_sel(sprintf("select file from source where id=%s",x[["fid"]]))[1,1]
                 Encoding(txt) <- "UTF-8"
                 ans <- substr(txt, as.numeric(x[["index1"]])+1, as.numeric(x[["index2"]]))
@@ -254,39 +254,39 @@ not <- function (CT1, CT2)
 
 #' @method %and% codingsByOne
 #' @export
-"%and%.codingsByOne" <- function(e1,e2){
+"%and%.codingsByOne" <- function(e1,e2) {
     ## and(e1, e2, showCoding=TRUE, method= getOption("andMethod"))
     and(e1, e2)
 }
 
 #' @method %or% codingsByOne
 #' @export
-"%or%.codingsByOne" <- function(e1,e2){
+"%or%.codingsByOne" <- function(e1,e2) {
   or(e1, e2)
 }
 
 #' @method %not% codingsByOne
 #' @export
-"%not%.codingsByOne" <- function(e1,e2){
+"%not%.codingsByOne" <- function(e1,e2) {
   not(e1, e2)
 }
 
 
 
-## and_helper <- function(CT1,CT2,method){
+## and_helper <- function(CT1,CT2,method) {
 ##   ## CT1 and CT2 is from getCodingTable,each for one code and one file only
 ##   ridx <- vector()
 ##   idx <- vector()
 ##   for (i in 1:nrow(CT1)) {
-##     for (j in 1:nrow(CT2)){
+##     for (j in 1:nrow(CT2)) {
 ##       rel <- relation(as.numeric(CT1[i,c("index1","index2")]),as.numeric(CT2[j,c("index1","index2")]))
-##       if (rel$Relation %in% method){
+##       if (rel$Relation %in% method) {
 ##         ridx <- c(ridx,i,j)
 ##         idx <- c(idx,rel$OverlapIndex)
 ##       }
 ##     }
 ##   }
-##   if (length(ridx) >=2){
+##   if (length(ridx) >=2) {
 ##     rf <- ridx[seq(from=1,to=length(ridx),by=2)] ## row index for CT1
 ##     rs <- ridx[seq(from=2,to=length(ridx),by=2)] ## row index for CT2
 ##     index1 <- idx[seq(from=1,to=length(idx),by=2)]
@@ -297,7 +297,7 @@ not <- function (CT1, CT2)
 ## }
 
 
-## and <- function(CT1,CT2,showCoding=TRUE, method= c("overlap","exact","inclusion")){
+## and <- function(CT1,CT2,showCoding=TRUE, method= c("overlap","exact","inclusion")) {
 ##   ## CT1 and CT2 is from getCodingTable,each for one code only
 ##   fid <- intersect(CT1$fid,CT2$fid)
 ##   if (length(fid)>0) {
@@ -306,8 +306,8 @@ not <- function (CT1, CT2)
 ##     }
 ##       )
 ##     ans <- do.call(rbind,ans)
-##     if (showCoding && !is.null(ans)){
-##       txt <- apply(ans,1,function(x){
+##     if (showCoding && !is.null(ans)) {
+##       txt <- apply(ans,1,function(x) {
 ##         txt <- rqda_sel(sprintf("select file from source where id==%s",x[["fid"]]))[1,1]
 ##         Encoding(txt) <- "UTF-8"
 ##         ans <- substr(txt, as.numeric(x[["index1"]])+1, as.numeric(x[["index2"]]))
@@ -317,7 +317,7 @@ not <- function (CT1, CT2)
 ##     }
 ##   }
 
-##   if ((length(fid)==0) || is.null(ans)){
+##   if ((length(fid)==0) || is.null(ans)) {
 ##     ans <- data.frame("rowid"=integer(0),"fid"=integer(0),
 ##                       "filename"=character(0), "index1"=integer(0),
 ##                       "index2"=integer(0), "coding"=character(0))
@@ -330,8 +330,8 @@ not <- function (CT1, CT2)
 ## or <- function(CT1,CT2) {
 ##   ## revised from mergeCodes() again.
 ##   ## may use temp database table to do it.
-##   orHelperFUN <- function(From,Exist){ ## from and exist are data frame of codings.
-##     if (nrow(Exist)==0){## just write to the new code if there is no coding related to that code.
+##   orHelperFUN <- function(From,Exist) { ## from and exist are data frame of codings.
+##     if (nrow(Exist)==0) {## just write to the new code if there is no coding related to that code.
 ##       ans <- From[,c("rowid","fid","filename","index1","index2","coding"),drop=FALSE]
 ##     } else {
 ##       Relations <- apply(Exist[c("index1","index2")],1,FUN=function(x) relation(x,c(From$index1,From$index2)))
@@ -343,7 +343,7 @@ not <- function (CT1, CT2)
 ##         Exist$WhichMin <- sapply(Relations,FUN=function(x)x$WhichMin)
 ##         Exist$Start <- sapply(Relations,FUN=function(x)x$UnionIndex[1])
 ##         Exist$End <- sapply(Relations,FUN=function(x)x$UnionIndex[2])
-##         if (all(Exist$Relation=="proximity")){
+##         if (all(Exist$Relation=="proximity")) {
 ##           ## take care of proximity with distance of 0.
 ##           ## (a not b) or (b) == a
 ##           dis <- sapply(Relations,function(x) x$Distance)
@@ -370,7 +370,7 @@ not <- function (CT1, CT2)
 ##           del2 <- Exist$Relation =="overlap"
 ##           ## if overlap or inclusion [Exist nested in From] -> delete codings in Exist
 ##           del <- (del1 | del2) ## index of rows in Exist that should be deleted.
-##           if (any(del)){
+##           if (any(del)) {
 ##             ExistN <- Exist[-which(del),c("rowid","fid","filename","index1","index2","coding")]
 ##             ## delete codings
 ##             tt <-   rqda_sel(sprintf("select file from source where id=='%i'", From$fid))[1,1]
@@ -421,7 +421,7 @@ not <- function (CT1, CT2)
 ## }
 
 
-## not_helper <- function(CT1,CT2){
+## not_helper <- function(CT1,CT2) {
 ##   ## CT1 and CT2 is coings for one code and one file.
 ##   ridx <- vector()
 ##   idx <- vector()
@@ -439,13 +439,13 @@ not <- function (CT1, CT2)
 ##         if (all(Relation=="exact")) {
 ##           ## do nothing
 ##         } else { ## else2
-##           if (all(Relation=="proximity")){
+##           if (all(Relation=="proximity")) {
 ##             ridx <- c(ridx,i)
 ##             idx <- c(idx, CT1[i,c("index1","index2"),drop=TRUE])
 ##           } else { ## else3
 ##             in.over <- Relation %in% c("inclusion", "overlap") ## index of overlap and inclusion
 ##             rel.in.over <- relAll[in.over]
-##             nested <- sapply(rel.in.over,function(x){
+##             nested <- sapply(rel.in.over,function(x) {
 ##               if (x$Relation=="inclusion") {
 ##                 ans <- (!is.na(x$WhichMin) &&  !is.na(x$WhichMax) &&
 ##                         x$WhichMin==2 &&  x$WhichMax==2)
@@ -462,10 +462,10 @@ not <- function (CT1, CT2)
 ##               if (sum(over)>2) stop("the same text is coded twice by the same code.", domain = "R-RQDA")
 
 ##               for (j in which(over)) {
-##                 if (!is.na(relAll[[j]]$WhichMin) &&  relAll[[j]]$WhichMin==2){
+##                 if (!is.na(relAll[[j]]$WhichMin) &&  relAll[[j]]$WhichMin==2) {
 ##                   CT1[i,"index1"] <- relAll[[j]]$OverlapIndex[2]
 ##                 }
-##                 if (!is.na(relAll[[j]]$WhichMin) &&  relAll[[j]]$WhichMin==1){
+##                 if (!is.na(relAll[[j]]$WhichMin) &&  relAll[[j]]$WhichMin==1) {
 ##                   CT1[i,"index2"] <- relAll[[j]]$OverlapIndex[1]
 ##                 }
 ##               } ## end for j
@@ -482,7 +482,7 @@ not <- function (CT1, CT2)
 ##     } ## end else1
 ##   }## if1
 
-##   if (length(ridx) >=1){
+##   if (length(ridx) >=1) {
 ##     idx <- unlist(idx)
 ##     index1 <- idx[seq(from=1,to=length(idx),by=2)]
 ##     index2 <- idx[seq(from=2,to=length(idx),by=2)]
@@ -494,13 +494,13 @@ not <- function (CT1, CT2)
 ## }## end of fun
 
 
-## not <- function(CT1,CT2,showCoding=FALSE){
+## not <- function(CT1,CT2,showCoding=FALSE) {
 ##   fid <- unique(CT1$fid)
 ##   if (length(fid)>0) {
 ##     ans <- lapply(fid,FUN=function(x) not_helper(CT1=subset(CT1,fid==x),CT2=subset(CT2,fid==x)))
 ##     ans <- do.call(rbind,ans)
-##     if (showCoding && !is.null(ans)){
-##       txt <- apply(ans,1,function(x){
+##     if (showCoding && !is.null(ans)) {
+##       txt <- apply(ans,1,function(x) {
 ##         txt <- rqda_sel(sprintf("select file from source where id==%s",x[["fid"]]))[1,1]
 ##         Encoding(txt) <- "UTF-8"
 ##         ans <- substr(txt, as.numeric(x[["index1"]])+1, as.numeric(x[["index2"]]))

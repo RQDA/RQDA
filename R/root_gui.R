@@ -17,8 +17,8 @@ RQDA <- function() {
       visible = FALSE,
       handler = function(h, ...) { closeProject(assignenv = .rqda) }
     )
-    addHandlerKeystroke(.root_rqdagui, function(h, ...){
-      if(h$key=="\021"){
+    addHandlerKeystroke(.root_rqdagui, function(h, ...) {
+      if(h$key=="\021") {
       dispose(.root_rqdagui)
       assign("isLaunched", FALSE, envir = .rqda)
       }

@@ -1,4 +1,4 @@
-new_proj <- function(path, conName="qdacon",assignenv=.rqda,...){
+new_proj <- function(path, conName="qdacon",assignenv=.rqda,...) {
   ## success <- file.create(tmpNamme <- tempfile(pattern = "file"
   ## , tmpdir = dirname(path)))
   success <- (file.access(names=dirname(path),mode=2)==0)
@@ -25,10 +25,10 @@ new_proj <- function(path, conName="qdacon",assignenv=.rqda,...){
           con=TRUE,icon="error")
       }
     }
-    if (!fexist | override ){
+    if (!fexist | override ) {
       ## close con in assignmenv first.
       tryCatch(closeProject(conName=conName,assignenv=assignenv),
-               error=function(e){})
+               error=function(e) {})
       if (Encoding(path)=='UTF-8') {
         Encoding(path)='unknown'
         ## otherwise, it is illegible under windows when path contains
@@ -160,7 +160,7 @@ new_proj <- function(path, conName="qdacon",assignenv=.rqda,...){
   }
 }
 
-UpgradeTables <- function(){
+UpgradeTables <- function() {
   Fields <- dbListFields(.rqda$qdacon,"project")
   if (!"databaseversion" %in% Fields) {
     rqda_exe("alter table project add column databaseversion text")
@@ -213,7 +213,7 @@ UpgradeTables <- function(){
             "y1 integer, x2 integer, y2 integer, memo text, date text,",
             "dateM text, owner text,status integer)"))
   }
-  if (currentVersion=="0.1.6"){
+  if (currentVersion=="0.1.6") {
     rqda_exe("alter table project add column about text")
     rqda_exe(
       paste("update project set about='Database created by RQDA",
@@ -238,11 +238,11 @@ UpgradeTables <- function(){
             "y1 integer, x2 integer, y2 integer, memo text, date text,",
             "dateM text, owner text,status integer)"))
   }
-  if (currentVersion=="0.1.8"){
+  if (currentVersion=="0.1.8") {
     rqda_exe("update project set databaseversion='0.1.9'")
     rqda_exe("alter table freecode add column color text")
   }
-  if (currentVersion<"0.2.0"){
+  if (currentVersion<"0.2.0") {
     if (dbExistsTable(.rqda$qdacon,"coding2"))
       dbRemoveTable(.rqda$qdacon, "coding2")
 
@@ -252,27 +252,27 @@ UpgradeTables <- function(){
             "date text, memo text)"))
     rqda_exe("update project set databaseversion='0.2.0'")
   }
-  if (currentVersion<"0.2.2"){
+  if (currentVersion<"0.2.2") {
     rqda_exe("alter table treecode add column owner text")
     rqda_exe("alter table treefile add column owner text")
     rqda_exe("update project set databaseversion='0.2.2'")
   }
 }
 
-open_proj <- function(path,conName="qdacon",assignenv=.rqda,...){
+open_proj <- function(path,conName="qdacon",assignenv=.rqda,...) {
   tryCatch( { con <- get(conName,assignenv)
   pkg <- attr(attr(con,"class"),'package')
   Open <- getFunction("dbIsValid",
                       where=sprintf("package:%s",pkg))(con)
   if (open) dbDisconnect(con)
   },
-  error=function(e){})
+  error=function(e) {})
   ## Fist close the con if it exist, then open a new con.
   if (file.access(path, 2) == 0) {
     Encoding(path) <- "unknown"
     assign(conName, dbConnect(drv=dbDriver("SQLite"),dbname=path),
            envir=assignenv)
-  } else if (file.access(path, 4) == 0){
+  } else if (file.access(path, 4) == 0) {
     Encoding(path) <- "unknown"
     assign(conName, dbConnect(drv=dbDriver("SQLite"),dbname=path),
            envir=assignenv)
@@ -289,27 +289,27 @@ open_proj <- function(path,conName="qdacon",assignenv=.rqda,...){
 
 
 
-closeProject <- function(conName="qdacon",assignenv=.rqda,...){
+closeProject <- function(conName="qdacon",assignenv=.rqda,...) {
   tryCatch({
     con <- get(conName,assignenv)
     if (is_projOpen(message=FALSE)) {
-      tryCatch(dispose(.rqda$.sfp),error=function(e){})
-      tryCatch(dispose(.rqda$.root_edit),error=function(e){})
+      tryCatch(dispose(.rqda$.sfp),error=function(e) {})
+      tryCatch(dispose(.rqda$.root_edit),error=function(e) {})
       WidgetList <- ls(envir=.rqda,pattern="^[.]codingsOf",all.names=TRUE)
       for (i in WidgetList)
-        tryCatch(dispose(get(i,envir=.rqda)),error=function(e){})
+        tryCatch(dispose(get(i,envir=.rqda)),error=function(e) {})
       closeProjBF() ## update all widgets
       if (!dbDisconnect(con)) {
         gmessage(gettext("Closing project failed.", domain = "R-RQDA"),
                  icon="waring",container=TRUE)
       }
     }
-  } ,error=function(e){})
+  } ,error=function(e) {})
 }
 
 
 
-is_projOpen <- function(envir=.rqda,conName="qdacon",message=TRUE){
+is_projOpen <- function(envir=.rqda,conName="qdacon",message=TRUE) {
   ## test if any project is open.
   open <- FALSE
   tryCatch({
@@ -317,14 +317,14 @@ is_projOpen <- function(envir=.rqda,conName="qdacon",message=TRUE){
     pkg <- attr(attr(con,"class"),'package')
     Open2 <- getFunction("dbIsValid",where=sprintf("package:%s",pkg))(con)
     open <- open + Open2
-  } ,error=function(e){})
+  } ,error=function(e) {})
   if (!open & message) gmessage(gettext("No Project is Open.",
                                         domain = "R-RQDA"),icon="warning",
                                 container=TRUE)
   return(open)
 }
 
-backup_proj <- function(con){
+backup_proj <- function(con) {
   ## con=.rqda$qdacon
   dbname <- con@dbname
   Encoding(dbname) <- "UTF-8"
@@ -342,7 +342,7 @@ backup_proj <- function(con){
 
 # ToDo: use MemoWidget for this as well? Why are
 # there two MemoWidgets after all
-ProjectMemoWidget <- function(){
+ProjectMemoWidget <- function() {
   if (is_projOpen(envir=.rqda,"qdacon")) {
     ## use enviroment, so you can refer to the same object easily, this is
     ## the beauty of environment
@@ -361,7 +361,7 @@ ProjectMemoWidget <- function(){
                   width = getOption("widgetSize")[1],
                   height = getOption("widgetSize")[2])
 
-    addHandlerKeystroke(gw, function(h, ...){
+    addHandlerKeystroke(gw, function(h, ...) {
     if(h$key=="\027") dispose(gw)
     })
     mainIcon <- system.file("icon", "mainIcon.png", package = "RQDA")
@@ -372,7 +372,7 @@ ProjectMemoWidget <- function(){
     ## use .projmemo2, so can add a save button to it.
     proj_memoB <- gbutton(
       gettext("Save memo", domain = "R-RQDA"),
-      container=.projmemo2,handler=function(h,...){
+      container=.projmemo2,handler=function(h,...) {
         ## send the new content of memo back to database
         newcontent <- svalue(W)
         ## Encoding(newcontent) <- "UTF-8"
@@ -394,7 +394,7 @@ ProjectMemoWidget <- function(){
     tmp <- gtext(container=.projmemo2,font.attr=list(size="large"))
     size(tmp) <- body_s
     gSignalConnect(tmp$buffer, "changed",
-                   function(h,...){
+                   function(h,...) {
                      mbut <- get("proj_memoB",envir=button)
                      enabled(mbut) <- TRUE
                    })##
@@ -420,7 +420,7 @@ ProjectMemoWidget <- function(){
     ## push the previous content to the widget.
     size(proj_memoB) <- head_s
     enabled(proj_memoB) <- FALSE
-    addHandlerUnrealize(get(".projmemo",envir=.rqda),handler = function(h,...){
+    addHandlerUnrealize(get(".projmemo",envir=.rqda),handler = function(h,...) {
       withinWidget <- svalue(get(".projmemocontent",envir=.rqda))
       InRQDA <- rqda_sel("select memo from project where rowid=1")[1, 1]
       if (isTRUE(all.equal(withinWidget,InRQDA))) {
@@ -436,10 +436,10 @@ ProjectMemoWidget <- function(){
   }
 }
 
-close_AllCodings <- function(){
+close_AllCodings <- function() {
   obj <- ls(.rqda,all.names=TRUE,pattern="^.codingsOf")
   if (length(obj)!=0) {
-    for (i in obj){tryCatch(dispose(get(i,envir=.rqda)),error=function(e){})
+    for (i in obj) {tryCatch(dispose(get(i,envir=.rqda)),error=function(e) {})
     }
   }
 }

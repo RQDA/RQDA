@@ -1,4 +1,4 @@
-AutoCoding <- function(KeyWord,expansion=6){
+AutoCoding <- function(KeyWord,expansion=6) {
   Files <- searchFiles(paste("%",KeyWord,"%",collapse=""),content=TRUE)
   AnsIndex <- gregexpr(KeyWord,Files$file)
   AnsIndex2 <- lapply(AnsIndex, FUN=function(x) {
@@ -15,19 +15,19 @@ insertCoding <- function(fid, cid, start, end, fulltext) {
   DAT <- data.frame(cid=cid,fid=fid,seltext=substr(fulltext,start+1,end),selfirst=start,selend=end,status=1,owner=.rqda$owner,date=date(),memo=NA,stringsAsFactors=FALSE)
   DAT$seltext <- enc(DAT$seltext)
 
-  if (nrow(Exist1)==0){
+  if (nrow(Exist1)==0) {
     try(rqda_exe(sprintf("insert into coding (cid,fid, seltext, selfirst, selend, status, owner, date) values (%s, %s, '%s', %s, %s, %s, '%s', '%s') ",
                            DAT$cid, DAT$fid,DAT$seltext, DAT$selfirst, DAT$selend, 1, .rqda$owner, as.character(date()))),silent=TRUE)
   } else {
     Exist <- Exist1[,c("selfirst","selend","rowid")]
     Relations <- apply(Exist,1,FUN=function(x) relation(x[c("selfirst","selend")],c(start,end)))
     Exist$Relation <- sapply(Relations,FUN=function(x)x$Relation)
-    if (!any(Exist$Relation=="exact")){
+    if (!any(Exist$Relation=="exact")) {
       ## if they are axact, do nothing; -> if they are not exact, do something.
       Exist$WhichMin <- sapply(Relations,FUN=function(x)x$WhichMin)
       Exist$Start <- sapply(Relations,FUN=function(x)x$UnionIndex[1])
       Exist$End <- sapply(Relations,FUN=function(x)x$UnionIndex[2])
-      if (all(Exist$Relation=="proximity")){
+      if (all(Exist$Relation=="proximity")) {
         rowid <- NextRowId("coding")
         try(rqda_exe(sprintf("insert into coding (cid,fid, seltext, selfirst, selend, status, owner, date) values (%s, %s, '%s', %s, %s, %s, '%s', '%s') ",
                               DAT$cid, DAT$fid, DAT$seltext, DAT$selfirst, DAT$selend, 1, .rqda$owner, as.character(date()))),silent=TRUE)
@@ -38,7 +38,7 @@ insertCoding <- function(fid, cid, start, end, fulltext) {
         ## then write the new coding to table
         del2 <- Exist$Relation =="overlap"
         del <- (del1 | del2)
-        if (any(del)){
+        if (any(del)) {
           Sel <- c(min(Exist$Start[del]), max(Exist$End[del]))
           memo <- rqda_sel(sprintf("select memo from coding where rowid in (%s)", paste(Exist$rowid[del],collapse=",",sep="")))$memo
           memo <- paste(memo,collapse="",sep="")
@@ -59,7 +59,7 @@ codingBySearchOneFile <- function(pattern, fid, cid, seperator, concatenate, ...
   ## by providing approperiate seperator, it allows flexible control on the unit of autocoding
     txt <- rqda_sel(sprintf("select file from source where status=1 and id=%s",fid))$file
     Encoding(txt) <- "UTF-8"
-    pidx <- gregexpr(sprintf("(%s){1,}", seperator),txt)
+    pidx <- gregexpr(sprintf("(%s) {1,}", seperator),txt)
     idx1 <- c(0,pidx[[1]]+attr(pidx[[1]],"match.length")-1)
     idx2 <- c(pidx[[1]]-1,nchar(txt))
     sidx <- gregexpr(pattern,txt, ...)[[1]]

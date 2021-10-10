@@ -1,4 +1,4 @@
-AddJournalButton <- function(label=gettext("Add", domain = "R-RQDA")){
+AddJournalButton <- function(label=gettext("Add", domain = "R-RQDA")) {
   AddJouB <- gbutton(label,handler=function(h,...) {
         AddNewJournalFun()
     }
@@ -8,10 +8,10 @@ AddJournalButton <- function(label=gettext("Add", domain = "R-RQDA")){
   AddJouB
 }
 
-DeleteJournalButton <- function(label=gettext("Delete", domain = "R-RQDA")){
+DeleteJournalButton <- function(label=gettext("Delete", domain = "R-RQDA")) {
   DelJouB <- gbutton(label,handler=function(h,...) {
         del <- gconfirm(gettext("Really delete the journal?", domain = "R-RQDA"),icon="question")
-        if (isTRUE(del)){
+        if (isTRUE(del)) {
           Selected <- svalue(.rqda$.JournalNamesWidget)
           Encoding(Selected) <- "UTF-8"
           rqda_exe(sprintf("update journal set status=0 where name='%s'",enc(Selected)))
@@ -59,7 +59,7 @@ OpenJournalButton <- function(label=gettext("Open", domain = "R-RQDA"))
 
 JournalNamesUpdate <- function(Widget=.rqda$.JournalNamesWidget,decreasing=FALSE,...)
 {
-  if (is_projOpen()){
+  if (is_projOpen()) {
     journal <- rqda_sel( "select name from journal where status=1")
     if (nrow(journal)==0) {
       journal <- NULL
@@ -68,18 +68,18 @@ JournalNamesUpdate <- function(Widget=.rqda$.JournalNamesWidget,decreasing=FALSE
       Encoding(journal) <- "UTF-8"
       journal <- journal[OrderByTime(substring(journal,0,20),decreasing=decreasing)]
     }
-    tryCatch(Widget[] <- journal, error=function(e){})
+    tryCatch(Widget[] <- journal, error=function(e) {})
   }
 }
 
-AddNewJournalFun <- function(){
+AddNewJournalFun <- function() {
     if (is_projOpen(envir=.rqda,"qdacon")) {
         tryCatch(eval(parse(text="dispose(.rqda$.AddNewJournalWidget")),error=function(e) {}) ## close the widget if open
         gw <- gwindow(title="Add New Journal.",parent=getOption("widgetCoordinate"),
                       width = getOption("widgetSize")[1], height = getOption("widgetSize")[2]
                            )
 
-        addHandlerKeystroke(gw, function(h, ...){
+        addHandlerKeystroke(gw, function(h, ...) {
           if(h$key=="\027") dispose(gw)
         })
         
@@ -92,10 +92,10 @@ AddNewJournalFun <- function(){
         gw$set_icon(mainIcon)
         assign(".AddNewJournalWidget",gw,envir=.rqda)
         assign(".AddNewJournalWidget2",gpanedgroup(horizontal = FALSE, container=get(".AddNewJournalWidget",envir=.rqda)),envir=.rqda)
-        jbut <- gbutton(gettext("Save Journal", domain = "R-RQDA"),container=get(".AddNewJournalWidget2",envir=.rqda),handler=function(h,...){
+        jbut <- gbutton(gettext("Save Journal", domain = "R-RQDA"),container=get(".AddNewJournalWidget2",envir=.rqda),handler=function(h,...) {
             ## title <- ginput(gettext("Enter new file name. ", domain = "R-RQDA"),text=Sys.time(), icon="info")
             title <- as.character(Sys.time())
-            if (!is.na(title)){
+            if (!is.na(title)) {
             if (nrow(rqda_sel(sprintf("select name from journal where name='%s'",enc(title))))!=0) {
                 title <- paste("New",title)
             }## Make sure it is unique
@@ -121,10 +121,10 @@ AddNewJournalFun <- function(){
         textW <- get(".AddNewJournalWidgetW",envir=.rqda)
     }}
 
-ViewJournalWidget <- function(prefix="Journal",widget=.rqda$.JournalNamesWidget,dbTable="journal"){
+ViewJournalWidget <- function(prefix="Journal",widget=.rqda$.JournalNamesWidget,dbTable="journal") {
   if (is_projOpen(envir=.rqda,"qdacon")) {
       Selected <- svalue(widget)
-      if (length(Selected)==0){
+      if (length(Selected)==0) {
         gmessage(gettext("Select first.", domain = "R-RQDA"),icon="error",container=TRUE)
       }
       else {
@@ -133,7 +133,7 @@ ViewJournalWidget <- function(prefix="Journal",widget=.rqda$.JournalNamesWidget,
                      width = getOption("widgetSize")[1], height = getOption("widgetSize")[2]
                            )
 
-    addHandlerKeystroke(gw, function(h, ...){
+    addHandlerKeystroke(gw, function(h, ...) {
     if(h$key=="\027") dispose(gw)
     })
         mainIcon <- system.file("icon", "mainIcon.png", package = "RQDA")
@@ -142,7 +142,7 @@ ViewJournalWidget <- function(prefix="Journal",widget=.rqda$.JournalNamesWidget,
         assign(sprintf(".%smemo2",prefix),
                gpanedgroup(horizontal = FALSE, container=get(sprintf(".%smemo",prefix),envir=.rqda)),
                envir=.rqda)
-        saveJournalButton <- gbutton(gettext("Save Journal", domain = "R-RQDA"),container=get(sprintf(".%smemo2",prefix),envir=.rqda),handler=function(h,...){
+        saveJournalButton <- gbutton(gettext("Save Journal", domain = "R-RQDA"),container=get(sprintf(".%smemo2",prefix),envir=.rqda),handler=function(h,...) {
             newcontent <- svalue(W)
             newcontent <- enc(newcontent,encoding="UTF-8") ## take care of double quote.
             Encoding(Selected) <- "UTF-8"
@@ -161,10 +161,10 @@ ViewJournalWidget <- function(prefix="Journal",widget=.rqda$.JournalNamesWidget,
         Encoding(prvcontent) <- "UTF-8"
         W <- get(sprintf(".%smemoW",prefix),envir=.rqda)
         insert(W, prvcontent, do.newline = FALSE, where = "beginning")
-        addHandlerKeystroke(tmp,handler=function(h,...){
+        addHandlerKeystroke(tmp,handler=function(h,...) {
             enabled(button$saveJournalB) <- TRUE
         })
-        addHandlerUnrealize(get(sprintf(".%smemo",prefix),envir=.rqda),handler = function(h,...){
+        addHandlerUnrealize(get(sprintf(".%smemo",prefix),envir=.rqda),handler = function(h,...) {
             withinWidget <- svalue(get(sprintf(".%smemoW",prefix),envir=.rqda))
             InRQDA <- rqda_sel( sprintf("select journal from %s where name='%s'",dbTable, enc(Selected)))[1, 1]
             if (isTRUE(all.equal(withinWidget,InRQDA))) {

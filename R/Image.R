@@ -1,8 +1,8 @@
-ViewImage <- function(file,width=800,height=600,...){
+ViewImage <- function(file,width=800,height=600,...) {
   da <- gtkDrawingArea()
   env <- new.env()
   img <- gdkPixbufNewFromFile(file)$retval
-  expose_event <- function(widget,event,data){
+  expose_event <- function(widget,event,data) {
     assign("drawable",widget[["window"]],envir=env)
     gdkDrawPixbuf(env$drawable, gc = NULL, pixbuf=data$img,
                   event[["area"]][["x"]], event[["area"]][["y"]],
@@ -28,7 +28,7 @@ ViewImage <- function(file,width=800,height=600,...){
   return(env) ## so can pass it to gdkDraw* function.
 }
 
-AddRectangle <- function(obj,x=10,y=10,width=100,height=100,...){
+AddRectangle <- function(obj,x=10,y=10,width=100,height=100,...) {
   ## draw a rectangle on top of image
   ## obj is an object from ViewImage()$drawable
  dgc <- gdkGCNew(obj)

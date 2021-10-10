@@ -1,4 +1,4 @@
-getCodingsOfCodes <- function(fid = NULL, codingTable = c("coding", "coding2")){
+getCodingsOfCodes <- function(fid = NULL, codingTable = c("coding", "coding2")) {
     codes <- .rqda$.codes_rqda[]
     Encoding(codes) <- "UTF-8"
     selected <- gselect.list(codes)
@@ -65,7 +65,7 @@ getCodingsFromFiles <- function(Fid, order=c("fname","ftime","ctime"),
                        "(%s) %s"), codingTable, codingTable, codingTable,
                  codingTable, paste(Fid,collapse=","), order))
 
-    if (nrow(retrieval)==0){
+    if (nrow(retrieval)==0) {
         gmessage( rqda_txt("No Coding associated with the selected code."),
                   container=TRUE)
     } else {
@@ -73,7 +73,7 @@ getCodingsFromFiles <- function(Fid, order=c("fname","ftime","ctime"),
         Nfiles <- length(fid)
         retrieval$fname <-""
         Ncodings <- nrow(retrieval)
-        if(Ncodings == 1){
+        if(Ncodings == 1) {
             title <- sprintf(ngettext(Nfiles,
                                       "1 retrieved coding from %i file",
                                       "1 retrieved coding from %i files",
@@ -91,7 +91,7 @@ getCodingsFromFiles <- function(Fid, order=c("fname","ftime","ctime"),
                        height = getOption("widgetSize")[2]
         )
 
-    addHandlerKeystroke(.gw, function(h, ...){
+    addHandlerKeystroke(.gw, function(h, ...) {
     if(h$key=="\027") dispose(.gw)
     })
         mainIcon <- system.file("icon", "mainIcon.png", package = "RQDA")
@@ -124,7 +124,7 @@ getCodingsFromFiles <- function(Fid, order=c("fname","ftime","ctime"),
         Encoding(retrieval$seltext) <-  Encoding(retrieval$fname) <- "UTF-8"
         ## helper function
         ComputeCallbackFun <- function(FileName,rowid) {
-            CallBackFUN <- function(widget,event,...){
+            CallBackFUN <- function(widget,event,...) {
                 ViewFileFunHelper(FileName,hightlight=FALSE)
                 textView <- .rqda$.openfile_gui$widget
                 buffer <- textView$buffer
@@ -149,7 +149,7 @@ getCodingsFromFiles <- function(Fid, order=c("fname","ftime","ctime"),
 
         iter <- buffer$getIterAtOffset(0)$iter
 
-        apply(retrieval,1, function(x){
+        apply(retrieval,1, function(x) {
             metaData <- sprintf("[%s] - %s [%i:%i]",x[["code"]], x[['fname']],
                                 as.numeric(x[['selfirst']]),
                                 as.numeric(x[['selend']]))

@@ -167,7 +167,7 @@ AddNewFileFun <- function() {
                   width = getOption("widgetSize")[1],
                   height = getOption("widgetSize")[2])
 
-    addHandlerKeystroke(gw, function(h, ...){
+    addHandlerKeystroke(gw, function(h, ...) {
       if(h$key=="\027") dispose(gw)
     })
 

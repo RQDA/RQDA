@@ -1,11 +1,11 @@
-AddCodeButton <- function(label=gettext("Add", domain = "R-RQDA")){
+AddCodeButton <- function(label=gettext("Add", domain = "R-RQDA")) {
   AddCodB <- gbutton(label,
                      handler= function(h,...) {
                        if (is_projOpen(envir=.rqda,conName="qdacon")) {
                          codename <- ginput(gettext("Enter new code. ", domain = "R-RQDA"), icon="info")
                          if (!identical(codename, character(0)))
                          {
-                         if (!is.na(codename)){
+                         if (!is.na(codename)) {
                            codename <- enc(codename,encoding="UTF-8")
                            addcode(codename)
                            CodeNamesUpdate(sortByTime=FALSE)
@@ -20,7 +20,7 @@ AddCodeButton <- function(label=gettext("Add", domain = "R-RQDA")){
 }
 
 
-DeleteCodeButton <- function(label=gettext("Delete", domain = "R-RQDA")){
+DeleteCodeButton <- function(label=gettext("Delete", domain = "R-RQDA")) {
   DelCodB <- gbutton(
     label, handler= function(h,...) {
 
@@ -30,7 +30,7 @@ DeleteCodeButton <- function(label=gettext("Delete", domain = "R-RQDA")){
         del <- gconfirm(gettext("Really delete the code?", domain = "R-RQDA"),
                         icon="question")
 
-        if (isTRUE(del)){
+        if (isTRUE(del)) {
           SelectedCode <- svalue(.rqda$.codes_rqda)
           SelectedCode2 <- enc(SelectedCode,encoding="UTF-8")
           cid <- rqda_sel(
@@ -57,7 +57,7 @@ DeleteCodeButton <- function(label=gettext("Delete", domain = "R-RQDA")){
   DelCodB
 }
 
-RetrievalButton <- function(label){
+RetrievalButton <- function(label) {
   RetB <- gbutton(label,
                   handler= function(h,...) {
                     if (is_projOpen(envir=.rqda,conName="qdacon")) {
@@ -74,7 +74,7 @@ RetrievalButton <- function(label){
   return(RetB)
 }
 
-Mark_Button<-function(label=gettext("Mark", domain = "R-RQDA"),codeListWidget=".codes_rqda",name="MarCodB1"){
+Mark_Button<-function(label=gettext("Mark", domain = "R-RQDA"),codeListWidget=".codes_rqda",name="MarCodB1") {
   ans <- gbutton(label, handler= function(h,...) {
     MarkCodeFun(codeListWidget=codeListWidget,codingTable=.rqda$codingTable)
   })
@@ -84,19 +84,19 @@ Mark_Button<-function(label=gettext("Mark", domain = "R-RQDA"),codeListWidget=".
 }
 
 
-MarkCodeFun <- function(codeListWidget=".codes_rqda",codingTable="coding"){
+MarkCodeFun <- function(codeListWidget=".codes_rqda",codingTable="coding") {
   ## insert lable as mark when data is written to database.
   if (is_projOpen(envir=.rqda,conName="qdacon")) {
-    currentFile <- tryCatch(svalue(.rqda$.root_edit),error= function(e){NULL})
+    currentFile <- tryCatch(svalue(.rqda$.root_edit),error= function(e) {NULL})
     if (is.null(currentFile)) gmessage(gettext("Open a file first.", domain = "R-RQDA"),con=TRUE) else{
       W <- .rqda$.openfile_gui$widget
       con <- .rqda$qdacon
       codeListWidget <- get(codeListWidget,envir=.rqda)
       idx <- sindex(.rqda$.openfile_gui,includeAnchor=FALSE,codingTable=codingTable)
       ans <- list(start=idx$startN,end=idx$endN,text=idx$seltext)
-      if (ans$start != ans$end){ ## when selected no text, makes on sense to do anything.
+      if (ans$start != ans$end) { ## when selected no text, makes on sense to do anything.
         SelectedCode <- svalue(codeListWidget)
-        if (length(SelectedCode)!=0){
+        if (length(SelectedCode)!=0) {
           Encoding(SelectedCode) <- "UTF-8"
           SelectedCode2 <- enc(SelectedCode,encoding="UTF-8")
           codeInfo<-  rqda_sel(sprintf("select id,color from freecode where name='%s'",SelectedCode2))
@@ -121,11 +121,11 @@ MarkCodeFun <- function(codeListWidget=".codes_rqda",codingTable="coding"){
           Exist1 <-  rqda_sel(sprintf("select %s.rowid, selfirst, selend,freecode.name from %s, freecode where cid=%i and fid=%i and %s.status=1 and cid=freecode.id",codingTable, codingTable,currentCid,currentFid,codingTable))
           DAT <- data.frame(cid=currentCid,fid=currentFid,seltext=ans$text,selfirst=ans$start,selend=ans$end,status=1,owner=.rqda$owner,date=date(),memo=NA,stringsAsFactors=FALSE)
           DAT$seltext <- enc(DAT$seltext)
-          if (nrow(Exist1)==0){
+          if (nrow(Exist1)==0) {
             rowid <- NextRowId(codingTable)
             success <- try(rqda_exe( sprintf("insert into %s (cid,fid, seltext, selfirst, selend, status, owner, date) values (%s, %s, '%s', %s, %s, %s, '%s', '%s') ",
                                                            codingTable,DAT$cid, DAT$fid,DAT$seltext, DAT$selfirst, DAT$selend, 1, .rqda$owner, as.character(date()))),silent=TRUE) > 0
-            if (success){
+            if (success) {
               markRange(widget=.rqda$.openfile_gui,from=ans$start,to=ans$end,rowid=rowid,addButton=TRUE,buttonLabel=SelectedCode,buttonCol=codeCol,codingTable=codingTable)}
             else{
               gmessage(gettext("Fail to write to database.", domain = "R-RQDA"))
@@ -134,16 +134,16 @@ MarkCodeFun <- function(codeListWidget=".codes_rqda",codingTable="coding"){
             Exist <- Exist1[,c("selfirst","selend","rowid")]
             Relations <- apply(Exist,1,FUN= function(x) relation(x[c("selfirst","selend")],c(ans$start,ans$end)))
             Exist$Relation <- sapply(Relations,FUN= function(x)x$Relation)
-            if (!any(Exist$Relation=="exact")){
+            if (!any(Exist$Relation=="exact")) {
               ## if they are axact, do nothing; -> if they are not exact, do something.
               Exist$WhichMin <- sapply(Relations,FUN= function(x)x$WhichMin)
               Exist$Start <- sapply(Relations,FUN= function(x)x$UnionIndex[1])
               Exist$End <- sapply(Relations,FUN= function(x)x$UnionIndex[2])
-              if (all(Exist$Relation=="proximity")){
+              if (all(Exist$Relation=="proximity")) {
                 rowid <- NextRowId(codingTable)
                 success <- try(rqda_exe( sprintf("insert into %s (cid,fid, seltext, selfirst, selend, status, owner, date) values (%s, %s, '%s', %s, %s, %s, '%s', '%s') ",
                                                                codingTable,DAT$cid, DAT$fid, DAT$seltext, DAT$selfirst, DAT$selend, 1, .rqda$owner, as.character(date()))),silent=TRUE) > 0
-                if (success){
+                if (success) {
                   markRange(widget=.rqda$.openfile_gui,from=ans$start,to=ans$end,rowid=rowid,addButton=TRUE,
                             buttonLabel=SelectedCode,buttonCol=codeCol,codingTable=codingTable)
                 } else {gmessage(gettext("Fail to write to data base.", domain = "R-RQDA"),con=TRUE)}
@@ -155,13 +155,13 @@ MarkCodeFun <- function(codeListWidget=".codes_rqda",codingTable="coding"){
                 ## then write the new coding to table
                 del2 <- Exist$Relation =="overlap"
                 del <- (del1 | del2)
-                if (any(del)){
+                if (any(del)) {
                   Sel <- c(min(Exist$Start[del]), max(Exist$End[del]))
                   memo <- rqda_sel(sprintf("select memo from %s where rowid in (%s)", codingTable,paste(Exist$rowid[del],collapse=",",sep="")))$memo
                   memo <- paste(memo,collapse="",sep="")
                   rqda_exe(sprintf("delete from %s where rowid in (%s)", codingTable,paste(Exist$rowid[del],collapse=",",sep="")))
                   buffer <- W$buffer
-                  for (i in Exist1$rowid[del]){
+                  for (i in Exist1$rowid[del]) {
                     code <- Exist1[Exist1$rowid==i,"name"]
                     m <- buffer$GetMark(sprintf("%s.1", i))
                     pos <- buffer$GetIterAtMark(m)$iter$GetOffset()
@@ -188,13 +188,13 @@ MarkCodeFun <- function(codeListWidget=".codes_rqda",codingTable="coding"){
                   rowid <- NextRowId(codingTable)
                   success <- is.null(try(rqda_exe(sprintf("insert into %s (cid,fid, seltext, selfirst, selend, status, owner, date, memo) values (%s, %s, '%s', %s, %s, %s, '%s', '%s','%s') ",
                                                            codingTable,DAT$cid, DAT$fid,DAT$seltext, DAT$selfirst, DAT$selend, 1, .rqda$owner, as.character(date()), DAT$memo)),silent=TRUE))
-                  if (success){
+                  if (success) {
                     markRange(widget=.rqda$.openfile_gui,from=Sel[1],to=Sel[2],rowid=rowid,addButton=TRUE,buttonLabel=SelectedCode,buttonCol=codeCol,codingTable=codingTable)}else{gmessage(gettext("Fail to write to database.", domain = "R-RQDA"))}
                 }
               }}}}}}}}
 
 
-Unmark_Button <- function(label=gettext("Unmark", domain = "R-RQDA"),codeListWidget=.rqda$.codes_rqda,name="UnMarB1"){
+Unmark_Button <- function(label=gettext("Unmark", domain = "R-RQDA"),codeListWidget=.rqda$.codes_rqda,name="UnMarB1") {
   ans <- gbutton(gettext("Unmark", domain = "R-RQDA"), handler= function(h,...) {
     UnMarkCodeFunByRowid(codeListWidget=codeListWidget,codingTable=.rqda$codingTable)
     enabled(button$UnMarB1) <- FALSE
@@ -209,7 +209,7 @@ UnMarkCodeFun <- function(codeListWidget=.rqda$.codes_rqda,codingTable="coding")
   ## this function is superseded by MarkCodeFunByRowid
   if (is_projOpen(envir=.rqda,conName="qdacon")) {
     con <- .rqda$qdacon
-    W <- tryCatch( get(".openfile_gui",envir=.rqda), error= function(e){})
+    W <- tryCatch( get(".openfile_gui",envir=.rqda), error= function(e) {})
     ## get the widget for file display. If it does not exist, then return NULL.
     idx1 <- tryCatch(sindex(W,includeAnchor=FALSE,codingTable=codingTable),error= function(e) {})
     idx2 <- tryCatch(sindex(W,includeAnchor=TRUE,codingTable=codingTable),error= function(e) {})
@@ -265,7 +265,7 @@ UnMarkCodeFun <- function(codeListWidget=.rqda$.codes_rqda,codingTable="coding")
 
 
 UnMarkCodeFunByRowid <- function(codeListWidget=.rqda$.codes_rqda,codingTable="coding") {
-  W <- tryCatch( get(".openfile_gui",envir=.rqda), error= function(e){})
+  W <- tryCatch( get(".openfile_gui",envir=.rqda), error= function(e) {})
   ## get the widget for file display. If it does not exist, then return NULL.
   if (!is.null(W)) {
     rowid <- .codingEnv$selectedRowid
@@ -291,8 +291,8 @@ UnMarkCodeFunByRowid <- function(codeListWidget=.rqda$.codes_rqda,codingTable="c
   }
 }
 
-CodeMemoButton <- function(label=gettext("C-Memo", domain = "R-RQDA"),...){
-  codememobuton <- gbutton(label, handler= function(h,...){
+CodeMemoButton <- function(label=gettext("C-Memo", domain = "R-RQDA"),...) {
+  codememobuton <- gbutton(label, handler= function(h,...) {
     MemoWidget(gettext("code", domain = "R-RQDA"),.rqda$.codes_rqda,"freecode")
   }
   )
@@ -329,7 +329,7 @@ CodingMemoButton <- function(label=gettext("C2Memo", domain = "R-RQDA"))
     return(TRUE)
   }
 
-  OpenCodingMemo <- function(rowid,AnchorPos=NULL,title=NULL){
+  OpenCodingMemo <- function(rowid,AnchorPos=NULL,title=NULL) {
     ##  open a widget for memo, and take care of the save memo function
     tryCatch(dispose(.rqda$.codingmemo),error= function(e) {})
     ## Close the coding memo first, then open a new one
@@ -337,13 +337,13 @@ CodingMemoButton <- function(label=gettext("C2Memo", domain = "R-RQDA"))
     .codingmemo <- gwindow(title=title,getOption("widgetCoordinate"),
     width = getOption("widgetSize")[1], height = getOption("widgetSize")[2])
     
-        addHandlerKeystroke(.codingmemo, function(h, ...){
+        addHandlerKeystroke(.codingmemo, function(h, ...) {
         if(h$key=="\027") dispose(.codingmemo)
         })
     assign(".codingmemo",.codingmemo, envir=.rqda)
     .codingmemo <- get(".codingmemo",envir=.rqda)
     .codingmemo2 <- gpanedgroup(horizontal = FALSE, container=.codingmemo)
-    gbutton(gettext("Save Coding Memo", domain = "R-RQDA"),container=.codingmemo2,handler= function(h,...){
+    gbutton(gettext("Save Coding Memo", domain = "R-RQDA"),container=.codingmemo2,handler= function(h,...) {
       newcontent <- svalue(.rqda$.cdmemocontent)
       newcontent <- enc(newcontent,encoding="UTF-8") ## take care of double quote.
       rqda_exe(sprintf("update coding set memo='%s' where rowid=%i",newcontent,rowid))
@@ -362,10 +362,10 @@ CodingMemoButton <- function(label=gettext("C2Memo", domain = "R-RQDA"))
            font.attr=list(size="large"))
   } ## end of OpenCodingMemo
 
-  c2memobutton <- gbutton(label, handler= function(h,...){
+  c2memobutton <- gbutton(label, handler= function(h,...) {
     con <- .rqda$qdacon
     if (is_projOpen(envir=.rqda,conName="qdacon")) {
-      W <- tryCatch( get(".openfile_gui",envir=.rqda), error= function(e){})
+      W <- tryCatch( get(".openfile_gui",envir=.rqda), error= function(e) {})
       ## get the widget for file display. If it does not exist, then return NULL.
       sel_index <- tryCatch(sindex(W,includeAnchor=FALSE),error= function(e) {})
       AnchorPos <- tryCatch(sindex(W,includeAnchor=TRUE)$startN,error= function(e) {})
@@ -409,7 +409,7 @@ FreeCode_RenameButton <- function(label=gettext("Rename", domain = "R-RQDA"),Cod
     if (is_projOpen(envir=.rqda,"qdacon")) {
       ## if project is open, then continue
       selectedCodeName <- svalue(CodeNamesWidget)
-      if (length(selectedCodeName)==0){
+      if (length(selectedCodeName)==0) {
         gmessage(gettext("Select a code first.", domain = "R-RQDA"),icon="error",container=TRUE)
       }
       else {
@@ -437,7 +437,7 @@ FreeCode_RenameButton <- function(label=gettext("Rename", domain = "R-RQDA"),Cod
 }
 
 
-AnnotationButton <- function(label=gettext("Add Anno", domain = "R-RQDA")){
+AnnotationButton <- function(label=gettext("Add Anno", domain = "R-RQDA")) {
   AnnB <- gbutton(label,handler= function(h,...) {
     if (is_projOpen(envir=.rqda,conName="qdacon")) {
       Annotation()
@@ -454,39 +454,39 @@ GetCodesNamesWidgetMenu <- function()
 {
   CodesNamesWidgetMenu <- list()
 
-  CodesNamesWidgetMenu[[1]] <- gaction(gettext("Add To Code Category...", domain = "R-RQDA"), handler = function(h, ...){
+  CodesNamesWidgetMenu[[1]] <- gaction(gettext("Add To Code Category...", domain = "R-RQDA"), handler = function(h, ...) {
     AddToCodeCategory()
   })
 
-  CodesNamesWidgetMenu[[2]] <- gaction(gettext("All Code Memos", domain = "R-RQDA"), handler = function(h, ...){
+  CodesNamesWidgetMenu[[2]] <- gaction(gettext("All Code Memos", domain = "R-RQDA"), handler = function(h, ...) {
     if (is_projOpen(envir = .rqda, conName = "qdacon", message = FALSE)) {
       print(getMemos())
     }
   })
 
-  CodesNamesWidgetMenu[[3]] <- gaction(gettext("All Annotations", domain = "R-RQDA"), handler = function(h, ...){
+  CodesNamesWidgetMenu[[3]] <- gaction(gettext("All Annotations", domain = "R-RQDA"), handler = function(h, ...) {
     if (is_projOpen(envir = .rqda, conName = "qdacon", message = FALSE)) {
       print(getAnnos())
     }
   })
 
-  CodesNamesWidgetMenu[[4]] <- gaction(gettext("Code Memo", domain = "R-RQDA"), handler = function(h, ...){
+  CodesNamesWidgetMenu[[4]] <- gaction(gettext("Code Memo", domain = "R-RQDA"), handler = function(h, ...) {
     if (is_projOpen(envir = .rqda, conName = "qdacon", message = FALSE)) {
       MemoWidget(gettext("code", domain = "R-RQDA"),.rqda$.codes_rqda,"freecode")
     }
   })
 
-  CodesNamesWidgetMenu[[5]] <- gaction(gettext("Codings of Multiple Codes", domain = "R-RQDA"), handler = function(h, ...){
+  CodesNamesWidgetMenu[[5]] <- gaction(gettext("Codings of Multiple Codes", domain = "R-RQDA"), handler = function(h, ...) {
     ct <- getCodingsOfCodes(fid=getFileIds(condition=.rqda$TOR))
     print.codingsByOne(ct)
   })
 
-  CodesNamesWidgetMenu[[6]] <- gaction(gettext("Export Codings as HTML", domain = "R-RQDA"), handler = function(h, ...){
+  CodesNamesWidgetMenu[[6]] <- gaction(gettext("Export Codings as HTML", domain = "R-RQDA"), handler = function(h, ...) {
     if (is_projOpen(envir = .rqda, conName = "qdacon", message = FALSE)) {
       path=gfile(type="save",text = gettext("Type a name for the exported codings and click OK.", domain = "R-RQDA"))
      if (!identical(path, character(0)))
      {
-      if (!is.na(path)){
+      if (!is.na(path)) {
         Encoding(path) <- "UTF-8"
         path <- sprintf("%s.html",path)
         if (.rqda$TOR == "uncondition") fid <- NULL else fid <- getFileIds(condition=.rqda$TOR)
@@ -495,15 +495,15 @@ GetCodesNamesWidgetMenu <- function()
       }}
   })
 
-  CodesNamesWidgetMenu[[7]] <- gaction(gettext("Highlight All Codings", domain = "R-RQDA"), handler = function(h, ...){
+  CodesNamesWidgetMenu[[7]] <- gaction(gettext("Highlight All Codings", domain = "R-RQDA"), handler = function(h, ...) {
     HL_AllCodings()
   })
 
-  CodesNamesWidgetMenu[[8]] <- gaction(gettext("Highlight Codings with Memo", domain = "R-RQDA"), handler = function(h, ...){
+  CodesNamesWidgetMenu[[8]] <- gaction(gettext("Highlight Codings with Memo", domain = "R-RQDA"), handler = function(h, ...) {
     HL_CodingWithMemo()
   })
 
-  CodesNamesWidgetMenu[[9]] <- gaction(gettext("Merge Selected with...", domain = "R-RQDA"), handler = function(h, ...){
+  CodesNamesWidgetMenu[[9]] <- gaction(gettext("Merge Selected with...", domain = "R-RQDA"), handler = function(h, ...) {
     if (is_projOpen(envir = .rqda, conName = "qdacon", message = FALSE)) {
       Selected1 <- svalue(.rqda$.codes_rqda)
       cid1 <- rqda_sel(sprintf("select id from freecode where name='%s'",Selected1))[1,1]
@@ -514,15 +514,15 @@ GetCodesNamesWidgetMenu <- function()
     }
   })
 
-  CodesNamesWidgetMenu[[10]] <- gaction(gettext("Show Codes With Codings", domain = "R-RQDA"), handler = function(h, ...){
+  CodesNamesWidgetMenu[[10]] <- gaction(gettext("Show Codes With Codings", domain = "R-RQDA"), handler = function(h, ...) {
     CodeWithCoding(.rqda$TOR)
   })
 
-  CodesNamesWidgetMenu[[11]] <- gaction(gettext("Show Codes Without Codings", domain = "R-RQDA"), handler = function(h, ...){
+  CodesNamesWidgetMenu[[11]] <- gaction(gettext("Show Codes Without Codings", domain = "R-RQDA"), handler = function(h, ...) {
     CodeWithoutCoding(condition=.rqda$TOR)
   })
 
-  CodesNamesWidgetMenu[[12]] <- gaction(gettext("Show Codes With Code Category", domain = "R-RQDA"), handler = function(h, ...){
+  CodesNamesWidgetMenu[[12]] <- gaction(gettext("Show Codes With Code Category", domain = "R-RQDA"), handler = function(h, ...) {
     if (is_projOpen(envir = .rqda, conName = "qdacon", message = FALSE)) {
       cid <- rqda_sel("select id from freecode where status=1 and id in (select cid from treecode where status=1)")
       if (nrow(cid)!=0) {
@@ -532,7 +532,7 @@ GetCodesNamesWidgetMenu <- function()
     }
   })
 
-  CodesNamesWidgetMenu[[13]] <- gaction(gettext("Show Codes Without Code Category", domain = "R-RQDA"), handler = function(h, ...){
+  CodesNamesWidgetMenu[[13]] <- gaction(gettext("Show Codes Without Code Category", domain = "R-RQDA"), handler = function(h, ...) {
     if (is_projOpen(envir = .rqda, conName = "qdacon", message = FALSE)) {
       cid <- rqda_sel("select id from freecode where status=1 and id not in (select cid from treecode where status=1)")
       if (nrow(cid)!=0) {
@@ -542,7 +542,7 @@ GetCodesNamesWidgetMenu <- function()
     }
   })
 
-  CodesNamesWidgetMenu[[14]] <- gaction(gettext("Show Codes With Memo", domain = "R-RQDA"), handler = function(h, ...){
+  CodesNamesWidgetMenu[[14]] <- gaction(gettext("Show Codes With Memo", domain = "R-RQDA"), handler = function(h, ...) {
     if (is_projOpen(envir = .rqda, conName = "qdacon", message = FALSE)) {
       cid <- rqda_sel("select id from freecode where memo is not null and memo != ''")
       if (nrow(cid)!=0) {
@@ -552,7 +552,7 @@ GetCodesNamesWidgetMenu <- function()
     }
   })
 
-  CodesNamesWidgetMenu[[15]] <- gaction(gettext("Show Codes Without Memo", domain = "R-RQDA"), handler = function(h, ...){
+  CodesNamesWidgetMenu[[15]] <- gaction(gettext("Show Codes Without Memo", domain = "R-RQDA"), handler = function(h, ...) {
     if (is_projOpen(envir = .rqda, conName = "qdacon", message = FALSE)) {
       cid <- rqda_sel("select id from freecode where memo is null or memo = ''")
       if (nrow(cid)!=0) {
@@ -562,7 +562,7 @@ GetCodesNamesWidgetMenu <- function()
     }
   })
 
-  CodesNamesWidgetMenu[[16]] <- gaction(gettext("Show Codes With Selected File", domain = "R-RQDA"), handler = function(h, ...){
+  CodesNamesWidgetMenu[[16]] <- gaction(gettext("Show Codes With Selected File", domain = "R-RQDA"), handler = function(h, ...) {
     fname <- svalue(.rqda$.fnames_rqda)
     if (length(fname) > 0) {
       fname <- enc(fname)
@@ -571,14 +571,14 @@ GetCodesNamesWidgetMenu <- function()
                                                                                                         select source.id from source where source.status=1 and source.name='%s'
                                                                                                         )
                                  )", fname))
-      if (nrow(codes) > 0){
+      if (nrow(codes) > 0) {
         Encoding(codes$name) <- "UTF-8"
         .rqda$.codes_rqda[] <- codes$name
       }
     }
   })
 
-  CodesNamesWidgetMenu[[17]] <- gaction(gettext("Set Coding Mark Color", domain = "R-RQDA"), handler = function(h, ...){
+  CodesNamesWidgetMenu[[17]] <- gaction(gettext("Set Coding Mark Color", domain = "R-RQDA"), handler = function(h, ...) {
     if (is_projOpen(envir = .rqda, conName = "qdacon", message = FALSE)) {
       Selected <- svalue(.rqda$.codes_rqda)
       Selected <- enc(Selected,"UTF-8")
@@ -587,22 +587,22 @@ GetCodesNamesWidgetMenu <- function()
       codeColor <- codeInfo[,2]
       if (is.na(codeColor)) title <- "Change color to..." else title <- sprintf("Change from '%s' to...",codeColor)
       newCol <- gselect.list(colors(), multiple = FALSE, title = title, x=getOption("widgetCoordinate")[1])
-      if (newCol!="" && length(newCol)!=0){
-        if (!identical(codeColor,newCol)){
+      if (newCol!="" && length(newCol)!=0) {
+        if (!identical(codeColor,newCol)) {
           rqda_exe(sprintf("update freecode set color='%s' where id =%i",newCol,cid))
         }
       }}
   })
 
-  CodesNamesWidgetMenu[[18]] <- gaction(gettext("Sort: By Created Time", domain = "R-RQDA"), handler = function(h, ...){
+  CodesNamesWidgetMenu[[18]] <- gaction(gettext("Sort: By Created Time", domain = "R-RQDA"), handler = function(h, ...) {
     if (is_projOpen(envir = .rqda, conName = "qdacon", message = FALSE)) {
       CodeNamesUpdate(sortByTime=TRUE)
     }
   })
 
-  CodesNamesWidgetMenu[[19]] <- gaction(gettext("Sort: Most to Least Frequently Used", domain = "R-RQDA"), handler = function(h, ...){
+  CodesNamesWidgetMenu[[19]] <- gaction(gettext("Sort: Most to Least Frequently Used", domain = "R-RQDA"), handler = function(h, ...) {
     freq <- rqda_sel("select count(cid) as freq, freecode.name, freecode.status from freecode left join coding on cid=freecode.id group by freecode.name order by freq desc")
-    if (nrow(freq)>0){
+    if (nrow(freq)>0) {
       Encoding(freq$name) <- "UTF-8"
       #freq <- subset(freq, status==1)
       freq <- freq[freq$status==1, ]
@@ -611,9 +611,9 @@ GetCodesNamesWidgetMenu <- function()
     }
   })
 
-  CodesNamesWidgetMenu[[20]] <- gaction(gettext("Sort: Least to Most Frequently Used", domain = "R-RQDA"), handler = function(h, ...){
+  CodesNamesWidgetMenu[[20]] <- gaction(gettext("Sort: Least to Most Frequently Used", domain = "R-RQDA"), handler = function(h, ...) {
     freq <- rqda_sel("select count(cid) as freq, freecode.name, freecode.status from freecode left join coding on cid=freecode.id group by freecode.name order by freq asc")
-    if (nrow(freq)>0){
+    if (nrow(freq)>0) {
       Encoding(freq$name) <- "UTF-8"
       #freq <- subset(freq, status==1)
       freq <- freq[freq$status==1, ]

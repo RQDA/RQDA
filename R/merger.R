@@ -1,6 +1,6 @@
-mergeCodes <- function(cid1,cid2){ ## cid1 and cid2 are two code IDs.
-  mergeHelperFUN <- function(From,Exist){ ## from and exist are data frame of codings.
-    if (nrow(Exist)==0){## just write to the new code if there is no coding related to that code.
+mergeCodes <- function(cid1,cid2) { ## cid1 and cid2 are two code IDs.
+  mergeHelperFUN <- function(From,Exist) { ## from and exist are data frame of codings.
+    if (nrow(Exist)==0) {## just write to the new code if there is no coding related to that code.
       success <- rqda_wrt("coding", From)
       if (!success) gmessage(gettext("Fail to write to database.", domain = "R-RQDA"))
     } else {
@@ -8,13 +8,13 @@ mergeCodes <- function(cid1,cid2){ ## cid1 and cid2 are two code IDs.
       ## because apply convert data to an array, and Exist containts character -> x is charater rather than numeric
       Exist$Relation <- sapply(Relations,FUN=function(x) x$Relation) ## add Relation to the data frame as indicator.
       ## possible bugs: should handle exact explicitely.
-      if (!any(Exist$Relation=="exact")){
+      if (!any(Exist$Relation=="exact")) {
         ## if they are axact, do nothing; -> if they are not exact, do something. The following lines record meta info.
         Exist$WhichMin <- sapply(Relations,FUN=function(x)x$WhichMin)
         Exist$WhichMax <- sapply(Relations,FUN=function(x)x$WhichMax)
         Exist$Start <- sapply(Relations,FUN=function(x)x$UnionIndex[1])
         Exist$End <- sapply(Relations,FUN=function(x)x$UnionIndex[2])
-        if (all(Exist$Relation=="proximity")){ ## if there are no overlap in any kind, just write to database
+        if (all(Exist$Relation=="proximity")) { ## if there are no overlap in any kind, just write to database
             dis <- sapply(Relations,function(x) x$Distance)
             if (all(dis>0)) {
                 success <- rqda_wrt("coding", From)
@@ -35,7 +35,7 @@ mergeCodes <- function(cid1,cid2){ ## cid1 and cid2 are two code IDs.
           del2 <- Exist$Relation =="overlap"
           ## if overlap or inclusion [Exist nested in From] -> delete codings in Exist
           del <- (del1 | del2) ## index of rows in Exist that should be deleted.
-          if (any(del)){
+          if (any(del)) {
             ## no rowid in Exist by sql of select, so add rowid to it (That is ToDat data frame).
             To_memo <- rqda_sel(sprintf("select memo from coding where rowid in (%s)",
                                                     paste(Exist$rowid[del],collapse=",",sep="")))$memo
@@ -94,7 +94,7 @@ findConsecutive <- function(x) {
     ans
 }
 
-expand <- function(first, end){
+expand <- function(first, end) {
     seq(from=first,to=end,by=1)
 }
 ## x <- c(0,1,2,5,6,7,8,20,21,23,24)

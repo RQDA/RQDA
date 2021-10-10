@@ -2,7 +2,7 @@ saveAsButt <- function(label=rqda_txt("Save Project As ..."),
                        container) {
 
     saveAsB <- gbutton(text=label, container=container,
-                       handler=function(h, ...){
+                       handler=function(h, ...) {
                            saveAs()
                        })
 
@@ -42,7 +42,7 @@ saveAs <- function(newpath=NULL) {
         }
     }
 
-    if (!fexist | override ){
+    if (!fexist | override ) {
         succeeded <- file.copy(from=oldpath, to=newpath,overwrite=override)
     }
 

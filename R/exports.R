@@ -1,5 +1,5 @@
 #' @export
-exportCodedFile <- function(file, fid, closeAfter=TRUE){
+exportCodedFile <- function(file, fid, closeAfter=TRUE) {
     ## possible bug when there is annotations
     ## open a file of fid first
     fname <- rqda_sel(sprintf("select name from source where id=%s and status=1",fid))$name[1]
@@ -15,7 +15,7 @@ exportCodedFile <- function(file, fid, closeAfter=TRUE){
     idx <- sort(unique(c(0, endidx, cidx$selfirst,cidx$selend)))
     nidx <- length(idx) - 1
 
-    for (i in 1:nidx){
+    for (i in 1:nidx) {
         idx1 <- idx[i] + shift
         idx2 <- idx[i+1] + shift
         iter1 <- buffer$GetIterAtOffset(idx1)$iter

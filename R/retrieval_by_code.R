@@ -27,7 +27,7 @@ retrieval_by_code <- function (Fid = NULL, order = c("fname", "ftime", "ctime"),
             retrieval$fname <- ""
             Nfiles <- length(fid)
             Ncodings <- nrow(retrieval)
-            if(Ncodings == 1){
+            if(Ncodings == 1) {
                 title <- sprintf(ngettext(Nfiles,
                                           "1 retrieved coding: \"%s\" from %i file", 
                                           "1 retrieved coding: \"%s\" from %i files", domain = "R-RQDA"),
@@ -47,7 +47,7 @@ retrieval_by_code <- function (Fid = NULL, order = c("fname", "ftime", "ctime"),
                 width = getOption("widgetSize")[1], height = getOption("widgetSize")[2]
                 )
 
-    addHandlerKeystroke(.gw, function(h, ...){
+    addHandlerKeystroke(.gw, function(h, ...) {
     if(h$key=="\027") dispose(.gw)
     })
 

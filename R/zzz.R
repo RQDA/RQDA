@@ -26,7 +26,7 @@
   }
 }
 
-.onUnload <- function(...){
+.onUnload <- function(...) {
   cat("Bye, RQDA is unloaded.\n")
   options(.rqda$optOld)
 }

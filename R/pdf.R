@@ -1,4 +1,4 @@
-importPDFHL <- function(file, type=c("Highlight"), engine="rjpod"){
+importPDFHL <- function(file, type=c("Highlight"), engine="rjpod") {
     if (missing(file)) {
         file <- gfile(text="select a pdf file", type="open", filter=list("PDF"=list(patterns=c("*.PDF"))))
     }
