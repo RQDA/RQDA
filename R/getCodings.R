@@ -85,7 +85,7 @@ getCodingsFromFiles <- function(Fid, order=c("fname", "ftime", "ctime"),
                                       domain = "R-RQDA"), Ncodings, Nfiles)
         }
         wnh <- size(.rqda$.root_rqdagui$widget) ## size of the main window
-        # parent=c(wnh[1]+10, 2), FixMe: ???
+        # parent=c(wnh[1] + 10, 2), FixMe: ???
         .gw <- gwindow(title=title, 
                        width = getOption("widgetSize")[1], 
                        height = getOption("widgetSize")[2]

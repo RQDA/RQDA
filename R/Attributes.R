@@ -36,7 +36,7 @@ EditVarWidget <- function(ExistingItems=NULL, container=NULL, title=NULL, ID=NUL
       column <- cell$getData("column")
       iter <- model$getIter(path)$iter
       if (column == 1) {
-               i <- path$getIndices()[[1]]+1
+               i <- path$getIndices()[[1]] + 1
                articles[[i]]$Value <<- new.text
                model$set(iter, column, articles[[i]]$Value)
              }

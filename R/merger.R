@@ -87,7 +87,7 @@ findConsecutive <- function(x) {
     x <- sort(x)
     d <- diff(x)
     d2 <- rle(d)
-    eidx <- cumsum(d2$length) [which(d2$values == 1)]+1
+    eidx <- cumsum(d2$length) [which(d2$values == 1)] + 1
     L.consecutive <- d2$length[which(d2$values == 1)]
     bidx <- eidx - L.consecutive
     ans <- data.frame(first=x[bidx], end=x[eidx])
@@ -121,7 +121,7 @@ erger2 <- function(cid1, cid2, data)
             idx <- unique(intersect(idx1, idx2))
             if (length(idx)>1) {
                 res <- findConsecutive(idx)
-                res <- data.frame(fid=fid, cid=tmpdat1$cid[1], index1=res$first, index2=res$end+1)
+                res <- data.frame(fid=fid, cid=tmpdat1$cid[1], index1=res$first, index2=res$end + 1)
                 ans <- rbind(ans, res)
             }
         }

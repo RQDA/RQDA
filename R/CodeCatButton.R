@@ -27,7 +27,7 @@ AddTodbTable <- function(item, dbTable, Id="id", field="name", con=.rqda$qdacon,
     ## now handles ' in item
     if (item != "") {
         maxid <- rqda_sel(sprintf("select max(%s) from %s", Id, dbTable))[[1]]
-        nextid <- ifelse(is.na(maxid), 0+1, maxid+1)
+        nextid <- ifelse(is.na(maxid), 0 + 1, maxid + 1)
         write <- FALSE
         if (nextid == 1) {
             write <- TRUE

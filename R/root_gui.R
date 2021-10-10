@@ -327,7 +327,7 @@ RQDA <- function() {
 
     ## Put them together
     if (is.null(getOption("widgetCoordinate"))) {
-      options(widgetCoordinate = c(size(.root_rqdagui$widget)[1]+12, 2))
+      options(widgetCoordinate = c(size(.root_rqdagui$widget)[1] + 12, 2))
     }
 
     visible(.root_rqdagui) <- TRUE

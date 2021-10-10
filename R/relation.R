@@ -79,7 +79,7 @@ crossTwoCodes <- function(cid1, cid2, data, relation=c("overlap", "inclusion", "
         for(j in seq_len(nrow(tmpdat2))) {
           Relation <- relation(unlist(tmpdat2[j, c("index1", "index2")]), unlist(tmpdat1[i, c("index1", "index2")]))
           if (Relation$Relation == relation) {
-            ans <- ans+1
+            ans <- ans + 1
             ## may add atributes to ans, so to get more information
           }
         }

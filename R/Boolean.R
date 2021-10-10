@@ -105,8 +105,8 @@ andHelper <- function(d1, d2) {
     ta <- table(daAll)
     x <- sort(as.numeric(names(ta)[which(ta == 2)]))
     vnl <- rle(diff(x))
-    idx2 <- 1+cumsum(vnl$lengths)[which(vnl$value == 1)]
-    len <- 1+vnl$lengths[which(vnl$value == 1)]
+    idx2 <- 1 + cumsum(vnl$lengths)[which(vnl$value == 1)]
+    len <- 1 + vnl$lengths[which(vnl$value == 1)]
     idx1 <- idx2 - len + 1
     x1 <- x[idx1]
     x2 <- x[idx2]
@@ -141,7 +141,7 @@ and <- function(CT1, CT2)
             txt <- apply(ans, 1, function(x) {
                 txt <- rqda_sel(sprintf("select file from source where id=%s", x[["fid"]]))[1, 1]
                 Encoding(txt) <- "UTF-8"
-                ans <- substr(txt, as.numeric(x[["index1"]])+1, as.numeric(x[["index2"]]))
+                ans <- substr(txt, as.numeric(x[["index1"]]) + 1, as.numeric(x[["index2"]]))
                 ans
             })
             ans$coding <- txt
@@ -157,8 +157,8 @@ orHelper <- function(d1, d2) {
     daAll <- c(da11, da22)
     x <- sort(unique(daAll))
     vnl <- rle(diff(x))
-    idx2 <- 1+cumsum(vnl$lengths)[which(vnl$value == 1)]
-    len <- 1+vnl$lengths[which(vnl$value == 1)]
+    idx2 <- 1 + cumsum(vnl$lengths)[which(vnl$value == 1)]
+    len <- 1 + vnl$lengths[which(vnl$value == 1)]
     idx1 <- idx2 - len + 1
     x1 <- x[idx1]
     x2 <- x[idx2]
@@ -192,7 +192,7 @@ or <- function(CT1, CT2)
             txt <- apply(ans, 1, function(x) {
                 txt <- rqda_sel(sprintf("select file from source where id=%s", x[["fid"]]))[1, 1]
                 Encoding(txt) <- "UTF-8"
-                ans <- substr(txt, as.numeric(x[["index1"]])+1, as.numeric(x[["index2"]]))
+                ans <- substr(txt, as.numeric(x[["index1"]]) + 1, as.numeric(x[["index2"]]))
                 ans
             })
             ans$coding <- txt
@@ -205,12 +205,12 @@ or <- function(CT1, CT2)
 
 notHelper <- function(d1, d2) {
     da11 <- sort(unlist(apply(d1, 1, function(i)seq(i[1], i[2]))))
-    da22 <- sort(unlist(apply(d2, 1, function(i)seq(i[1]+1, i[2]-1))))
+    da22 <- sort(unlist(apply(d2, 1, function(i)seq(i[1] + 1, i[2]-1))))
     daAll <- setdiff(da11, da22)
     x <- sort(unique(daAll))
     vnl <- rle(diff(x))
-    idx2 <- 1+cumsum(vnl$lengths)[which(vnl$value == 1)]
-    len <- 1+vnl$lengths[which(vnl$value == 1)]
+    idx2 <- 1 + cumsum(vnl$lengths)[which(vnl$value == 1)]
+    len <- 1 + vnl$lengths[which(vnl$value == 1)]
     idx1 <- idx2 - len + 1
     x1 <- x[idx1]
     x2 <- x[idx2]
@@ -242,7 +242,7 @@ not <- function(CT1, CT2)
             txt <- apply(ans, 1, function(x) {
                 txt <- rqda_sel(sprintf("select file from source where id=%s", x[["fid"]]))[1, 1]
                 Encoding(txt) <- "UTF-8"
-                ans <- substr(txt, as.numeric(x[["index1"]])+1, as.numeric(x[["index2"]]))
+                ans <- substr(txt, as.numeric(x[["index1"]]) + 1, as.numeric(x[["index2"]]))
                 ans
             })
             ans$coding <- txt
@@ -310,7 +310,7 @@ not <- function(CT1, CT2)
 ##       txt <- apply(ans, 1, function(x) {
 ##         txt <- rqda_sel(sprintf("select file from source where id == %s", x[["fid"]]))[1, 1]
 ##         Encoding(txt) <- "UTF-8"
-##         ans <- substr(txt, as.numeric(x[["index1"]])+1, as.numeric(x[["index2"]]))
+##         ans <- substr(txt, as.numeric(x[["index1"]]) + 1, as.numeric(x[["index2"]]))
 ##         ans
 ##       })
 ##       ans$coding <- txt
@@ -348,7 +348,7 @@ not <- function(CT1, CT2)
 ##           ## (a not b) or (b) == a
 ##           dis <- sapply(Relations, function(x) x$Distance)
 ##           if (all(dis>0)) {
-##             ## if there are no overlap in any kind, the result is From+Exist
+##             ## if there are no overlap in any kind, the result is From + Exist
 ##             ans <- rbind(From[, c("rowid", "fid", "filename", "index1", "index2", "coding"), drop=FALSE], 
 ##                          Exist[, c("rowid", "fid", "filename", "index1", "index2", "coding"), drop=FALSE])
 ##           } else {
@@ -401,7 +401,7 @@ not <- function(CT1, CT2)
 
 ##   fidUnique <- unique(FromDat$fid)
 ##   Nf <- length(fidUnique)
-##   ans <- vector("list", Nf+1)
+##   ans <- vector("list", Nf + 1)
 ##   for (j in 1:Nf) {
 ##     From <- FromDat[FromDat$fid == fidUnique[j], ]
 ##     for (i in seq_len(nrow(From))) {
@@ -414,7 +414,7 @@ not <- function(CT1, CT2)
 ##     }## end of i
 ##     ans[[j]] <- Exist
 ##   } ## and of j
-##   ans[[j+1]] <- ToDat[!ToDat$fid %in% fidUnique, c("rowid", "fid", "filename", "index1", "index2", "coding"), drop=FALSE]
+##   ans[[j + 1]] <- ToDat[!ToDat$fid %in% fidUnique, c("rowid", "fid", "filename", "index1", "index2", "coding"), drop=FALSE]
 ##   ans <- do.call(rbind, ans)
 ##   class(ans) <- c("codingsByOne", "data.frame")
 ##   ans
@@ -503,7 +503,7 @@ not <- function(CT1, CT2)
 ##       txt <- apply(ans, 1, function(x) {
 ##         txt <- rqda_sel(sprintf("select file from source where id == %s", x[["fid"]]))[1, 1]
 ##         Encoding(txt) <- "UTF-8"
-##         ans <- substr(txt, as.numeric(x[["index1"]])+1, as.numeric(x[["index2"]]))
+##         ans <- substr(txt, as.numeric(x[["index1"]]) + 1, as.numeric(x[["index2"]]))
 ##         ans
 ##       })
 ##       ans$coding <- txt

@@ -23,7 +23,7 @@ AddCase <- function(name, conName="qdacon", assignenv=.rqda, ...) {
   if (name != "") {
     con <- get(conName, assignenv)
     maxid <- rqda_sel("select max(id) from cases")[[1]]
-    nextid <- ifelse(is.na(maxid), 0+1, maxid+1)
+    nextid <- ifelse(is.na(maxid), 0 + 1, maxid + 1)
     write <- FALSE
     if (nextid == 1) {
       write <- TRUE

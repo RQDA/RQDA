@@ -102,14 +102,14 @@ MarkCodeFun <- function(codeListWidget=".codes_rqda", codingTable="coding") {
           codeInfo<-  rqda_sel(sprintf("select id, color from freecode where name='%s'", SelectedCode2))
           currentCid <- codeInfo[, 1]
           codeCol <- codeInfo[, 2] ## select color for the code
-          ## if (is.na(codeCol)) codeCol <-  c("antiquewhite1", "green", "aquamarine2", "bisque1", "brown1")[as.numeric(currentCid) %% 5+1] ## specification of default color for codemark
-          if (is.na(codeCol)) codeCol <-  DefaultCodeColor[as.numeric(currentCid) %% 11+1] ## specification of default color for codemark
+          ## if (is.na(codeCol)) codeCol <-  c("antiquewhite1", "green", "aquamarine2", "bisque1", "brown1")[as.numeric(currentCid) %% 5 + 1] ## specification of default color for codemark
+          if (is.na(codeCol)) codeCol <-  DefaultCodeColor[as.numeric(currentCid) %% 11 + 1] ## specification of default color for codemark
           SelectedFile <- svalue(.rqda$.root_edit)
           SelectedFile <- enc(SelectedFile, encoding="UTF-8")
           currentFid <-  rqda_sel(sprintf("select id from source where name='%s'", SelectedFile))[, 1]
 
           # JS Test for coherency!
-          #sourcetext <- rqda_sel(sprintf("select substr(file, %s, %s) from source where name='%s'", ans$start+1, ans$end-ans$start, SelectedFile))[, 1]
+          #sourcetext <- rqda_sel(sprintf("select substr(file, %s, %s) from source where name='%s'", ans$start + 1, ans$end-ans$start, SelectedFile))[, 1]
           #if (sourcetext != ans$text) {
           #  print(sprintf("Start: %s  End: %s", ans$start, ans$end))
           #  print(sprintf("Source <%s>", sourcetext))
@@ -172,11 +172,11 @@ MarkCodeFun <- function(codeListWidget=".codes_rqda", codingTable="coding") {
                   }
                   tt <- svalue(W)
                   Encoding(tt) <- "UTF-8"
-                  DAT <- data.frame(cid=currentCid, fid=currentFid, seltext=substr(tt, Sel[1]+1, Sel[2]), selfirst=Sel[1], selend=Sel[2], status=1, owner=.rqda$owner, date=date(), memo=memo, stringsAsFactors=FALSE)
+                  DAT <- data.frame(cid=currentCid, fid=currentFid, seltext=substr(tt, Sel[1] + 1, Sel[2]), selfirst=Sel[1], selend=Sel[2], status=1, owner=.rqda$owner, date=date(), memo=memo, stringsAsFactors=FALSE)
 
                   # JS Test for coherency!
-                  #sourcetext <- rqda_sel(sprintf("select substr(file, %s, %s) from source where name='%s'", Sel[1]+1, Sel[2]-Sel[1], SelectedFile))[, 1]
-                  #seltext = substr(tt, Sel[1]+1, Sel[2])
+                  #sourcetext <- rqda_sel(sprintf("select substr(file, %s, %s) from source where name='%s'", Sel[1] + 1, Sel[2]-Sel[1], SelectedFile))[, 1]
+                  #seltext = substr(tt, Sel[1] + 1, Sel[2])
                   #if (sourcetext != seltext) {
                   #  print(sprintf("Start: %s  End: %s", Sel[1], Sel[2]))
                   #  print(sprintf("Source <%s>", sourcetext))
@@ -276,13 +276,13 @@ UnMarkCodeFunByRowid <- function(codeListWidget=.rqda$.codes_rqda, codingTable="
     nshift2 <- nrow(rqda_sel(sprintf("select fid, position from annotation where status=1 and position <= %s and fid=%s", 
                                       coding_index$selfirst, coding_index$fid)))
     nshift <- nshift1 + nshift2
-    ClearMark(W, min=coding_index$selfirst+nshift, max=coding_index$selend+nshift)
+    ClearMark(W, min=coding_index$selfirst + nshift, max=coding_index$selend + nshift)
     ## clear mark of the selected coding
     codeName <- rqda_sel(sprintf("select name from freecode where status=1 and id = %s", coding_index$cid))$name
     Encoding(codeName) <- "UTF-8"
     buffer <- .rqda$.openfile_gui$widget$buffer
     isRemoved <- DeleteButton(.rqda$.openfile_gui, label=sprintf("<%s>", codeName), 
-                              index=coding_index$selfirst+nshift, direction="backward")
+                              index=coding_index$selfirst + nshift, direction="backward")
     if (isRemoved) {
       rqda_exe(sprintf("update %s set status=-1 where rowid=%s", codingTable, rowid))
       endMark <- buffer$GetMark(sprintf("%s.2", rowid))

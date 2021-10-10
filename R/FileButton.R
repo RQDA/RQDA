@@ -196,7 +196,7 @@ AddNewFileFun <- function() {
         ## the current one
         maxid <- rqda_sel("select max(id) from source")[[1]]
         ## the new one/ for the new file
-        nextid <- ifelse(is.na(maxid), 0+1, maxid+1)
+        nextid <- ifelse(is.na(maxid), 0 + 1, maxid + 1)
         ans <- rqda_exe(
           sprintf(
             paste("insert into source (name, file, id, status, date, owner )", 

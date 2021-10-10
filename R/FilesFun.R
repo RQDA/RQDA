@@ -25,7 +25,7 @@ ImportFile <- function(paths, encoding = .rqda$encoding, con= .rqda$qdacon, ...)
       content <- gsub("'", "''", content)
 
       maxid <- rqda_sel("select max(id) from source")[[1]]
-      nextid <- ifelse(is.na(maxid), 0+1, maxid+1)
+      nextid <- ifelse(is.na(maxid), 0 + 1, maxid + 1)
       write <- FALSE
       ## check if the content should be written into con.
       if (nextid == 1) {
@@ -85,7 +85,7 @@ LineNumber.expose <- function(da, event, data) {
   while (!iter$IsEnd()) {
     tmp <- textView$GetLineYrange(iter)
     y <- tmp$y
-    line_num <- gtkTextViewGetLineAtY(textView, y)$target.iter$GetLine()+1
+    line_num <- gtkTextViewGetLineAtY(textView, y)$target.iter$GetLine() + 1
     numbers <- c(numbers, line_num)
     height <- tmp$height
     count <- count + 1
@@ -202,7 +202,7 @@ ViewFileFunHelper <- function(FileName, hightlight=TRUE, codingTable=.rqda$codin
       Encoding(code) <- "UTF-8"
       codeColor <- markidx[markidx$rowid == x, "color"]
       if (is.na(codeColor)) {
-        codeColor <-  DefaultCodeColor[as.numeric(markidx[markidx$rowid == x, "id"]) %% length(DefaultCodeColor)+1]
+        codeColor <-  DefaultCodeColor[as.numeric(markidx[markidx$rowid == x, "id"]) %% length(DefaultCodeColor) + 1]
       }
       m1 <- buffer$GetMark(sprintf("%s.1", x))
       iter1 <- buffer$GetIterAtMark(m1)
@@ -437,7 +437,7 @@ write.FileList <- function(FileList, encoding=.rqda$encoding, con=.rqda$qdacon, 
       content <- iconv(content, to="UTF-8", sub = "byte") ## UTF-8 file content
     }
     maxid <- rqda_sel("select max(id) from source")[[1]]
-    nextid <- ifelse(is.na(maxid), 0+1, maxid+1)
+    nextid <- ifelse(is.na(maxid), 0 + 1, maxid + 1)
     write <- FALSE
     ## check if the content should be written into con.
     if (nextid == 1) {

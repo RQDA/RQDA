@@ -5,7 +5,7 @@ importPDFHL <- function(file, type=c("Highlight"), engine="rjpod") {
     fileName <- basename(file)
     fileName <- enc(fileName)
     maxid <- rqda_sel("select max(id) from source")[[1]]
-    nextid <- ifelse(is.na(maxid), 0+1, maxid+1)
+    nextid <- ifelse(is.na(maxid), 0 + 1, maxid + 1)
     write <- FALSE
     if (nextid == 1) {
         write <- TRUE

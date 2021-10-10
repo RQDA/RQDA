@@ -916,7 +916,7 @@ queryFiles <- function(or=NULL, and=NULL, not=NULL, names=TRUE) {
 UpdateCoding <- function() {
     rowid <- rqda_sel("select rowid from coding")$rowid
     for (i in rowid) {
-    rqda_exe(sprintf("update coding set seltext=(select substr(source.file, coding.selfirst+1, coding.selend-coding.selfirst)
+    rqda_exe(sprintf("update coding set seltext=(select substr(source.file, coding.selfirst + 1, coding.selend-coding.selfirst)
         from coding inner join source on coding.fid=source.id where coding.ROWID=%i) where coding.ROWID=%i", i, i))
 }}
 #UpdateCoding()

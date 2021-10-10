@@ -167,8 +167,8 @@ CaseUnMark_Button<-function(label=gettext("Unmark", domain = "R-RQDA")) {
         anno.idx <- rqda_sel(sprintf("select position from annotation where fid=%i and status=1", currentFid))$position
         allidx <- unlist(coding.idx, anno.idx)
         if (!is.null(allidx)) {
-          startN<- sel_index$startN +  sum(allidx <= sel_index$startN)
-          endN <- sel_index$endN +  sum(allidx <= sel_index$endN)
+          startN<- sel_index$startN + sum(allidx <= sel_index$startN)
+          endN <- sel_index$endN + sum(allidx <= sel_index$endN)
         }
         ## better to get around the loop by sqlite condition expression.
         ClearMark(W, min=startN, max=endN, clear.fore.col = FALSE, clear.back.col = TRUE)

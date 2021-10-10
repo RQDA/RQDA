@@ -17,7 +17,7 @@ exportCodedFile <- function(file, fid, closeAfter=TRUE) {
 
     for (i in 1:nidx) {
         idx1 <- idx[i] + shift
-        idx2 <- idx[i+1] + shift
+        idx2 <- idx[i + 1] + shift
         iter1 <- buffer$GetIterAtOffset(idx1)$iter
         iter2 <- buffer$GetIterAtOffset(idx2)$iter
         text <- buffer$GetText(iter1, iter2)

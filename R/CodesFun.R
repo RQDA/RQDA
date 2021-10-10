@@ -2,7 +2,7 @@ addcode <- function(name, conName="qdacon", assignenv=.rqda, ...) {
   if (name != "") {
     con <- get(conName, assignenv)
     maxid <- rqda_sel("select max(id) from freecode")[[1]]
-    nextid <- ifelse(is.na(maxid), 0+1, maxid+1)
+    nextid <- ifelse(is.na(maxid), 0 + 1, maxid + 1)
     write <- FALSE
     if (nextid == 1) {
       write <- TRUE
@@ -259,7 +259,7 @@ DeleteButton <- function(widget, label, index, direction=c("backward", "forward"
       Encoding(lab) <- "UTF-8"
       if (lab == label) {
         iterEnd <- gtkTextIterGetOffset(iter)
-        iterEnd <- gtkTextBufferGetIterAtOffset(buffer, iterEnd+1)$iter
+        iterEnd <- gtkTextBufferGetIterAtOffset(buffer, iterEnd + 1)$iter
         gtkTextBufferDelete(buffer, iter, iterEnd)
         stop <- TRUE
         isRemove <- TRUE
@@ -567,14 +567,14 @@ exportCodingsOfOneCode <- function(file, currentCode, Fid, order=c("fname", "fti
       Ncodings <- nrow(retrieval)
       Encoding(retrieval$seltext) <- "UTF-8"
       if (nrow(retrieval) == 1) {
-       cat("<hr><p align='center'><b><font color='blue' size='+2'>", 
+       cat("<hr><p align='center'><b><font color='blue' size=' + 2'>", 
            sprintf(ngettext(Nfiles, 
                             "%i Coding of <a id='%s'>\"%s\"</a> from %s file.", 
                             "%i Coding of <a id='%s'>\"%s\"</a> from %s files.", domain = "R-RQDA"), 
                    Ncodings, currentCode, currentCode, Nfiles), 
            "</b></font><hr><p align='left'>", sep="", file=file, append=append)
      } else {
-       cat("<hr><p align='center'><b><font color='blue' size='+2'>", 
+       cat("<hr><p align='center'><b><font color='blue' size=' + 2'>", 
            sprintf(ngettext(Nfiles, 
                             "%i Codings of <a id='%s'>\"%s\"</a> from %s file.", 
                             "%i Codings of <a id='%s'>\"%s\"</a> from %s files.", domain = "R-RQDA"), 
@@ -586,7 +586,7 @@ exportCodingsOfOneCode <- function(file, currentCode, Fid, order=c("fname", "fti
         metaData <- sprintf("<b><font color='red'> %s [%s:%s] </font></b><br><br>", x[['fname']], x[['selfirst']], x[['selend']])
         cat(metaData, file=file, append=TRUE)
         cat(x[['seltext']], file=file, append=TRUE)
-        cat(sprintf("<br><a href='#%s+b'>", currentCode), gettext("Back", domain = "R-RQDA"), "<a><br><br>", sep="", file=file, append=TRUE)
+        cat(sprintf("<br><a href='#%s + b'>", currentCode), gettext("Back", domain = "R-RQDA"), "<a><br><br>", sep="", file=file, append=TRUE)
       }
             )## end of apply
     }}}## end of export helper function
@@ -605,7 +605,7 @@ if (!is.null(allcodes)) {
         }
         cat(sprintf("Created by <a href='http://rqda.r-forge.r-project.org/'>RQDA</a> at %s<br><br>\n", Sys.time()), file=file, append=TRUE)
         for (i in CodeList) {
-        cat(sprintf("<a id='%s+b' href='#%s'>%s<a><br>", i, i, i), file=file, append=TRUE)
+        cat(sprintf("<a id='%s + b' href='#%s'>%s<a><br>", i, i, i), file=file, append=TRUE)
           }
         for (i in seq_along(CodeList)) {
             exportCodingsOfOneCode(file=file, currentCode=CodeList[i], Fid=Fid, order=order, append=TRUE)
@@ -637,7 +637,7 @@ ClickHandlerFun <- function(CodeNameWidget, buttons=c("MarCodB1", "UnMarB1"), co
                                        cid=%i and fid=%i and status=1", codingTable, currentCid, currentFid))
             idx2 <- rqda_sel(sprintf("select selfirst, selend from %s where fid=%i and status=1", codingTable, currentFid))
             if (nrow(idx2)>0) {
-                ClearMark(.rqda$.openfile_gui, min=0, max=max(as.numeric(idx2$selend))+2*nrow(idx2), clear.fore.col = TRUE, clear.back.col =FALSE)
+                ClearMark(.rqda$.openfile_gui, min=0, max=max(as.numeric(idx2$selend)) + 2*nrow(idx2), clear.fore.col = TRUE, clear.back.col =FALSE)
             }
             if (nrow(idx1)>0) {
                 ##allidx <- unlist(idx2)
@@ -645,7 +645,7 @@ ClickHandlerFun <- function(CodeNameWidget, buttons=c("MarCodB1", "UnMarB1"), co
                 allidx <- c(idx2[, 1], anno) ## since 0.2-0, only one code label is added to file widget.
                 addidx <-  data.frame(selfirst=apply(outer(allidx, idx1$selfirst, "<="), 2, sum), 
                                       selend=apply(outer(allidx, idx1$selend, "<="), 2, sum))
-                idx1 <- idx1+addidx
+                idx1 <- idx1 + addidx
                 HL(.rqda$.openfile_gui, index=idx1, fore.col=.rqda$fore.col, back.col=NULL)
             }
         }# end of mark text chuck
@@ -664,7 +664,7 @@ HL_CodingWithMemo <- function(codingTable="coding") {
         widget <- .rqda$.openfile_gui$widget
         idx <-  rqda_sel(sprintf("select selfirst, selend, memo from %s where fid=%i and status=1", codingTable, currentFid))
         if (nrow(idx) != 0) {
-          ClearMark(widget, min=0, max=max(as.numeric(idx$selend))+2*nrow(idx), clear.fore.col = TRUE, clear.back.col =FALSE)
+          ClearMark(widget, min=0, max=max(as.numeric(idx$selend)) + 2*nrow(idx), clear.fore.col = TRUE, clear.back.col =FALSE)
           anno <- rqda_sel(sprintf("select position from annotation where status=1 and fid=%s", currentFid))$position
           ## allidx <- unlist(idx[, c("selfirst", "selend")])
           allidx <- c(idx[, c("selfirst")], anno)
@@ -704,7 +704,7 @@ HL_AllCodings <- function(codingTable="coding") {
 ##} ##rqda_exe("drop table annotation")
 
 NextRowId <- function(table) {
-  ans <- rqda_sel(sprintf("select max(rowid)+1 as nextid from %s", table))$nextid
+  ans <- rqda_sel(sprintf("select max(rowid) + 1 as nextid from %s", table))$nextid
   if (is.na(ans)) ans <- 1
   ans
 }

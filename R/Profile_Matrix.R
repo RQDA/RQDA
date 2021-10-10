@@ -20,7 +20,7 @@ prof_mat <- function(unit = c("coding", "file"), case_ids = NULL, case_names = N
   w <- gwindow(title=sprintf(rqda_txt("Profile Matrix - %s"), unit), 
                width = getOption("widgetSize")[1], 
                height = getOption("widgetSize")[2], 
-               visible=FALSE, parent = c(wnh[1]+10, 2))
+               visible=FALSE, parent = c(wnh[1] + 10, 2))
 
     addHandlerKeystroke(w, function(h, ...) {
     if(h$key == "\027") dispose(w)
@@ -29,7 +29,7 @@ prof_mat <- function(unit = c("coding", "file"), case_ids = NULL, case_names = N
   tbl <- glayout(container = gf, expand=FALSE)
 
   for (i in 1:nrow(codes)) {
-    tbl[i+1, 1] <- glabel(codes$name[i], container=tbl, 
+    tbl[i + 1, 1] <- glabel(codes$name[i], container=tbl, 
                          action=list(code=codes$name[i]), 
                          handler=function(h, ...) {
                            retrieval_by_code(code=h$action$code)
@@ -37,7 +37,7 @@ prof_mat <- function(unit = c("coding", "file"), case_ids = NULL, case_names = N
   }
 
   for (i in 1:length(case_names)) {
-    tbl[1, i+1] <- glabel(case_names[i], container=tbl)
+    tbl[1, i + 1] <- glabel(case_names[i], container=tbl)
   }
 
   for (i in 1:nrow(codes)) {
@@ -56,7 +56,7 @@ prof_mat <- function(unit = c("coding", "file"), case_ids = NULL, case_names = N
                            file = sum(ncoded$fid %in% fid)
         )
       }
-      tbl[i+1, col+1] <- gcheckbox(
+      tbl[i + 1, col + 1] <- gcheckbox(
         formatC(ncodings, width=4), 
         container=tbl, use.togglebutton=TRUE, 
         action=list(code=codes$name[i], fid=fid), 
