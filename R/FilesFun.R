@@ -91,7 +91,9 @@ LineNumber.expose <- function(da, event, data) {
     height <- tmp$height
     count <- count + 1
     pixels <- c(pixels, y)
-    if ((y + height) >= lastY) {break}
+    if ((y + height) >= lastY) {
+        break
+    }
     iter$ForwardLine()
   }
   pixels <- pixels - min(pixels)
@@ -549,9 +551,11 @@ getFileIds <- function(condition = c("unconditional", "case", "filecategory", "b
       if (length(Selected) == 0) {
         ans <- NULL
       } else {
-        if (length(Selected) > 1) {gmessage(gettext("select one file category only.", domain = "R-RQDA"), container = TRUE)
+          if (length(Selected) > 1) {
+              gmessage(gettext("select one file category only.", domain = "R-RQDA"), container = TRUE)
           stop("more than one file categories are selected", domain = "R-RQDA")
-        }
+
+          }
         caseid <- rqda_sel(sprintf("select id from cases where status = 1 and name='%s'",
                                    enc(Selected)))$id
         fidofcase <- rqda_sel(sprintf("select fid from caselinkage where status = 1 and caseid=%i", caseid))$fid
@@ -578,7 +582,9 @@ getFileIds <- function(condition = c("unconditional", "case", "filecategory", "b
     allfid <- getFileIdsSets("filecategory", "intersect")
     if (type == "all") {ans <- allfid} else {
       codedfid <- rqda_sel(sprintf("select fid from coding where status = 1 and fid in (%s) group by fid", paste(shQuote(allfid), collapse = ", ")))$fid
-      if (type == "coded") {ans <- codedfid}
+      if (type == "coded") {
+          ans <- codedfid
+      }
       if (type == "uncoded") { ans <-  setdiff(allfid, codedfid)}
     }
     ans
@@ -647,7 +653,9 @@ AddToFileCategory <- function(Widget = .rqda$.fnames_rqda, updateWidget = TRUE) 
   Encoding(query$file) <- "UTF-8"
   ## select a F-cat name -> F-cat id
   Fcat <- rqda_sel("select catid, name from filecat where status = 1")
-  if (nrow(Fcat) == 0) {gmessage(gettext("Add File Category first.", domain = "R-RQDA"), container = TRUE)} else{
+    if (nrow(Fcat) == 0) {
+        gmessage(gettext("Add File Category first.", domain = "R-RQDA"), container = TRUE)
+    } else{
     Encoding(Fcat$name) <- "UTF-8"
     Selecteds <- gselect.list(Fcat$name, multiple = TRUE)
     if (length(Selecteds) > 0 && Selecteds != "") {

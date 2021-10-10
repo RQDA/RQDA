@@ -152,7 +152,9 @@ CaseUnMark_Button <- function(label = gettext("Unmark", domain = "R-RQDA")) {
     ## if the not file is open, unmark doesn't work.
     if (!is.null(sel_index)) {
       SelectedCase <- svalue(.rqda$.CasesNamesWidget)
-      if (length(SelectedCase) == 0) {gmessage(gettext("Select a case first.", domain = "R-RQDA"), con = TRUE)} else{
+      if (length(SelectedCase) == 0) {
+          gmessage(gettext("Select a case first.", domain = "R-RQDA"), con = TRUE)
+      } else{
         SelectedCase <- enc(SelectedCase, "UTF-8")
         caseid <-  rqda_sel(sprintf("select id from cases where name='%s'", SelectedCase))[, 1]
         SelectedFile <- svalue(.rqda$.root_edit)

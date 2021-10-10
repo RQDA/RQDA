@@ -287,7 +287,9 @@ GetFileNamesWidgetMenu <- function()
     handler = function(h, ...) {
       if (is_projOpen(envir = .rqda, conName = "qdacon")) {
         Selected <- tryCatch(svalue(.rqda$.root_edit),
-                             error = function(e) {NULL})
+                             error = function(e) {
+                                 NULL
+                             })
         if (!is.null(Selected)) {
           fileId <- rqda_sel(
             sprintf("select id from source where status = 1 and name = '%s'",

@@ -215,7 +215,9 @@ AttrNamesUpdate <- function(Widget = .rqda$.AttrNamesWidget, sortByTime = FALSE,
     } else {
       attr <- attr$name
       Encoding(attr) <- "UTF-8"
-      if (!sortByTime) {attr <- sort(attr)} else {
+      if (!sortByTime) {
+          attr <- sort(attr)
+      } else {
         attr <- attr[OrderByTime(attr$date, decreasing = decreasing)]
       }
     }

@@ -64,7 +64,9 @@ RetrievalButton <- function(label) {
                       Fid <- getFileIds(condition = .rqda$TOR, type = "coded")
                       if (length(Fid) > 0) {
                         retrieval(Fid = Fid, CodeNameWidget = .rqda$.codes_rqda)
-                      } else {gmessage(gettext("No codings associated with this code.", domain = "R-RQDA"), cont = TRUE)}
+                      } else {
+                          gmessage(gettext("No codings associated with this code.", domain = "R-RQDA"), cont = TRUE)
+                      }
                     }
                   }
   )
@@ -87,7 +89,9 @@ Mark_Button <- function(label = gettext("Mark", domain = "R-RQDA"), codeListWidg
 MarkCodeFun <- function(codeListWidget = ".codes_rqda", codingTable = "coding") {
   ## insert lable as mark when data is written to database.
   if (is_projOpen(envir = .rqda, conName = "qdacon")) {
-    currentFile <- tryCatch(svalue(.rqda$.root_edit), error= function(e) {NULL})
+      currentFile <- tryCatch(svalue(.rqda$.root_edit), error= function(e) {
+          NULL
+      })
     if (is.null(currentFile)) gmessage(gettext("Open a file first.", domain = "R-RQDA"), con = TRUE) else{
       W <- .rqda$.openfile_gui$widget
       con <- .rqda$qdacon
@@ -146,7 +150,9 @@ MarkCodeFun <- function(codeListWidget = ".codes_rqda", codingTable = "coding") 
                 if (success) {
                   markRange(widget = .rqda$.openfile_gui, from = ans$start, to = ans$end, rowid = rowid, addButton = TRUE,
                             buttonLabel = SelectedCode, buttonCol = codeCol, codingTable = codingTable)
-                } else {gmessage(gettext("Fail to write to data base.", domain = "R-RQDA"), con = TRUE)}
+                } else {
+                    gmessage(gettext("Fail to write to data base.", domain = "R-RQDA"), con = TRUE)
+                }
                 ## if there are no overlap in any kind, just write to database; otherwise, pass to else{
 }.
               } else {
@@ -190,7 +196,9 @@ MarkCodeFun <- function(codeListWidget = ".codes_rqda", codingTable = "coding") 
                   success <- is.null(try(rqda_exe(sprintf("insert into %s (cid, fid, seltext, selfirst, selend, status, owner, date, memo) values (%s, %s, '%s', %s, %s, %s, '%s', '%s', '%s') ",
                                                            codingTable, DAT$cid, DAT$fid, DAT$seltext, DAT$selfirst, DAT$selend, 1, .rqda$owner, as.character(date()), DAT$memo)), silent = TRUE))
                   if (success) {
-                    markRange(widget = .rqda$.openfile_gui, from = Sel[1], to = Sel[2], rowid = rowid, addButton = TRUE, buttonLabel = SelectedCode, buttonCol = codeCol, codingTable = codingTable)}else{gmessage(gettext("Fail to write to database.", domain = "R-RQDA"))}
+                      markRange(widget = .rqda$.openfile_gui, from = Sel[1], to = Sel[2], rowid = rowid, addButton = TRUE, buttonLabel = SelectedCode, buttonCol = codeCol, codingTable = codingTable)}else{
+                                                                                                                                                                                                          gmessage(gettext("Fail to write to database.", domain = "R-RQDA"))
+                                                                                                                                                                                                      }
                 }
               }}}}}}}}
 
@@ -379,7 +387,9 @@ CodingMemoButton <- function(label = gettext("C2Memo", domain = "R-RQDA"))
       AnchorPos <- tryCatch(sindex(W, includeAnchor = TRUE)$startN, error= function(e) {
 })
       ## if the not file is open, it doesn't work.
-      if (is.null(sel_index)) {gmessage(gettext("Open a file first!", domain = "R-RQDA"), container = TRUE)}
+      if (is.null(sel_index)) {
+          gmessage(gettext("Open a file first!", domain = "R-RQDA"), container = TRUE)
+      }
       else {
         SelectedCode <- svalue(.rqda$.codes_rqda)
         if (length(SelectedCode) == 0) gmessage(gettext("select a code first.", domain = "R-RQDA"), container = TRUE) else {
@@ -397,7 +407,9 @@ CodingMemoButton <- function(label = gettext("C2Memo", domain = "R-RQDA"))
                                          (codings_index$selend  <= sel_index$endN)&
                                          (codings_index$selend  >= sel_index$endN - 2)
           ] ## determine which one is the current text chunk?
-          if (length(rowid) !=  1) {gmessage(gettext("Select the exact CODING AND the corresponding CODE first.", domain = "R-RQDA"), container = TRUE)}
+          if (length(rowid) !=  1) {
+              gmessage(gettext("Select the exact CODING AND the corresponding CODE first.", domain = "R-RQDA"), container = TRUE)
+          }
           else {
             OpenCodingMemo(rowid = rowid, AnchorPos = AnchorPos, title = sprintf("Coding Memo: %s", SelectedCode))
           }

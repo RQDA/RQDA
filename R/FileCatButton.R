@@ -119,7 +119,9 @@ FileCatAddToButton <- function(label = gettext("AddTo", domain = "R-RQDA"), Widg
     SelectedFileCat <- svalue(.rqda$.FileCatWidget)
     catid <- rqda_sel(sprintf("select catid from filecat where status = 1 and name='%s'", enc(SelectedFileCat)))[, 1]
     freefile <-  rqda_sel("select name, id from source where status = 1")
-    if (nrow(freefile) == 0) {gmessage(gettext("No files Yet.", domain = "R-RQDA"), cont = .rqda$.FileCatWidget)} else {
+    if (nrow(freefile) == 0) {
+        gmessage(gettext("No files Yet.", domain = "R-RQDA"), cont = .rqda$.FileCatWidget)
+    } else {
       Encoding(SelectedFileCat) <- Encoding(freefile[['name']]) <- "UTF-8"
       fileofcat <- rqda_sel(sprintf("select fid from treefile where status = 1 and catid=%i", catid))
       if (nrow(fileofcat) != 0) {

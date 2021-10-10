@@ -376,7 +376,9 @@ GetCodeCatWidgetMenu <- function()
         cid <- rqda_sel(sprintf("select id from freecode where status = 1 and name='%s'", codename))$id
         ## end of add a new code to free code.
         SelectedCodeCat <- svalue(.rqda$.CodeCatWidget)
-        if (length(SelectedCodeCat) == 0) {gmessage(rqda_txt("Select a code category first."), container = TRUE)} else{
+        if (length(SelectedCodeCat) == 0) {
+            gmessage(rqda_txt("Select a code category first."), container = TRUE)
+        } else{
           catid <- rqda_sel(sprintf("select catid from codecat where status = 1 and name='%s'", SelectedCodeCat))[, 1]
           ## CodeList and the id (table freecode): sql -> name and id where status == 1
           Dat <- data.frame(cid = cid, catid = catid, date = date(), dateM = date(), memo = "",

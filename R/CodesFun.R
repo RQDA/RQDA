@@ -42,7 +42,9 @@ CodeNamesWidgetUpdate <- function(CodeNamesWidget = .rqda$.codes_rqda, sortByTim
   if (is_projOpen()) {
     freecode <- rqda_sel("select name, id, date from freecode where status = 1 order by lower(name)")
     if (nrow(freecode) != 0) {
-      if (!is.null(CodeId)) {freecode <- freecode[freecode$id %in% CodeId, ]}
+        if (!is.null(CodeId)) {
+            freecode <- freecode[freecode$id %in% CodeId, ]
+        }
       codeName <- freecode$name
       Encoding(codeName) <- "UTF-8"
       if (sortByTime) {
@@ -270,7 +272,9 @@ DeleteButton <- function(widget, label, index, direction = c("backward", "forwar
       }
       if (direction == "backward") if (! iter$BackwardChar()) stop <- TRUE
       if (direction == "forward") if (! iter$ForwardChar()) stop <- TRUE
-    } else {stop <- TRUE}
+    } else {
+        stop <- TRUE
+    }
   }
   invisible(isRemove)
 }
@@ -686,7 +690,9 @@ HL_CodingWithMemo <- function(codingTable = "coding") {
 
 HL_AllCodings <- function(codingTable = "coding") {
     if (is_projOpen(envir = .rqda, conName = "qdacon")) {
-        SelectedFile <- tryCatch(svalue(.rqda$.root_edit), error = function(e) {NULL})
+        SelectedFile <- tryCatch(svalue(.rqda$.root_edit), error = function(e) {
+            NULL
+        })
         if (!is.null(SelectedFile)) {
             currentFid <-  rqda_sel(sprintf("select id from source where name='%s'", enc(SelectedFile, "UTF-8")))[, 1]
             idx <- rqda_sel(sprintf("select selfirst, selend from %s where fid=%i and status = 1", codingTable, currentFid))
@@ -815,7 +821,9 @@ Annotation <- function(...) {
     ## get the widget for file display. If it does not exist, then return NULL.
     pos <- tryCatch(sindex(W, includeAnchor = FALSE), error = function(e) {
 }) ## if the not file is open, it doesn't work.
-    if (is.null(pos)) {gmessage(gettext("Open a file first!", domain = "R-RQDA"), container = TRUE)}
+    if (is.null(pos)) {
+        gmessage(gettext("Open a file first!", domain = "R-RQDA"), container = TRUE)
+    }
     else {
       AnchorPos <- sindex(W, includeAnchor = TRUE)$startN
       SelectedFile <- svalue(.rqda$.root_edit)
@@ -897,11 +905,9 @@ AddToCodeCategory <- function(Widget = .rqda$.codes_rqda, updateWidget = TRUE)
 ## c2InfoFun <- function() {
 ##   con <- .rqda$qdacon
 ##   if (is_projOpen(envir = .rqda, conName = "qdacon")) {
-##     W <- tryCatch(get(".openfile_gui", envir = .rqda), error = function(e) {
-})
+##     W <- tryCatch(get(".openfile_gui", envir = .rqda), error = function(e) {})
 ## ## get the widget for file display. If it does not exist, then return NULL.
-## sel_index <- tryCatch(sindex(W, includeAnchor = FALSE), error = function(e) {
-})
+## sel_index <- tryCatch(sindex(W, includeAnchor = FALSE), error = function(e) {})
 ## ## if the not file is open, it doesn't work.
 ## if (is.null(sel_index)) {gmessage(gettext("Open a file first!", domain = "R-RQDA"), container = TRUE)}
 ## else {
@@ -918,8 +924,7 @@ AddToCodeCategory <- function(Widget = .rqda$.codes_rqda, updateWidget = TRUE)
 ## ## should not use data frame as x, otherwise, svalue(c2infoWidget) is a factor rather than a character
 ## if (length(Codes) != 0) {
 ##   Encoding(Codes) <- "UTF-8"
-##   tryCatch(dispose(.rqda$.c2info), error = function(e) {
-})
+##   tryCatch(dispose(.rqda$.c2info), error = function(e) {})
 ##   gw <- gwindow(title = "Associted code-list.", heigh = min(33*length(Codes), 600), parent = .rqda$.openfile_gui)
 ##   c2infoWidget <- gtable(Codes, container = gw)
 ##   assign(".c2info", gw, envir = .rqda)
@@ -982,5 +987,3 @@ AddToCodeCategory <- function(Widget = .rqda$.codes_rqda, updateWidget = TRUE)
 ##     anchor <- gtkTextIterGetChildAnchor(iter)
 ##     widget$addChildAtAnchor(label, anchor)
 ## }
-
-

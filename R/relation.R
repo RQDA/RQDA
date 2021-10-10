@@ -116,7 +116,9 @@ crossCodes <- CrossCode <- function(relation = c("overlap", "inclusion", "exact"
         }
       }
       class(ans) <- "crossCodes"
-      if (print) {print(ans, na.print = "")}
+      if (print) {
+          print(ans, na.print = "")
+      }
       invisible(ans)
     }
   }

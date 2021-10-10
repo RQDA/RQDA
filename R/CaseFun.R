@@ -9,7 +9,9 @@ CaseNamesUpdate <- function(CaseNamesWidget = .rqda$.CasesNamesWidget,
     } else {
       case <- CaseName$name
       Encoding(case) <- "UTF-8"
-      if (!sortByTime) {case <- sort(case, decreasing = decreasing)} else {
+      if (!sortByTime) {
+          case <- sort(case, decreasing = decreasing)
+      } else {
         case <- case[OrderByTime(CaseName$date, decreasing = decreasing)]
       }
     }

@@ -447,8 +447,10 @@ ProjectMemoWidget <- function() {
 close_AllCodings <- function() {
   obj <- ls(.rqda, all.names = TRUE, pattern = "^.codingsOf")
   if (length(obj) != 0) {
-    for (i in obj) {tryCatch(dispose(get(i, envir = .rqda)), error = function(e) {
-})
+      for (i in obj) {
+          tryCatch(dispose(get(i, envir = .rqda)), error = function(e) {
+
+          })
     }
   }
 }
