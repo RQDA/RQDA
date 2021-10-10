@@ -1,8 +1,7 @@
 NewProjectButton <- function(container) {
     gbutton(rqda_txt("New Project"), container = container, handler = function(h, ...) {
         path = gfile(type = "save", text = rqda_txt("Type a name for the new project and click OK."))
-        if (!identical(path, character(0)))
-        {
+        if (!identical(path, character(0))) {
             if (Encoding(path) != "UTF-8") {
                 Encoding(path) <- "UTF-8"
             }
@@ -48,10 +47,9 @@ OpenProjectButton <- function(container) {
             container = container, handler = function(h, ...) {
                 path <- gfile(
                     text = rqda_txt("Select a *.rqda file and click OK."),
-                    type = "open", filter = list("rqda"=list(patterns = c("*.rqda")),
+                    type = "open", filter = list("rqda" = list(patterns = c("*.rqda")),
                                                  "All files" = list(patterns = c("*"))))
-                if (!identical(path, character(0)))
-                {
+                if (!identical(path, character(0))) {
                     if (!is.na(path)) {
                         Encoding(path) <- "UTF-8"
                         openProject(path, updateGUI = TRUE)
@@ -62,19 +60,19 @@ OpenProjectButton <- function(container) {
 
 #' @export
 openProject <- function(path, updateGUI = FALSE) {
-    tryCatch(.rqda$.codes_rqda[]<- NULL, error = function(e) {
+    tryCatch(.rqda$.codes_rqda[] <- NULL, error = function(e) {
     })
-    tryCatch(.rqda$.fnames_rqda[]<- NULL, error = function(e) {
+    tryCatch(.rqda$.fnames_rqda[] <- NULL, error = function(e) {
     })
-    tryCatch(.rqda$.CasesNamesWidget[]<- NULL, error = function(e) {
+    tryCatch(.rqda$.CasesNamesWidget[] <- NULL, error = function(e) {
     })
-    tryCatch(.rqda$.CodeCatWidget[]<- NULL, error = function(e) {
+    tryCatch(.rqda$.CodeCatWidget[] <- NULL, error = function(e) {
     })
-    tryCatch(.rqda$.CodeofCat[]<- NULL, error = function(e) {
+    tryCatch(.rqda$.CodeofCat[] <- NULL, error = function(e) {
     })
-    tryCatch(.rqda$.FileCatWidget[]<- NULL, error = function(e) {
+    tryCatch(.rqda$.FileCatWidget[] <- NULL, error = function(e) {
     })
-    tryCatch(.rqda$.FileofCat[]<- NULL, error = function(e) {
+    tryCatch(.rqda$.FileofCat[] <- NULL, error = function(e) {
     })
     tryCatch(.rqda$.AttrNamesWidget[] <- NULL, error = function(e) {
     })
@@ -140,21 +138,21 @@ openProject <- function(path, updateGUI = FALSE) {
 
 closeProjBF <- function() {
     svalue(.rqda$.currentProj$widget) <- rqda_txt("Closing ...")
-    tryCatch(.rqda$.codes_rqda[]<- NULL, error = function(e) {
+    tryCatch(.rqda$.codes_rqda[] <- NULL, error = function(e) {
     })
-    tryCatch(.rqda$.fnames_rqda[]<- NULL, error = function(e) {
+    tryCatch(.rqda$.fnames_rqda[] <- NULL, error = function(e) {
     })
-    tryCatch(.rqda$.CasesNamesWidget[]<- NULL, error = function(e) {
+    tryCatch(.rqda$.CasesNamesWidget[] <- NULL, error = function(e) {
     })
-    tryCatch(.rqda$.FileofCase[]<- NULL, error = function(e) {
+    tryCatch(.rqda$.FileofCase[] <- NULL, error = function(e) {
     })
-    tryCatch(.rqda$.CodeCatWidget[]<- NULL, error = function(e) {
+    tryCatch(.rqda$.CodeCatWidget[] <- NULL, error = function(e) {
     })
-    tryCatch(.rqda$.CodeofCat[]<- NULL, error = function(e) {
+    tryCatch(.rqda$.CodeofCat[] <- NULL, error = function(e) {
     })
-    tryCatch(.rqda$.FileCatWidget[]<- NULL, error = function(e) {
+    tryCatch(.rqda$.FileCatWidget[] <- NULL, error = function(e) {
     })
-    tryCatch(.rqda$.FileofCat[]<- NULL, error = function(e) {
+    tryCatch(.rqda$.FileofCat[] <- NULL, error = function(e) {
     })
     tryCatch(.rqda$.AttrNamesWidget[] <- NULL, error = function(e) {
     })
@@ -163,12 +161,12 @@ closeProjBF <- function() {
     svalue(.rqda$.currentProj) <- rqda_txt("No project is open.")
     names(.rqda$.fnames_rqda) <- rqda_txt("Files")
     names(.rqda$.codes_rqda) <- rqda_txt("Codes List")
-    names(.rqda$.CodeCatWidget)<- rqda_txt("Code Category")
-    names(.rqda$.CodeofCat)<- rqda_txt("Codes of This Category")
+    names(.rqda$.CodeCatWidget) <- rqda_txt("Code Category")
+    names(.rqda$.CodeofCat) <- rqda_txt("Codes of This Category")
     names(.rqda$.CasesNamesWidget) <- rqda_txt("Cases")
-    names(.rqda$.FileofCase)<- rqda_txt("Files of This Case")
-    names(.rqda$.FileCatWidget)<- rqda_txt("File Category")
-    names(.rqda$.FileofCat)<- rqda_txt("Files of This Category")
+    names(.rqda$.FileofCase) <- rqda_txt("Files of This Case")
+    names(.rqda$.FileCatWidget) <- rqda_txt("File Category")
+    names(.rqda$.FileofCat) <- rqda_txt("Files of This Category")
     gtkWidgetSetSensitive(.rqda$.fnames_rqda$widget, FALSE)
     enabled(.rqda$.JournalNamesWidget) <- FALSE
     enabled(.rqda$.codes_rqda) <- FALSE

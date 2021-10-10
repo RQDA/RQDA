@@ -1,8 +1,7 @@
 ### UpdateTableWidget() and AddTodbTable() are general versions of the previous
 ### functions
 UpdateTableWidget <- function(Widget, FromdbTable, con = .rqda$qdacon,
-                              sortByTime = FALSE, decreasing = FALSE, ...)
-{
+                              sortByTime = FALSE, decreasing = FALSE, ...) {
     if (is_projOpen()) {
         items <- rqda_sel(sprintf("select name, date from %s where status = 1",
                                   FromdbTable))
@@ -62,15 +61,14 @@ AddCodeCatButton <- function(label = rqda_txt("Add")) {
 
 
 
-DeleteCodeCatButton <- function(label = rqda_txt("Delete"))
-{
+DeleteCodeCatButton <- function(label = rqda_txt("Delete")) {
 
     DelCodCatB <- gbutton(label, handler = function(h, ...) {
 
         Selected <- svalue(.rqda$.CodeCatWidget)
         Encoding(Selected) <- "UTF-8"
 
-        if (identical (Selected, character(0))) {
+        if (identical(Selected, character(0))) {
             gmessage(rqda_txt("Select a Code Category first."),
                      icon = "error", container = TRUE)
             return(invisible(NULL))
@@ -113,8 +111,7 @@ DeleteCodeCatButton <- function(label = rqda_txt("Delete"))
 }
 
 
-CodeCat_RenameButton <- function(label = gettext("Rename", domain = "R-RQDA"), Widget = .rqda$.CodeCatWidget, ...)
-{
+CodeCat_RenameButton <- function(label = gettext("Rename", domain = "R-RQDA"), Widget = .rqda$.CodeCatWidget, ...) {
     ## rename of selected code cat.
     CodCatRenB <- gbutton(label, handler = function(h, ...) {
         OldName <- svalue(Widget)
@@ -125,8 +122,7 @@ CodeCat_RenameButton <- function(label = gettext("Rename", domain = "R-RQDA"), W
             ## get the new file names
             NewName <- ginput(gettext("Enter new Category name. ", domain = "R-RQDA"), text = OldName, icon = "info")
 
-            if (!identical(NewName, character(0)))
-            {
+            if (!identical(NewName, character(0))) {
                 if (!is.na(NewName)) {
                     Encoding(NewName) <- "UTF-8"
                     rename(OldName, NewName, "codecat")
@@ -140,8 +136,7 @@ CodeCat_RenameButton <- function(label = gettext("Rename", domain = "R-RQDA"), W
     CodCatRenB
 }
 
-UpdateCodeofCatWidget <- function(con = .rqda$qdacon, Widget = .rqda$.CodeofCat, sort = TRUE)
-{
+UpdateCodeofCatWidget <- function(con = .rqda$qdacon, Widget = .rqda$.CodeofCat, sort = TRUE) {
     SelectedCodeCat <- svalue(.rqda$.CodeCatWidget)
                                         # print(SelectedCodeCat)
                                         # print(length(SelectedCodeCat))
@@ -188,7 +183,7 @@ CodeCatAddToButton <- function(label = rqda_txt("Add To"),
     ans <- gbutton(label, handler = function(h, ...) {
 
         SelectedCodeCat <- svalue(.rqda$.CodeCatWidget)
-        if (identical (SelectedCodeCat, character(0))) {
+        if (identical(SelectedCodeCat, character(0))) {
             gmessage(rqda_txt("Select a Code Category first."),
                      icon = "error", container = TRUE)
             return(invisible(NULL))
@@ -205,7 +200,7 @@ CodeCatAddToButton <- function(label = rqda_txt("Add To"),
                      cont = .rqda$.CodeCatWidget)
 
         } else {
-            Encoding(SelectedCodeCat) <- Encoding(freecode[['name']]) <- "UTF-8"
+            Encoding(SelectedCodeCat) <- Encoding(freecode[["name"]]) <- "UTF-8"
 
             codeofcat <- rqda_sel(
                 sprintf("select cid from treecode where status = 1 and catid=%i",
@@ -219,7 +214,7 @@ CodeCatAddToButton <- function(label = rqda_txt("Add To"),
                 codeoutofcat <- freecode
             }
 
-            Selected <- gselect.list(codeoutofcat[['name']],
+            Selected <- gselect.list(codeoutofcat[["name"]],
                                      multiple = TRUE,
                                      x = getOption("widgetCoordinate")[1])
 
@@ -251,8 +246,7 @@ CodeCatAddToButton <- function(label = rqda_txt("Add To"),
 
 ## update .rqda$.CodeofCat[] by click handler on .rqda$.CodeCatWidget
 
-CodeCatDropFromButton <- function(label = gettext("Drop From", domain = "R-RQDA"), Widget = .rqda$.CodeofCat, ...)
-{
+CodeCatDropFromButton <- function(label = gettext("Drop From", domain = "R-RQDA"), Widget = .rqda$.CodeofCat, ...) {
     ans <- gbutton(label, handler = function(h, ...) {
         ## Get CodeList already in the category (table treecode): svalue()
         CodeOfCat <- svalue(Widget)
@@ -360,15 +354,13 @@ where coding2.status = 1 and source.status = 1 and freecode.status = 1 and codin
     ## class(ct) <- c("codingsByOne", "data.frame")
     ct
 }
-GetCodeCatWidgetMenu <- function()
-{
+GetCodeCatWidgetMenu <- function() {
     CodeCatWidgetMenu <- list()
 
     CodeCatWidgetMenu[[1]] <- gaction(rqda_txt("Add New Code to Selected Category"), handler = function(h, ...) {
         if (is_projOpen(envir = .rqda, conName = "qdacon")) {
             codename <- ginput(rqda_txt("Enter new code."), icon = "info")
-            if (!identical(codename, character(0)))
-            {
+            if (!identical(codename, character(0))) {
                 if (!is.na(codename)) {
                     codename <- enc(codename, encoding = "UTF-8")
                     addcode(codename)
@@ -428,8 +420,7 @@ GetCodeCatWidgetMenu <- function()
 
 
 ##
-GetCodeofCatWidgetMenu <- function()
-{
+GetCodeofCatWidgetMenu <- function() {
     CodeofCatWidgetMenu <- list()
 
     CodeofCatWidgetMenu[[1]] <- gaction(gettext("Rename Selected Code", domain = "R-RQDA"), handler = function(h, ...) {
@@ -440,8 +431,7 @@ GetCodeofCatWidgetMenu <- function()
         else {
             NewCodeName <- ginput(gettext("Enter new code name. ", domain = "R-RQDA"), text = selectedCodeName, icon = "info")
 
-            if (!identical(NewCodeName, character(0)))
-            {
+            if (!identical(NewCodeName, character(0))) {
                 if (!is.na(NewCodeName)) {
                     Encoding(NewCodeName) <- Encoding(selectedCodeName) <- "UTF-8"
                     rename(selectedCodeName, NewCodeName, "freecode")

@@ -6,7 +6,7 @@ AddCaseButton <- function(label = gettext("Add", domain = "R-RQDA")) {
             AddCase(CaseName)
             CaseNamesUpdate()
             enabled(button$profmatB) <- TRUE
-            idx <- as.character(which(.rqda$.CasesNamesWidget[] %in%  CaseName) -1)
+            idx <- as.character(which(.rqda$.CasesNamesWidget[] %in%  CaseName) - 1)
             ## note the position, before manipulation of items
             path <- gtkTreePathNewFromString(idx)
             gtkTreeViewScrollToCell(.rqda$.CasesNamesWidget$widget,
@@ -44,16 +44,14 @@ DeleteCaseButton <- function(label = gettext("Delete", domain = "R-RQDA")) {
 }
 
 
-Case_RenameButton <- function(label = gettext("Rename", domain = "R-RQDA"), CaseNamesWidget = .rqda$.CasesNamesWidget, ...)
-{
+Case_RenameButton <- function(label = gettext("Rename", domain = "R-RQDA"), CaseNamesWidget = .rqda$.CasesNamesWidget, ...) {
     ## rename of selected case.
     CasRenB <- gbutton(label, handler = function(h, ...) {
         selectedCaseName <- svalue(CaseNamesWidget)
         ## get the new file names
         NewName <- ginput(gettext("Enter new Case name. ", domain = "R-RQDA"), text = selectedCaseName, icon = "info")
 
-        if (!identical(NewName, character(0)))
-        {
+        if (!identical(NewName, character(0))) {
             if (!is.na(NewName)) {
                 rename(selectedCaseName, NewName, "cases")
                 CaseNamesUpdate()
@@ -202,14 +200,13 @@ CaseAttribute_Button <- function(label = gettext("Attribute", domain = "R-RQDA")
 
 prof_mat_Button <- function(label = "prof_mat") {
     profmatB <- gbutton(text = label, handler = function(h, ...) {
-        prof_mat(case_names = gselect.list(.rqda$.CasesNamesWidget[], multiple = TRUE, x= getOption("widgetCoordinate")[1]))
+        prof_mat(case_names = gselect.list(.rqda$.CasesNamesWidget[], multiple = TRUE, x = getOption("widgetCoordinate")[1]))
     })
     assign("profmatB", profmatB, envir = button)
     profmatB
 }
 
-GetCaseNamesWidgetMenu <- function()
-{
+GetCaseNamesWidgetMenu <- function() {
     CaseNamesWidgetMenu <- list()
 
     CaseNamesWidgetMenu[[1]] <- gaction(gettext("Add File(s)", domain = "R-RQDA"), handler = function(h, ...) {
@@ -219,26 +216,28 @@ GetCaseNamesWidgetMenu <- function()
             caseid <- rqda_sel(sprintf("select id from cases where status = 1 and name='%s'", SelectedCase))[, 1]
             freefile <-  rqda_sel("select name, id, file from source where status = 1")
             fileofcase <- rqda_sel(sprintf("select fid from caselinkage where status = 1 and caseid=%i", caseid))
-            Encoding(freefile[['name']]) <- Encoding(freefile[['file']]) <- "UTF-8"
+            Encoding(freefile[["name"]]) <- Encoding(freefile[["file"]]) <- "UTF-8"
             if (nrow(fileofcase) != 0) {
                 fileoutofcase <- subset(freefile, !(freefile$id %in% fileofcase$fid))
             } else  fileoutofcase <- freefile
-            if (length(fileoutofcase[['name']]) == 0) gmessage(gettext("All files are linked with this case.", domain = "R-RQDA"), cont = TRUE) else {
-                                                                                                                                                    ##Selected <- select.list(fileoutofcase[['name']], multiple = TRUE)
-                                                                                                                                                    CurrentFrame <- sys.frame(sys.nframe())
-                                                                                                                                                    ## sys.frame(): get the frame of n
-                                                                                                                                                    ## nframe(): get n of current frame
-                                                                                                                                                    ## The value of them depends on where they evaluated, should not placed inside RunOnSelected()
-                                                                                                                                                    RunOnSelected(fileoutofcase[['name']], multiple = TRUE, enclos = CurrentFrame, expr={
-                                                                                                                                                        if (length(Selected)> 0) {
-                                                                                                                                                            Encoding(Selected) <- "UTF-8"
-                                                                                                                                                            fid <- fileoutofcase[fileoutofcase$name %in% Selected, "id"]
-                                                                                                                                                            selend <- nchar(fileoutofcase[fileoutofcase$name %in% Selected, "file"])
-                                                                                                                                                            Dat <- data.frame(caseid = caseid, fid = fid, selfirst = 0, selend = selend, status = 1, owner = .rqda$owner, date = date(), memo = NA)
-                                                                                                                                                            rqda_wrt("caselinkage", Dat)
-                                                                                                                                                            UpdateFileofCaseWidget()
-                                                                                                                                                        }})
-                                                                                                                                                }
+            if (length(fileoutofcase[["name"]]) == 0) {
+                gmessage(gettext("All files are linked with this case.", domain = "R-RQDA"), cont = TRUE)
+            } else {
+                ##Selected <- select.list(fileoutofcase[["name"]], multiple = TRUE)
+                CurrentFrame <- sys.frame(sys.nframe())
+                ## sys.frame(): get the frame of n
+                ## nframe(): get n of current frame
+                ## The value of them depends on where they evaluated, should not placed inside RunOnSelected()
+                RunOnSelected(fileoutofcase[["name"]], multiple = TRUE, enclos = CurrentFrame, expr = {
+                    if (length(Selected) > 0) {
+                        Encoding(Selected) <- "UTF-8"
+                        fid <- fileoutofcase[fileoutofcase$name %in% Selected, "id"]
+                        selend <- nchar(fileoutofcase[fileoutofcase$name %in% Selected, "file"])
+                        Dat <- data.frame(caseid = caseid, fid = fid, selfirst = 0, selend = selend, status = 1, owner = .rqda$owner, date = date(), memo = NA)
+                        rqda_wrt("caselinkage", Dat)
+                        UpdateFileofCaseWidget()
+                    }})
+            }
         }
     })
 
@@ -280,7 +279,7 @@ GetCaseNamesWidgetMenu <- function()
 
     CaseNamesWidgetMenu[[7]] <- gaction(gettext("Export Case Attributes", domain = "R-RQDA"), handler = function(h, ...) {
         if (is_projOpen(envir = .rqda, conName = "qdacon")) {
-            fName <- gfile(type='save', filter = list("csv"=list(pattern = c("*.csv"))))
+            fName <- gfile(type = "save", filter = list("csv" = list(pattern = c("*.csv"))))
             Encoding(fName) <- "UTF-8"
             if (length(grep(".csv$", fName)) == 0) fName <- sprintf("%s.csv", fName)
             write.csv(getAttr("case"), row.names = FALSE, file = fName, na = "")
@@ -333,8 +332,7 @@ GetCaseNamesWidgetMenu <- function()
 
 
 ## pop-up menu of .rqda$.FileofCase
-GetFileofCaseWidgetMenu <- function()
-{
+GetFileofCaseWidgetMenu <- function() {
     FileofCaseWidgetMenu <- list() ## not used yet.
 
     FileofCaseWidgetMenu[[1]] <- gaction(gettext("Add To File Category ...", domain = "R-RQDA"), handler = function(h, ...) {
@@ -347,24 +345,24 @@ GetFileofCaseWidgetMenu <- function()
         if (is_projOpen(envir = .rqda, conName = "qdacon", message = FALSE)) {
             FileOfCat <- svalue(.rqda$.FileofCase)
             if ((NumofSelected <- length(FileOfCat)) == 0) {
-                gmessage(gettext("Please select the Files you want to delete.", domain = "R-RQDA"), con = TRUE)} else
-                                                                                                               {
-                                                                                                                   ## Give a confirm msg
-                                                                                                                   del <- gconfirm(sprintf(gettext("Delete %i file(s) from this category. Are you sure?", domain = "R-RQDA"), NumofSelected), con = TRUE, icon = "question")
-                                                                                                                   if (isTRUE(del)) {
-                                                                                                                       SelectedCase <- svalue(.rqda$.CasesNamesWidget)
-                                                                                                                       ## Encoding(SelectedCase) <- Encoding(FileOfCat)<- "UTF-8"
-                                                                                                                       SelectedCase <- enc(SelectedCase, "UTF-8")
-                                                                                                                       FileOfCat <- enc(FileOfCat, "UTF-8")
-                                                                                                                       caseid <- rqda_sel(sprintf("select id from cases where status = 1 and name='%s'", SelectedCase))[, 1]
-                                                                                                                       for (i in FileOfCat) {
-                                                                                                                           fid <- rqda_sel(sprintf("select id from source where status = 1 and name='%s'", i))[, 1]
-                                                                                                                           rqda_exe(sprintf("update caselinkage set status = 0 where caseid=%i and fid=%i", caseid, fid))
-                                                                                                                       }
-                                                                                                                       ## update Widget
-                                                                                                                       UpdateFileofCaseWidget()
-                                                                                                                   }
-                                                                                                               }
+                gmessage(gettext("Please select the Files you want to delete.", domain = "R-RQDA"), con = TRUE)
+            } else {
+                ## Give a confirm msg
+                del <- gconfirm(sprintf(gettext("Delete %i file(s) from this category. Are you sure?", domain = "R-RQDA"), NumofSelected), con = TRUE, icon = "question")
+                if (isTRUE(del)) {
+                    SelectedCase <- svalue(.rqda$.CasesNamesWidget)
+                    ## Encoding(SelectedCase) <- Encoding(FileOfCat)<- "UTF-8"
+                    SelectedCase <- enc(SelectedCase, "UTF-8")
+                    FileOfCat <- enc(FileOfCat, "UTF-8")
+                    caseid <- rqda_sel(sprintf("select id from cases where status = 1 and name='%s'", SelectedCase))[, 1]
+                    for (i in FileOfCat) {
+                        fid <- rqda_sel(sprintf("select id from source where status = 1 and name='%s'", i))[, 1]
+                        rqda_exe(sprintf("update caselinkage set status = 0 where caseid=%i and fid=%i", caseid, fid))
+                    }
+                    ## update Widget
+                    UpdateFileofCaseWidget()
+                }
+            }
         }
     })
 
@@ -455,4 +453,3 @@ GetFileofCaseWidgetMenu <- function()
 
     FileofCaseWidgetMenu
 }
-

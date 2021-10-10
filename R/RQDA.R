@@ -35,4 +35,3 @@
 #' @importFrom utils browseURL citation packageDescription write.csv
 #' @include rqda-env.R
 NULL
-

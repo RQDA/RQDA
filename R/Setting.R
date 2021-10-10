@@ -132,8 +132,8 @@ addSettingGUI <- function(container, width = 12) {
 setFont <- function(default = "Sans 11") {
     font <- gtkFontButtonNew()
     gtkFontButtonSetFontName(font, default)
-    gw <- gwindow(width=(gdkScreenWidth()/10),
-                  height=(gdkScreenHeight()/10),
+    gw <- gwindow(width = (gdkScreenWidth() / 10),
+                  height = (gdkScreenHeight() / 10),
                   parent = getOption("widgetCoordinate"))
     addHandlerKeystroke(gw, function(h, ...) {
         if (h$key == "\027") dispose(gw)

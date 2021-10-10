@@ -30,8 +30,8 @@ new_proj <- function(path, conName = "qdacon", assignenv = .rqda, ...) {
             tryCatch(closeProject(conName = conName, assignenv = assignenv),
                      error = function(e) {
                      })
-            if (Encoding(path) == 'UTF-8') {
-                Encoding(path)='unknown'
+            if (Encoding(path) == "UTF-8") {
+                Encoding(path) = "unknown"
                 ## otherwise, it is illegible under windows when path contains
                 ## chinese because it is in utf8 encoding
                 assign(conName, dbConnect(drv = dbDriver("SQLite"),
@@ -243,7 +243,7 @@ UpgradeTables <- function() {
         rqda_exe("update project set databaseversion='0.1.9'")
         rqda_exe("alter table freecode add column color text")
     }
-    if (currentVersion<"0.2.0") {
+    if (currentVersion < "0.2.0") {
         if (dbExistsTable(.rqda$qdacon, "coding2"))
             dbRemoveTable(.rqda$qdacon, "coding2")
 
@@ -253,7 +253,7 @@ UpgradeTables <- function() {
                   "date text, memo text)"))
         rqda_exe("update project set databaseversion='0.2.0'")
     }
-    if (currentVersion<"0.2.2") {
+    if (currentVersion < "0.2.2") {
         rqda_exe("alter table treecode add column owner text")
         rqda_exe("alter table treefile add column owner text")
         rqda_exe("update project set databaseversion='0.2.2'")
@@ -261,8 +261,9 @@ UpgradeTables <- function() {
 }
 
 open_proj <- function(path, conName = "qdacon", assignenv = .rqda, ...) {
-    tryCatch({ con <- get(conName, assignenv)
-        pkg <- attr(attr(con, "class"), 'package')
+    tryCatch({
+        con <- get(conName, assignenv)
+        pkg <- attr(attr(con, "class"), "package")
         Open <- getFunction("dbIsValid",
                             where = sprintf("package:%s", pkg))(con)
         if (open) dbDisconnect(con)
@@ -320,10 +321,10 @@ is_projOpen <- function(envir = .rqda, conName = "qdacon", message = TRUE) {
     open <- FALSE
     tryCatch({
         con <- get(conName, envir)
-        pkg <- attr(attr(con, "class"), 'package')
+        pkg <- attr(attr(con, "class"), "package")
         Open2 <- getFunction("dbIsValid", where = sprintf("package:%s", pkg))(con)
         open <- open + Open2
-    } , error = function(e) {
+    }, error = function(e) {
     })
     if (!open & message) gmessage(gettext("No Project is Open.",
                                           domain = "R-RQDA"), icon = "warning",
@@ -341,7 +342,7 @@ backup_proj <- function(con) {
     if (success) {
         gmessage(gettext("Succeeded!", domain = "R-RQDA"),
                  container = TRUE, icon = "info")
-    } else{
+    } else {
         gmessage(gettext("Fail to back up the project.", domain = "R-RQDA"),
                  container = TRUE, icon = "error")
     }
@@ -432,13 +433,14 @@ ProjectMemoWidget <- function() {
             withinWidget <- svalue(get(".projmemocontent", envir = .rqda))
             InRQDA <- rqda_sel("select memo from project where rowid = 1")[1, 1]
             if (isTRUE(all.equal(withinWidget, InRQDA))) {
-                return(FALSE) } else {
-                                  val <- gconfirm(
-                                      gettext(
-                                          "The memo has bee change. Close anyway?", domain = "R-RQDA"),
-                                      container = TRUE)
-                                  return(!val)
-                              }
+                return(FALSE)
+            } else {
+                val <- gconfirm(
+                    gettext(
+                        "The memo has bee change. Close anyway?", domain = "R-RQDA"),
+                    container = TRUE)
+                return(!val)
+            }
         }
         )
     }

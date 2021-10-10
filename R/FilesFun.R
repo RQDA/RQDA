@@ -70,14 +70,14 @@ FileNamesUpdate <- function(FileNamesWidget = .rqda$.fnames_rqda, sortByTime = T
 LineNumber.expose <- function(da, event, data) {
     ## translated from http://www.pygtk.org/pygtk2tutorial/sec-TextViewExample.html
     textView <- da
-    textView$SetBorderWindowSize('GTK_TEXT_WINDOW_LEFT', 30)
+    textView$SetBorderWindowSize("GTK_TEXT_WINDOW_LEFT", 30)
     vis <- textView$GetVisibleRect()
     heightVis <- vis$visible.rect$height
     firstY <- vis$visible.rect$y
     lastY <- firstY + heightVis
-    posFirst <- gtkTextViewWindowToBufferCoords(textView, 'GTK_TEXT_WINDOW_LEFT', 0, firstY)
-    posLast <- gtkTextViewWindowToBufferCoords(textView, 'GTK_TEXT_WINDOW_LEFT', 0, lastY)
-    windowL <- textView$GetWindow('GTK_TEXT_WINDOW_LEFT')
+    posFirst <- gtkTextViewWindowToBufferCoords(textView, "GTK_TEXT_WINDOW_LEFT", 0, firstY)
+    posLast <- gtkTextViewWindowToBufferCoords(textView, "GTK_TEXT_WINDOW_LEFT", 0, lastY)
+    windowL <- textView$GetWindow("GTK_TEXT_WINDOW_LEFT")
     atTop <- textView$GetLineAtY(firstY)
     iter  <- atTop$target.iter
     top <- atTop$line.top
@@ -378,7 +378,7 @@ EditFileFun <- function(FileNameWidget = .rqda$.fnames_rqda) {
             mark_index <- rqda_sel(sprintf("select selfirst, selend, rowid from coding where fid=%i and status = 1",
                                            IDandContent$id))
             if (nrow(mark_index) != 0) {## make sense only when there is coding there
-                ClearMark(W, 0 , max(mark_index$selend), TRUE, FALSE)
+                ClearMark(W, 0, max(mark_index$selend), TRUE, FALSE)
                 HL(W, index = mark_index[, c("selfirst", "selend")], .rqda$fore.col, NULL)
                 ## insert marks according to mark_index (use rowid to name the marks)
                 apply(mark_index, 1, function(x) {
@@ -512,11 +512,9 @@ FileNameWidgetUpdate <- function(FileNamesWidget = .rqda$.fnames_rqda, sort = TR
 }
 
 #' @export
-getFileIds <- function(condition = c("unconditional", "case", "filecategory", "both"), type = c("all", "coded", "uncoded", "selected"))
-{
+getFileIds <- function(condition = c("unconditional", "case", "filecategory", "both"), type = c("all", "coded", "uncoded", "selected")) {
     ## helper function
-    unconditionalFun <- function(type)
-    {
+    unconditionalFun <- function(type) {
         if (type == "selected") {
             selected <- svalue(.rqda$.fnames_rqda)
             ans <- rqda_sel(
@@ -580,13 +578,17 @@ getFileIds <- function(condition = c("unconditional", "case", "filecategory", "b
                         ))$id
         }
         allfid <- getFileIdsSets("filecategory", "intersect")
-        if (type == "all") {ans <- allfid} else {
-                                             codedfid <- rqda_sel(sprintf("select fid from coding where status = 1 and fid in (%s) group by fid", paste(shQuote(allfid), collapse = ", ")))$fid
-                                             if (type == "coded") {
-                                                 ans <- codedfid
-                                             }
-                                             if (type == "uncoded") { ans <-  setdiff(allfid, codedfid)}
-                                         }
+        if (type == "all") {
+            ans <- allfid
+        } else {
+            codedfid <- rqda_sel(sprintf("select fid from coding where status = 1 and fid in (%s) group by fid", paste(shQuote(allfid), collapse = ", ")))$fid
+            if (type == "coded") {
+                ans <- codedfid
+            }
+            if (type == "uncoded") {
+                ans <-  setdiff(allfid, codedfid)
+            }
+        }
         ans
     }
 
@@ -687,7 +689,7 @@ searchWord <- function(str, widget, from = 0, col = "green", verbose = FALSE) {
     tview <- widget$widget
     buffer <- tview$buffer
     Iter0 <- buffer$GetIterAtOffset(from)$iter
-    ans <- gtkTextIterForwardSearch(Iter0, str, 'GTK_TEXT_SEARCH_VISIBLE_ONLY')
+    ans <- gtkTextIterForwardSearch(Iter0, str, "GTK_TEXT_SEARCH_VISIBLE_ONLY")
     if (ans$retval) {
         gtkTextViewScrollToIter(tview, ans$match.start, 0.47)
 

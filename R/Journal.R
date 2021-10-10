@@ -24,16 +24,14 @@ DeleteJournalButton <- function(label = gettext("Delete", domain = "R-RQDA")) {
     DelJouB
 }
 
-RenameJournalButton <- function(label = gettext("Rename", domain = "R-RQDA"))
-{
+RenameJournalButton <- function(label = gettext("Rename", domain = "R-RQDA")) {
     RenJouB <- gbutton(label, handler = function(h, ...) {
         selected <- svalue(.rqda$.JournalNamesWidget)
         NewName <- ginput(gettext("Enter new journal name. ", domain = "R-RQDA"), text = substring(selected, 20), icon = "info")
         Encoding(NewName) <- "UTF-8"
         NewName <- paste(substring(selected, 0, 19), NewName, sep = " ")
-        
-        if (!identical(NewName, character(0)))
-        {
+
+        if (!identical(NewName, character(0))) {
             if (!is.na(NewName)) {
                 rename(from = selected, to = NewName, "journal")
                 JournalNamesUpdate()
@@ -47,8 +45,7 @@ RenameJournalButton <- function(label = gettext("Rename", domain = "R-RQDA"))
 }
 
 
-OpenJournalButton <- function(label = gettext("Open", domain = "R-RQDA"))
-{
+OpenJournalButton <- function(label = gettext("Open", domain = "R-RQDA")) {
     OpeJouB <- gbutton(label, handler = function(h, ...) {
         ViewJournalWidget()
     })
@@ -57,8 +54,7 @@ OpenJournalButton <- function(label = gettext("Open", domain = "R-RQDA"))
     OpeJouB
 }
 
-JournalNamesUpdate <- function(Widget = .rqda$.JournalNamesWidget, decreasing = FALSE, ...)
-{
+JournalNamesUpdate <- function(Widget = .rqda$.JournalNamesWidget, decreasing = FALSE, ...) {
     if (is_projOpen()) {
         journal <- rqda_sel("select name from journal where status = 1")
         if (nrow(journal) == 0) {
@@ -77,19 +73,19 @@ AddNewJournalFun <- function() {
     if (is_projOpen(envir = .rqda, "qdacon")) {
         tryCatch(eval(parse(text = "dispose(.rqda$.AddNewJournalWidget")), error = function(e) {
         }) ## close the widget if open
-        gw <- gwindow(title = "Add New Journal.", parent = getOption("widgetCoordinate"), 
+        gw <- gwindow(title = "Add New Journal.", parent = getOption("widgetCoordinate"),
                       width = getOption("widgetSize")[1], height = getOption("widgetSize")[2]
                       )
-        
+
         addHandlerKeystroke(gw, function(h, ...) {
             if (h$key == "\027") dispose(gw)
         })
-        
+
                                         # get size of root gui as width and height
         wdh <- size(.rqda$.root_rqdagui)
         head_s <- c(wdh["width"], wdh["height"] * .1)
         body_s <- c(wdh["width"], wdh["height"] * .9)
-        
+
         mainIcon <- system.file("icon", "mainIcon.png", package = "RQDA")
         gw$set_icon(mainIcon)
         assign(".AddNewJournalWidget", gw, envir = .rqda)
@@ -104,7 +100,7 @@ AddNewJournalFun <- function() {
                 content <- svalue(textW)
                 content <- enc(content, encoding = "UTF-8") ## take care of double quote.
                 ans <- rqda_exe(sprintf("insert into journal (name, journal, date, owner, status)
-                             values ('%s', '%s', '%s', '%s', %i)", 
+                             values ('%s', '%s', '%s', '%s', %i)",
                              enc(title), content, date(), .rqda$owner, 1))
                 if (is.null(ans)) {
                     dispose(.rqda$.AddNewJournalWidget)
@@ -113,7 +109,7 @@ AddNewJournalFun <- function() {
                 ## must put here rather than in AddJournalButton()
                 JournalNamesUpdate()
             }}) ## end of save button
-        
+
         size(jbut) <- head_s
         tmp <- gtext(container = get(".AddNewJournalWidget2", envir = .rqda))
         size(tmp) <- body_s
@@ -132,18 +128,18 @@ ViewJournalWidget <- function(prefix = "Journal", widget = .rqda$.JournalNamesWi
         else {
             tryCatch(eval(parse(text = sprintf("dispose(.rqda$.%smemo)", prefix))), error = function(e) {
             })
-            gw <- gwindow(title = sprintf("%s:%s", prefix, Selected), parent = getOption("widgetCoordinate"), 
+            gw <- gwindow(title = sprintf("%s:%s", prefix, Selected), parent = getOption("widgetCoordinate"),
                           width = getOption("widgetSize")[1], height = getOption("widgetSize")[2]
                           )
-            
+
             addHandlerKeystroke(gw, function(h, ...) {
                 if (h$key == "\027") dispose(gw)
             })
             mainIcon <- system.file("icon", "mainIcon.png", package = "RQDA")
             gw$set_icon(mainIcon)
             assign(sprintf(".%smemo", prefix), gw, envir = .rqda)
-            assign(sprintf(".%smemo2", prefix), 
-                   gpanedgroup(horizontal = FALSE, container = get(sprintf(".%smemo", prefix), envir = .rqda)), 
+            assign(sprintf(".%smemo2", prefix),
+                   gpanedgroup(horizontal = FALSE, container = get(sprintf(".%smemo", prefix), envir = .rqda)),
                    envir = .rqda)
             saveJournalButton <- gbutton(gettext("Save Journal", domain = "R-RQDA"), container = get(sprintf(".%smemo2", prefix), envir = .rqda), handler = function(h, ...) {
                 newcontent <- svalue(W)
@@ -171,10 +167,11 @@ ViewJournalWidget <- function(prefix = "Journal", widget = .rqda$.JournalNamesWi
                 withinWidget <- svalue(get(sprintf(".%smemoW", prefix), envir = .rqda))
                 InRQDA <- rqda_sel(sprintf("select journal from %s where name='%s'", dbTable, enc(Selected)))[1, 1]
                 if (isTRUE(all.equal(withinWidget, InRQDA))) {
-                    return(FALSE) } else {
-                                      val <- gconfirm(gettext("The Journal has been changed. Close anyway?", domain = "R-RQDA"), container = TRUE)
-                                      return(!val)
-                                  }
+                    return(FALSE)
+                } else {
+                    val <- gconfirm(gettext("The Journal has been changed. Close anyway?", domain = "R-RQDA"), container = TRUE)
+                    return(!val)
+                }
             }
             )
         }

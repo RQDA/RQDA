@@ -5,8 +5,7 @@ ImportFileButton <- function(label = rqda_txt("Import"), container, ...) {
                                           list(mime.types = c("text/plain")),
                                       "All files" = list(patterns = c("*"))),
                         multi = TRUE)
-        if (!identical(paths, character(0)))
-        {
+        if (!identical(paths, character(0))) {
             if (all(paths != "")) {
                 ## have to convert, otherwise, can not find the file.
                 Encoding(paths) <- "UTF-8"
@@ -102,8 +101,7 @@ File_RenameButton <- function(label = rqda_txt("Rename"),
             NewFileName <- ginput(rqda_txt("Enter new file name. "),
                                   text = selectedFN, icon = "info")
 
-            if (!identical(NewFileName, character(0)))
-            {
+            if (!identical(NewFileName, character(0))) {
                 if (!is.na(NewFileName)) {
                     Encoding(NewFileName) <- "UTF-8"
                     ## otherwise, R transform it into local Encoding rather
@@ -255,8 +253,7 @@ AddNewFileFun <- function() {
 
 ## pop-up menu of add to case and F-cat from Files Tab
 ## The translations must be created at run time, otherwise they will not work.
-GetFileNamesWidgetMenu <- function()
-{
+GetFileNamesWidgetMenu <- function() {
     FileNamesWidgetMenu <- list()
 
     FileNamesWidgetMenu[[1]] <- gaction(
@@ -320,7 +317,7 @@ GetFileNamesWidgetMenu <- function()
     FileNamesWidgetMenu[[7]] <- gaction(
         rqda_txt("Export File Attributes"), handler = function(h, ...) {
             if (is_projOpen(envir = .rqda, conName = "qdacon")) {
-                fName <- gfile(type = 'save',
+                fName <- gfile(type = "save",
                                filter = list("csv" = list(pattern = c("*.csv"))))
                 Encoding(fName) <- "UTF-8"
                 if (length(grep(".csv$", fName)) == 0)
@@ -341,8 +338,7 @@ GetFileNamesWidgetMenu <- function()
                 path = gfile(
                     type = "save",
                     text = rqda_txt("Type a name for the exported codings and click OK."))
-                if (!identical(path, character(0)))
-                {
+                if (!identical(path, character(0))) {
                     if (!is.na(path)) {
                         Encoding(path) <- "UTF-8"
                         path <- sprintf("%s.html", path)
@@ -524,7 +520,8 @@ GetFileNamesWidgetMenu <- function()
                                          FileId = fileid)
                 } else {
                     gmessage(rqda_txt("All are linked with file category."),
-                             container = TRUE)}
+                             container = TRUE)
+                }
             }
         })
 

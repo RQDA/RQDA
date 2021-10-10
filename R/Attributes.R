@@ -6,8 +6,7 @@ EditVarWidget <- function(ExistingItems = NULL, container = NULL, title = NULL, 
     COLUMN <- c(Variable = 0, Value = 1, editable = 2)
     articles <- NULL
 
-    create.model <- function()
-    {
+    create.model <- function() {
         ## create the array of data
         articles <<- list()
         ##  create list store
@@ -16,8 +15,7 @@ EditVarWidget <- function(ExistingItems = NULL, container = NULL, title = NULL, 
         ## needs modification
         if (!is.null(ExistingItems)) {
             articles <<- c(articles, unlist(apply(ExistingItems, 1, function(x) list(list(Variable = x[1], Value = x[2], editable = TRUE))), FALSE))
-            for (i in 1:length(articles))
-            {
+            for (i in 1:length(articles)) {
                 iter <- model$append()$iter
                 model$set(iter, COLUMN["Variable"], articles[[i]]$Variable,
                           COLUMN["Value"], articles[[i]]$Value,
@@ -27,9 +25,8 @@ EditVarWidget <- function(ExistingItems = NULL, container = NULL, title = NULL, 
         return(model)
     }
 
-    cell.edited <- function(cell, path.string, new.text, data)
-    {
-        Encoding(new.text) <- 'UTF-8' ## now atrribute displays correctly for non-english character
+    cell.edited <- function(cell, path.string, new.text, data) {
+        Encoding(new.text) <- "UTF-8" ## now atrribute displays correctly for non-english character
         checkPtrType(data, "GtkListStore")
         model <- data
         path <- gtkTreePathNewFromString(path.string)
@@ -42,8 +39,7 @@ EditVarWidget <- function(ExistingItems = NULL, container = NULL, title = NULL, 
         }
     }
 
-    add.columns <- function(treeview)
-    {
+    add.columns <- function(treeview) {
         model <- treeview$getModel()
         ## Variable column
         renderer <- gtkCellRendererTextNew()
@@ -61,7 +57,7 @@ EditVarWidget <- function(ExistingItems = NULL, container = NULL, title = NULL, 
 
     ## create window, etc
     window <- gtkWindowNew("toplevel", show = F)
-    Encoding(title) <- 'UTF-8'
+    Encoding(title) <- "UTF-8"
     window$setTitle(paste(gettext("Attribute of:", domain = "R-RQDA"), title))
                                         #window$`border-width` <- 5
     vbox <- gtkVBoxNew(FALSE, 5)
@@ -101,7 +97,7 @@ saveFUN4CaseAttr <- function(button, data) {
     cond <- IterFirst[[1]]
     iter <- IterFirst$iter
     ans <- c()
-    while(cond) {
+    while (cond) {
         dat <- unlist(model$get(iter, 0, 1))
         ans <- c(ans, dat)
         cond <- model$iterNext(iter)
@@ -138,7 +134,7 @@ CaseAttrFun <- function(caseId, title = NULL, attrs = svalue(.rqda$.AttrNamesWid
         attrs2 <- data.frame(variable = attrs, value = "NA", stringsAsFactors = FALSE)
         variables <- rqda_sel(sprintf("select variable, value from caseAttr where caseID=%i and variable in (%s) and status = 1", caseId, paste(shQuote(attrs), collapse = ", ")))
         if (nrow(variables) != 0) {
-            Encoding(variables$variable) <- Encoding(variables$value) <- 'UTF-8'
+            Encoding(variables$variable) <- Encoding(variables$value) <- "UTF-8"
             idx <- match(variables[[1]], attrs2[[1]])
             attrs2[idx, ] <- variables
         }
@@ -158,7 +154,7 @@ saveFUN4FileAttr <- function(button, data) {
     cond <- IterFirst[[1]]
     iter <- IterFirst$iter
     ans <- c()
-    while(cond) {
+    while (cond) {
         dat <- unlist(model$get(iter, 0, 1))
         ans <- c(ans, dat)
         cond <- model$iterNext(iter)
@@ -189,11 +185,11 @@ saveFUN4FileAttr <- function(button, data) {
 FileAttrFun <- function(fileId, title = NULL, attrs = svalue(.rqda$.AttrNamesWidget)) {
     if (length(attrs) == 0) attrs <-  rqda_sel("select name from attributes where status = 1")$name
     if (is.null(attrs)) gmessage(gettext("add attribute in Attrs Table first.", domain = "R-RQDA"), container = TRUE) else{
-                                                                                                                          Encoding(attrs) <- 'UTF-8'
+                                                                                                                          Encoding(attrs) <- "UTF-8"
                                                                                                                           attrs2 <- data.frame(variable = attrs, value = "NA", stringsAsFactors = FALSE)
                                                                                                                           variables <- rqda_sel(sprintf("select variable, value from fileAttr where fileID=%i and variable in (%s) and status = 1", fileId, paste(shQuote(attrs), collapse = ", ")))
                                                                                                                           if (nrow(variables) != 0) {
-                                                                                                                              Encoding(variables$variable) <- Encoding(variables$value) <- 'UTF-8'
+                                                                                                                              Encoding(variables$variable) <- Encoding(variables$value) <- "UTF-8"
                                                                                                                               idx <- match(variables[[1]], attrs2[[1]])
                                                                                                                               attrs2[idx, ] <- variables
                                                                                                                           }
@@ -205,8 +201,7 @@ FileAttrFun <- function(fileId, title = NULL, attrs = svalue(.rqda$.AttrNamesWid
 
 ## change the name of Variables.R to Attributes.R
 
-AttrNamesUpdate <- function(Widget = .rqda$.AttrNamesWidget, sortByTime = FALSE, decreasing = FALSE, ...)
-{
+AttrNamesUpdate <- function(Widget = .rqda$.AttrNamesWidget, sortByTime = FALSE, decreasing = FALSE, ...) {
     if (is_projOpen()) {
         attr <- rqda_sel(
             "select name, date from attributes where status = 1")
@@ -240,8 +235,7 @@ AddAttrNames <- function(name, ...) {
 AddAttrButton <- function(label = gettext("Add", domain = "R-RQDA")) {
     AddAttB <- gbutton(label, handler = function(h, ...) {
         AttrName <- ginput(gettext("Enter new Attr Name. ", domain = "R-RQDA"), icon = "info")
-        if (!identical(AttrName, character(0)))
-        {
+        if (!identical(AttrName, character(0))) {
             if (!is.na(AttrName)) {
                 Encoding(AttrName) <- "UTF-8"
                 invalid <- grepl("'", AttrName)
@@ -307,8 +301,7 @@ RenameAttrButton <- function(label = gettext("Rename", domain = "R-RQDA")) {
         selected <- svalue(.rqda$.AttrNamesWidget)
         NewName <- ginput(gettext("Enter new attribute name. ", domain = "R-RQDA"), text = selected, icon = "info")
 
-        if (!identical(NewName, character(0)))
-        {
+        if (!identical(NewName, character(0))) {
             if (!is.na(NewName)) {
                 Encoding(NewName) <- "UTF-8"
                 selected <- enc(selected, encoding = "UTF-8")
@@ -454,7 +447,7 @@ getAttr <- function(type = c("case", "file"), attrs = svalue(.rqda$.AttrNamesWid
         tt <- rqda_sel("select name, class from attributes")
         attrs <- tt[tt$class == "numeric", "name"]
         idx <- which(names(DF) %in% attrs)
-        DF[, idx]<- as.data.frame(apply(DF[, idx, drop = FALSE], 2, as.numeric))
+        DF[, idx] <- as.data.frame(apply(DF[, idx, drop = FALSE], 2, as.numeric))
         if (missing(subset)) DF else {
                                     r <- eval(substitute(subset), DF)
                                     if (!is.logical(r))
@@ -484,12 +477,12 @@ setAttrType <- function() {
                            rqda_exe("alter table attributes add column class text")
                            rqda_sel(sprintf("select class from attributes where status = 1 and name='%s'", Selected))[1, 1]
                        })
-    if (is.null(oldCls)||is.na(oldCls)) {
+    if (is.null(oldCls) || is.na(oldCls)) {
         items <- c("unspecified", "numeric", "character")
         idx <- 1
     } else {
         items <- c("numeric", "character")
-        idx <- which (items %in%  oldCls)
+        idx <- which(items %in%  oldCls)
     }
     w <- gwindow(gettext("Type of attribute", domain = "R-RQDA"), width = getOption("widgetSize")[1], height = getOption("widgetSize")[2])
     addHandlerKeystroke(w, function(h, ...) {
@@ -505,7 +498,7 @@ setAttrType <- function() {
     })}
 
 
-importAttr <- function(data, type='file', filename) {
+importAttr <- function(data, type="file", filename) {
     idx <- match(filename, names(data))
     dat <- data[, -idx, drop = FALSE]
     fn <- getFiles()
@@ -517,7 +510,7 @@ importAttr <- function(data, type='file', filename) {
     if (!all(names(dat) %in% allAtt)) stop("some attributes are in not the rqda project.", domain = "R-RQDA")
     for (att in names(dat)) {
         attval <- dat[[att]]
-        if (mode(attval) == "character" && Encoding(attval) != "UTF-8") attval <- iconv(attval, to='UTF-8')
+        if (mode(attval) == "character" && Encoding(attval) != "UTF-8") attval <- iconv(attval, to = "UTF-8")
         for (i in 1:nrow(dat)) {
             exist <- rqda_sel(sprintf("select value from fileAttr where variable='%s' and fileID=%i and status = 1", att, fid[i]))
             if (nrow(exist) == 0 && !is.na(attval[i])) {
