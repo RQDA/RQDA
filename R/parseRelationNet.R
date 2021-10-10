@@ -1,4 +1,4 @@
- parseRelationNet <- function(mapStr, plot=FALSE) {
+ parseRelationNet <- function(mapStr, plot = FALSE) {
      mapStr <- strsplit(mapStr, "\n")[[1]]
      mapStr <- gsub("(^[[:space:]]{1, })|([[:space:]]{1, }$)", "", mapStr) ## strip white space
      mapStr <- mapStr[!grepl("^#", mapStr)] ## strip comment lines
@@ -14,8 +14,8 @@
      mapDF$relation <- relation
      map <- igraph::graph.data.frame(mapDF)
      if (plot) {
-         igraph::tkplot(map, vertex.label=igraph::get.vertex.attribute(map, "name"), vertex.size=10,
-                         edge.label=igraph::get.edge.attribute(map, "relation"), edge.label.cex=0.8)
+         igraph::tkplot(map, vertex.label = igraph::get.vertex.attribute(map, "name"), vertex.size = 10,
+                         edge.label = igraph::get.edge.attribute(map, "relation"), edge.label.cex = 0.8)
      }
      map
  }

@@ -15,7 +15,7 @@ relation <- function(index1, index2) {
   if (length(index1) == 2 || length(index1) == 2) {
     Max <- max(c(index1, index2))
     Min <- min(c(index1, index2))
-    ans <- list(Relation=NA, WhichMin=NA, WhichMax=NA, Distance=NA, OverlapIndex=c(NA, NA), UnionIndex=c(NA, NA))
+    ans <- list(Relation = NA, WhichMin = NA, WhichMax = NA, Distance = NA, OverlapIndex = c(NA, NA), UnionIndex = c(NA, NA))
     ans$WhichMin <- which(c(index1[1], index2[1]) == Min)
     ans$WhichMax <- which(c(index1[2], index2[2]) == Max)
     if (sum(index1 %in% c(Min, Max)) == 2 || sum(index2 %in% c(Min, Max)) == 2) {
@@ -62,18 +62,18 @@ relation <- function(index1, index2) {
 }
 
 #' @export
-crossTwoCodes <- function(cid1, cid2, data, relation=c("overlap", "inclusion", "exact", "proximity"), ...)
+crossTwoCodes <- function(cid1, cid2, data, relation = c("overlap", "inclusion", "exact", "proximity"), ...)
 {
   ## cid1 and cid2 is length-1 numeric, represents the id of codes
   ## data is return by getCodingTable.
-  ## cid1=1; cid2=2
+  ## cid1 = 1; cid2 = 2
   relation <- match.arg(relation)
   data <- data[data$cid %in% c(cid1, cid2), c("cid", "fid", "index1", "index2")]
   ans <- 0
   fidList <- unique(data[data$cid %in% cid1, "fid"])
   for (fid in fidList) {
-    tmpdat1 <- data[data$fid == fid & data$cid == cid1, , drop=FALSE]
-    tmpdat2 <- data[data$fid == fid & data$cid == cid2, , drop=FALSE]
+    tmpdat1 <- data[data$fid == fid & data$cid == cid1, , drop = FALSE]
+    tmpdat2 <- data[data$fid == fid & data$cid == cid2, , drop = FALSE]
     if (nrow(tmpdat2)>0 && nrow(tmpdat1)>0) {
       for(i in seq_len(nrow(tmpdat1))) {
         for(j in seq_len(nrow(tmpdat2))) {
@@ -89,14 +89,14 @@ crossTwoCodes <- function(cid1, cid2, data, relation=c("overlap", "inclusion", "
   ans
 }
 
-crossCodes <- CrossCode <- function(relation=c("overlap", "inclusion", "exact", "proximity"), codeList=NULL, data=getCodingTable(), print=TRUE, ...) {
+crossCodes <- CrossCode <- function(relation = c("overlap", "inclusion", "exact", "proximity"), codeList = NULL, data = getCodingTable(), print = TRUE, ...) {
 ## codeList is character vector of codes.
   if (nrow(data) == 0) {
     stop("No coding in this project.", domain = "R-RQDA")
   } else{
     Cid_Name <- unique(data[, c("cid", "codename")])
     if (is.null(codeList)) {
-        codeList <- gselect.list(Cid_Name$codename, multiple=TRUE)
+        codeList <- gselect.list(Cid_Name$codename, multiple = TRUE)
     } else {
         nList <- length(codeList)
         codeList <- intersect(Cid_Name$codename, codeList)
@@ -107,12 +107,12 @@ crossCodes <- CrossCode <- function(relation=c("overlap", "inclusion", "exact", 
     } else {
       cidList <- Cid_Name$cid[match(codeList, Cid_Name$codename)]
       relation <- match.arg(relation)
-      ans <- matrix(nrow=length(codeList), ncol=length(codeList), dimnames=list(
+      ans <- matrix(nrow = length(codeList), ncol = length(codeList), dimnames = list(
                                                                  sprintf("%s(%s)", codeList, cidList),
                                                                  cidList))
       for (i in 1:length(codeList)) {
         for (j in i:length(codeList)) {
-          ans[i, j] <- crossTwoCodes(cidList[i], cidList[j], data=data, relation=relation)
+          ans[i, j] <- crossTwoCodes(cidList[i], cidList[j], data = data, relation = relation)
         }
       }
       class(ans) <- "crossCodes"
@@ -127,17 +127,17 @@ crossCodes <- CrossCode <- function(relation=c("overlap", "inclusion", "exact", 
 #' @export
 plot.crossCodes <- function(x, ...) {
     colnames(x) <- rownames(x)
-    if (all(x == 0, na.rm=T)) x <- x + 0.5
-    cmG <- igraph::graph.adjacency(x, mode="upper", diag=FALSE, weighted=TRUE)
+    if (all(x == 0, na.rm = T)) x <- x + 0.5
+    cmG <- igraph::graph.adjacency(x, mode="upper", diag = FALSE, weighted = TRUE)
     ew <- igraph::get.edge.attribute(cmG, "weight")
     igraph::set.edge.attribute(cmG, "color", V(cmG)[ew == 1], "green")
     igraph::set.edge.attribute(cmG, "color", V(cmG)[ew == 2], "yellow")
     igraph::set.edge.attribute(cmG, "color", V(cmG)[ew == 3], "orange")
     igraph::set.edge.attribute(cmG, "color", V(cmG)[ew>3], "red")
-    tryCatch(igraph::tkplot(cmG, edge.width=sqrt(igraph::get.edge.attribute(cmG, "weight")),
-                             vertex.label=igraph::get.vertex.attribute(cmG, "name"),
-                             edge.label=floor(igraph::get.edge.attribute(cmG, "weight"))
+    tryCatch(igraph::tkplot(cmG, edge.width = sqrt(igraph::get.edge.attribute(cmG, "weight")),
+                             vertex.label = igraph::get.vertex.attribute(cmG, "name"),
+                             edge.label = floor(igraph::get.edge.attribute(cmG, "weight"))
                              ), error = function(e) {
-        plot(cmG, edge.width=sqrt(igraph::E(cmG)$weight), vertex.label=igraph::V(cmG)$CodeName)
+        plot(cmG, edge.width = sqrt(igraph::E(cmG)$weight), vertex.label = igraph::V(cmG)$CodeName)
     })
 }

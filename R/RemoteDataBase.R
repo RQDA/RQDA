@@ -1,7 +1,7 @@
 ## newMySQLProjMySQL <- function(user='rqda', password='rqdaproj', dbname='rqda', host='localhost', ...)
 ## {
 ##     require(RMySQL)
-##     con = dbConnect(MySQL(), user=user, password=password, dbname=dbname, host=host)
+##     con = dbConnect(MySQL(), user = user, password = password, dbname = dbname, host = host)
 ##     assign("qdacon", con , envir = .rqda)
 ##     if (dbExistsTable(con, "source")) dbRemoveTable(con, "source")
 ##     ## interview record
@@ -72,7 +72,7 @@
 ##     rqda_exe("create table imageCoding (cid integer, iid integer, x1 integer, y1 integer, x2 integer, y2 integer, memo text, date text, dateM text, owner text, status integer, rowid integer NOT NULL primary key AUTO_INCREMENT)")
 ## }
 
-## openMySQLProject <- function(user='rqda', password='rqdaproj', dbname='rqda', host='localhost', updateGUI=TRUE, ...) {
+## openMySQLProject <- function(user='rqda', password='rqdaproj', dbname='rqda', host='localhost', updateGUI = TRUE, ...) {
 ##     tryCatch(.rqda$.codes_rqda[]<-NULL, error = function(e) {
 })
 ##     tryCatch(.rqda$.fnames_rqda[]<-NULL, error = function(e) {
@@ -95,14 +95,14 @@
 })
 ##     ## close currect project before open a new one.
 ##     require(RMySQL)
-##     con = dbConnect(MySQL(), user=user, password=password, dbname=dbname, host=host)
+##     con = dbConnect(MySQL(), user = user, password = password, dbname = dbname, host = host)
 ##     assign("qdacon", con , envir = .rqda)
 ##     if (updateGUI) {
 ##         svalue(.rqda$.currentProj) <- "Opening ..."
 ##         UpgradeTables()
-##         tryCatch(CodeNamesUpdate(sortByTime=FALSE), error = function(e) {
+##         tryCatch(CodeNamesUpdate(sortByTime = FALSE), error = function(e) {
 })
-##         tryCatch(FileNamesUpdate(sortByTime=FALSE), error = function(e) {
+##         tryCatch(FileNamesUpdate(sortByTime = FALSE), error = function(e) {
 })
 ##         tryCatch(CaseNamesUpdate(), error = function(e) {
 })

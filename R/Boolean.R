@@ -1,12 +1,12 @@
 #' @export
-getCodingsByOne <- function(cid, fid=NULL, codingTable=c("coding", "coding2")) {
+getCodingsByOne <- function(cid, fid = NULL, codingTable = c("coding", "coding2")) {
     if (length(cid) != 1) stop("cid should be length-1 integer vector.", domain = "R-RQDA")
     codingTable <- match.arg(codingTable)
      if (codingTable == "coding") {
-    ct <- rqda_sel(sprintf("select coding.rowid as rowid, coding.cid, coding.fid, freecode.name as codename, source.name as filename, coding.selfirst as index1, coding.selend as index2, coding.seltext as coding, coding.selend - coding.selfirst as CodingLength from coding left join freecode on (coding.cid=freecode.id) left join source on (coding.fid=source.id) where coding.status=1 and source.status=1 and freecode.status=1 and coding.cid=%s", cid))
+    ct <- rqda_sel(sprintf("select coding.rowid as rowid, coding.cid, coding.fid, freecode.name as codename, source.name as filename, coding.selfirst as index1, coding.selend as index2, coding.seltext as coding, coding.selend - coding.selfirst as CodingLength from coding left join freecode on (coding.cid = freecode.id) left join source on (coding.fid = source.id) where coding.status = 1 and source.status = 1 and freecode.status = 1 and coding.cid=%s", cid))
      }
      if (codingTable == "coding2") {
-    ct <- rqda_sel(sprintf("select coding2.rowid as rowid, coding2.cid, coding2.fid, freecode.name as codename, source.name as filename, coding2.selfirst as index1, coding2.selend as index2, coding2.seltext as coding, coding2.selend - coding2.selfirst as CodingLength from coding2 left join freecode on (coding2.cid=freecode.id) left join source on (coding2.fid=source.id) where coding2.status=1 and source.status=1 and freecode.status=1 and coding2.cid=%s", cid))
+    ct <- rqda_sel(sprintf("select coding2.rowid as rowid, coding2.cid, coding2.fid, freecode.name as codename, source.name as filename, coding2.selfirst as index1, coding2.selend as index2, coding2.seltext as coding, coding2.selend - coding2.selfirst as CodingLength from coding2 left join freecode on (coding2.cid = freecode.id) left join source on (coding2.fid = source.id) where coding2.status = 1 and source.status = 1 and freecode.status = 1 and coding2.cid=%s", cid))
      }
     if (nrow(ct) != 0) {
         Encoding(ct$codename) <- Encoding(ct$filename) <- Encoding(ct$coding) <- "UTF-8"
@@ -22,7 +22,7 @@ print.codingsByOne <- function(x, ...)
 {
     ComputeCallbackFun <- function(FileName, rowid) {
         CallBackFUN <- function(widget, event, ...) {
-            ViewFileFunHelper(FileName, hightlight=FALSE)
+            ViewFileFunHelper(FileName, hightlight = FALSE)
             textView <- .rqda$.openfile_gui$widget
             buffer <- textView$buffer
             mark1 <- gtkTextBufferGetMark(buffer, sprintf("%s.1", rowid))
@@ -110,7 +110,7 @@ andHelper <- function(d1, d2) {
     idx1 <- idx2 - len + 1
     x1 <- x[idx1]
     x2 <- x[idx2]
-    ans <- data.frame(index1=x1, index2=x2)
+    ans <- data.frame(index1 = x1, index2 = x2)
     ans
 }
 
@@ -127,7 +127,7 @@ and <- function(CT1, CT2)
                                     subset(CT2, fid == j, c("index1", "index2"))
                                     )
             if (nrow(tmp)>0) {
-            tmp <- cbind(tmp, fid=j, filename=CT1$filename[which(CT1$fid == j)[1]])
+            tmp <- cbind(tmp, fid = j, filename = CT1$filename[which(CT1$fid == j)[1]])
             rid1 <- match(tmp$index1, CT1$index1)
             rid1NA <- is.na(rid1)
             tmp$rowid[!rid1NA] <- CT1$rowid[rid1[!rid1NA]]
@@ -162,14 +162,14 @@ orHelper <- function(d1, d2) {
     idx1 <- idx2 - len + 1
     x1 <- x[idx1]
     x2 <- x[idx2]
-    ans <- data.frame(index1=x1, index2=x2)
+    ans <- data.frame(index1 = x1, index2 = x2)
     ans
 }
 
 #' @export
 or <- function(CT1, CT2)
 {
-    ans <- data.frame(stringsAsFactors=FALSE)
+    ans <- data.frame(stringsAsFactors = FALSE)
     fid <- unique(union(CT1$fid, CT2$fid))
     if (length(fid) > 0) {
         for (j in fid) {
@@ -177,7 +177,7 @@ or <- function(CT1, CT2)
                             subset(CT2, fid == j, c("index1", "index2"))
                             )
             if (nrow(tmp)>0) {
-                tmp <- cbind(tmp, fid=j, filename=CT1$filename[which(CT1$fid == j)[1]], stringsAsFactors=FALSE)
+                tmp <- cbind(tmp, fid = j, filename = CT1$filename[which(CT1$fid == j)[1]], stringsAsFactors = FALSE)
                 tmp$filename[is.na(tmp$filename)] <- CT2$filename[which(CT2$fid == j)[1]]
                 rid1 <- match(tmp$index1, CT1$index1)
                 rid1NA <- is.na(rid1)
@@ -214,14 +214,14 @@ notHelper <- function(d1, d2) {
     idx1 <- idx2 - len + 1
     x1 <- x[idx1]
     x2 <- x[idx2]
-    ans <- data.frame(index1=x1, index2=x2)
+    ans <- data.frame(index1 = x1, index2 = x2)
     ans
 }
 
 #' @export
 not <- function(CT1, CT2)
 {
-    ans <- data.frame(stringsAsFactors=FALSE)
+    ans <- data.frame(stringsAsFactors = FALSE)
     fid <- unique(CT1$fid)
     if (length(fid) > 0) {
         for (j in fid) {
@@ -229,7 +229,7 @@ not <- function(CT1, CT2)
                              subset(CT2, fid == j, c("index1", "index2"))
                             )
             if (nrow(tmp)>0) {
-                tmp <- cbind(tmp, fid=j, filename=CT1$filename[which(CT1$fid == j)[1]], stringsAsFactors=FALSE)
+                tmp <- cbind(tmp, fid = j, filename = CT1$filename[which(CT1$fid == j)[1]], stringsAsFactors = FALSE)
                 rid1 <- match(tmp$index1, CT1$index1)
                 rid1NA <- is.na(rid1)
                 tmp$rowid[!rid1NA] <- CT1$rowid[rid1[!rid1NA]]
@@ -255,7 +255,7 @@ not <- function(CT1, CT2)
 #' @method %and% codingsByOne
 #' @export
 "%and%.codingsByOne" <- function(e1, e2) {
-    ## and(e1, e2, showCoding=TRUE, method= getOption("andMethod"))
+    ## and(e1, e2, showCoding = TRUE, method= getOption("andMethod"))
     and(e1, e2)
 }
 
@@ -287,22 +287,22 @@ not <- function(CT1, CT2)
 ##     }
 ##   }
 ##   if (length(ridx) >=2) {
-##     rf <- ridx[seq(from=1, to=length(ridx), by=2)] ## row index for CT1
-##     rs <- ridx[seq(from=2, to=length(ridx), by=2)] ## row index for CT2
-##     index1 <- idx[seq(from=1, to=length(idx), by=2)]
-##     index2 <- idx[seq(from=2, to=length(idx), by=2)]
-##     ans <- cbind(CT1[rf, c("rowid", "fid", "filename")], index1=index1, index2=index2)
+##     rf <- ridx[seq(from = 1, to = length(ridx), by = 2)] ## row index for CT1
+##     rs <- ridx[seq(from = 2, to = length(ridx), by = 2)] ## row index for CT2
+##     index1 <- idx[seq(from = 1, to = length(idx), by = 2)]
+##     index2 <- idx[seq(from = 2, to = length(idx), by = 2)]
+##     ans <- cbind(CT1[rf, c("rowid", "fid", "filename")], index1 = index1, index2 = index2)
 ##     ans
 ##   }
 ## }
 
 
-## and <- function(CT1, CT2, showCoding=TRUE, method= c("overlap", "exact", "inclusion")) {
+## and <- function(CT1, CT2, showCoding = TRUE, method= c("overlap", "exact", "inclusion")) {
 ##   ## CT1 and CT2 is from getCodingTable, each for one code only
 ##   fid <- intersect(CT1$fid, CT2$fid)
 ##   if (length(fid)>0) {
-##     ans <- lapply(fid, FUN=function(x) {
-##       and_helper(CT1=subset(CT1, fid == x), CT2=subset(CT2, fid == x), method=method)
+##     ans <- lapply(fid, FUN = function(x) {
+##       and_helper(CT1 = subset(CT1, fid == x), CT2 = subset(CT2, fid == x), method = method)
 ##     }
 ##       )
 ##     ans <- do.call(rbind, ans)
@@ -332,34 +332,34 @@ not <- function(CT1, CT2)
 ##   ## may use temp database table to do it.
 ##   orHelperFUN <- function(From, Exist) { ## from and exist are data frame of codings.
 ##     if (nrow(Exist) == 0) {## just write to the new code if there is no coding related to that code.
-##       ans <- From[, c("rowid", "fid", "filename", "index1", "index2", "coding"), drop=FALSE]
+##       ans <- From[, c("rowid", "fid", "filename", "index1", "index2", "coding"), drop = FALSE]
 ##     } else {
-##       Relations <- apply(Exist[c("index1", "index2")], 1, FUN=function(x) relation(x, c(From$index1, From$index2)))
+##       Relations <- apply(Exist[c("index1", "index2")], 1, FUN = function(x) relation(x, c(From$index1, From$index2)))
 ##       ## because apply convert data to an array, and Exist containts character -> x is charater rather than numeric
-##       Exist$Relation <- sapply(Relations, FUN=function(x) x$Relation) ## add Relation to the data frame as indicator.
+##       Exist$Relation <- sapply(Relations, FUN = function(x) x$Relation) ## add Relation to the data frame as indicator.
 ##       if (!any(Exist$Relation == "exact")) {
 ##         ## if they are axact, do nothing;
 ##         ## if they are not exact, do something. The following lines record meta info
-##         Exist$WhichMin <- sapply(Relations, FUN=function(x)x$WhichMin)
-##         Exist$Start <- sapply(Relations, FUN=function(x)x$UnionIndex[1])
-##         Exist$End <- sapply(Relations, FUN=function(x)x$UnionIndex[2])
+##         Exist$WhichMin <- sapply(Relations, FUN = function(x)x$WhichMin)
+##         Exist$Start <- sapply(Relations, FUN = function(x)x$UnionIndex[1])
+##         Exist$End <- sapply(Relations, FUN = function(x)x$UnionIndex[2])
 ##         if (all(Exist$Relation == "proximity")) {
 ##           ## take care of proximity with distance of 0.
 ##           ## (a not b) or (b) == a
 ##           dis <- sapply(Relations, function(x) x$Distance)
 ##           if (all(dis>0)) {
 ##             ## if there are no overlap in any kind, the result is From + Exist
-##             ans <- rbind(From[, c("rowid", "fid", "filename", "index1", "index2", "coding"), drop=FALSE],
-##                          Exist[, c("rowid", "fid", "filename", "index1", "index2", "coding"), drop=FALSE])
+##             ans <- rbind(From[, c("rowid", "fid", "filename", "index1", "index2", "coding"), drop = FALSE],
+##                          Exist[, c("rowid", "fid", "filename", "index1", "index2", "coding"), drop = FALSE])
 ##           } else {
 ##             idx0 <- which(dis == 0)
 ##             index3 <- unlist(c(From[, c("index1", "index2")], Exist[idx0, c("index1", "index2")]))
 ##             From["coding"] <- paste(Exist$coding[idx0][rank(Exist$index1[idx0])], collapse="")
 ##             From["index1"] <- min(index3)
 ##             From["index2"] <- max(index3)
-##             ans <- rbind(From[, c("rowid", "fid", "filename", "index1", "index2", "coding"), drop=FALSE],
+##             ans <- rbind(From[, c("rowid", "fid", "filename", "index1", "index2", "coding"), drop = FALSE],
 ##                          Exist[which(dis>0),
-##                                c("rowid", "fid", "filename", "index1", "index2", "coding"), drop=FALSE]
+##                                c("rowid", "fid", "filename", "index1", "index2", "coding"), drop = FALSE]
 ##                          )
 ##           }
 ##           ## end of handling proximity
@@ -377,8 +377,8 @@ not <- function(CT1, CT2)
 ##             Encoding(tt) <- "UTF-8"  ## fulltext of the file
 ##             Sel <- c(min(Exist$Start[del]), max(Exist$End[del])) ## index to get the new coding
 ##             ans <- rbind(ExistN,
-##                          data.frame(rowid=From$rowid, fid=From$fid, filename=From$filename,
-##                                     index1=Sel[1], index2=Sel[2], coding=substr(tt, Sel[1], Sel[2])
+##                          data.frame(rowid = From$rowid, fid = From$fid, filename = From$filename,
+##                                     index1 = Sel[1], index2 = Sel[2], coding = substr(tt, Sel[1], Sel[2])
 ##                                     )
 ##                          )
 ##           }
@@ -389,8 +389,8 @@ not <- function(CT1, CT2)
 ##   } ## end of helper function.
 
 ##   if (any(c(nrow(CT1), nrow(CT2)) == 0)) stop("One code has empty coding.", domain = "R-RQDA")
-##   CT1 <- CT1[, c("rowid", "fid", "filename", "index1", "index2", "coding"), drop=FALSE]
-##   CT2 <- CT2[, c("rowid", "fid", "filename", "index1", "index2", "coding"), drop=FALSE]
+##   CT1 <- CT1[, c("rowid", "fid", "filename", "index1", "index2", "coding"), drop = FALSE]
+##   CT2 <- CT2[, c("rowid", "fid", "filename", "index1", "index2", "coding"), drop = FALSE]
 ##   if (nrow(CT1) >= nrow(CT2)) {
 ##     FromDat <- CT2
 ##     ToDat <- CT1
@@ -405,16 +405,16 @@ not <- function(CT1, CT2)
 ##   for (j in 1:Nf) {
 ##     From <- FromDat[FromDat$fid == fidUnique[j], ]
 ##     for (i in seq_len(nrow(From))) {
-##       x <- From[i, , drop=FALSE]
+##       x <- From[i, , drop = FALSE]
 ##       if (i == 1) {
 ##         Exist <- ToDat[ToDat$fid == fidUnique[j], ]
 ##         ## use original data only for the first
 ##       }
-##       Exist <- orHelperFUN(From=x, Exist=Exist) ## use the result to update Exist
+##       Exist <- orHelperFUN(From = x, Exist = Exist) ## use the result to update Exist
 ##     }## end of i
 ##     ans[[j]] <- Exist
 ##   } ## and of j
-##   ans[[j + 1]] <- ToDat[!ToDat$fid %in% fidUnique, c("rowid", "fid", "filename", "index1", "index2", "coding"), drop=FALSE]
+##   ans[[j + 1]] <- ToDat[!ToDat$fid %in% fidUnique, c("rowid", "fid", "filename", "index1", "index2", "coding"), drop = FALSE]
 ##   ans <- do.call(rbind, ans)
 ##   class(ans) <- c("codingsByOne", "data.frame")
 ##   ans
@@ -432,7 +432,7 @@ not <- function(CT1, CT2)
 ##     } else { ## else1
 ##       for (i in 1:nrow(CT1)) {
 ##         relAll <- apply(CT2, 1, function(x)
-##                         relation(CT1[i, c("index1", "index2"), drop=TRUE],
+##                         relation(CT1[i, c("index1", "index2"), drop = TRUE],
 ##                                  as.numeric(x[c("index1", "index2")]))
 ##                         ) ## end of apply
 ##         Relation <- sapply(relAll, function(x) x$Relation)
@@ -441,7 +441,7 @@ not <- function(CT1, CT2)
 ##         } else { ## else2
 ##           if (all(Relation == "proximity")) {
 ##             ridx <- c(ridx, i)
-##             idx <- c(idx, CT1[i, c("index1", "index2"), drop=TRUE])
+##             idx <- c(idx, CT1[i, c("index1", "index2"), drop = TRUE])
 ##           } else { ## else3
 ##             in.over <- Relation %in% c("inclusion", "overlap") ## index of overlap and inclusion
 ##             rel.in.over <- relAll[in.over]
@@ -472,7 +472,7 @@ not <- function(CT1, CT2)
 
 ##               inidx<- Relation %in% c("inclusion")
 ##               ans <- sapply(relAll[inidx], function(x) x$OverlapIndex)
-##               ans <- sort(unlist(c(CT1[i, c("index1", "index2"), drop=TRUE], ans)))
+##               ans <- sort(unlist(c(CT1[i, c("index1", "index2"), drop = TRUE], ans)))
 ##               ridx <- c(ridx, rep(i, length(ans)/2))
 ##               idx <- c(idx, ans)
 ##             }## else4
@@ -484,9 +484,9 @@ not <- function(CT1, CT2)
 
 ##   if (length(ridx) >=1) {
 ##     idx <- unlist(idx)
-##     index1 <- idx[seq(from=1, to=length(idx), by=2)]
-##     index2 <- idx[seq(from=2, to=length(idx), by=2)]
-##     ans <- cbind(CT1[ridx, c("rowid", "fid", "filename")], index1=index1, index2=index2)
+##     index1 <- idx[seq(from = 1, to = length(idx), by = 2)]
+##     index2 <- idx[seq(from = 2, to = length(idx), by = 2)]
+##     ans <- cbind(CT1[ridx, c("rowid", "fid", "filename")], index1 = index1, index2 = index2)
 ##     ## ans <- unique(ans)
 ##     ans
 ##   }
@@ -494,10 +494,10 @@ not <- function(CT1, CT2)
 ## }## end of fun
 
 
-## not <- function(CT1, CT2, showCoding=FALSE) {
+## not <- function(CT1, CT2, showCoding = FALSE) {
 ##   fid <- unique(CT1$fid)
 ##   if (length(fid)>0) {
-##     ans <- lapply(fid, FUN=function(x) not_helper(CT1=subset(CT1, fid == x), CT2=subset(CT2, fid == x)))
+##     ans <- lapply(fid, FUN = function(x) not_helper(CT1 = subset(CT1, fid == x), CT2 = subset(CT2, fid == x)))
 ##     ans <- do.call(rbind, ans)
 ##     if (showCoding && !is.null(ans)) {
 ##       txt <- apply(ans, 1, function(x) {

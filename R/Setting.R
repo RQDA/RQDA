@@ -1,4 +1,4 @@
-addSettingGUI <- function(container, width=12) {
+addSettingGUI <- function(container, width = 12) {
     colorsList <- colors()
     if (Sys.info()["user"] != "") assign("owner", Sys.info()["user"], envir = .rqda)
 
@@ -7,14 +7,14 @@ addSettingGUI <- function(container, width=12) {
 
     ans <- gbutton(gettext("Click to set font", domain = "R-RQDA"),
                    container = container,
-                   handler=function(h, ...)
+                   handler = function(h, ...)
                        setFont(default=.rqda$font))
     ## set font for widget
     gtkWidgetSetTooltipText(getToolkitWidget(ans),
                             gettext("Set fonts for memo widgets.", domain = "R-RQDA"))
 
     SettingFL <- gformlayout(align = "default", spacing = 5,
-                             container = container, expand=TRUE)
+                             container = container, expand = TRUE)
 
     name <- rqda_txt("Name of Coder")
     fenc <- rqda_txt("File Encoding")
@@ -35,17 +35,17 @@ addSettingGUI <- function(container, width=12) {
           )
     gcombobox(name = "fore.col",
               label = colc,
-              items=c(.rqda$fore.col, colorsList),
+              items = c(.rqda$fore.col, colorsList),
               container = SettingFL
               )
     gcombobox(name = "back.col",
               label = casc,
-              items=c(.rqda$back.col, colorsList),
+              items = c(.rqda$back.col, colorsList),
               container = SettingFL
               )
     gcombobox(name = "codingTable",
               label = codt,
-              items=c(.rqda$codingTable, "coding2"),
+              items = c(.rqda$codingTable, "coding2"),
               container = SettingFL
               )
     gcombobox(name = "BOM",
@@ -67,7 +67,7 @@ addSettingGUI <- function(container, width=12) {
               container = SettingFL
               )
 
-    ButtonContainer <- ggroup(container = container) ##, width=100) ## not necessary to set width here
+    ButtonContainer <- ggroup(container = container) ##, width = 100) ## not necessary to set width here
     addSpring(ButtonContainer)
     resetButton <- gbutton(gettext("Default", domain = "R-RQDA"),
                            container = ButtonContainer)
@@ -134,16 +134,16 @@ setFont <- function(default="Sans 11") {
     gtkFontButtonSetFontName(font, default)
     gw <- gwindow(width=(gdkScreenWidth()/10),
                   height=(gdkScreenHeight()/10),
-                  parent=getOption("widgetCoordinate"))
+                  parent = getOption("widgetCoordinate"))
     addHandlerKeystroke(gw, function(h, ...) {
         if (h$key == "\027") dispose(gw)
     })
-    g <-glayout(container=gw, homogeneous=TRUE)
+    g <-glayout(container = gw, homogeneous = TRUE)
     g[1, 1:2] <- font
-    g[2, 1] <- gbutton("Ok", handler=function(h, ...) {
+    g[2, 1] <- gbutton("Ok", handler = function(h, ...) {
         ans <- font$GetFontName()
         assign("font", ans, envir = .rqda)
         dispose(g)
     })
-    g[2, 2] <- gbutton("Cancel", handler=function(h, ...) dispose(g))
+    g[2, 2] <- gbutton("Cancel", handler = function(h, ...) dispose(g))
 }

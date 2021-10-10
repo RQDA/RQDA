@@ -10,12 +10,12 @@ retrieval_by_code <- function(Fid = NULL, order = c("fname", "ftime", "ctime"), 
         order <- switch(order, fname = "order by source.name",
             ftime = "order by source.id", ctime = "")
         if (is.null(Fid)) {
-            retrieval <- rqda_sel(sprintf("select cid, fid, selfirst, selend, seltext, %s.rowid, source.name, source.id from %s, source where %s.status=1 and cid=%i and source.id=fid %s",
+            retrieval <- rqda_sel(sprintf("select cid, fid, selfirst, selend, seltext, %s.rowid, source.name, source.id from %s, source where %s.status = 1 and cid=%i and source.id = fid %s",
                 codingTable, codingTable, codingTable, currentCid,
                 order))
         }
         else {
-            retrieval <- rqda_sel(sprintf("select cid, fid, selfirst, selend, seltext, %s.rowid, source.name, source.id from %s, source where %s.status=1 and cid=%i and source.id=fid and fid in (%s) %s",
+            retrieval <- rqda_sel(sprintf("select cid, fid, selfirst, selend, seltext, %s.rowid, source.name, source.id from %s, source where %s.status = 1 and cid=%i and source.id = fid and fid in (%s) %s",
                 codingTable, codingTable, codingTable, currentCid,
                 paste(Fid, collapse = ", "), order))
         }
@@ -62,7 +62,7 @@ retrieval_by_code <- function(Fid = NULL, order = c("fname", "ftime", "ctime"), 
             .retreivalgui$widget$SetPixelsBelowLines(5)
             .retreivalgui$widget$SetPixelsInsideWrap(5)
             for (i in fid) {
-                FileName <- rqda_sel(sprintf("select name from source where status=1 and id=%i",
+                FileName <- rqda_sel(sprintf("select name from source where status = 1 and id=%i",
                   i))[["name"]]
                 if (!is.null(FileName)) {
                   Encoding(FileName) <- "UTF-8"
@@ -71,7 +71,7 @@ retrieval_by_code <- function(Fid = NULL, order = c("fname", "ftime", "ctime"), 
                 else {
                   retrieval <- retrieval[retrieval$fid != i,
                     ]
-                  rqda_exe(sprintf("update %s set status=0 where fid=%i",
+                  rqda_exe(sprintf("update %s set status = 0 where fid=%i",
                     codingTable, i))
                 }
             }

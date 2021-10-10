@@ -4,16 +4,16 @@ mergeCodes <- function(cid1, cid2) { ## cid1 and cid2 are two code IDs.
       success <- rqda_wrt("coding", From)
       if (!success) gmessage(gettext("Fail to write to database.", domain = "R-RQDA"))
     } else {
-      Relations <- apply(Exist[c("selfirst", "selend")], 1, FUN=function(x) relation(x, c(From$selfirst, From$selend)))
+      Relations <- apply(Exist[c("selfirst", "selend")], 1, FUN = function(x) relation(x, c(From$selfirst, From$selend)))
       ## because apply convert data to an array, and Exist containts character -> x is charater rather than numeric
-      Exist$Relation <- sapply(Relations, FUN=function(x) x$Relation) ## add Relation to the data frame as indicator.
+      Exist$Relation <- sapply(Relations, FUN = function(x) x$Relation) ## add Relation to the data frame as indicator.
       ## possible bugs: should handle exact explicitely.
       if (!any(Exist$Relation == "exact")) {
         ## if they are axact, do nothing; -> if they are not exact, do something. The following lines record meta info.
-        Exist$WhichMin <- sapply(Relations, FUN=function(x)x$WhichMin)
-        Exist$WhichMax <- sapply(Relations, FUN=function(x)x$WhichMax)
-        Exist$Start <- sapply(Relations, FUN=function(x)x$UnionIndex[1])
-        Exist$End <- sapply(Relations, FUN=function(x)x$UnionIndex[2])
+        Exist$WhichMin <- sapply(Relations, FUN = function(x)x$WhichMin)
+        Exist$WhichMax <- sapply(Relations, FUN = function(x)x$WhichMax)
+        Exist$Start <- sapply(Relations, FUN = function(x)x$UnionIndex[1])
+        Exist$End <- sapply(Relations, FUN = function(x)x$UnionIndex[2])
         if (all(Exist$Relation == "proximity")) { ## if there are no overlap in any kind, just write to database
             dis <- sapply(Relations, function(x) x$Distance)
             if (all(dis>0)) {
@@ -25,7 +25,7 @@ mergeCodes <- function(cid1, cid2) { ## cid1 and cid2 are two code IDs.
                 From["seltext"] <- paste(Exist$coding[idx0][rank(Exist$selfirst[idx0])], collapse="")
                 From["selfirst"] <- min(index3)
                 From["selend"] <- max(index3)
-                ## DAT <- From[, c("rowid", "fid", "filename", "index1", "index2", "coding"), drop=FALSE] ## write to coding
+                ## DAT <- From[, c("rowid", "fid", "filename", "index1", "index2", "coding"), drop = FALSE] ## write to coding
                 ## delete the adjacent one.
             }
         } else { ## if not proximate, pass to else branch.
@@ -46,9 +46,9 @@ mergeCodes <- function(cid1, cid2) { ## cid1 and cid2 are two code IDs.
             Encoding(tt) <- "UTF-8"  ## fulltext of the file
             Sel <- c(min(Exist$Start[del]), max(Exist$End[del])) ## index to get the new coding
             ## what is Sel?
-            DAT <- data.frame(cid=From$cid, fid=From$fid, seltext=substr(tt, Sel[1], Sel[2]), 
-                              selfirst=Sel[1], selend=Sel[2], status=1, 
-                              owner=.rqda$owner, date=date(), memo=memo) ## The new coding to table.
+            DAT <- data.frame(cid = From$cid, fid = From$fid, seltext = substr(tt, Sel[1], Sel[2]), 
+                              selfirst = Sel[1], selend = Sel[2], status = 1, 
+                              owner=.rqda$owner, date = date(), memo = memo) ## The new coding to table.
             success <- rqda_wrt("coding", DAT)
             if (!success) gmessage(gettext("Fail to write to database.", domain = "R-RQDA"))
           }
@@ -57,30 +57,30 @@ mergeCodes <- function(cid1, cid2) { ## cid1 and cid2 are two code IDs.
     }
   } ## end of helper function.
 
-  Coding1 <-  rqda_sel(sprintf("select * from coding where cid=%i and status=1", cid1))
-  Coding2 <-  rqda_sel(sprintf("select * from coding where cid=%i and status=1", cid2))
+  Coding1 <-  rqda_sel(sprintf("select * from coding where cid=%i and status = 1", cid1))
+  Coding2 <-  rqda_sel(sprintf("select * from coding where cid=%i and status = 1", cid2))
   if (any(c(nrow(Coding1), nrow(Coding2)) == 0)) stop("One code has empty coding.", domain = "R-RQDA")
   if (nrow(Coding1) >= nrow(Coding2)) {
     FromDat <- Coding2
     ToDat <- Coding1
-    ToDat$rowid <- rqda_sel(sprintf("select rowid from coding where cid=%i and status=1", cid1))$rowid
+    ToDat$rowid <- rqda_sel(sprintf("select rowid from coding where cid=%i and status = 1", cid1))$rowid
     FromDat$cid <- cid1 ## so can write to directly where it is proximate
     FromCid <- cid2
   } else {
     FromDat <- Coding1
     ToDat <- Coding2
-    ToDat$rowid <- rqda_sel(sprintf("select rowid from coding where cid=%i and status=1", cid2))$rowid
+    ToDat$rowid <- rqda_sel(sprintf("select rowid from coding where cid=%i and status = 1", cid2))$rowid
     FromDat$cid <- cid2
     FromCid <- cid1
   } ## use small coding as FromDat -> speed it up.
   for (i in seq_len(nrow(FromDat))) {
-    x <- FromDat[i, , drop=FALSE]
-    Exist <- ToDat[ToDat$fid == x$fid, ] ## subset(ToDat, subset=fid == x$fid)
+    x <- FromDat[i, , drop = FALSE]
+    Exist <- ToDat[ToDat$fid == x$fid, ] ## subset(ToDat, subset = fid == x$fid)
     ## avoding the NOTE from docs checking.
-    mergeHelperFUN(From=x, Exist=Exist)
+    mergeHelperFUN(From = x, Exist = Exist)
   }
-  rqda_exe(sprintf("update coding set status=0 where cid='%i'", FromCid))
-  rqda_exe(sprintf("update freecode set status=0 where id='%i'", FromCid))
+  rqda_exe(sprintf("update coding set status = 0 where cid='%i'", FromCid))
+  rqda_exe(sprintf("update freecode set status = 0 where id='%i'", FromCid))
 }
 
 findConsecutive <- function(x) {
@@ -90,12 +90,12 @@ findConsecutive <- function(x) {
     eidx <- cumsum(d2$length) [which(d2$values == 1)] + 1
     L.consecutive <- d2$length[which(d2$values == 1)]
     bidx <- eidx - L.consecutive
-    ans <- data.frame(first=x[bidx], end=x[eidx])
+    ans <- data.frame(first = x[bidx], end = x[eidx])
     ans
 }
 
 expand <- function(first, end) {
-    seq(from=first, to=end, by=1)
+    seq(from = first, to = end, by = 1)
 }
 ## x <- c(0, 1, 2, 5, 6, 7, 8, 20, 21, 23, 24)
 ## res <- findConsecutive(x)
@@ -106,7 +106,7 @@ erger2 <- function(cid1, cid2, data)
 {## cid1 and cid2
     data <- data[data$cid %in% c(cid1, cid2), c("cid", "fid", 
                                                 "index1", "index2")]
-    ans <-  data.frame(fid=numeric(), cid=numeric(), index1=numeric(), index2=numeric())
+    ans <-  data.frame(fid = numeric(), cid = numeric(), index1 = numeric(), index2 = numeric())
     fidList <- unique(data[data$cid %in% cid1, "fid"])
     for (fid in fidList) {
         tmpdat1 <- data[data$fid == fid & data$cid == cid1, , 
@@ -121,7 +121,7 @@ erger2 <- function(cid1, cid2, data)
             idx <- unique(intersect(idx1, idx2))
             if (length(idx)>1) {
                 res <- findConsecutive(idx)
-                res <- data.frame(fid=fid, cid=tmpdat1$cid[1], index1=res$first, index2=res$end + 1)
+                res <- data.frame(fid = fid, cid = tmpdat1$cid[1], index1 = res$first, index2 = res$end + 1)
                 ans <- rbind(ans, res)
             }
         }

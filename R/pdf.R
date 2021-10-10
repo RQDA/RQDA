@@ -1,6 +1,6 @@
-importPDFHL <- function(file, type=c("Highlight"), engine="rjpod") {
+importPDFHL <- function(file, type = c("Highlight"), engine="rjpod") {
     if (missing(file)) {
-        file <- gfile(text="select a pdf file", type="open", filter=list("PDF"=list(patterns=c("*.PDF"))))
+        file <- gfile(text="select a pdf file", type="open", filter = list("PDF"=list(patterns = c("*.PDF"))))
     }
     fileName <- basename(file)
     fileName <- enc(fileName)
@@ -21,7 +21,7 @@ importPDFHL <- function(file, type=c("Highlight"), engine="rjpod") {
             cat("Extracting highlight ...\n")
             ans <- rjpod::pdfAnnotations(file, type = type)
             cat("Highlight extracted\nExtracting XMP ...\n")
-            finfo <-  rjpod::pdfXMP(file, jabrefOnly=TRUE)
+            finfo <-  rjpod::pdfXMP(file, jabrefOnly = TRUE)
             cat("XMP extracted\n")
             finfo <- gsub("^bibtex/", "", finfo)
             finfo <- paste(sort(finfo), collapse=", \n")

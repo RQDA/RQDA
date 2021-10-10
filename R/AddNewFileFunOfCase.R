@@ -3,11 +3,11 @@ AddNewFileFunOfCase <- function()
     updateCaseLink <- function(fid) {
         SelectedCase <- svalue(.rqda$.CasesNamesWidget)
         SelectedCase <- enc(SelectedCase, "UTF-8")
-        caseid <- rqda_sel(sprintf("select id from cases where status=1 and name='%s'", SelectedCase))$id
+        caseid <- rqda_sel(sprintf("select id from cases where status = 1 and name='%s'", SelectedCase))$id
         content <- rqda_sel(sprintf("select file from source where id=%s", fid))$file
         Encoding(content) <- "UTF-8"
         selend <- nchar(content)
-        Dat <- data.frame(caseid=caseid, fid=fid, selfirst=0, selend=selend, status=1, owner=.rqda$owner, date=date(), memo=NA)
+        Dat <- data.frame(caseid = caseid, fid = fid, selfirst = 0, selend = selend, status = 1, owner=.rqda$owner, date = date(), memo = NA)
         rqda_wrt("caselinkage", Dat)
         UpdateFileofCaseWidget()
     }
@@ -19,7 +19,7 @@ AddNewFileFunOfCase <- function()
     addHandlerKeystroke(gw, function(h, ...) {
     if (h$key == "\027") dispose(gw)
     })
-    gp <- gpanedgroup(horizontal = FALSE, container=gw)
+    gp <- gpanedgroup(horizontal = FALSE, container = gw)
 
     saveFileFun <- function() {
         Ftitle <- ginput(gettext("Enter the title", domain = "R-RQDA"), icon = "info")
@@ -38,7 +38,7 @@ AddNewFileFunOfCase <- function()
                 svalue(textW) <- ""
                 FileNamesUpdate()
                 enabled(button$AddNewFilBC) <- FALSE
-                updateCaseLink(fid=nextid)
+                updateCaseLink(fid = nextid)
             }
             return(TRUE)
         }

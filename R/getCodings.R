@@ -4,7 +4,7 @@ getCodingsOfCodes <- function(fid = NULL, codingTable = c("coding", "coding2")) 
     selected <- gselect.list(codes)
     selected <- enc(selected)
     cid <- rqda_sel(sprintf(
-        "select id from freecode where status=1 and name in (%s)",
+        "select id from freecode where status = 1 and name in (%s)",
         paste(paste("'", selected, "'", sep=""), collapse = ", ")))$id
 
     codingTable <- match.arg(codingTable)
@@ -17,10 +17,10 @@ getCodingsOfCodes <- function(fid = NULL, codingTable = c("coding", "coding2")) 
                 "coding.selfirst as index1, coding.selend as index2, ",
                 "coding.seltext as coding, coding.selend - ",
                 "coding.selfirst as CodingLength from coding",
-                "left join freecode on (coding.cid=freecode.id)",
-                "left join source on (coding.fid=source.id)",
-                "where coding.status=1 and source.status=1 and",
-                "freecode.status=1 and coding.cid in (%s)"),
+                "left join freecode on (coding.cid = freecode.id)",
+                "left join source on (coding.fid = source.id)",
+                "where coding.status = 1 and source.status = 1 and",
+                "freecode.status = 1 and coding.cid in (%s)"),
                 paste(cid, collapse=", ")))
     }
 
@@ -32,10 +32,10 @@ getCodingsOfCodes <- function(fid = NULL, codingTable = c("coding", "coding2")) 
                 "coding2.selfirst as index1, coding2.selend as index2, ",
                 "coding2.seltext as coding2, coding2.selend - ",
                 "coding2.selfirst as CodingLength from coding2",
-                "left join freecode on (coding2.cid=freecode.id)",
-                "left join source on (coding2.fid=source.id)",
-                "where coding2.status=1 and source.status=1 and",
-                "freecode.status=1 and coding2.cid in (%s)"),
+                "left join freecode on (coding2.cid = freecode.id)",
+                "left join source on (coding2.fid = source.id)",
+                "where coding2.status = 1 and source.status = 1 and",
+                "freecode.status = 1 and coding2.cid in (%s)"),
                 paste(cid, collapse=", ")))
     }
     if (nrow(ct) != 0) {
@@ -47,7 +47,7 @@ getCodingsOfCodes <- function(fid = NULL, codingTable = c("coding", "coding2")) 
     ct ## can be printed via print.CodingsByOne
 }
 
-getCodingsFromFiles <- function(Fid, order=c("fname", "ftime", "ctime"),
+getCodingsFromFiles <- function(Fid, order = c("fname", "ftime", "ctime"),
                                 codingTable="coding")
 {
     order <- match.arg(order)
@@ -60,14 +60,14 @@ getCodingsFromFiles <- function(Fid, order=c("fname", "ftime", "ctime"),
     retrieval <- rqda_sel(
         sprintf(paste("select cid, freecode.name as code, fid, selfirst, ",
                        "selend, seltext, %s.rowid, source.name, source.id",
-                       "from %s, source, freecode where %s.status=1 and",
-                       "source.id=fid and freecode.id=%s.cid and fid in",
+                       "from %s, source, freecode where %s.status = 1 and",
+                       "source.id = fid and freecode.id=%s.cid and fid in",
                        "(%s) %s"), codingTable, codingTable, codingTable,
                  codingTable, paste(Fid, collapse=", "), order))
 
     if (nrow(retrieval) == 0) {
         gmessage(rqda_txt("No Coding associated with the selected code."),
-                  container=TRUE)
+                  container = TRUE)
     } else {
         fid <- unique(retrieval$fid)
         Nfiles <- length(fid)
@@ -85,8 +85,8 @@ getCodingsFromFiles <- function(Fid, order=c("fname", "ftime", "ctime"),
                                       domain = "R-RQDA"), Ncodings, Nfiles)
         }
         wnh <- size(.rqda$.root_rqdagui$widget) ## size of the main window
-        # parent=c(wnh[1] + 10, 2), FixMe: ???
-        .gw <- gwindow(title=title,
+        # parent = c(wnh[1] + 10, 2), FixMe: ???
+        .gw <- gwindow(title = title,
                        width = getOption("widgetSize")[1],
                        height = getOption("widgetSize")[2]
         )
@@ -107,7 +107,7 @@ getCodingsFromFiles <- function(Fid, order=c("fname", "ftime", "ctime"),
         for (i in fid) {
             FileName <- rqda_sel(
                 sprintf(
-                    "select name from source where status=1 and id=%i",
+                    "select name from source where status = 1 and id=%i",
                     i))[['name']]
 
             if (!is.null(FileName)) {
@@ -115,7 +115,7 @@ getCodingsFromFiles <- function(Fid, order=c("fname", "ftime", "ctime"),
                 retrieval$fname[retrieval$fid == i] <- FileName
             } else {
                 retrieval <- retrieval[retrieval$fid != i, ]
-                rqda_exe(sprintf("update %s set status=0 where fid=%i",
+                rqda_exe(sprintf("update %s set status = 0 where fid=%i",
                                  codingTable, i))
             }
 
@@ -125,7 +125,7 @@ getCodingsFromFiles <- function(Fid, order=c("fname", "ftime", "ctime"),
         ## helper function
         ComputeCallbackFun <- function(FileName, rowid) {
             CallBackFUN <- function(widget, event, ...) {
-                ViewFileFunHelper(FileName, hightlight=FALSE)
+                ViewFileFunHelper(FileName, hightlight = FALSE)
                 textView <- .rqda$.openfile_gui$widget
                 buffer <- textView$buffer
                 mark1 <- gtkTextBufferGetMark(buffer, sprintf("%s.1", rowid))
