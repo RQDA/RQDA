@@ -18,7 +18,7 @@ RQDA <- function() {
       handler = function(h, ...) { closeProject(assignenv = .rqda) }
     )
     addHandlerKeystroke(.root_rqdagui, function(h, ...) {
-      if(h$key == "\021") {
+      if (h$key == "\021") {
       dispose(.root_rqdagui)
       assign("isLaunched", FALSE, envir = .rqda)
       }
@@ -393,7 +393,7 @@ AddHandler <- function() {
     val <- gconfirm(
       rqda_txt(paste("Really EXIT?\n\n",
       "You can use RQDA() to start this program again.")), parent = h$obj)
-    if(as.logical(val)) {
+    if (as.logical(val)) {
       assign("isLaunched", FALSE, envir = .rqda)
       return(FALSE) # destroy
     } else {

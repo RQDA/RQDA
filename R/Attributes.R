@@ -219,7 +219,8 @@ AttrNamesUpdate <- function(Widget=.rqda$.AttrNamesWidget, sortByTime=FALSE, dec
         attr <- attr[OrderByTime(attr$date, decreasing=decreasing)]
       }
     }
-    tryCatch(Widget[] <- attr, error=function(e) {})
+    tryCatch(Widget[] <- attr, error = function(e) {
+})
   }
 }
 
@@ -237,7 +238,7 @@ AddAttrNames <- function(name, ...) {
 AddAttrButton <- function(label=gettext("Add", domain = "R-RQDA")) {
   AddAttB <- gbutton(label, handler=function(h, ...) {
     AttrName <- ginput(gettext("Enter new Attr Name. ", domain = "R-RQDA"), icon="info")
-    if(!identical(AttrName, character(0)))
+    if (!identical(AttrName, character(0)))
     {
     if (!is.na(AttrName)) {
       Encoding(AttrName) <- "UTF-8"
@@ -277,7 +278,7 @@ DeleteAttrButton <- function(label=rqda_txt("Delete")) {
       found <- rqda_sel(
         sprintf("select * from caseAttr where variable = '%s' ", sel))
 
-      if (nrow(found) > 0 )
+      if (nrow(found) > 0)
         rqda_exe(
           sprintf("update caseAttr set status=0 where variable='%s'", sel))
 
@@ -285,7 +286,7 @@ DeleteAttrButton <- function(label=rqda_txt("Delete")) {
         sprintf("select * from fileAttr where variable = '%s' ", sel))
 
 
-      if (nrow(found) > 0 )
+      if (nrow(found) > 0)
         rqda_exe(sprintf("update fileAttr set status=0 where variable='%s'",
                          sel))
 
@@ -314,7 +315,7 @@ RenameAttrButton <- function(label=gettext("Rename", domain = "R-RQDA")) {
         gmessage(gettext("Attribute should NOT contain '.", domain = "R-RQDA"), container=TRUE)
       } else {
         exists <- rqda_sel(sprintf("select * from attributes where name = '%s' ", NewName))
-        if (nrow(exists) > 0 ) {
+        if (nrow(exists) > 0) {
           gmessage(gettext("Name duplicated. Please use another name.", domain = "R-RQDA"), cont=TRUE)
         } else {
           rqda_exe(sprintf("update attributes set name = '%s' where name = '%s' ", NewName, selected))
@@ -421,7 +422,7 @@ getAttr <- function(type=c("case", "file"), attrs=svalue(.rqda$.AttrNamesWidget)
     rqda_exe("delete from caseAttr where value='NA'")
     rqda_exe("delete from caseAttr where value=''") ## clean the table
     DF <- rqda_sel(sprintf("select variable, value, caseId from caseAttr %s", inClause))
-    if (nrow(DF) > 0 ) {
+    if (nrow(DF) > 0) {
     Encoding(DF$variable) <- Encoding(DF$value) <- "UTF-8"
     DF <- reshape(DF, v.names="value", idvar="caseID", direction="wide", timevar="variable")
     names(DF) <- gsub("^value.", "", names(DF))
@@ -436,7 +437,7 @@ getAttr <- function(type=c("case", "file"), attrs=svalue(.rqda$.AttrNamesWidget)
     rqda_exe("delete from fileAttr where value='NA'")
     rqda_exe("delete from fileAttr where value=''") ## clean the table
     DF <- rqda_sel(sprintf("select variable, value, fileId from fileAttr %s", inClause))
-    if (nrow(DF) > 0 ) {
+    if (nrow(DF) > 0) {
     Encoding(DF$variable) <- Encoding(DF$value) <- "UTF-8"
     DF <- reshape(DF, v.names="value", idvar="fileID", direction="wide", timevar="variable")
     names(DF) <- gsub("^value.", "", names(DF))
@@ -477,7 +478,7 @@ SetAttrClsButton <- function(label=gettext("Class", domain = "R-RQDA")) {
 setAttrType <- function() {
     Selected <- enc(svalue(.rqda$.AttrNamesWidget), encoding="UTF-8")
     oldCls <- tryCatch(rqda_sel(sprintf("select class from attributes where status=1 and name='%s'", Selected))[1, 1],
-                       error=function(e) {
+                       error = function(e) {
                          rqda_exe("alter table attributes add column class text")
                          rqda_sel(sprintf("select class from attributes where status=1 and name='%s'", Selected))[1, 1]
                        })
@@ -490,7 +491,7 @@ setAttrType <- function() {
     }
     w <- gwindow(gettext("Type of attribute", domain = "R-RQDA"), width = getOption("widgetSize")[1], height = getOption("widgetSize")[2])
     addHandlerKeystroke(w, function(h, ...) {
-      if(h$key == "\027") dispose(w)
+      if (h$key == "\027") dispose(w)
     })
     gp <- ggroup(horizontal=FALSE, container=w)
     rb <- gradio(items, idx, horizontal=TRUE, container=gp)

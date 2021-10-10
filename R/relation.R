@@ -137,7 +137,7 @@ plot.crossCodes <- function(x, ...) {
     tryCatch(igraph::tkplot(cmG, edge.width=sqrt(igraph::get.edge.attribute(cmG, "weight")),
                              vertex.label=igraph::get.vertex.attribute(cmG, "name"),
                              edge.label=floor(igraph::get.edge.attribute(cmG, "weight"))
-                             ), error=function(e) {
+                             ), error = function(e) {
         plot(cmG, edge.width=sqrt(igraph::E(cmG)$weight), vertex.label=igraph::V(cmG)$CodeName)
     })
 }

@@ -27,7 +27,7 @@ retrieval_by_code <- function(Fid = NULL, order = c("fname", "ftime", "ctime"), 
             retrieval$fname <- ""
             Nfiles <- length(fid)
             Ncodings <- nrow(retrieval)
-            if(Ncodings == 1) {
+            if (Ncodings == 1) {
                 title <- sprintf(ngettext(Nfiles,
                                           "1 retrieved coding: \"%s\" from %i file",
                                           "1 retrieved coding: \"%s\" from %i files", domain = "R-RQDA"),
@@ -48,7 +48,7 @@ retrieval_by_code <- function(Fid = NULL, order = c("fname", "ftime", "ctime"), 
                 )
 
     addHandlerKeystroke(.gw, function(h, ...) {
-    if(h$key == "\027") dispose(.gw)
+    if (h$key == "\027") dispose(.gw)
     })
 
             mainIcon <- system.file("icon", "mainIcon.png", package = "RQDA")
@@ -96,7 +96,7 @@ retrieval_by_code <- function(Fid = NULL, order = c("fname", "ftime", "ctime"), 
                 CallBackFUN
             }
             buffer <- .retreivalgui$buffer
-            if(is.null(gtkTextTagTableLookup(buffer$`tag-table`, "red")))
+            if (is.null(gtkTextTagTableLookup(buffer$`tag-table`, "red")))
               buffer$createTag("red", foreground = "red")
             iter <- buffer$getIterAtOffset(0)$iter
             apply(retrieval, 1, function(x) {

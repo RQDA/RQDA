@@ -1,7 +1,7 @@
 AddCodeButton <- function(label=gettext("Add", domain = "R-RQDA")) {
   AddCodB <- gbutton(label,
                      handler= function(h, ...) {
-                       if (is_projOpen(envir=.rqda, conName="qdacon")) {
+                       if (is_projOpen(envir = .rqda, conName="qdacon")) {
                          codename <- ginput(gettext("Enter new code. ", domain = "R-RQDA"), icon="info")
                          if (!identical(codename, character(0)))
                          {
@@ -24,7 +24,7 @@ DeleteCodeButton <- function(label=gettext("Delete", domain = "R-RQDA")) {
   DelCodB <- gbutton(
     label, handler= function(h, ...) {
 
-      if (is_projOpen(envir=.rqda, conName="qdacon") &
+      if (is_projOpen(envir = .rqda, conName="qdacon") &
           length(svalue(.rqda$.codes_rqda)) != 0) {
         ## if project is open and one code is selected, then continue
         del <- gconfirm(gettext("Really delete the code?", domain = "R-RQDA"),
@@ -60,7 +60,7 @@ DeleteCodeButton <- function(label=gettext("Delete", domain = "R-RQDA")) {
 RetrievalButton <- function(label) {
   RetB <- gbutton(label,
                   handler= function(h, ...) {
-                    if (is_projOpen(envir=.rqda, conName="qdacon")) {
+                    if (is_projOpen(envir = .rqda, conName="qdacon")) {
                       Fid <- getFileIds(condition=.rqda$TOR, type="coded")
                       if (length(Fid)>0) {
                         retrieval(Fid=Fid, CodeNameWidget=.rqda$.codes_rqda)
@@ -86,12 +86,12 @@ Mark_Button<-function(label=gettext("Mark", domain = "R-RQDA"), codeListWidget="
 
 MarkCodeFun <- function(codeListWidget=".codes_rqda", codingTable="coding") {
   ## insert lable as mark when data is written to database.
-  if (is_projOpen(envir=.rqda, conName="qdacon")) {
+  if (is_projOpen(envir = .rqda, conName="qdacon")) {
     currentFile <- tryCatch(svalue(.rqda$.root_edit), error= function(e) {NULL})
     if (is.null(currentFile)) gmessage(gettext("Open a file first.", domain = "R-RQDA"), con=TRUE) else{
       W <- .rqda$.openfile_gui$widget
       con <- .rqda$qdacon
-      codeListWidget <- get(codeListWidget, envir=.rqda)
+      codeListWidget <- get(codeListWidget, envir = .rqda)
       idx <- sindex(.rqda$.openfile_gui, includeAnchor=FALSE, codingTable=codingTable)
       ans <- list(start=idx$startN, end=idx$endN, text=idx$seltext)
       if (ans$start != ans$end) { ## when selected no text, makes on sense to do anything.
@@ -147,7 +147,8 @@ MarkCodeFun <- function(codeListWidget=".codes_rqda", codingTable="coding") {
                   markRange(widget=.rqda$.openfile_gui, from=ans$start, to=ans$end, rowid=rowid, addButton=TRUE,
                             buttonLabel=SelectedCode, buttonCol=codeCol, codingTable=codingTable)
                 } else {gmessage(gettext("Fail to write to data base.", domain = "R-RQDA"), con=TRUE)}
-                ## if there are no overlap in any kind, just write to database; otherwise, pass to else{}.
+                ## if there are no overlap in any kind, just write to database; otherwise, pass to else{
+}.
               } else {
                 del1 <-(Exist$Relation == "inclusion" & (is.na(Exist$WhichMin) | Exist$WhichMin == 2))
                 ## if overlap or inclusion [old nested in new]
@@ -207,15 +208,18 @@ Unmark_Button <- function(label=gettext("Unmark", domain = "R-RQDA"), codeListWi
 
 UnMarkCodeFun <- function(codeListWidget=.rqda$.codes_rqda, codingTable="coding") {
   ## this function is superseded by MarkCodeFunByRowid
-  if (is_projOpen(envir=.rqda, conName="qdacon")) {
+  if (is_projOpen(envir = .rqda, conName="qdacon")) {
     con <- .rqda$qdacon
-    W <- tryCatch(get(".openfile_gui", envir=.rqda), error= function(e) {})
+    W <- tryCatch(get(".openfile_gui", envir = .rqda), error= function(e) {
+})
     ## get the widget for file display. If it does not exist, then return NULL.
-    idx1 <- tryCatch(sindex(W, includeAnchor=FALSE, codingTable=codingTable), error= function(e) {})
-    idx2 <- tryCatch(sindex(W, includeAnchor=TRUE, codingTable=codingTable), error= function(e) {})
+    idx1 <- tryCatch(sindex(W, includeAnchor=FALSE, codingTable=codingTable), error= function(e) {
+})
+    idx2 <- tryCatch(sindex(W, includeAnchor=TRUE, codingTable=codingTable), error= function(e) {
+})
     ## if the not file is open, unmark doesn't work.
     if (!is.null(idx1)) {
-      ## codeListWidget <- get(codeListWidget, envir=.rqda)
+      ## codeListWidget <- get(codeListWidget, envir = .rqda)
       SelectedCode <- svalue(codeListWidget)
       if (length(SelectedCode) == 0) {
         gmessage(gettext("Select a code first.", domain = "R-RQDA"), con=TRUE)
@@ -265,7 +269,8 @@ UnMarkCodeFun <- function(codeListWidget=.rqda$.codes_rqda, codingTable="coding"
 
 
 UnMarkCodeFunByRowid <- function(codeListWidget=.rqda$.codes_rqda, codingTable="coding") {
-  W <- tryCatch(get(".openfile_gui", envir=.rqda), error= function(e) {})
+  W <- tryCatch(get(".openfile_gui", envir = .rqda), error= function(e) {
+})
   ## get the widget for file display. If it does not exist, then return NULL.
   if (!is.null(W)) {
     rowid <- .codingEnv$selectedRowid
@@ -331,44 +336,48 @@ CodingMemoButton <- function(label=gettext("C2Memo", domain = "R-RQDA"))
 
   OpenCodingMemo <- function(rowid, AnchorPos=NULL, title=NULL) {
     ##  open a widget for memo, and take care of the save memo function
-    tryCatch(dispose(.rqda$.codingmemo), error= function(e) {})
+    tryCatch(dispose(.rqda$.codingmemo), error= function(e) {
+})
     ## Close the coding memo first, then open a new one
     if (is.null(title)) title <- "Coding Memo"
     .codingmemo <- gwindow(title=title, getOption("widgetCoordinate"),
     width = getOption("widgetSize")[1], height = getOption("widgetSize")[2])
 
         addHandlerKeystroke(.codingmemo, function(h, ...) {
-        if(h$key == "\027") dispose(.codingmemo)
+        if (h$key == "\027") dispose(.codingmemo)
         })
-    assign(".codingmemo", .codingmemo, envir=.rqda)
-    .codingmemo <- get(".codingmemo", envir=.rqda)
+    assign(".codingmemo", .codingmemo, envir = .rqda)
+    .codingmemo <- get(".codingmemo", envir = .rqda)
     .codingmemo2 <- gpanedgroup(horizontal = FALSE, container=.codingmemo)
     gbutton(gettext("Save Coding Memo", domain = "R-RQDA"), container=.codingmemo2, handler= function(h, ...) {
       newcontent <- svalue(.rqda$.cdmemocontent)
       newcontent <- enc(newcontent, encoding="UTF-8") ## take care of double quote.
       rqda_exe(sprintf("update coding set memo='%s' where rowid=%i", newcontent, rowid))
       ## if (isTRUE(.rqda$NewCodingMemo)) {
-      ## if (InsertCodingMemoAnchor(index=AnchorPos, rowid=rowid, title=title)) assign("NewCodingMemo", FALSE, envir=.rqda)
+      ## if (InsertCodingMemoAnchor(index=AnchorPos, rowid=rowid, title=title)) assign("NewCodingMemo", FALSE, envir = .rqda)
       ## }
       ## if newcontent is "", should delete the codingMemoAnchor (not add memoanchor here)
     })## end of save memo button
-    assign(".cdmemocontent", gtext(container=.codingmemo2, font.attr=list(size="large")), envir=.rqda)
+    assign(".cdmemocontent", gtext(container=.codingmemo2, font.attr=list(size="large")), envir = .rqda)
     prvcontent <- rqda_sel(sprintf("select memo from coding where rowid=%i", rowid))[1, 1]
     if (is.na(prvcontent)) prvcontent <- ""
     Encoding(prvcontent) <- "UTF-8"
-    if (prvcontent == "") assign("NewCodingMemo", TRUE, envir=.rqda)
-    W <- get(".cdmemocontent", envir=.rqda)
+    if (prvcontent == "") assign("NewCodingMemo", TRUE, envir = .rqda)
+    W <- get(".cdmemocontent", envir = .rqda)
     insert(W, prvcontent, do.newline = FALSE, where = "beginning",
            font.attr=list(size="large"))
   } ## end of OpenCodingMemo
 
   c2memobutton <- gbutton(label, handler= function(h, ...) {
     con <- .rqda$qdacon
-    if (is_projOpen(envir=.rqda, conName="qdacon")) {
-      W <- tryCatch(get(".openfile_gui", envir=.rqda), error= function(e) {})
+    if (is_projOpen(envir = .rqda, conName="qdacon")) {
+      W <- tryCatch(get(".openfile_gui", envir = .rqda), error= function(e) {
+})
       ## get the widget for file display. If it does not exist, then return NULL.
-      sel_index <- tryCatch(sindex(W, includeAnchor=FALSE), error= function(e) {})
-      AnchorPos <- tryCatch(sindex(W, includeAnchor=TRUE)$startN, error= function(e) {})
+      sel_index <- tryCatch(sindex(W, includeAnchor=FALSE), error= function(e) {
+})
+      AnchorPos <- tryCatch(sindex(W, includeAnchor=TRUE)$startN, error= function(e) {
+})
       ## if the not file is open, it doesn't work.
       if (is.null(sel_index)) {gmessage(gettext("Open a file first!", domain = "R-RQDA"), container=TRUE)}
       else {
@@ -406,7 +415,7 @@ FreeCode_RenameButton <- function(label=gettext("Rename", domain = "R-RQDA"), Co
 {
   ## rename of selected file.
   FreCodRenB <- gbutton(label, handler= function(h, ...) {
-    if (is_projOpen(envir=.rqda, "qdacon")) {
+    if (is_projOpen(envir = .rqda, "qdacon")) {
       ## if project is open, then continue
       selectedCodeName <- svalue(CodeNamesWidget)
       if (length(selectedCodeName) == 0) {
@@ -439,7 +448,7 @@ FreeCode_RenameButton <- function(label=gettext("Rename", domain = "R-RQDA"), Co
 
 AnnotationButton <- function(label=gettext("Add Anno", domain = "R-RQDA")) {
   AnnB <- gbutton(label, handler= function(h, ...) {
-    if (is_projOpen(envir=.rqda, conName="qdacon")) {
+    if (is_projOpen(envir = .rqda, conName="qdacon")) {
       Annotation()
     }})
   gtkWidgetSetTooltipText(getToolkitWidget(AnnB), gettext("Add new annotation to the open file\nat position of cursor.", domain = "R-RQDA"))

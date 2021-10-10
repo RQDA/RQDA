@@ -135,7 +135,7 @@ FileAttribute_Button <- function(label = rqda_txt("Attribute"),
   FileAttrB <- gbutton(label, container = container, handler = function(h, ...) {
     if (is_projOpen(envir = .rqda, conName = "qdacon")) {
       Selected <- svalue(FileWidget)
-      if (length(Selected != 0 )) {
+      if (length(Selected != 0)) {
         fileId <- rqda_sel(
           sprintf("select id from source where status = 1 and name = '%s'",
                   enc(Selected)))[, 1]
@@ -168,7 +168,7 @@ AddNewFileFun <- function() {
                   height = getOption("widgetSize")[2])
 
     addHandlerKeystroke(gw, function(h, ...) {
-      if(h$key == "\027") dispose(gw)
+      if (h$key == "\027") dispose(gw)
     })
 
     mainIcon <- system.file("icon", "mainIcon.png", package = "RQDA")
@@ -199,7 +199,7 @@ AddNewFileFun <- function() {
         nextid <- ifelse(is.na(maxid), 0 + 1, maxid + 1)
         ans <- rqda_exe(
           sprintf(
-            paste("insert into source (name, file, id, status, date, owner )",
+            paste("insert into source (name, file, id, status, date, owner)",
                   "values ('%s', '%s', %i, %i, '%s', '%s')"),
             Ftitle, content, nextid, 1, date(), .rqda$owner))
         if (is.null(ans)) {

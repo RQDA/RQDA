@@ -79,10 +79,10 @@ CaseMark_Button<-function(label=gettext("Mark", domain = "R-RQDA")) {
 }
 
 MarkCaseFun <- function() {
-  if (is_projOpen(envir=.rqda, conName="qdacon")) {
+  if (is_projOpen(envir = .rqda, conName="qdacon")) {
     con <- .rqda$qdacon
     tryCatch({
-      ans <- mark(get(".openfile_gui", envir=.rqda), fore.col=NULL, back.col=.rqda$back.col, addButton=FALSE)
+      ans <- mark(get(".openfile_gui", envir = .rqda), fore.col=NULL, back.col=.rqda$back.col, addButton=FALSE)
       if (ans$start != ans$end) {
         ## when selected no text, makes on sense to do anything.
         SelectedCase <- svalue(.rqda$.CasesNamesWidget)
@@ -135,7 +135,8 @@ MarkCaseFun <- function() {
           }
         }
       }
-    }, error=function(e) {}
+    }, error = function(e) {
+}
     )
   }
 }
@@ -146,7 +147,8 @@ CaseUnMark_Button<-function(label=gettext("Unmark", domain = "R-RQDA")) {
     con <- .rqda$qdacon
     W <- .rqda$.openfile_gui$widget
     ## get the widget for file display. If it does not exist, then return NULL.
-    sel_index <- tryCatch(sindex(W, includeAnchor=FALSE), error=function(e) {})
+    sel_index <- tryCatch(sindex(W, includeAnchor=FALSE), error = function(e) {
+})
     ## if the not file is open, unmark doesn't work.
     if (!is.null(sel_index)) {
       SelectedCase <- svalue(.rqda$.CasesNamesWidget)
@@ -243,14 +245,14 @@ GetCaseNamesWidgetMenu <- function()
   })
 
   CaseNamesWidgetMenu[[3]] <- gaction(gettext("Case Memo", domain = "R-RQDA"), handler =function(h, ...) {
-    if (is_projOpen(envir=.rqda, conName="qdacon")) {
+    if (is_projOpen(envir = .rqda, conName="qdacon")) {
       MemoWidget(gettext("Case", domain = "R-RQDA"), .rqda$.CasesNamesWidget, "cases")
       ## see CodeCatButton.R  for definition of MemoWidget
     }
   })
 
   CaseNamesWidgetMenu[[4]] <- gaction(gettext("Show Cases with Memo Only", domain = "R-RQDA"), handler =function(h, ...) {
-    if (is_projOpen(envir=.rqda, conName="qdacon")) {
+    if (is_projOpen(envir = .rqda, conName="qdacon")) {
       cnames <- rqda_sel("select name from cases where memo is not null")$name
       if (!is.null(cnames)) cnames <- enc(cnames, "UTF-8")
       .rqda$.CasesNamesWidget[] <- cnames
@@ -258,7 +260,7 @@ GetCaseNamesWidgetMenu <- function()
   })
 
   CaseNamesWidgetMenu[[5]] <- gaction(gettext("Add/modify Attributes...", domain = "R-RQDA"), handler =function(h, ...) {
-    if (is_projOpen(envir=.rqda, conName="qdacon")) {
+    if (is_projOpen(envir = .rqda, conName="qdacon")) {
       SelectedCase <- svalue(.rqda$.CasesNamesWidget)
       if (length(SelectedCase != 0)) {
         SelectedCase <- enc(SelectedCase, "UTF-8")
@@ -269,13 +271,13 @@ GetCaseNamesWidgetMenu <- function()
   })
 
   CaseNamesWidgetMenu[[6]] <- gaction(gettext("View Attributes", domain = "R-RQDA"), handler =function(h, ...) {
-    if (is_projOpen(envir=.rqda, conName="qdacon")) {
+    if (is_projOpen(envir = .rqda, conName="qdacon")) {
       viewCaseAttr()
     }
   })
 
   CaseNamesWidgetMenu[[7]] <- gaction(gettext("Export Case Attributes", domain = "R-RQDA"), handler =function(h, ...) {
-    if (is_projOpen(envir=.rqda, conName="qdacon")) {
+    if (is_projOpen(envir = .rqda, conName="qdacon")) {
       fName <- gfile(type='save', filter=list("csv"=list(pattern=c("*.csv"))))
       Encoding(fName) <- "UTF-8"
       if (length(grep(".csv$", fName)) == 0) fName <- sprintf("%s.csv", fName)
@@ -366,7 +368,7 @@ GetFileofCaseWidgetMenu <- function()
   })
 
   FileofCaseWidgetMenu[[3]] <- gaction(gettext("Delete Selected File(s)", domain = "R-RQDA"), handler =function(h, ...) {
-    if (is_projOpen(envir=.rqda, conName="qdacon")) {
+    if (is_projOpen(envir = .rqda, conName="qdacon")) {
       SelectedFile <- svalue(.rqda$.FileofCase)
       Encoding(SelectedFile) <- "UTF-8"
       for (i in SelectedFile) {
@@ -389,7 +391,7 @@ GetFileofCaseWidgetMenu <- function()
   })
 
   FileofCaseWidgetMenu[[6]] <- gaction(gettext("Rename selected File", domain = "R-RQDA"), handler =function(h, ...) {
-    if (is_projOpen(envir=.rqda, conName="qdacon")) {
+    if (is_projOpen(envir = .rqda, conName="qdacon")) {
       selectedFN <- svalue(.rqda$.FileofCase)
       if (length(selectedFN) == 0) {
         gmessage(gettext("Select a file first.", domain = "R-RQDA"), icon="error", con=TRUE)
@@ -412,8 +414,8 @@ GetFileofCaseWidgetMenu <- function()
       pattern <- ginput(gettext("Please input a search pattern.", domain = "R-RQDA"), text=pattern)
       if (!is.na(pattern)) {
         Fid <- getFileIds("case")
-        tryCatch(searchFiles(pattern, Fid=Fid, Widget=".FileofCase", is.UTF8=TRUE), error=function(e) gmessage(gettext("Error~~~.", domain = "R-RQDA")), con=TRUE)
-        assign("lastsearch", pattern, envir=.rqda)
+        tryCatch(searchFiles(pattern, Fid=Fid, Widget=".FileofCase", is.UTF8=TRUE), error = function(e) gmessage(gettext("Error~~~.", domain = "R-RQDA")), con=TRUE)
+        assign("lastsearch", pattern, envir = .rqda)
       }
     }
   })
@@ -422,21 +424,21 @@ GetFileofCaseWidgetMenu <- function()
 
   show_lst[[1]] <- gaction(gettext("Show All by Sorted by Imported Time", domain = "R-RQDA"), handler =function(h, ...) {
     ## UpdateFileofCaseWidget()
-    if (is_projOpen(envir=.rqda, conName="qdacon")) {
+    if (is_projOpen(envir = .rqda, conName="qdacon")) {
       fid <- getFileIds(condition="case", type="all")
       FileNameWidgetUpdate(FileNamesWidget=.rqda$.FileofCase, FileId=fid)
     }
   })
 
   show_lst[[2]] <- gaction(gettext("Show Coded Files Only (sorted)", domain = "R-RQDA"), handler =function(h, ...) {
-    if (is_projOpen(envir=.rqda, conName="qdacon")) {
+    if (is_projOpen(envir = .rqda, conName="qdacon")) {
       fid <- getFileIds(condition="case", type="coded")
       FileNameWidgetUpdate(FileNamesWidget=.rqda$.FileofCase, FileId=fid)
     }
   })
 
   show_lst[[3]] <- gaction(gettext("Show Uncoded Files Only (sorted)", domain = "R-RQDA"), handler =function(h, ...) {
-    if (is_projOpen(envir=.rqda, conName="qdacon")) {
+    if (is_projOpen(envir = .rqda, conName="qdacon")) {
       fid <- getFileIds(condition="case", type="uncoded")
       FileNameWidgetUpdate(FileNamesWidget=.rqda$.FileofCase, FileId=fid)
     }

@@ -13,7 +13,8 @@ CaseNamesUpdate <- function(CaseNamesWidget=.rqda$.CasesNamesWidget,
         case <- case[OrderByTime(CaseName$date, decreasing=decreasing)]
       }
     }
-    tryCatch(CaseNamesWidget[] <- case, error=function(e) {})
+    tryCatch(CaseNamesWidget[] <- case, error = function(e) {
+})
   }
 }
 
@@ -31,7 +32,7 @@ AddCase <- function(name, conName="qdacon", assignenv=.rqda, ...) {
       dup <- rqda_sel(sprintf("select name from cases where name='%s'", enc(name)))
       if (nrow(dup) == 0) write <- TRUE
     }
-    if (write ) {
+    if (write) {
       rqda_exe(sprintf("insert into cases (name, id, status, date, owner)
                                             values ('%s', %i, %i, %s, %s)", 
                              enc(name), nextid, 1, shQuote(date()), shQuote(.rqda$owner)))
@@ -94,11 +95,12 @@ UpdateFileofCaseWidget <- function(con=.rqda$qdacon, Widget=.rqda$.FileofCase, s
       } else items <- NULL
     } else items <- NULL
   } else items <- NULL
-  tryCatch(Widget[] <- items, error=function(e) {})
+  tryCatch(Widget[] <- items, error = function(e) {
+})
 }
 
 HL_Case <- function() {
-  if (is_projOpen(envir=.rqda, conName="qdacon")) {
+  if (is_projOpen(envir = .rqda, conName="qdacon")) {
     SelectedFile <- svalue(.rqda$.root_edit)
     currentFid <-  rqda_sel(sprintf("select id from source where name='%s'", 
                                      enc(SelectedFile)))[, 1]

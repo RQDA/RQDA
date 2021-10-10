@@ -62,32 +62,51 @@ OpenProjectButton <- function(container) {
 
 #' @export
 openProject <- function(path, updateGUI=FALSE) {
-  tryCatch(.rqda$.codes_rqda[]<-NULL, error=function(e) {})
-  tryCatch(.rqda$.fnames_rqda[]<-NULL, error=function(e) {})
-  tryCatch(.rqda$.CasesNamesWidget[]<-NULL, error=function(e) {})
-  tryCatch(.rqda$.CodeCatWidget[]<-NULL, error=function(e) {})
-  tryCatch(.rqda$.CodeofCat[]<-NULL, error=function(e) {})
-  tryCatch(.rqda$.FileCatWidget[]<-NULL, error=function(e) {})
-  tryCatch(.rqda$.FileofCat[]<-NULL, error=function(e) {})
-  tryCatch(.rqda$.AttrNamesWidget[] <- NULL, error=function(e) {})
-  tryCatch(.rqda$.JournalNamesWidget[] <- NULL, error=function(e) {})
-  tryCatch(closeProject(assignenv=.rqda), error=function(e) {})
+  tryCatch(.rqda$.codes_rqda[]<-NULL, error = function(e) {
+})
+  tryCatch(.rqda$.fnames_rqda[]<-NULL, error = function(e) {
+})
+  tryCatch(.rqda$.CasesNamesWidget[]<-NULL, error = function(e) {
+})
+  tryCatch(.rqda$.CodeCatWidget[]<-NULL, error = function(e) {
+})
+  tryCatch(.rqda$.CodeofCat[]<-NULL, error = function(e) {
+})
+  tryCatch(.rqda$.FileCatWidget[]<-NULL, error = function(e) {
+})
+  tryCatch(.rqda$.FileofCat[]<-NULL, error = function(e) {
+})
+  tryCatch(.rqda$.AttrNamesWidget[] <- NULL, error = function(e) {
+})
+  tryCatch(.rqda$.JournalNamesWidget[] <- NULL, error = function(e) {
+})
+  tryCatch(closeProject(assignenv=.rqda), error = function(e) {
+})
   ## close currect project before open a new one.
   open_proj(path, assignenv=.rqda)
   if (updateGUI) {
     svalue(.rqda$.currentProj) <- rqda_txt("Opening ...")
     UpgradeTables()
-    tryCatch(CodeNamesUpdate(sortByTime=FALSE), error=function(e) {})
-    tryCatch(FileNamesUpdate(sortByTime=FALSE), error=function(e) {})
-    tryCatch(CaseNamesUpdate(), error=function(e) {})
+    tryCatch(CodeNamesUpdate(sortByTime=FALSE), error = function(e) {
+})
+    tryCatch(FileNamesUpdate(sortByTime=FALSE), error = function(e) {
+})
+    tryCatch(CaseNamesUpdate(), error = function(e) {
+})
     tryCatch(UpdateTableWidget(Widget=.rqda$.CodeCatWidget,
-                               FromdbTable="codecat"), error=function(e) {})
-    tryCatch(UpdateCodeofCatWidget(), error=function(e) {})
+                               FromdbTable="codecat"), error = function(e) {
+})
+    tryCatch(UpdateCodeofCatWidget(), error = function(e) {
+})
     tryCatch(UpdateTableWidget(Widget=.rqda$.FileCatWidget,
-                               FromdbTable="filecat"), error=function(e) {})
-    tryCatch(UpdateFileofCatWidget(), error=function(e) {})
-    tryCatch(AttrNamesUpdate(), error=function(e) {})
-    tryCatch(JournalNamesUpdate(), error=function(e) {})
+                               FromdbTable="filecat"), error = function(e) {
+})
+    tryCatch(UpdateFileofCatWidget(), error = function(e) {
+})
+    tryCatch(AttrNamesUpdate(), error = function(e) {
+})
+    tryCatch(JournalNamesUpdate(), error = function(e) {
+})
     path <- .rqda$qdacon@dbname
     Encoding(path) <- "UTF-8"
     path <- gsub("\\\\", "/", path)
@@ -121,16 +140,26 @@ openProject <- function(path, updateGUI=FALSE) {
 
 closeProjBF <- function() {
   svalue(.rqda$.currentProj$widget) <- rqda_txt("Closing ...")
-  tryCatch(.rqda$.codes_rqda[]<-NULL, error=function(e) {})
-  tryCatch(.rqda$.fnames_rqda[]<-NULL, error=function(e) {})
-  tryCatch(.rqda$.CasesNamesWidget[]<-NULL, error=function(e) {})
-  tryCatch(.rqda$.FileofCase[]<-NULL, error=function(e) {})
-  tryCatch(.rqda$.CodeCatWidget[]<-NULL, error=function(e) {})
-  tryCatch(.rqda$.CodeofCat[]<-NULL, error=function(e) {})
-  tryCatch(.rqda$.FileCatWidget[]<-NULL, error=function(e) {})
-  tryCatch(.rqda$.FileofCat[]<-NULL, error=function(e) {})
-  tryCatch(.rqda$.AttrNamesWidget[] <- NULL, error=function(e) {})
-  tryCatch(.rqda$.JournalNamesWidget[] <- NULL, error=function(e) {})
+  tryCatch(.rqda$.codes_rqda[]<-NULL, error = function(e) {
+})
+  tryCatch(.rqda$.fnames_rqda[]<-NULL, error = function(e) {
+})
+  tryCatch(.rqda$.CasesNamesWidget[]<-NULL, error = function(e) {
+})
+  tryCatch(.rqda$.FileofCase[]<-NULL, error = function(e) {
+})
+  tryCatch(.rqda$.CodeCatWidget[]<-NULL, error = function(e) {
+})
+  tryCatch(.rqda$.CodeofCat[]<-NULL, error = function(e) {
+})
+  tryCatch(.rqda$.FileCatWidget[]<-NULL, error = function(e) {
+})
+  tryCatch(.rqda$.FileofCat[]<-NULL, error = function(e) {
+})
+  tryCatch(.rqda$.AttrNamesWidget[] <- NULL, error = function(e) {
+})
+  tryCatch(.rqda$.JournalNamesWidget[] <- NULL, error = function(e) {
+})
   svalue(.rqda$.currentProj) <- rqda_txt("No project is open.")
   names(.rqda$.fnames_rqda) <- rqda_txt("Files")
   names(.rqda$.codes_rqda) <- rqda_txt("Codes List")

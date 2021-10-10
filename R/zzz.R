@@ -18,7 +18,7 @@
 
 
   options(andMethod=c("overlap", "exact", "inclusion"))
-  assign("optOld", optOld, envir=.rqda)
+  assign("optOld", optOld, envir = .rqda)
   if (interactive()) {
     packageStartupMessage(
       "\nUse 'RQDA()' to start the programme.\n", domain = "R-RQDA")

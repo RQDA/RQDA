@@ -39,10 +39,10 @@ UpdateWidget <- function(widget, from, to=NULL) {
 
 
     # was length > 0 which will throw an error
-    if (length(idx) > 1 ) {
+    if (length(idx) > 1) {
       path <- gtkTreePathNewFromString(idx)
 
-      gtkTreeViewScrollToCell(get(widget, envir=.rqda)$widget,
+      gtkTreeViewScrollToCell(get(widget, envir = .rqda)$widget,
                               path, use.align=TRUE, row.align = 0.07)
     }}
 }
@@ -103,7 +103,7 @@ save_memo <- function(W = W, dbTable = dbTable, Selected = Selected, prefix = pr
 MemoWidget <- function(prefix, widget, dbTable) {
   ## prefix of window tile. E.g. "Code" ->  tile of gwindow becomes "Code Memo:"
   ## widget of the F-cat/C-cat list, such as widget=.rqda$.fnames_rqda
-  if (is_projOpen(envir=.rqda, "qdacon")) {
+  if (is_projOpen(envir = .rqda, "qdacon")) {
     Selected <- svalue(widget)
     if (length(Selected) == 0) {
       gmessage(
@@ -118,7 +118,7 @@ MemoWidget <- function(prefix, widget, dbTable) {
 
 
       CloseYes <- function(currentCode) {
-        withinWidget <- svalue(get(sprintf(".%smemoW", prefix), envir=.rqda))
+        withinWidget <- svalue(get(sprintf(".%smemoW", prefix), envir = .rqda))
         InRQDA <- rqda_sel(
                              sprintf("select memo from %s where name='%s'",
                                      dbTable, enc(currentCode, "UTF-8")))[1, 1]
@@ -140,12 +140,12 @@ MemoWidget <- function(prefix, widget, dbTable) {
         | stopifnot(
           !is.null(eval(parse(text=sprintf("svalue(.rqda$.%smemoW)", prefix))))
           ),
-        error=function(e) simpleError("No opened memo widget."))
+        error = function(e) simpleError("No opened memo widget."))
 
 
       if (!inherits(IsOpen, "simpleError")) { ## if a widget is open
         ## title of the memo widget
-        prvSelected <- svalue(get(sprintf(".%smemo", prefix), envir=.rqda))
+        prvSelected <- svalue(get(sprintf(".%smemo", prefix), envir = .rqda))
         Encoding(prvSelected) <- "UTF-8"
         prvSelected <- sub(sprintf("^%s Memo: ", prefix), "", prvSelected)
         ## previously selected codename
@@ -156,7 +156,8 @@ MemoWidget <- function(prefix, widget, dbTable) {
       if (inherits(IsOpen, "simpleError") || IfCont) {
         tryCatch(
           eval(parse(text=sprintf("dispose(.rqda$.%smemo)", prefix))),
-          error=function(e) {})
+          error = function(e) {
+})
         gw <- gwindow(
           title=sprintf(gettext("%s Memo:%s", domain = "R-RQDA"),
                         prefix, Selected),
@@ -166,26 +167,26 @@ MemoWidget <- function(prefix, widget, dbTable) {
         )
 
         addHandlerKeystroke(gw, function(h, ...) {
-          if(h$key == "\023") {
+          if (h$key == "\023") {
             #print("got keystroke")
             #print(enabled(mbut))
             save_memo(W, dbTable, Selected, prefix)
             #print(enabled(mbut))
             #print("end keystroke")
           }
-          if(h$key == "\027") dispose(gw)
+          if (h$key == "\027") dispose(gw)
         })
         mainIcon <- system.file("icon", "mainIcon.png", package = "RQDA")
         gw$set_icon(mainIcon)
-        assign(sprintf(".%smemo", prefix), gw, envir=.rqda)
+        assign(sprintf(".%smemo", prefix), gw, envir = .rqda)
         assign(sprintf(".%smemo2", prefix),
                gpanedgroup(
                  horizontal = FALSE,
-                 container=get(sprintf(".%smemo", prefix), envir=.rqda)),
-               envir=.rqda)
+                 container=get(sprintf(".%smemo", prefix), envir = .rqda)),
+               envir = .rqda)
         mbut <- gbutton(
           rqda_txt("Save Memo"),
-          container=get(sprintf(".%smemo2", prefix), envir=.rqda),
+          container=get(sprintf(".%smemo2", prefix), envir = .rqda),
           handler=function(h, ...) {
             save_memo(W, dbTable, Selected, prefix)
           }
@@ -195,20 +196,20 @@ MemoWidget <- function(prefix, widget, dbTable) {
         enabled(mbut) <- FALSE
         assign(sprintf("buttonOf.%smemo", prefix),
                mbut, envir=button) ## assign the button object
-        tmp <- gtext(container=get(sprintf(".%smemo2", prefix), envir=.rqda))
+        tmp <- gtext(container=get(sprintf(".%smemo2", prefix), envir = .rqda))
         size(tmp) <- body_s
         font <- pangoFontDescriptionFromString(.rqda$font)
         gtkWidgetModifyFont(tmp$widget, font)## set the default fontsize
-        assign(sprintf(".%smemoW", prefix), tmp, envir=.rqda)
+        assign(sprintf(".%smemoW", prefix), tmp, envir = .rqda)
         prvcontent <- rqda_sel(
           sprintf("select memo from %s where name='%s'",
                   dbTable, enc(Selected)))[1, 1]
         if (is.na(prvcontent)) prvcontent <- ""
         Encoding(prvcontent) <- "UTF-8"
-        W <- get(sprintf(".%smemoW", prefix), envir=.rqda)
+        W <- get(sprintf(".%smemoW", prefix), envir = .rqda)
         insert(W, prvcontent, do.newline=FALSE, where = "beginning")
         addHandlerUnrealize(
-          get(sprintf(".%smemo", prefix), envir=.rqda),
+          get(sprintf(".%smemo", prefix), envir = .rqda),
           handler = function(h, ...)  {!CloseYes(Selected)})
         gSignalConnect(tmp$widget$buffer, "changed", function(h, ...) {
           mbut <- get(sprintf("buttonOf.%smemo", prefix), envir=button)
@@ -276,7 +277,7 @@ print.Info4Widget <- function(x, ...) {
                        width = getOption("widgetSize")[1], height = getOption("widgetSize")[2])
         mainIcon <- system.file("icon", "mainIcon.png", package = "RQDA")
         addHandlerKeystroke(.gw, function(h, ...) {
-          if(h$key == "\027") dispose(.gw)
+          if (h$key == "\027") dispose(.gw)
         })
         .gw$set_icon(mainIcon)
         ## assign(sprintf(".codingsOf%s", "codingsByone"), .gw, env = .rqda)
@@ -286,7 +287,7 @@ print.Info4Widget <- function(x, ...) {
         .retreivalgui$widget$SetPixelsBelowLines(5)
         .retreivalgui$widget$SetPixelsInsideWrap(5)
         buffer <- .retreivalgui$buffer
-        if(is.null(gtkTextTagTableLookup(buffer$`tag-table`, "red")))
+        if (is.null(gtkTextTagTableLookup(buffer$`tag-table`, "red")))
           buffer$createTag("red", foreground = "red")
         iter <- buffer$getIterAtOffset(0)$iter
         apply(x, 1, function(x) {
@@ -443,7 +444,7 @@ searchFiles <- function(pattern, content=FALSE, Fid=NULL, Widget=NULL, is.UTF8=F
 ##searchFiles("name like '%Wu Quan Fa%'")
 ##searchFiles("file like '%Xin Min Wan Bao%'", Widget=.rqda$.fnames_rqda)
     if (is_projOpen() ) {
-        if(!is.UTF8) { pattern <- iconv(pattern, to="UTF-8")}
+        if (!is.UTF8) { pattern <- iconv(pattern, to="UTF-8")}
         Encoding(pattern) <- "unknown"
         if (!is.null(Fid)) pattern <- sprintf("(%s) and id in (%s)", pattern, paste(shQuote(Fid), collapse=", "))
         if (content) {
@@ -473,7 +474,7 @@ RunOnSelected <- function(x, multiple=TRUE, expr, enclos=parent.frame(), title=N
   g <- gwindow(title=title,
   width = getOption("widgetSize")[1], height = getOption("widgetSize")[2], parent=c(hpos, vpos))
   addHandlerKeystroke(g, function(h, ...) {
-    if(h$key == "\027") dispose(g)
+    if (h$key == "\027") dispose(g)
   })
   x1<-ggroup(FALSE, container=g)
   ##x1$parent$parent$parent$SetTitle(title)
@@ -571,7 +572,7 @@ getFiles <- function(condition = c("unconditional", "case", "filecategory", "bot
 getCaseIds <- function(fid=getFileIds(), nFiles=FALSE) {
   ## if (caseName) {
   if (nFiles) {
-    ## ans <-  rqda_sel(sprintf(" select name, id from cases where status=1 and id in (select caseid from caselinkage where status=1 and fid in (%s) group by caseid )", paste(shQuote(fid), collapse=", ")))
+    ## ans <-  rqda_sel(sprintf(" select name, id from cases where status=1 and id in (select caseid from caselinkage where status=1 and fid in (%s) group by caseid)", paste(shQuote(fid), collapse=", ")))
     ## if (nrow(ans)>0) Encoding(ans$name) <- "UTF-8"
     ans <- rqda_sel(sprintf("select caseid, count(caseid) as nFiles from caselinkage where status=1 and fid in (%s) group by caseid", paste(shQuote(fid), collapse=", ")))
   } else {
@@ -724,7 +725,7 @@ showSubset <- function(x, ...) {
 
 #' @method showSubset fileName
 #' @export
-showSubset.fileName <- function(x, widget=".fnames_rqda", envir=.rqda, ...) {
+showSubset.fileName <- function(x, widget=".fnames_rqda", envir = .rqda, ...) {
   widget <- get(widget, envir=envir)
   class(x) <- NULL
   widget[] <- x
@@ -733,13 +734,15 @@ showSubset.fileName <- function(x, widget=".fnames_rqda", envir=.rqda, ...) {
 #' @method showSubset CaseAttr
 #' @export
 showSubset.CaseAttr <- function(x, ...) {
-  tryCatch(.rqda$.CasesNamesWidget[] <- x$case, error = function(e) {})
+  tryCatch(.rqda$.CasesNamesWidget[] <- x$case, error = function(e) {
+})
 }
 
 #' @method showSubset FileAttr
 #' @export
 showSubset.FileAttr <- function(x, ...) {
-  tryCatch(.rqda$.fnames_rqda[] <- x$file, error = function(e) {})
+  tryCatch(.rqda$.fnames_rqda[] <- x$file, error = function(e) {
+})
 }
 
 #' @method showSubset caseName
@@ -773,17 +776,17 @@ ShowFileProperty <- function(Fid = getFileIds(type = "selected"), focus=TRUE) {
     }
 
     # not sure what the tryCatch below is supposed to catch.
-    #tryCatch(svalue(.rqda$.sfp) <- val, error=function(e) {
+    #tryCatch(svalue(.rqda$.sfp) <- val, error = function(e) {
       gw <- gwindow(gettext("File Property", domain = "R-RQDA"),
             width = getOption("widgetSize")[1]*.5,
             height = getOption("widgetSize")[2]*.5)
       addHandlerKeystroke(gw, function(h, ...) {
-        if(h$key == "\027") dispose(gw)
+        if (h$key == "\027") dispose(gw)
       })
       mainIcon <- system.file("icon", "mainIcon.png", package = "RQDA")
       gw$set_icon(mainIcon)
       sfp <- glabel(val, container=gw)
-      assign(".sfp", sfp, envir=.rqda)
+      assign(".sfp", sfp, envir = .rqda)
       "focus<-"(gw, value=focus)
     #})
 

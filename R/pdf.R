@@ -16,7 +16,7 @@ importPDFHL <- function(file, type=c("Highlight"), engine="rjpod") {
             gmessage(gettext("A file with the same name exists in the database!", domain = "R-RQDA"))
         }
     }
-    if (write ) {
+    if (write) {
         if (engine == "rjpod") {
             cat("Extracting highlight ...\n")
             ans <- rjpod::pdfAnnotations(file, type = type)
@@ -26,7 +26,7 @@ importPDFHL <- function(file, type=c("Highlight"), engine="rjpod") {
             finfo <- gsub("^bibtex/", "", finfo)
             finfo <- paste(sort(finfo), collapse=", \n")
         }
-        rqda_exe(sprintf("insert into source (name, file, id, status, date, owner, memo )
+        rqda_exe(sprintf("insert into source (name, file, id, status, date, owner, memo)
                              values ('%s', '%s', %i, %i, '%s', '%s', '%s')",
                           fileName, enc(ans), nextid, 1, date(), .rqda$owner, enc(finfo)))
         FileNamesUpdate()

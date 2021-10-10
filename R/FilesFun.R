@@ -39,8 +39,8 @@ ImportFile <- function(paths, encoding = .rqda$encoding, con= .rqda$qdacon, ...)
           gmessage(gettext("A file with the same name exists in the database!", domain = "R-RQDA"))
         }
       }
-      if (write ) {
-        rqda_exe(sprintf("insert into source (name, file, id, status, date, owner )
+      if (write) {
+        rqda_exe(sprintf("insert into source (name, file, id, status, date, owner)
                              values ('%s', '%s', %i, %i, '%s', '%s')",
                          Fname, content, nextid, 1, date(), .rqda$owner))
       }
@@ -62,7 +62,8 @@ FileNamesUpdate <- function(FileNamesWidget=.rqda$.fnames_rqda, sortByTime=TRUE,
     if (sortByTime) {
       fnames <- fnames[OrderByTime(source$date, decreasing=decreasing)]
     }
-    tryCatch(FileNamesWidget[] <- fnames, error=function(e) {})
+    tryCatch(FileNamesWidget[] <- fnames, error = function(e) {
+})
   }
 }
 
@@ -74,7 +75,7 @@ LineNumber.expose <- function(da, event, data) {
   heightVis <- vis$visible.rect$height
   firstY <- vis$visible.rect$y
   lastY <- firstY + heightVis
-  posFirst <- gtkTextViewWindowToBufferCoords(textView, 'GTK_TEXT_WINDOW_LEFT', 0, firstY )
+  posFirst <- gtkTextViewWindowToBufferCoords(textView, 'GTK_TEXT_WINDOW_LEFT', 0, firstY)
   posLast <- gtkTextViewWindowToBufferCoords(textView, 'GTK_TEXT_WINDOW_LEFT', 0, lastY)
   windowL <- textView$GetWindow('GTK_TEXT_WINDOW_LEFT')
   atTop <- textView$GetLineAtY(firstY)
@@ -116,7 +117,7 @@ ViewFileFun <- function(FileNameWidget, hightlight=TRUE) {
 
 
 ViewFileFunHelper <- function(FileName, hightlight=TRUE, codingTable=.rqda$codingTable, annotation=TRUE) {
-  if (exists(".root_edit", envir=.rqda) && isExtant(.rqda$.root_edit)) {
+  if (exists(".root_edit", envir = .rqda) && isExtant(.rqda$.root_edit)) {
     dispose(.rqda$.root_edit)
   }
   SelectedFileName <- FileName
@@ -132,7 +133,7 @@ ViewFileFunHelper <- function(FileName, hightlight=TRUE, codingTable=.rqda$codin
   }
 
   addHandlerKeystroke(gw, function(h, ...) {
-    if(h$key == "\027") dispose(gw)
+    if (h$key == "\027") dispose(gw)
   })
 
   mainIcon <- system.file("icon", "mainIcon.png", package = "RQDA")
@@ -146,7 +147,7 @@ ViewFileFunHelper <- function(FileName, hightlight=TRUE, codingTable=.rqda$codin
   gtkWidgetModifyFont(tmp$widget, font)
   tmp$widget$SetPixelsBelowLines(5) ## set the spacing
   tmp$widget$SetPixelsInsideWrap(5) ## so the text looks more confortable.
-  assign(".openfile_gui", tmp, envir= .rqda)
+  assign(".openfile_gui", tmp, envir = .rqda)
   Encoding(SelectedFileName) <- "unknown"
   IDandContent <- rqda_sel(sprintf("select id, file from source where name='%s'",
                                    enc(SelectedFileName))
@@ -166,13 +167,13 @@ ViewFileFunHelper <- function(FileName, hightlight=TRUE, codingTable=.rqda$codin
 
 
   # checks if the tag exists otherwise Gtk will complain
-  if(is.null(gtkTextTagTableLookup(buffer$`tag-table`, "underline")))
+  if (is.null(gtkTextTagTableLookup(buffer$`tag-table`, "underline")))
     buffer$createTag("underline", underline = "single")
 
-  if(is.null(gtkTextTagTableLookup(buffer$`tag-table`, fore.col)))
+  if (is.null(gtkTextTagTableLookup(buffer$`tag-table`, fore.col)))
     buffer$createTag(fore.col, foreground = fore.col)
 
-  if(is.null(gtkTextTagTableLookup(buffer$`tag-table`, sprintf("%s.background", back.col))))
+  if (is.null(gtkTextTagTableLookup(buffer$`tag-table`, sprintf("%s.background", back.col))))
     buffer$createTag(sprintf("%s.background", back.col), background = back.col)
 
   ## create buffer tag, which is created by default since gwidgetRGtk2 changes its API
@@ -264,24 +265,25 @@ ViewFileFunHelper <- function(FileName, hightlight=TRUE, codingTable=.rqda$codin
 EditFileFun <- function(FileNameWidget=.rqda$.fnames_rqda) {
   ## FileNameWidget=.rqda$.fnames_rqda in Files Tab
   ## FileNameWidget=.rqda$.FileofCat in F-CAT Tab
-  if (is_projOpen(envir=.rqda, conName = "qdacon")) {
+  if (is_projOpen(envir = .rqda, conName = "qdacon")) {
     SelectedFileName <- svalue(FileNameWidget)
     if (length(svalue(FileNameWidget)) == 0) {
       gmessage(gettext("Select a file first.", domain = "R-RQDA"), icon = "error", con = TRUE)
     }
     else {
-      tryCatch(dispose(.rqda$.root_edit), error=function(e) {})
+      tryCatch(dispose(.rqda$.root_edit), error = function(e) {
+})
       gw <- gwindow(title=SelectedFileName, #parent=getOption("widgetCoordinate"),
                     width = getOption("widgetSize")[1], height = getOption("widgetSize")[2]
       )
 
       addHandlerKeystroke(gw, function(h, ...) {
-        if(h$key == "\027") dispose(gw)
+        if (h$key == "\027") dispose(gw)
       })
       mainIcon <- system.file("icon", "mainIcon.png", package = "RQDA")
       gw$set_icon(mainIcon)
-      assign(".root_edit", gw, envir=.rqda)
-      assign(".root_edit2", gpanedgroup(horizontal = FALSE, container=.rqda$.root_edit), envir=.rqda)
+      assign(".root_edit", gw, envir = .rqda)
+      assign(".root_edit2", gpanedgroup(horizontal = FALSE, container=.rqda$.root_edit), envir = .rqda)
       EdiFilB <- gbutton(gettext("Save File", domain = "R-RQDA"), container=.rqda$.root_edit2, handler=function(h, ...) {
         content <-  svalue(.rqda$.openfile_gui)
         rqda_exe(sprintf("update source set file='%s', dateM='%s' where name='%s'",
@@ -348,7 +350,7 @@ EditFileFun <- function(FileNameWidget=.rqda$.fnames_rqda) {
       tmp <- gtext(container=.rqda$.root_edit2)
       font <- pangoFontDescriptionFromString(.rqda$font)
       gtkWidgetModifyFont(tmp$widget, font)
-      assign(".openfile_gui", tmp, envir= .rqda)
+      assign(".openfile_gui", tmp, envir = .rqda)
       Encoding(SelectedFileName) <- "unknown"
       IDandContent <- rqda_sel(sprintf("select id, file from source where name='%s'", enc(SelectedFileName)))
       content <- IDandContent$file
@@ -361,13 +363,13 @@ EditFileFun <- function(FileNameWidget=.rqda$.fnames_rqda) {
       back.col <- .rqda$back.col
 
       # checks if the tag exists otherwise Gtk will complain
-      if(is.null(gtkTextTagTableLookup(buffer$`tag-table`, "underline")))
+      if (is.null(gtkTextTagTableLookup(buffer$`tag-table`, "underline")))
         buffer$createTag("underline", underline = "single")
 
-      if(is.null(gtkTextTagTableLookup(buffer$`tag-table`, fore.col)))
+      if (is.null(gtkTextTagTableLookup(buffer$`tag-table`, fore.col)))
         buffer$createTag(fore.col, foreground = fore.col)
 
-      if(is.null(gtkTextTagTableLookup(buffer$`tag-table`, sprintf("%s.background", back.col))))
+      if (is.null(gtkTextTagTableLookup(buffer$`tag-table`, sprintf("%s.background", back.col))))
         buffer$createTag(sprintf("%s.background", back.col), background = back.col)
 
 
@@ -417,7 +419,7 @@ EditFileFun <- function(FileNameWidget=.rqda$.fnames_rqda) {
                      })
       addHandlerUnrealize(.rqda$.openfile_gui, handler=function(h, ...) {
         rm("EdiFilB", envir=button)
-        rm(".root_edit", ".root_edit2", ".openfile_gui", envir=.rqda)
+        rm(".root_edit", ".root_edit2", ".openfile_gui", envir = .rqda)
         FALSE
       })
     } ## end of else
@@ -451,8 +453,8 @@ write.FileList <- function(FileList, encoding=.rqda$encoding, con=.rqda$qdacon, 
         cat(sprintf("%s exists in the database!\n", Fname))
       }
     }
-    if (write ) {
-      rqda_exe(sprintf("insert into source (name, file, id, status, date, owner )
+    if (write) {
+      rqda_exe(sprintf("insert into source (name, file, id, status, date, owner)
                              values ('%s', '%s', %i, %i, '%s', '%s')",
                        FnameUTF8, content, nextid, 1, date(), .rqda$owner))
     }
@@ -503,7 +505,8 @@ FileNameWidgetUpdate <- function(FileNamesWidget=.rqda$.fnames_rqda, sort=TRUE, 
       fnames <- fnames[OrderByTime(date, decreasing=decreasing)]
     }
   }
-  tryCatch(FileNamesWidget[] <- fnames, error=function(e) {})
+  tryCatch(FileNamesWidget[] <- fnames, error = function(e) {
+})
 }
 
 #' @export
@@ -680,7 +683,7 @@ searchWord <- function(str, widget, from=0, col="green", verbose=FALSE) {
   if (ans$retval) {
     gtkTextViewScrollToIter(tview, ans$match.start, 0.47)
 
-    if(is.null(gtkTextTagTableLookup(buffer$`tag-table`, sprintf("%s.background", col))))
+    if (is.null(gtkTextTagTableLookup(buffer$`tag-table`, sprintf("%s.background", col))))
       buffer$createTag(sprintf("%s.background", col), background = col)
 
     buffer$ApplyTagByName(sprintf("%s.background", col), ans$match.start, ans$match.end)
@@ -693,7 +696,7 @@ searchWord <- function(str, widget, from=0, col="green", verbose=FALSE) {
 
 SearchButton <- function(widget) {
   ## widget=.rqda$.openfile_gui)
-  assign("searchFrom", 0, envir=.rqda)
+  assign("searchFrom", 0, envir = .rqda)
   group <- ggroup(horizontal=FALSE, container=gwindow(
     width = getOption("widgetSize")[1], height = getOption("widgetSize")[2], title="Search a word"))
   kwdW <- gedit("", container=group)
@@ -702,17 +705,17 @@ SearchButton <- function(widget) {
       str <- svalue(h$action)
       Encoding(str) <- "UTF-8"
       res <- searchWord(str, widget=widget, from=.rqda$searchFrom, verbose=TRUE)
-      assign("searchFrom", res, envir=.rqda)
+      assign("searchFrom", res, envir = .rqda)
     }}, action=kwdW)
   gbutton(gettext("Restart", domain = "R-RQDA"), container = group, handler=function(h, ...) {
-    assign("searchFrom", 1, envir=.rqda)
+    assign("searchFrom", 1, envir = .rqda)
   })
 }
 
 
 #' @export
 viewPlainFile <- function(FileNameWidget=.rqda$.fnames_rqda) {
-  if (is_projOpen(envir= .rqda, conName = "qdacon")) {
+  if (is_projOpen(envir = .rqda, conName = "qdacon")) {
     if (length(svalue(FileNameWidget)) == 0) {
       gmessage(gettext("Select a file first.", domain = "R-RQDA"), icon = "error", con = TRUE)
     } else {
@@ -723,7 +726,7 @@ viewPlainFile <- function(FileNameWidget=.rqda$.fnames_rqda) {
                     width = getOption("widgetSize")[1], height = getOption("widgetSize")[2])
 
       addHandlerKeystroke(gw, function(h, ...) {
-        if(h$key == "\027") dispose(gw)
+        if (h$key == "\027") dispose(gw)
       })
       mainIcon <- system.file("icon", "mainIcon.png", package = "RQDA")
       gw$set_icon(mainIcon)

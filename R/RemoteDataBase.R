@@ -2,7 +2,7 @@
 ## {
 ##     require(RMySQL)
 ##     con = dbConnect(MySQL(), user=user, password=password, dbname=dbname, host=host)
-##     assign("qdacon", con , envir=.rqda)
+##     assign("qdacon", con , envir = .rqda)
 ##     if (dbExistsTable(con, "source")) dbRemoveTable(con, "source")
 ##     ## interview record
 ##     rqda_exe("create table source (name text, id integer,
@@ -73,32 +73,51 @@
 ## }
 
 ## openMySQLProject <- function(user='rqda', password='rqdaproj', dbname='rqda', host='localhost', updateGUI=TRUE, ...) {
-##     tryCatch(.rqda$.codes_rqda[]<-NULL, error=function(e) {})
-##     tryCatch(.rqda$.fnames_rqda[]<-NULL, error=function(e) {})
-##     tryCatch(.rqda$.CasesNamesWidget[]<-NULL, error=function(e) {})
-##     tryCatch(.rqda$.CodeCatWidget[]<-NULL, error=function(e) {})
-##     tryCatch(.rqda$.CodeofCat[]<-NULL, error=function(e) {})
-##     tryCatch(.rqda$.FileCatWidget[]<-NULL, error=function(e) {})
-##     tryCatch(.rqda$.FileofCat[]<-NULL, error=function(e) {})
-##     tryCatch(.rqda$.AttrNamesWidget[] <- NULL, error=function(e) {})
-##     tryCatch(.rqda$.JournalNamesWidget[] <- NULL, error=function(e) {})
-##     tryCatch(closeProject(assignenv=.rqda), error=function(e) {})
+##     tryCatch(.rqda$.codes_rqda[]<-NULL, error = function(e) {
+})
+##     tryCatch(.rqda$.fnames_rqda[]<-NULL, error = function(e) {
+})
+##     tryCatch(.rqda$.CasesNamesWidget[]<-NULL, error = function(e) {
+})
+##     tryCatch(.rqda$.CodeCatWidget[]<-NULL, error = function(e) {
+})
+##     tryCatch(.rqda$.CodeofCat[]<-NULL, error = function(e) {
+})
+##     tryCatch(.rqda$.FileCatWidget[]<-NULL, error = function(e) {
+})
+##     tryCatch(.rqda$.FileofCat[]<-NULL, error = function(e) {
+})
+##     tryCatch(.rqda$.AttrNamesWidget[] <- NULL, error = function(e) {
+})
+##     tryCatch(.rqda$.JournalNamesWidget[] <- NULL, error = function(e) {
+})
+##     tryCatch(closeProject(assignenv=.rqda), error = function(e) {
+})
 ##     ## close currect project before open a new one.
 ##     require(RMySQL)
 ##     con = dbConnect(MySQL(), user=user, password=password, dbname=dbname, host=host)
-##     assign("qdacon", con , envir=.rqda)
+##     assign("qdacon", con , envir = .rqda)
 ##     if (updateGUI) {
 ##         svalue(.rqda$.currentProj) <- "Opening ..."
 ##         UpgradeTables()
-##         tryCatch(CodeNamesUpdate(sortByTime=FALSE), error=function(e) {})
-##         tryCatch(FileNamesUpdate(sortByTime=FALSE), error=function(e) {})
-##         tryCatch(CaseNamesUpdate(), error=function(e) {})
-##         tryCatch(UpdateTableWidget(Widget=.rqda$.CodeCatWidget, FromdbTable="codecat"), error=function(e) {})
-##         tryCatch(UpdateCodeofCatWidget(), error=function(e) {})
-##         tryCatch(UpdateTableWidget(Widget=.rqda$.FileCatWidget, FromdbTable="filecat"), error=function(e) {})
-##         tryCatch(UpdateFileofCatWidget(), error=function(e) {})
-##         tryCatch(AttrNamesUpdate(), error=function(e) {})
-##         tryCatch(JournalNamesUpdate(), error=function(e) {})
+##         tryCatch(CodeNamesUpdate(sortByTime=FALSE), error = function(e) {
+})
+##         tryCatch(FileNamesUpdate(sortByTime=FALSE), error = function(e) {
+})
+##         tryCatch(CaseNamesUpdate(), error = function(e) {
+})
+##         tryCatch(UpdateTableWidget(Widget=.rqda$.CodeCatWidget, FromdbTable="codecat"), error = function(e) {
+})
+##         tryCatch(UpdateCodeofCatWidget(), error = function(e) {
+})
+##         tryCatch(UpdateTableWidget(Widget=.rqda$.FileCatWidget, FromdbTable="filecat"), error = function(e) {
+})
+##         tryCatch(UpdateFileofCatWidget(), error = function(e) {
+})
+##         tryCatch(AttrNamesUpdate(), error = function(e) {
+})
+##         tryCatch(JournalNamesUpdate(), error = function(e) {
+})
 ##         path <- gsub("\\\\", "/", dbGetInfo(.rqda$qdacon)$dbname)
 ##         path <- gsub("/", "/ ", path)
 ##         svalue(.rqda$.currentProj) <- gsub("/ ", "/", paste(strwrap(path, 50), collapse="\n"))

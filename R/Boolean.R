@@ -45,7 +45,7 @@ print.codingsByOne <- function(x, ...)
         fid <- unique(x$fid)
         Nfiles <- length(fid)
         Ncodings <- nrow(x)
-        if(Ncodings == 1) {
+        if (Ncodings == 1) {
             title <- sprintf(ngettext(Nfiles,
                                       "1 coding from %i file",
                                       "1 coding from %i files", domain = "R-RQDA"), Nfiles)
@@ -61,7 +61,7 @@ print.codingsByOne <- function(x, ...)
                        width = getOption("widgetSize")[1], height = getOption("widgetSize")[2])
 
         addHandlerKeystroke(.gw, function(h, ...) {
-        if(h$key == "\027") dispose(.gw)
+        if (h$key == "\027") dispose(.gw)
         })
         mainIcon <- system.file("icon", "mainIcon.png", package = "RQDA")
         .gw$set_icon(mainIcon)
@@ -73,7 +73,7 @@ print.codingsByOne <- function(x, ...)
         .retreivalgui$widget$SetPixelsInsideWrap(5)
         buffer <- .retreivalgui$buffer
 
-        if(is.null(gtkTextTagTableLookup(buffer$`tag-table`, "red")))
+        if (is.null(gtkTextTagTableLookup(buffer$`tag-table`, "red")))
             buffer$createTag("red", foreground = "red")
         iter <- buffer$getIterAtOffset(0)$iter
         apply(x, 1, function(x) {

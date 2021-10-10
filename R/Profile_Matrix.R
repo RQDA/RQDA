@@ -23,7 +23,7 @@ prof_mat <- function(unit = c("coding", "file"), case_ids = NULL, case_names = N
                visible=FALSE, parent = c(wnh[1] + 10, 2))
 
     addHandlerKeystroke(w, function(h, ...) {
-    if(h$key == "\027") dispose(w)
+    if (h$key == "\027") dispose(w)
     })
   gf <- ggroup(container=w, use.scrollwindow=TRUE)
   tbl <- glayout(container = gf, expand=FALSE)

@@ -25,10 +25,11 @@ new_proj <- function(path, conName="qdacon", assignenv=.rqda, ...) {
           con=TRUE, icon="error")
       }
     }
-    if (!fexist | override ) {
+    if (!fexist | override) {
       ## close con in assignmenv first.
       tryCatch(closeProject(conName=conName, assignenv=assignenv),
-               error=function(e) {})
+               error = function(e) {
+})
       if (Encoding(path) == 'UTF-8') {
         Encoding(path)='unknown'
         ## otherwise, it is illegible under windows when path contains
@@ -266,7 +267,8 @@ open_proj <- function(path, conName="qdacon", assignenv=.rqda, ...) {
                       where=sprintf("package:%s", pkg))(con)
   if (open) dbDisconnect(con)
   },
-  error=function(e) {})
+  error = function(e) {
+})
   ## Fist close the con if it exist, then open a new con.
   if (file.access(path, 2) == 0) {
     Encoding(path) <- "unknown"
@@ -293,23 +295,27 @@ closeProject <- function(conName="qdacon", assignenv=.rqda, ...) {
   tryCatch({
     con <- get(conName, assignenv)
     if (is_projOpen(message=FALSE)) {
-      tryCatch(dispose(.rqda$.sfp), error=function(e) {})
-      tryCatch(dispose(.rqda$.root_edit), error=function(e) {})
-      WidgetList <- ls(envir=.rqda, pattern="^[.]codingsOf", all.names=TRUE)
+      tryCatch(dispose(.rqda$.sfp), error = function(e) {
+})
+      tryCatch(dispose(.rqda$.root_edit), error = function(e) {
+})
+      WidgetList <- ls(envir = .rqda, pattern="^[.]codingsOf", all.names=TRUE)
       for (i in WidgetList)
-        tryCatch(dispose(get(i, envir=.rqda)), error=function(e) {})
+        tryCatch(dispose(get(i, envir = .rqda)), error = function(e) {
+})
       closeProjBF() ## update all widgets
       if (!dbDisconnect(con)) {
         gmessage(gettext("Closing project failed.", domain = "R-RQDA"),
                  icon="waring", container=TRUE)
       }
     }
-  } , error=function(e) {})
+  } , error = function(e) {
+})
 }
 
 
 
-is_projOpen <- function(envir=.rqda, conName="qdacon", message=TRUE) {
+is_projOpen <- function(envir = .rqda, conName="qdacon", message=TRUE) {
   ## test if any project is open.
   open <- FALSE
   tryCatch({
@@ -317,7 +323,8 @@ is_projOpen <- function(envir=.rqda, conName="qdacon", message=TRUE) {
     pkg <- attr(attr(con, "class"), 'package')
     Open2 <- getFunction("dbIsValid", where=sprintf("package:%s", pkg))(con)
     open <- open + Open2
-  } , error=function(e) {})
+  } , error = function(e) {
+})
   if (!open & message) gmessage(gettext("No Project is Open.",
                                         domain = "R-RQDA"), icon="warning",
                                 container=TRUE)
@@ -343,11 +350,12 @@ backup_proj <- function(con) {
 # ToDo: use MemoWidget for this as well? Why are
 # there two MemoWidgets after all
 ProjectMemoWidget <- function() {
-  if (is_projOpen(envir=.rqda, "qdacon")) {
+  if (is_projOpen(envir = .rqda, "qdacon")) {
     ## use enviroment, so you can refer to the same object easily, this is
     ## the beauty of environment
     ## if project is open, then continue
-    tryCatch(dispose(.rqda$.projmemo), error=function(e) {})
+    tryCatch(dispose(.rqda$.projmemo), error = function(e) {
+})
     ## Close the open project memo first, then open a new one
     ## .projmemo is the container of .projmemocontent, widget for the content
     ## of memo
@@ -362,11 +370,11 @@ ProjectMemoWidget <- function() {
                   height = getOption("widgetSize")[2])
 
     addHandlerKeystroke(gw, function(h, ...) {
-    if(h$key == "\027") dispose(gw)
+    if (h$key == "\027") dispose(gw)
     })
     mainIcon <- system.file("icon", "mainIcon.png", package = "RQDA")
     gw$set_icon(mainIcon)
-    assign(".projmemo", gw, envir=.rqda)
+    assign(".projmemo", gw, envir = .rqda)
     .projmemo <- get(".projmemo", .rqda)
     .projmemo2 <- gpanedgroup(horizontal = FALSE, container=.projmemo)
     ## use .projmemo2, so can add a save button to it.
@@ -400,7 +408,7 @@ ProjectMemoWidget <- function() {
                    })##
     font <- pangoFontDescriptionFromString(.rqda$font)
     gtkWidgetModifyFont(tmp$widget, font)
-    assign(".projmemocontent", tmp, envir=.rqda)
+    assign(".projmemocontent", tmp, envir = .rqda)
     prvcontent <- rqda_sel("select memo from project")[1, 1]
     ## [1, 1]turn data.frame to 1-length character. Existing content of memo
     if (length(prvcontent) == 0) {
@@ -420,8 +428,8 @@ ProjectMemoWidget <- function() {
     ## push the previous content to the widget.
     size(proj_memoB) <- head_s
     enabled(proj_memoB) <- FALSE
-    addHandlerUnrealize(get(".projmemo", envir=.rqda), handler = function(h, ...) {
-      withinWidget <- svalue(get(".projmemocontent", envir=.rqda))
+    addHandlerUnrealize(get(".projmemo", envir = .rqda), handler = function(h, ...) {
+      withinWidget <- svalue(get(".projmemocontent", envir = .rqda))
       InRQDA <- rqda_sel("select memo from project where rowid=1")[1, 1]
       if (isTRUE(all.equal(withinWidget, InRQDA))) {
         return(FALSE) } else {
@@ -439,7 +447,8 @@ ProjectMemoWidget <- function() {
 close_AllCodings <- function() {
   obj <- ls(.rqda, all.names=TRUE, pattern="^.codingsOf")
   if (length(obj) != 0) {
-    for (i in obj) {tryCatch(dispose(get(i, envir=.rqda)), error=function(e) {})
+    for (i in obj) {tryCatch(dispose(get(i, envir = .rqda)), error = function(e) {
+})
     }
   }
 }

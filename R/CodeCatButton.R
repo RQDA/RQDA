@@ -18,7 +18,8 @@ UpdateTableWidget <- function(Widget, FromdbTable, con = .rqda$qdacon,
     }
     tryCatch(eval(substitute(W[] <- items,
                              list(W = quote(Widget)))),
-             error=function(e) {})
+             error = function(e) {
+})
   }
 }
 
@@ -35,7 +36,7 @@ AddTodbTable <- function(item, dbTable, Id="id", field="name", con=.rqda$qdacon,
             dup <- rqda_sel(sprintf("select %s from %s where name='%s'", field, dbTable, enc(item)))
             if (nrow(dup) == 0) write <- TRUE
         }
-        if (write ) {
+        if (write) {
             rqda_exe(sprintf("insert into %s (%s, %s, status, date, owner)
                                             values ('%s', %i, %i, %s, %s)", dbTable, field, Id,
                                    enc(item), nextid, 1, shQuote(date()), shQuote(.rqda$owner)))
@@ -82,7 +83,7 @@ DeleteCodeCatButton <- function(label = rqda_txt("Delete"))
       catid <- rqda_sel(
         sprintf("select catid from codecat where status=1 and name='%s'",
                 enc(Selected)))[ , 1]
-      if (length(catid) == 1 ) {
+      if (length(catid) == 1) {
         rqda_exe(
           sprintf("update codecat set status=0 where name='%s'",
                   enc(Selected)))
@@ -93,7 +94,8 @@ DeleteCodeCatButton <- function(label = rqda_txt("Delete"))
           rqda_exe(
             sprintf("update treecode set status=0 where catid='%s'",
                     catid)),
-          error=function(e) {})
+          error = function(e) {
+})
 
         ## should delete all the related codelists
         UpdateCodeofCatWidget() ## update the code of cat widget
@@ -176,7 +178,8 @@ UpdateCodeofCatWidget <- function(con=.rqda$qdacon, Widget=.rqda$.CodeofCat, sor
     items <- NULL
   }
 
-  tryCatch(Widget[] <- items, error=function(e) {})
+  tryCatch(Widget[] <- items, error = function(e) {
+})
 }
 
 CodeCatAddToButton <- function(label = rqda_txt("Add To"),
@@ -314,7 +317,7 @@ plotCodeCategory <-function(parent=NULL) {
 
   g <- igraph::graph.data.frame(ans)
   tryCatch(
-    igraph::tkplot(g, vertex.label = igraph::V(g)$name), error=function(e) {
+    igraph::tkplot(g, vertex.label = igraph::V(g)$name), error = function(e) {
     igraph::plot.igraph(g, vertex.label=igraph::V(g)$name)
   })
 }
@@ -362,7 +365,7 @@ GetCodeCatWidgetMenu <- function()
   CodeCatWidgetMenu <- list()
 
   CodeCatWidgetMenu[[1]] <- gaction(rqda_txt("Add New Code to Selected Category"), handler = function(h, ...) {
-    if (is_projOpen(envir=.rqda, conName="qdacon")) {
+    if (is_projOpen(envir = .rqda, conName="qdacon")) {
       codename <- ginput(rqda_txt("Enter new code."), icon="info")
       if (!identical(codename, character(0)))
       {
@@ -391,14 +394,14 @@ GetCodeCatWidgetMenu <- function()
   })
 
   CodeCatWidgetMenu[[2]] <- gaction(rqda_txt("Codings of selected category"), handler = function(h, ...) {
-    if (is_projOpen(envir=.rqda, conName="qdacon")) {
+    if (is_projOpen(envir = .rqda, conName="qdacon")) {
       ct <- getCodingsByCategory(fid=getFileIds(condition=.rqda$TOR))
       print.codingsByOne(ct)
     }
   })
 
   CodeCatWidgetMenu[[3]] <- gaction(rqda_txt("Memo"), handler = function(h, ...) {
-    if (is_projOpen(envir=.rqda, conName="qdacon")) {
+    if (is_projOpen(envir = .rqda, conName="qdacon")) {
       MemoWidget("Code Category", .rqda$.CodeCatWidget, "codecat")
     }
   })
@@ -412,7 +415,7 @@ GetCodeCatWidgetMenu <- function()
   })
 
   CodeCatWidgetMenu[[6]] <- gaction(rqda_txt("Sort by created time"), handler = function(h, ...) {
-    if (is_projOpen(envir=.rqda, conName="qdacon")) {
+    if (is_projOpen(envir = .rqda, conName="qdacon")) {
       UpdateTableWidget(Widget=.rqda$.CodeCatWidget, FromdbTable="codecat")
       ## UpdateCodeofCatWidget() ## wrong function
     }
@@ -454,7 +457,7 @@ GetCodeofCatWidgetMenu <- function()
   })
 
   CodeofCatWidgetMenu[[3]] <- gaction(gettext("Sort by created time", domain = "R-RQDA"), handler = function(h, ...) {
-    if (is_projOpen(envir=.rqda, conName="qdacon")) {
+    if (is_projOpen(envir = .rqda, conName="qdacon")) {
       UpdateCodeofCatWidget()
     }
   })
