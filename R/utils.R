@@ -4,7 +4,7 @@ rename <- function(from,to,table=c("source","freecode","cases","codecat","fileca
   ## rename name field in table source and freecode (other tables can be added futher)
   ## source is the file name, freecode is the free code name
   table <- match.arg(table)
-  if (to!="") { ## if to is "", makes no sense to rename
+  if (to != "") { ## if to is "", makes no sense to rename
       exists <- rqda_sel( sprintf("select * from %s where name = '%s' ",table, enc(to)))
       ## should check it there is any dupliation in the table
       if (nrow(exists) > 0) {
@@ -49,10 +49,10 @@ UpdateWidget <- function(widget, from, to=NULL) {
 
 ScrollToItem <- function(widget,item=svalue(widget)) {
   items <- widget[]
-  if (length(items)!= 0) {
+  if (length(items) !=  0) {
     Encoding(items) <- "UTF-8"
     idx <- as.character(which(items %in% item) - 1)
-    if (length(idx)!=0) {
+    if (length(idx) != 0) {
       path <-gtkTreePathNewFromString(idx)
       gtkTreeViewScrollToCell(widget$widget, path,use.align=TRUE,row.align = 0.07)
     }}}
@@ -62,7 +62,7 @@ enc <- function(x,encoding="UTF-8") {
   ## encoding is the encoding of x (character vector).
   Encoding(x) <- encoding
   x <- gsub("'", "''", x)
-  if (all(Encoding(x)!="UTF-8")) {
+  if (all(Encoding(x) != "UTF-8")) {
     x <- iconv(x,to="UTF-8")
   }
   x
@@ -330,7 +330,7 @@ getCodingTable <- function() {
                                                   left join source on (coding.fid=source.id)
                                       where coding.status==1 and source.status=1 and freecode.status=1")
 
-    if (nrow(Codings)!=0) {
+    if (nrow(Codings) != 0) {
       Encoding(Codings$codename) <- Encoding(Codings$filename) <- "UTF-8"
     }
    ## if (!all (all.equal(Codings$cid,Codings$cid2),all.equal(Codings$fid,Codings$fid2))) {
@@ -484,7 +484,7 @@ RunOnSelected <- function(x,multiple=TRUE,expr,enclos=parent.frame(),title=NULL,
   })
   gbutton(gettext("OK", domain = "R-RQDA"),container=x1,handler=function(h,...) {
     Selected <- svalue(x2)
-    if (Selected!="") {
+    if (Selected != "") {
       eval(h$action$expr,envir=pairlist(Selected=Selected),enclos=h$action$enclos)
       ## evaluate expr in env
       ## Variable Selected will be found in env
@@ -670,7 +670,7 @@ casesCodedByNot <- function(cid) {
 #' @export
 casesCodedByOr <- function(cid) {
   fid <- filesCodedByOr(cid)
-  if (length(fid)!=0) {
+  if (length(fid) != 0) {
       ans <- getCaseIds(fid)
   } else ans <- integer(0)
   class(ans) <- c("RQDA.vector","caseId")
@@ -930,7 +930,7 @@ filesByCodes <- function(codingTable=c("coding","coding2")) {
   if (codingTable=="coding2") {
     ans <- rqda_sel("select coding2.fid as fid, freecode.name as codename, source.name as filename from coding2 left join freecode on (coding2.cid=freecode.id)left join source on (coding2.fid=source.id) where coding2.status=1 and source.status=1 and freecode.status=1")
   }
-  if (nrow(ans)!=0) {
+  if (nrow(ans) != 0) {
     Encoding(ans$codename) <- Encoding(ans$filename) <- "UTF-8"
     ans$codedBy <- 1
     ansWide <- reshape(ans,idvar="fid",timevar="codename",v.names="codedBy",direction="wide")

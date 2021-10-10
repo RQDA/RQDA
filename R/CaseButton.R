@@ -186,7 +186,7 @@ CaseUnMark_Button<-function(label=gettext("Unmark", domain = "R-RQDA")) {
 CaseAttribute_Button <- function(label=gettext("Attribute", domain = "R-RQDA")) {
   CasAttrB <- gbutton(text=label, handler = function(h, ...) {
     SelectedCase <- svalue(.rqda$.CasesNamesWidget)
-    if (length(SelectedCase!=0)) {
+    if (length(SelectedCase != 0)) {
       SelectedCase <- enc(SelectedCase,"UTF-8")
       caseid <- rqda_sel(sprintf("select id from cases where status=1 and name='%s'",SelectedCase))[,1]
       CaseAttrFun(caseId=caseid,title=SelectedCase)
@@ -216,7 +216,7 @@ GetCaseNamesWidgetMenu <- function()
       freefile <-  rqda_sel("select name, id, file from source where status=1")
       fileofcase <- rqda_sel(sprintf("select fid from caselinkage where status=1 and caseid=%i",caseid))
       Encoding(freefile[['name']]) <- Encoding(freefile[['file']]) <- "UTF-8"
-      if (nrow(fileofcase)!=0) {
+      if (nrow(fileofcase) != 0) {
         fileoutofcase <- subset(freefile,!(freefile$id %in% fileofcase$fid))
       } else  fileoutofcase <- freefile
       if (length(fileoutofcase[['name']])==0) gmessage(gettext("All files are linked with this case.", domain = "R-RQDA"), cont=TRUE) else {
@@ -260,7 +260,7 @@ GetCaseNamesWidgetMenu <- function()
   CaseNamesWidgetMenu[[5]] <- gaction(gettext("Add/modify Attributes...", domain = "R-RQDA"), handler =function(h, ...) {
     if (is_projOpen(envir=.rqda,conName="qdacon")) {
       SelectedCase <- svalue(.rqda$.CasesNamesWidget)
-      if (length(SelectedCase!=0)) {
+      if (length(SelectedCase != 0)) {
         SelectedCase <- enc(SelectedCase,"UTF-8")
         caseid <- rqda_sel(sprintf("select id from cases where status=1 and name='%s'",SelectedCase))[,1]
         CaseAttrFun(caseId=caseid,title=SelectedCase)
@@ -291,7 +291,7 @@ GetCaseNamesWidgetMenu <- function()
   
   search_lst[[1]] <- gaction("Google", handler =function(h, ...) {
     KeyWord <- svalue(.rqda$.CasesNamesWidget)
-    if (length(KeyWord)!=0) {
+    if (length(KeyWord) != 0) {
       KeyWord <- iconv(KeyWord, from="UTF-8")
       browseURL(sprintf("http://www.google.com/search?q=%s",KeyWord))
     }
@@ -299,7 +299,7 @@ GetCaseNamesWidgetMenu <- function()
   
   search_lst[[2]] <- gaction("Yahoo", handler =function(h, ...) {
     KeyWord <- svalue(.rqda$.CasesNamesWidget)
-    if (length(KeyWord)!=0) {
+    if (length(KeyWord) != 0) {
       KeyWord <- iconv(KeyWord, from="UTF-8")
       browseURL(sprintf("http://search.yahoo.com/search;_ylt=A0oGkmFV.CZJNssAOK.l87UF?p=%s&ei=UTF-8&iscqry=&fr=sfp&fr2=sfp"
                         ,KeyWord))
@@ -308,7 +308,7 @@ GetCaseNamesWidgetMenu <- function()
   
   search_lst[[3]] <- gaction("Baidu", handler =function(h, ...) {
     KeyWord <- svalue(.rqda$.CasesNamesWidget)
-    if (length(KeyWord)!=0) {
+    if (length(KeyWord) != 0) {
       KeyWord <- iconv(KeyWord, from="UTF-8",to="CP936") ## should be in CP936 to work properly.
       browseURL(sprintf("http://www.baidu.com/s?wd=%s",paste("%",paste(charToRaw(KeyWord),sep="",collapse="%"),sep="",collapse="")))
     }
@@ -317,7 +317,7 @@ GetCaseNamesWidgetMenu <- function()
   
   search_lst[[4]] <- gaction("Sogou", handler =function(h, ...) {
     KeyWord <- svalue(.rqda$.CasesNamesWidget)
-    if (length(KeyWord)!=0) {
+    if (length(KeyWord) != 0) {
       KeyWord <- iconv(KeyWord, from="UTF-8",to="CP936")## should be in CP936 to work properly.
       browseURL(sprintf("http://www.sogou.com/sohu?query=%s",paste("%",paste(charToRaw(KeyWord),sep="",collapse="%"),sep="",collapse="")))
     }

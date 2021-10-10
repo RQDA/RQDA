@@ -114,7 +114,7 @@ saveFUN4CaseAttr <- function(button,data) {
     ## cal which variable is added and which is modified
     ExistingItems$value[which(is.na(ExistingItems$value))] <- "NA" ## add this line to address NA.
     change_idx <- ans$Value != ExistingItems$value
-    mod_idx <- change_idx & (ExistingItems$value!= "NA")
+    mod_idx <- change_idx & (ExistingItems$value !=  "NA")
     new_idx <- change_idx & (! mod_idx)
     if (any(mod_idx)) {
     ## alter the table for the modified variable
@@ -137,7 +137,7 @@ CaseAttrFun <- function(caseId,title=NULL,attrs=svalue(.rqda$.AttrNamesWidget)) 
    } else {
     attrs2 <- data.frame(variable=attrs,value="NA",stringsAsFactors=FALSE)
     variables <- rqda_sel(sprintf("select variable, value from caseAttr where caseID=%i and variable in (%s) and status=1", caseId,paste(shQuote(attrs),collapse=",")))
-    if (nrow(variables)!=0) {
+    if (nrow(variables) != 0) {
       Encoding(variables$variable) <- Encoding(variables$value) <- 'UTF-8'
       idx <- match(variables[[1]],attrs2[[1]])
       attrs2[idx,] <- variables
@@ -170,7 +170,7 @@ saveFUN4FileAttr <- function(button,data) {
     ans <- data.frame(Variable=ans[idx1],Value=ans[idx2],stringsAsFactors=FALSE)
     ## cal which variable is added and which is modified
     change_idx <- ans$Value != ExistingItems$value
-    mod_idx <- change_idx & (ExistingItems$value!= "NA")
+    mod_idx <- change_idx & (ExistingItems$value !=  "NA")
     new_idx <- change_idx & (! mod_idx)
     if (any(mod_idx)) {
     ## alter the table for the modified variable
@@ -192,7 +192,7 @@ FileAttrFun <- function(fileId,title=NULL,attrs=svalue(.rqda$.AttrNamesWidget)) 
     Encoding(attrs) <- 'UTF-8'
     attrs2 <- data.frame(variable=attrs,value="NA",stringsAsFactors=FALSE)
     variables <- rqda_sel(sprintf("select variable, value from fileAttr where fileID=%i and variable in (%s) and status=1",fileId,paste(shQuote(attrs),collapse=",")))
-    if (nrow(variables)!=0) {
+    if (nrow(variables) != 0) {
       Encoding(variables$variable) <- Encoding(variables$value) <- 'UTF-8'
       idx <- match(variables[[1]],attrs2[[1]])
       attrs2[idx,] <- variables
@@ -347,7 +347,7 @@ viewCaseAttr <- function() {
   DF <- reshape(DF,v.names="value",idvar="caseID",direction="wide",timevar="variable")
   names(DF) <- gsub("^value.","",names(DF))
   caseName <- rqda_sel("select name,id from cases where status=1")
-  if (nrow(caseName)!=0) {
+  if (nrow(caseName) != 0) {
     names(caseName) <- c("case","caseID")
     Encoding(caseName$case) <- "UTF-8"
     DF <- merge(caseName,DF)
@@ -360,7 +360,7 @@ viewFileAttr <- function() {
   DF <- reshape(DF,v.names="value",idvar="fileID",direction="wide",timevar="variable")
   names(DF) <- gsub("^value.","",names(DF))
   fileName <- rqda_sel("select name,id from source where status=1")
-  if (nrow(fileName)!=0) {
+  if (nrow(fileName) != 0) {
     names(fileName) <- c("file","fileID")
     Encoding(fileName$file) <- "UTF-8"
     DF <- merge(fileName,DF)
@@ -426,7 +426,7 @@ getAttr <- function(type=c("case","file"),attrs=svalue(.rqda$.AttrNamesWidget),s
     DF <- reshape(DF,v.names="value",idvar="caseID",direction="wide",timevar="variable")
     names(DF) <- gsub("^value.","",names(DF))
     caseName <- rqda_sel("select name,id from cases where status=1")
-    if (nrow(caseName)!=0) {
+    if (nrow(caseName) != 0) {
       names(caseName) <- c("case","caseID")
       Encoding(caseName$case) <- "UTF-8"
       DF <- merge(caseName,DF)
@@ -441,7 +441,7 @@ getAttr <- function(type=c("case","file"),attrs=svalue(.rqda$.AttrNamesWidget),s
     DF <- reshape(DF,v.names="value",idvar="fileID",direction="wide",timevar="variable")
     names(DF) <- gsub("^value.","",names(DF))
     fileName <- rqda_sel("select name,id from source where status=1")
-    if (nrow(fileName)!=0) {
+    if (nrow(fileName) != 0) {
       names(fileName) <- c("file","fileID")
       Encoding(fileName$file) <- "UTF-8"
       DF <- merge(fileName,DF)
@@ -495,7 +495,7 @@ setAttrType <- function() {
     gp <- ggroup(horizontal=FALSE,container=w)
     rb <- gradio(items,idx,horizontal=TRUE, container=gp)
     gbutton("OK",container=gp,handler=function(h,...) {
-      if ((newCls <- svalue(rb))!= "unspecified") {
+      if ((newCls <- svalue(rb)) !=  "unspecified") {
         rqda_exe(sprintf("update attributes set class='%s' where status=1 and name='%s'",newCls,Selected))
       }
       dispose(w)

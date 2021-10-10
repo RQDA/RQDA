@@ -45,7 +45,7 @@ pdelete <- function(type=c("file","code","case","codecategory","filecategory","c
     ## delete files
     fid <- rqda_sel( sprintf("select id from source where status=0 AND name in (%s)",
                                             paste(paste("'",del,"'",sep=""),collapse=",")))[,1]
-    if (length(fid)!=0) {
+    if (length(fid) != 0) {
       rqda_exe( sprintf("delete from source where status=0 and id in (%s)",
                                        paste(paste(fid,sep=""),collapse=",")))
       ## delete from source table
@@ -64,7 +64,7 @@ pdelete <- function(type=c("file","code","case","codecategory","filecategory","c
   codeFun <- function(del) {
     cid <- rqda_sel( sprintf("select id from freecode where status=0 AND name in (%s)",
                                             paste(paste("'",del,"'",sep=""),collapse=",")))[,1]
-    if (length(cid)!=0) {
+    if (length(cid) != 0) {
       rqda_exe( sprintf("delete from freecode where status=0 and id in (%s)",
                                        paste(paste(cid,sep=""),collapse=",")))
       ## delete from freecode table
@@ -77,7 +77,7 @@ pdelete <- function(type=c("file","code","case","codecategory","filecategory","c
     caseFun <- function(del) {
     caseid <- rqda_sel( sprintf("select id from cases where status=0 AND name in (%s)",
                                             paste(paste("'",del,"'",sep=""),collapse=",")))[,1]
-    if (length(caseid)!=0) {
+    if (length(caseid) != 0) {
       rqda_exe( sprintf("delete from cases where status=0 and id in (%s)",
                                        paste(paste(caseid,sep=""),collapse=",")))
       rqda_exe( sprintf("delete from caselinkage where status=0 and caseid in (%s)",
@@ -89,7 +89,7 @@ pdelete <- function(type=c("file","code","case","codecategory","filecategory","c
   CcatFun <- function(del) {
     catid <- rqda_sel( sprintf("select catid from codecat where status=0 AND name in (%s)",
                                             paste(paste("'",del,"'",sep=""),collapse=",")))[,1]
-    if (length(catid)!=0) {
+    if (length(catid) != 0) {
       rqda_exe( sprintf("delete from codecat where status=0 and catid in (%s)",
                                        paste(paste(catid,sep=""),collapse=",")))
       rqda_exe( sprintf("delete from treecode where status=0 and catid in (%s)",
@@ -101,7 +101,7 @@ pdelete <- function(type=c("file","code","case","codecategory","filecategory","c
   FcatFun <- function(del) {
       catid <- rqda_sel( sprintf("select catid from filecat where status=0 AND name in (%s)",
                                               paste(paste("'",del,"'",sep=""),collapse=",")))[,1]
-    if (length(catid)!=0) {
+    if (length(catid) != 0) {
       rqda_exe( sprintf("delete from filecat where status=0 and catid in (%s)",
                                        paste(paste(catid,sep=""),collapse=",")))
       rqda_exe( sprintf("delete from treefile where status=0 and catid in (%s)",
@@ -161,7 +161,7 @@ undelete <- function(type=c("file","code","case","codecategory","filecategory"),
     ## delete files
     fid <- rqda_sel( sprintf("select id from source where status=0 AND name in (%s)",
                                             paste(paste("'",del,"'",sep=""),collapse=",")))[,1]
-    if (length(fid)!=0) {
+    if (length(fid) != 0) {
       rqda_exe( sprintf("update source set status = 1 where status=0 and id in (%s)",
                                        paste(paste(fid,sep=""),collapse=",")))
       rqda_exe( sprintf("update coding set status = 1 where status=0 and fid in (%s)",
@@ -176,7 +176,7 @@ undelete <- function(type=c("file","code","case","codecategory","filecategory"),
   codeFun <- function(del) {
     cid <- rqda_sel( sprintf("select id from freecode where status=0 AND name in (%s)",
                                             paste(paste("'",del,"'",sep=""),collapse=",")))[,1]
-    if (length(cid)!=0) {
+    if (length(cid) != 0) {
       rqda_exe( sprintf("update freecode set status = 1  where status=0 and id in (%s)",
                                        paste(paste(cid,sep=""),collapse=",")))
       rqda_exe( sprintf("update coding set status = 1 where status=0 and cid in (%s)",
@@ -187,7 +187,7 @@ undelete <- function(type=c("file","code","case","codecategory","filecategory"),
     caseFun <- function(del) {
     caseid <- rqda_sel( sprintf("select id from cases where status=0 AND name in (%s)",
                                             paste(paste("'",del,"'",sep=""),collapse=",")))[,1]
-    if (length(caseid)!=0) {
+    if (length(caseid) != 0) {
       rqda_exe( sprintf("update cases set status =1  where status=0 and id in (%s)",
                                        paste(paste(caseid,sep=""),collapse=",")))
       rqda_exe( sprintf("update caselinkage set status = 1 where status=0 and caseid in (%s)",
@@ -198,7 +198,7 @@ undelete <- function(type=c("file","code","case","codecategory","filecategory"),
   CcatFun <- function(del) {
     catid <- rqda_sel( sprintf("select catid from codecat where status=0 AND name in (%s)",
                                             paste(paste("'",del,"'",sep=""),collapse=",")))[,1]
-    if (length(catid)!=0) {
+    if (length(catid) != 0) {
       rqda_exe( sprintf("update codecat set status = 1 where status=0 and catid in (%s)",
                                        paste(paste(catid,sep=""),collapse=",")))
       UpdateTableWidget(Widget=.rqda$.CodeCatWidget,FromdbTable="codecat")
@@ -210,7 +210,7 @@ undelete <- function(type=c("file","code","case","codecategory","filecategory"),
   FcatFun <- function(del) {
       catid <- rqda_sel( sprintf("select catid from filecat where status=0 AND name in (%s)",
                                               paste(paste("'",del,"'",sep=""),collapse=",")))[,1]
-    if (length(catid)!=0) {
+    if (length(catid) != 0) {
       rqda_exe( sprintf("update filecat set status = 1 where status=0 and catid in (%s)",
                                        paste(paste(catid,sep=""),collapse=",")))
       UpdateTableWidget(Widget=.rqda$.FileCatWidget,FromdbTable="filecat")
@@ -233,7 +233,7 @@ undelete <- function(type=c("file","code","case","codecategory","filecategory"),
       } else {
         del <- del[,1]
       }
-      if (del!="") {
+      if (del != "") {
         del <- enc(del,encoding="UTF-8")
         switch(type,
              ## use switch to run Fun

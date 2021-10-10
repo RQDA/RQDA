@@ -114,7 +114,7 @@ getCodingsFromFiles <- function(Fid, order=c("fname","ftime","ctime"),
                 Encoding(FileName) <- "UTF-8"
                 retrieval$fname[retrieval$fid==i] <- FileName
             } else {
-                retrieval <- retrieval[retrieval$fid!=i,]
+                retrieval <- retrieval[retrieval$fid != i,]
                 rqda_exe(sprintf("update %s set status=0 where fid=%i",
                                  codingTable, i))
             }

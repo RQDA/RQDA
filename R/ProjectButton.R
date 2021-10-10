@@ -6,7 +6,7 @@ NewProjectButton <- function(container) {
     if (Encoding(path) != "UTF-8") {
       Encoding(path) <- "UTF-8"
     }
-    if (path!="") {
+    if (path != "") {
       ## if path="", then click "cancel".
       new_proj(path,assignenv=.rqda)
       path <- .rqda$qdacon@dbname

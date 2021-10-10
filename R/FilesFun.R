@@ -7,7 +7,7 @@ ImportFile <- function(paths, encoding = .rqda$encoding, con= .rqda$qdacon,...) 
     Fname <- gsub("\\.[[:alpha:]]*$","",basename(path))
     FnameUTF8 <- iconv(Fname,to="UTF-8")
     ## remove the suffix such as .txt
-    if ( Fname!="" ) {
+    if ( Fname != "" ) {
       file_con <- file(path,open="r")
       if (isTRUE(.rqda$BOM)) seek(file_con,3)
       content <- readLines(file_con,warn=FALSE,encoding=encoding)
@@ -56,7 +56,7 @@ FileNamesUpdate <- function(FileNamesWidget=.rqda$.fnames_rqda,sortByTime=TRUE,d
   wopt <- options(warn=-2)
   on.exit(options(wopt))
   source <- rqda_sel( "select name, date, id from source where status=1 order by lower(name)")
-  if (nrow(source)!=0) {
+  if (nrow(source) != 0) {
     fnames <- source$name
     Encoding(fnames) <- "UTF-8"
     if (sortByTime) {
@@ -178,7 +178,7 @@ ViewFileFunHelper <- function(FileName,hightlight=TRUE,codingTable=.rqda$codingT
   ## create buffer tag, which is created by default since gwidgetRGtk2 changes its API
   N <- nrow(markidx)
 
-  if (nrow(markidx)!=0) { ## make sense only when there is coding there
+  if (nrow(markidx) != 0) { ## make sense only when there is coding there
     for (i in 1:N) {
       iter <- gtkTextBufferGetIterAtOffset(buffer, markidx[i,"selfirst"]) ## index to iter
       buffer$CreateMark(sprintf("%s.1",markidx[i,"rowid"]),where=iter$iter) ## insert marks
@@ -189,14 +189,14 @@ ViewFileFunHelper <- function(FileName,hightlight=TRUE,codingTable=.rqda$codingT
   } ## create marks
 
   if (annotation) {
-    if (nrow(anno)!=0) {
+    if (nrow(anno) != 0) {
       for (i in 1:nrow(anno)) {
         iter <- gtkTextBufferGetIterAtOffset(buffer, anno[i,"position"]) ## index to iter
         buffer$CreateMark(sprintf("%s.3",anno[i,"rowid"]),where=iter$iter) ## insert marks
       }} ## creat marks for annotation
   }
 
-  if (nrow(markidx)!=0) {
+  if (nrow(markidx) != 0) {
     sapply(markidx[, "rowid"], FUN = function(x) {
       code <- markidx[markidx$rowid == x, "name"]
       Encoding(code) <- "UTF-8"
@@ -229,7 +229,7 @@ ViewFileFunHelper <- function(FileName,hightlight=TRUE,codingTable=.rqda$codingT
     }}
 
   if (annotation) {
-    if (nrow(anno)!=0) {
+    if (nrow(anno) != 0) {
       apply(anno,1,function(x) {
         m <- buffer$GetMark(sprintf("%s.3", x["rowid"]))
         iter <- buffer$GetIterAtMark(m)
@@ -286,7 +286,7 @@ EditFileFun <- function(FileNameWidget=.rqda$.fnames_rqda) {
         content <-  svalue(.rqda$.openfile_gui)
         rqda_exe(sprintf("update source set file='%s', dateM='%s' where name='%s'",
                          enc(content,"UTF-8"),date(),enc(svalue(.rqda$.root_edit),"UTF-8"))) ## update source table
-        if (nrow(mark_index)!=0) { ## only manipulate the coding when there is one.
+        if (nrow(mark_index) != 0) { ## only manipulate the coding when there is one.
           idx <- apply(mark_index, 1, FUN = function(x) {
             m1 <- buffer$GetMark(sprintf("%s.1", x[3]))
             iter1 <- buffer$GetIterAtMark(m1)
@@ -305,7 +305,7 @@ EditFileFun <- function(FileNameWidget=.rqda$.fnames_rqda) {
           })## update the coding table (seltext,selfirst, selend), on the rowid (use rowid to name the marks)
         }
 
-        if (nrow(mark_indexS)!=0) { ## only manipulate coding2
+        if (nrow(mark_indexS) != 0) { ## only manipulate coding2
           idxS <- apply(mark_indexS, 1, FUN = function(x) {
             m1 <- buffer$GetMark(sprintf("%s.1S", x[3]))
             iter1 <- buffer$GetIterAtMark(m1)
@@ -324,7 +324,7 @@ EditFileFun <- function(FileNameWidget=.rqda$.fnames_rqda) {
           })
         } ## end of updating coding2
 
-        if (nrow(mark_idx_case)!=0) {
+        if (nrow(mark_idx_case) != 0) {
           idx_case <- apply(mark_idx_case, 1, FUN = function(x) {
             m1 <- buffer$GetMark(sprintf("c%s.1", x["rowid"]))
             iter1 <- buffer$GetIterAtMark(m1)
@@ -373,7 +373,7 @@ EditFileFun <- function(FileNameWidget=.rqda$.fnames_rqda) {
 
       mark_index <- rqda_sel(sprintf("select selfirst,selend,rowid from coding where fid=%i and status=1",
                                      IDandContent$id))
-      if (nrow(mark_index)!=0) {## make sense only when there is coding there
+      if (nrow(mark_index) != 0) {## make sense only when there is coding there
         ClearMark(W ,0 , max(mark_index$selend),TRUE,FALSE)
         HL(W,index=mark_index[,c("selfirst","selend")],.rqda$fore.col,NULL)
         ## insert marks according to mark_index (use rowid to name the marks)
@@ -388,7 +388,7 @@ EditFileFun <- function(FileNameWidget=.rqda$.fnames_rqda) {
       }
 
       mark_indexS <- rqda_sel(sprintf("select selfirst,selend,rowid from coding2 where fid=%i and status=1",IDandContent$id))
-      if (nrow(mark_indexS)!=0) {
+      if (nrow(mark_indexS) != 0) {
         apply(mark_indexS,1,function(x) {
           iter <- gtkTextBufferGetIterAtOffset(buffer, x[1]) ## index to iter
           mark <- buffer$CreateMark(sprintf("%s.1S",x[3]),where=iter$iter)
@@ -399,7 +399,7 @@ EditFileFun <- function(FileNameWidget=.rqda$.fnames_rqda) {
 
       mark_idx_case<- rqda_sel(sprintf("select selfirst,selend,rowid from caselinkage where fid=%i and status=1",
                                        IDandContent$id))
-      if (nrow(mark_idx_case)!=0) {
+      if (nrow(mark_idx_case) != 0) {
         ClearMark(W ,0 , max(mark_idx_case$selend),FALSE,TRUE)
         HL(W,index=mark_idx_case[,c("selfirst","selend")],NULL,.rqda$back.col)
         apply(mark_idx_case,1,function(x) {
@@ -433,7 +433,7 @@ write.FileList <- function(FileList,encoding=.rqda$encoding,con=.rqda$qdacon,...
     ## FnameUTF8 <- iconv(Fname,to="UTF-8")
     FnameUTF8 <- enc(Fname, encoding=encoding)
     content <- enc(content,encoding=encoding) ## adjust encoding argument.
-    if (Encoding(content)!="UTF-8") {
+    if (Encoding(content) != "UTF-8") {
       content <- iconv(content,to="UTF-8", sub = "byte") ## UTF-8 file content
     }
     maxid <- rqda_sel("select max(id) from source")[[1]]
@@ -520,7 +520,7 @@ getFileIds <- function(condition=c("unconditional","case","filecategory","both")
         ))$id
     } else {
       allfid <- rqda_sel("select id from source where status=1 group by id")$id
-      if (type!="all") {
+      if (type != "all") {
         fid_coded <- rqda_sel("select fid from coding where status=1 group by fid")$fid
       }
       if (type=="all") {
@@ -647,12 +647,12 @@ AddToFileCategory <- function(Widget=.rqda$.fnames_rqda,updateWidget=TRUE) {
   if (nrow(Fcat)==0) {gmessage(gettext("Add File Category first.", domain = "R-RQDA"),container=TRUE)} else{
     Encoding(Fcat$name) <- "UTF-8"
     Selecteds <- gselect.list(Fcat$name,multiple=TRUE)
-    if (length(Selecteds)>0 && Selecteds!="") {
+    if (length(Selecteds)>0 && Selecteds != "") {
       Encoding(Selecteds) <- "UTF-8"
       for (Selected in Selecteds) {
         Fcatid <- Fcat$catid[Fcat$name %in% Selected]
         exist <- rqda_sel(sprintf("select fid from treefile where status=1 and fid in (%s) and catid=%i",paste("'",fid,"'",sep="",collapse=","),Fcatid))
-        if (nrow(exist)!=length(fid)) {
+        if (nrow(exist) != length(fid)) {
           ## write only when the selected file associated with specific f-cat is not there
           DAT <- data.frame(fid=fid[!fid %in% exist$fid], catid=Fcatid, date=date(),dateM=date(),memo='',status=1,owner=.rqda$owner)
           ## should pay attention to the var order of DAT, must be the same as that of treefile table

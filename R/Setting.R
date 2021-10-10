@@ -1,6 +1,6 @@
 addSettingGUI <- function(container,width=12) {
   colorsList <- colors()
-  if (Sys.info()["user"]!="") assign("owner",Sys.info()["user"],envir=.rqda)
+  if (Sys.info()["user"] != "") assign("owner",Sys.info()["user"],envir=.rqda)
   
   
   container <- ggroup(horizontal = FALSE, container = container)

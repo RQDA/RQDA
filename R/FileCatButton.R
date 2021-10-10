@@ -64,13 +64,13 @@ FileCat_RenameButton <- function(label=gettext("Rename", domain = "R-RQDA"),Widg
 
 UpdateFileofCatWidget <- function(con=.rqda$qdacon,Widget=.rqda$.FileofCat,sortByTime=FALSE,...) {
   SelectedFileCat <- svalue(.rqda$.FileCatWidget)
-  if (length(SelectedFileCat)!=0) {
+  if (length(SelectedFileCat) != 0) {
     Encoding(SelectedFileCat) <- "UTF-8"
     catid <- rqda_sel(sprintf("select catid from filecat where status=1 and name='%s'",enc(SelectedFileCat)))[,1]
     Total_fid <- rqda_sel(sprintf("select fid from treefile where status=1 and catid=%i",catid))
-    if (nrow(Total_fid)!=0) {
+    if (nrow(Total_fid) != 0) {
       items <- rqda_sel("select name,id,date from source where status=1")
-      if (nrow(items)!=0) {
+      if (nrow(items) != 0) {
         items <- items[items$id %in% Total_fid$fid,c("name","date")]
         items <- items$name[OrderByTime(items$date)] ## sort by date
         Encoding(items) <- "UTF-8"
@@ -84,9 +84,9 @@ UpdateFileofCatWidget <- function(con=.rqda$qdacon,Widget=.rqda$.FileofCat,sortB
 UpdateFileofCatWidget2 <- function(con=.rqda$qdacon,Widget=.rqda$.FileofCat,sortByTime=FALSE,...)
 {
   Total_fid <- getFileIdsSets("filecategory","intersect")
-  if (length(Total_fid)!=0) {
+  if (length(Total_fid) != 0) {
     items <- rqda_sel("select name,id,date from source where status=1")
-    if (nrow(items)!=0) {
+    if (nrow(items) != 0) {
       items <- items[items$id %in% Total_fid,c("name","date")]
       items <- items$name[OrderByTime(items$date)] ## sort by date
       Encoding(items) <- "UTF-8"
@@ -119,7 +119,7 @@ FileCatAddToButton <- function(label=gettext("AddTo", domain = "R-RQDA"),Widget=
     if (nrow(freefile) == 0) {gmessage(gettext("No files Yet.", domain = "R-RQDA"),cont=.rqda$.FileCatWidget)} else {
       Encoding(SelectedFileCat) <- Encoding(freefile[['name']]) <- "UTF-8"
       fileofcat <- rqda_sel(sprintf("select fid from treefile where status=1 and catid=%i",catid))
-      if (nrow(fileofcat)!=0) {
+      if (nrow(fileofcat) != 0) {
         fileoutofcat <- subset(freefile,!(freefile$id %in% fileofcat$fid))
       } else  fileoutofcat <- freefile
       Selected <- gselect.list(fileoutofcat[['name']],multiple=TRUE,x=getOption("widgetCoordinate")[1])
@@ -253,7 +253,7 @@ GetFileofCatWidgetMenu <- function()
       pattern <- ifelse(is.null(.rqda$lastsearch),"file like '%%'",.rqda$lastsearch)
       pattern <- ginput(gettext("Please input a search pattern.", domain = "R-RQDA"),text=pattern)
       Encoding(pattern)<- "UTF-8"
-      if (!is.na(pattern) && length(fid)!=0) {
+      if (!is.na(pattern) && length(fid) != 0) {
         tryCatch(searchFiles(sprintf("(%s) and id in (%s)",pattern,paste(shQuote(fid),collapse=",")),
                              Widget=".FileofCat",is.UTF8=TRUE),
                  error=function(e) gmessage(gettext("Error~~~.", domain = "R-RQDA")),con=TRUE)

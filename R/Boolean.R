@@ -1,6 +1,6 @@
 #' @export
 getCodingsByOne <- function(cid, fid=NULL,codingTable=c("coding","coding2")) {
-    if (length(cid)!=1) stop("cid should be length-1 integer vector.", domain = "R-RQDA")
+    if (length(cid) != 1) stop("cid should be length-1 integer vector.", domain = "R-RQDA")
     codingTable <- match.arg(codingTable)
      if (codingTable=="coding") {
     ct <- rqda_sel(sprintf("select coding.rowid as rowid, coding.cid, coding.fid, freecode.name as codename, source.name as filename, coding.selfirst as index1, coding.selend as index2, coding.seltext as coding, coding.selend - coding.selfirst as CodingLength from coding left join freecode on (coding.cid=freecode.id) left join source on (coding.fid=source.id) where coding.status=1 and source.status=1 and freecode.status=1 and coding.cid=%s",cid))
@@ -425,7 +425,7 @@ not <- function (CT1, CT2)
 ##   ## CT1 and CT2 is coings for one code and one file.
 ##   ridx <- vector()
 ##   idx <- vector()
-##   if (nrow(CT1)!=0) { ## if1
+##   if (nrow(CT1) != 0) { ## if1
 ##     if (nrow(CT2)==0) {
 ##       ridx <- c(ridx,nrow(CT1))
 ##       idx <- c(idx,unlist(as.data.frame(t(CT1[,c("index1","index2")]))))

@@ -415,7 +415,7 @@ AddHandler <- function() {
       gtkWidgetSetSensitive(button$FilMemB$widget, TRUE)
       gtkWidgetSetSensitive(button$FilRenB$widget, TRUE)
       ## dynamically change the label of attribute(s)
-      if ((nattr <- length(.rqda$.AttrNamesWidget[]))!= 0) {
+      if ((nattr <- length(.rqda$.AttrNamesWidget[])) !=  0) {
         enabled(button$FileAttrB) <- TRUE
         if (length(svalue(.rqda$.AttrNamesWidget))>1 || nattr>1) {
           svalue(button$FileAttrB) <- rqda_txt("Attributes")
@@ -475,11 +475,11 @@ AddHandler <- function() {
 
     SelectedCase <- svalue(.rqda$.CasesNamesWidget)
 
-    if (length(SelectedCase)!= 0) {
+    if (length(SelectedCase) !=  0) {
       enabled(button$DelCasB) <- TRUE
       enabled(button$CasRenB) <- TRUE
       enabled(button$profmatB) <- TRUE
-      if ((nattr <- length(.rqda$.AttrNamesWidget[]))!= 0) {
+      if ((nattr <- length(.rqda$.AttrNamesWidget[])) !=  0) {
         enabled(button$CasAttrB) <- TRUE
         if (length(svalue(.rqda$.AttrNamesWidget))>1 || nattr>1) {
           svalue(button$CasAttrB) <- rqda_txt("Attributes")
@@ -598,7 +598,7 @@ AddHandler <- function() {
   })
 
   addHandlerClicked(.rqda$.AttrNamesWidget, handler = function(h, ...) {
-    if (length(svalue(.rqda$.AttrNamesWidget))!= 0) {
+    if (length(svalue(.rqda$.AttrNamesWidget)) !=  0) {
       enabled(button$DelAttB) <- TRUE
       enabled(button$RenAttB) <- TRUE
       enabled(button$AttMemB) <- TRUE
@@ -690,7 +690,7 @@ AddHandler <- function() {
   })
 
   addHandlerClicked(.rqda$.JournalNamesWidget, handler = function(h, ...) {
-    if (length(svalue(.rqda$.JournalNamesWidget))!= 0) {
+    if (length(svalue(.rqda$.JournalNamesWidget)) !=  0) {
       enabled(button$DelJouB) <- TRUE
       enabled(button$RenJouB) <- TRUE
       enabled(button$OpeJouB) <- TRUE

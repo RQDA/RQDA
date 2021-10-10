@@ -96,7 +96,7 @@ AddNewJournalFun <- function() {
             ## title <- ginput(gettext("Enter new file name. ", domain = "R-RQDA"),text=Sys.time(), icon="info")
             title <- as.character(Sys.time())
             if (!is.na(title)) {
-            if (nrow(rqda_sel(sprintf("select name from journal where name='%s'",enc(title))))!=0) {
+            if (nrow(rqda_sel(sprintf("select name from journal where name='%s'",enc(title)))) != 0) {
                 title <- paste("New",title)
             }## Make sure it is unique
             content <- svalue(textW)

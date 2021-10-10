@@ -25,7 +25,7 @@ DeleteCodeButton <- function(label=gettext("Delete", domain = "R-RQDA")) {
     label, handler= function(h,...) {
 
       if (is_projOpen(envir=.rqda,conName="qdacon") &
-          length(svalue(.rqda$.codes_rqda))!=0) {
+          length(svalue(.rqda$.codes_rqda)) != 0) {
         ## if project is open and one code is selected,then continue
         del <- gconfirm(gettext("Really delete the code?", domain = "R-RQDA"),
                         icon="question")
@@ -96,7 +96,7 @@ MarkCodeFun <- function(codeListWidget=".codes_rqda",codingTable="coding") {
       ans <- list(start=idx$startN,end=idx$endN,text=idx$seltext)
       if (ans$start != ans$end) { ## when selected no text, makes on sense to do anything.
         SelectedCode <- svalue(codeListWidget)
-        if (length(SelectedCode)!=0) {
+        if (length(SelectedCode) != 0) {
           Encoding(SelectedCode) <- "UTF-8"
           SelectedCode2 <- enc(SelectedCode,encoding="UTF-8")
           codeInfo<-  rqda_sel(sprintf("select id,color from freecode where name='%s'",SelectedCode2))
@@ -388,7 +388,7 @@ CodingMemoButton <- function(label=gettext("C2Memo", domain = "R-RQDA"))
                                          (codings_index$selend  <= sel_index$endN)&
                                          (codings_index$selend  >= sel_index$endN - 2)
           ] ## determine which one is the current text chunk?
-          if (length(rowid)!= 1) {gmessage(gettext("Select the exact CODING AND the corresponding CODE first.", domain = "R-RQDA"), container=TRUE)}
+          if (length(rowid) !=  1) {gmessage(gettext("Select the exact CODING AND the corresponding CODE first.", domain = "R-RQDA"), container=TRUE)}
           else {
             OpenCodingMemo(rowid=rowid,AnchorPos=AnchorPos,title=sprintf("Coding Memo: %s",SelectedCode))
           }
@@ -508,7 +508,7 @@ GetCodesNamesWidgetMenu <- function()
       Selected1 <- svalue(.rqda$.codes_rqda)
       cid1 <- rqda_sel(sprintf("select id from freecode where name='%s'",Selected1))[1,1]
       Selected2 <- gselect.list(as.character(.rqda$.codes_rqda[]), x=getOption("widgetCoordinate")[1])
-      if (Selected2!="" && Selected1!=Selected2) cid2 <- rqda_sel(sprintf("select id from freecode where name='%s'",Selected2))[1,1]
+      if (Selected2 != "" && Selected1 != Selected2) cid2 <- rqda_sel(sprintf("select id from freecode where name='%s'",Selected2))[1,1]
       mergeCodes(cid1,cid2)
       CodeNamesWidgetUpdate()
     }
@@ -525,7 +525,7 @@ GetCodesNamesWidgetMenu <- function()
   CodesNamesWidgetMenu[[12]] <- gaction(gettext("Show Codes With Code Category", domain = "R-RQDA"), handler = function(h, ...) {
     if (is_projOpen(envir = .rqda, conName = "qdacon", message = FALSE)) {
       cid <- rqda_sel("select id from freecode where status=1 and id in (select cid from treecode where status=1)")
-      if (nrow(cid)!=0) {
+      if (nrow(cid) != 0) {
         cid <- cid[[1]]
         CodeNamesWidgetUpdate(CodeNamesWidget=.rqda$.codes_rqda, CodeId=cid, sortByTime=FALSE)
       } else gmessage(gettext("All codes are assigned to code category.", domain = "R-RQDA"), container=TRUE)
@@ -535,7 +535,7 @@ GetCodesNamesWidgetMenu <- function()
   CodesNamesWidgetMenu[[13]] <- gaction(gettext("Show Codes Without Code Category", domain = "R-RQDA"), handler = function(h, ...) {
     if (is_projOpen(envir = .rqda, conName = "qdacon", message = FALSE)) {
       cid <- rqda_sel("select id from freecode where status=1 and id not in (select cid from treecode where status=1)")
-      if (nrow(cid)!=0) {
+      if (nrow(cid) != 0) {
         cid <- cid[[1]]
         CodeNamesWidgetUpdate(CodeNamesWidget=.rqda$.codes_rqda,CodeId=cid,sortByTime=FALSE)
       } else gmessage(gettext("All codes are assigned to code category.", domain = "R-RQDA"),container=TRUE)
@@ -545,7 +545,7 @@ GetCodesNamesWidgetMenu <- function()
   CodesNamesWidgetMenu[[14]] <- gaction(gettext("Show Codes With Memo", domain = "R-RQDA"), handler = function(h, ...) {
     if (is_projOpen(envir = .rqda, conName = "qdacon", message = FALSE)) {
       cid <- rqda_sel("select id from freecode where memo is not null and memo != ''")
-      if (nrow(cid)!=0) {
+      if (nrow(cid) != 0) {
         cid <- cid[[1]]
         CodeNamesWidgetUpdate(CodeNamesWidget=.rqda$.codes_rqda,CodeId=cid,sortByTime=FALSE)
       } else gmessage(gettext("No Code with memo.", domain = "R-RQDA"),container=TRUE)
@@ -555,7 +555,7 @@ GetCodesNamesWidgetMenu <- function()
   CodesNamesWidgetMenu[[15]] <- gaction(gettext("Show Codes Without Memo", domain = "R-RQDA"), handler = function(h, ...) {
     if (is_projOpen(envir = .rqda, conName = "qdacon", message = FALSE)) {
       cid <- rqda_sel("select id from freecode where memo is null or memo = ''")
-      if (nrow(cid)!=0) {
+      if (nrow(cid) != 0) {
         cid <- cid[[1]]
         CodeNamesWidgetUpdate(CodeNamesWidget=.rqda$.codes_rqda,CodeId=cid,sortByTime=FALSE)
       } else gmessage(gettext("No Code with memo.", domain = "R-RQDA"),container=TRUE)
@@ -587,7 +587,7 @@ GetCodesNamesWidgetMenu <- function()
       codeColor <- codeInfo[,2]
       if (is.na(codeColor)) title <- "Change color to..." else title <- sprintf("Change from '%s' to...",codeColor)
       newCol <- gselect.list(colors(), multiple = FALSE, title = title, x=getOption("widgetCoordinate")[1])
-      if (newCol!="" && length(newCol)!=0) {
+      if (newCol != "" && length(newCol) != 0) {
         if (!identical(codeColor,newCol)) {
           rqda_exe(sprintf("update freecode set color='%s' where id =%i",newCol,cid))
         }

@@ -53,15 +53,15 @@ AddFileToCaselinkage <- function(Widget=.rqda$.fnames_rqda) {
 
   ## select a case name -> caseid
   cases <- rqda_sel("select id, name from cases where status=1")
-  if (nrow(cases)!=0) {
+  if (nrow(cases) != 0) {
       Encoding(cases$name) <- "UTF-8"
       Selected <- gselect.list(cases$name,multiple=TRUE,x=getOption("widgetCoordinate")[1])
-      if (length(Selected)>0 && Selected!="") {
+      if (length(Selected)>0 && Selected != "") {
           Encoding(Selected) <- "UTF-8"
           caseid <- cases$id[cases$name %in% Selected]
           for (i in caseid) {
               exist <- rqda_sel(sprintf("select fid from caselinkage where status=1 and fid in (%s) and caseid=%i",paste("'",fid,"'",sep="",collapse=","),i))
-              if (nrow(exist)!=length(fid)) {
+              if (nrow(exist) != length(fid)) {
                   ## write only when the selected file associated with specific case is not in the caselinkage table
                   DAT <- data.frame(caseid=caseid, fid=fid[!fid %in% exist$fid], selfirst=0, selend=selend[!fid %in% exist$fid], status=1,owner=.rqda$owner,date=date(),memo='')
                   success <- rqda_wrt("caselinkage", DAT)
@@ -75,13 +75,13 @@ AddFileToCaselinkage <- function(Widget=.rqda$.fnames_rqda) {
 
 UpdateFileofCaseWidget <- function(con=.rqda$qdacon,Widget=.rqda$.FileofCase,sortByTime=FALSE,...) {
   Selected <- svalue(.rqda$.CasesNamesWidget)
-  if (length(Selected)!=0) {
+  if (length(Selected) != 0) {
     caseid <- rqda_sel(sprintf("select id from cases where status=1 and name='%s'",
                                               enc(Selected)))[,1]
     Total_fid <- rqda_sel(sprintf("select fid from caselinkage where status=1 and caseid=%i",caseid))
-    if (nrow(Total_fid)!=0) {
+    if (nrow(Total_fid) != 0) {
       items <- rqda_sel("select name,id,date from source where status=1")
-      if (nrow(items)!=0) {
+      if (nrow(items) != 0) {
         if (sortByTime) {
           items <- items[items$id %in% Total_fid$fid,c("name","date")]
           items <- items$name[OrderByTime(items$date)]
@@ -102,14 +102,14 @@ HL_Case <- function() {
     SelectedFile <- svalue(.rqda$.root_edit)
     currentFid <-  rqda_sel(sprintf("select id from source where name='%s'",
                                      enc(SelectedFile)))[,1]
-    if (length(currentFid)!=0) {
+    if (length(currentFid) != 0) {
       caseName <- svalue(.rqda$.CasesNamesWidget)
       caseid <- rqda_sel(sprintf("select id from cases where name='%s'",enc(caseName)))[,1]
       idx <- rqda_sel(sprintf("select selfirst,selend from caselinkage where fid=%i and status=1 and caseid=%i",currentFid,caseid))
       coding.idx <- rqda_sel(sprintf("select selfirst,selend from coding where fid=%i and status=1",currentFid))
       anno.idx <- rqda_sel(sprintf("select position from annotation where fid=%i and status=1",currentFid))$position
       allidx <- unlist(coding.idx,anno.idx)
-      if (nrow(idx)!=0) {
+      if (nrow(idx) != 0) {
         if (!is.null(allidx)) {
           idx[,"selfirst"] <- sapply(idx[,"selfirst"],FUN=function(x) x + sum(allidx <= x))
           idx[,"selend"] <- sapply(idx[,"selend"],FUN=function(x) x + sum(allidx <= x))
