@@ -9,16 +9,16 @@
   optOld <- options()
 
   ## if (is.null(getOption("widgetCoordinate")))
-  ##  options(widgetCoordinate=c(400,2))
+  ##  options(widgetCoordinate=c(400, 2))
   ## cordinate of ViewFunWidget
 
   # if (is.null(getOption("widgetSize")))
-  #   options(widgetSize = c(gdkScreenWidth()*.5,
+  #   options(widgetSize = c(gdkScreenWidth()*.5, 
   #                          gdkScreenHeight()*.5))
 
 
-  options(andMethod=c("overlap","exact","inclusion"))
-  assign("optOld",optOld,envir=.rqda)
+  options(andMethod=c("overlap", "exact", "inclusion"))
+  assign("optOld", optOld, envir=.rqda)
   if (interactive()) {
     packageStartupMessage(
       "\nUse 'RQDA()' to start the programme.\n", domain = "R-RQDA")

@@ -10,14 +10,14 @@ retrieval_by_code <- function(Fid = NULL, order = c("fname", "ftime", "ctime"), 
         order <- switch(order, fname = "order by source.name", 
             ftime = "order by source.id", ctime = "")
         if (is.null(Fid)) {
-            retrieval <- rqda_sel(sprintf("select cid,fid, selfirst, selend, seltext,%s.rowid, source.name,source.id from %s,source where %s.status=1 and cid=%i and source.id=fid %s", 
+            retrieval <- rqda_sel(sprintf("select cid, fid, selfirst, selend, seltext, %s.rowid, source.name, source.id from %s, source where %s.status=1 and cid=%i and source.id=fid %s", 
                 codingTable, codingTable, codingTable, currentCid, 
                 order))
         }
         else {
-            retrieval <- rqda_sel(sprintf("select cid,fid, selfirst, selend, seltext, %s.rowid,source.name,source.id from %s,source where %s.status=1 and cid=%i and source.id=fid and fid in (%s) %s", 
+            retrieval <- rqda_sel(sprintf("select cid, fid, selfirst, selend, seltext, %s.rowid, source.name, source.id from %s, source where %s.status=1 and cid=%i and source.id=fid and fid in (%s) %s", 
                 codingTable, codingTable, codingTable, currentCid, 
-                paste(Fid, collapse = ","), order))
+                paste(Fid, collapse = ", "), order))
         }
         if (nrow(retrieval) == 0) 
             gmessage(gettext("No Coding associated with the selected code.", domain = "R-RQDA"), 
@@ -28,14 +28,14 @@ retrieval_by_code <- function(Fid = NULL, order = c("fname", "ftime", "ctime"), 
             Nfiles <- length(fid)
             Ncodings <- nrow(retrieval)
             if(Ncodings == 1) {
-                title <- sprintf(ngettext(Nfiles,
+                title <- sprintf(ngettext(Nfiles, 
                                           "1 retrieved coding: \"%s\" from %i file", 
-                                          "1 retrieved coding: \"%s\" from %i files", domain = "R-RQDA"),
+                                          "1 retrieved coding: \"%s\" from %i files", domain = "R-RQDA"), 
                                  currentCode2, Nfiles)
             } else {
-                title <- sprintf(ngettext(Nfiles,
+                title <- sprintf(ngettext(Nfiles, 
                                           "%i retrieved codings: \"%s\" from %i file", 
-                                          "%i retrieved codings: \"%s\" from %i files", domain = "R-RQDA"),
+                                          "%i retrieved codings: \"%s\" from %i files", domain = "R-RQDA"), 
                                  Ncodings, currentCode2, Nfiles)
             }
             tryCatch(eval(parse(text = sprintf("dispose(.rqda$.codingsOf%s)", 
@@ -43,7 +43,7 @@ retrieval_by_code <- function(Fid = NULL, order = c("fname", "ftime", "ctime"), 
             })
             wnh <- size(.rqda$.root_rqdagui)
             .gw <- gwindow(title = title, parent = c(wnh[1] + 
-                10, 2),
+                10, 2), 
                 width = getOption("widgetSize")[1], height = getOption("widgetSize")[2]
                 )
 

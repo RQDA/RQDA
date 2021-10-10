@@ -1,9 +1,9 @@
 ImportFileButton <- function(label = rqda_txt("Import"), container, ...) {
   ImpFilB <- gbutton(label, container = container, handler = function(h, ...) {
-    paths  <- gfile(type = "open",
+    paths  <- gfile(type = "open", 
                     filter = list("text files" =
-                                    list(mime.types = c("text/plain")),
-                                  "All files" = list(patterns = c("*"))),
+                                    list(mime.types = c("text/plain")), 
+                                  "All files" = list(patterns = c("*"))), 
                     multi = TRUE)
     if (!identical(paths, character(0)))
     {
@@ -33,28 +33,28 @@ DeleteFileButton <- function(label = rqda_txt("Delete"), container, ...) {
     SelectedFile <- svalue(.rqda$.fnames_rqda)
     Encoding(SelectedFile) <- "UTF-8"
     ## if the project open and a file is selected, then continue the action
-    del <- gconfirm(ngettext(length(SelectedFile),
-                             "Really delete the file?",
+    del <- gconfirm(ngettext(length(SelectedFile), 
+                             "Really delete the file?", 
                              "Really delete the files?"), icon = "question")
     if (isTRUE(del)) {
       ## con <- .rqda$qdacon
       for (i in SelectedFile) {
         i <- enc(i)
         fid <- rqda_sel(
-          sprintf("select id from source where name = '%s'",
+          sprintf("select id from source where name = '%s'", 
                   i))$id
         rqda_exe(
-          sprintf("update source set status = 0 where name = '%s'",
+          sprintf("update source set status = 0 where name = '%s'", 
                   i))
         ## set the status of the selected file to 0
         rqda_exe(
-          sprintf("update caselinkage set status = 0 where fid = %i",
+          sprintf("update caselinkage set status = 0 where fid = %i", 
                   fid))
         rqda_exe(
-          sprintf("update treefile set status = 0 where fid = %i",
+          sprintf("update treefile set status = 0 where fid = %i", 
                   fid))
         rqda_exe(
-          sprintf("update coding set status = 0 where fid = %i",
+          sprintf("update coding set status = 0 where fid = %i", 
                   fid))
         ## set the status of the related case/f-cat to 0
       }
@@ -68,7 +68,7 @@ DeleteFileButton <- function(label = rqda_txt("Delete"), container, ...) {
 }
 
 ViewFileButton <-  function(label = rqda_txt("Open"), container, ...) {
-  VieFilB <- gbutton(label, container = container,
+  VieFilB <- gbutton(label, container = container, 
                      handler = function(h, ...) {
                        ViewFileFun(FileNameWidget = .rqda$.fnames_rqda)
                      })
@@ -76,8 +76,8 @@ ViewFileButton <-  function(label = rqda_txt("Open"), container, ...) {
   gtkWidgetSetSensitive(button$VieFilB$widget, FALSE)
 }
 
-File_MemoButton <- function(label = rqda_txt("Memo"),
-                            container = .rqda$.files_button,
+File_MemoButton <- function(label = rqda_txt("Memo"), 
+                            container = .rqda$.files_button, 
                             FileWidget = .rqda$.fnames_rqda, ...) {
   ## memo of selected file.
   FilMemB <- gbutton(label, container = container, handler = function(h, ...) {
@@ -87,19 +87,19 @@ File_MemoButton <- function(label = rqda_txt("Memo"),
   gtkWidgetSetSensitive(button$FilMemB$widget, FALSE)
 }
 
-File_RenameButton <- function(label = rqda_txt("Rename"),
-                              container = .rqda$.files_button,
+File_RenameButton <- function(label = rqda_txt("Rename"), 
+                              container = .rqda$.files_button, 
                               FileWidget = .rqda$.fnames_rqda, ...) {
   ## rename of selected file.
   FilRenB <- gbutton(label, container = container, handler = function(h, ...) {
     selectedFN <- svalue(FileWidget)
 
     if (length(selectedFN) == 0) {
-      gmessage(rqda_txt("Select a file first."), icon = "error",
+      gmessage(rqda_txt("Select a file first."), icon = "error", 
                container = TRUE)
     } else {
       ## get the new file names
-      NewFileName <- ginput(rqda_txt("Enter new file name. "),
+      NewFileName <- ginput(rqda_txt("Enter new file name. "), 
                             text = selectedFN, icon = "info")
 
       if (!identical(NewFileName, character(0)))
@@ -129,15 +129,15 @@ File_RenameButton <- function(label = rqda_txt("Rename"),
   gtkWidgetSetSensitive(button$FilRenB$widget, FALSE)
 }
 
-FileAttribute_Button <- function(label = rqda_txt("Attribute"),
-                                 container = .rqda$.files_button,
+FileAttribute_Button <- function(label = rqda_txt("Attribute"), 
+                                 container = .rqda$.files_button, 
                                  FileWidget = .rqda$.fnames_rqda, ...) {
   FileAttrB <- gbutton(label, container = container, handler = function(h, ...) {
     if (is_projOpen(envir = .rqda, conName = "qdacon")) {
       Selected <- svalue(FileWidget)
       if (length(Selected != 0 )) {
         fileId <- rqda_sel(
-          sprintf("select id from source where status = 1 and name = '%s'",
+          sprintf("select id from source where status = 1 and name = '%s'", 
                   enc(Selected)))[, 1]
         FileAttrFun(fileId = fileId, title = Selected)
       }
@@ -162,9 +162,9 @@ AddNewFileFun <- function() {
     head_s <- c(wdh["width"], wdh["height"] * .1)
     body_s <- c(wdh["width"], wdh["height"] * .9)
 
-    gw <- gwindow(title = "Add a new file",
-                  parent = getOption("widgetCoordinate"),
-                  width = getOption("widgetSize")[1],
+    gw <- gwindow(title = "Add a new file", 
+                  parent = getOption("widgetCoordinate"), 
+                  width = getOption("widgetSize")[1], 
                   height = getOption("widgetSize")[2])
 
     addHandlerKeystroke(gw, function(h, ...) {
@@ -174,20 +174,20 @@ AddNewFileFun <- function() {
     mainIcon <- system.file("icon", "mainIcon.png", package = "RQDA")
     gw$set_icon(mainIcon)
     assign(".AddNewFileWidget", gw, envir = .rqda)
-    assign(".AddNewFileWidget2",
-           gpanedgroup(horizontal = FALSE,
-                       container = get(".AddNewFileWidget", envir = .rqda)),
+    assign(".AddNewFileWidget2", 
+           gpanedgroup(horizontal = FALSE, 
+                       container = get(".AddNewFileWidget", envir = .rqda)), 
            envir = .rqda)
 
     saveFileFun <- function() {
       ## require a title for the file
-      Ftitle <- ginput(rqda_txt("Enter the title"),
+      Ftitle <- ginput(rqda_txt("Enter the title"), 
                        icon = "info")
       if (!is.na(Ftitle)) {
         Ftitle <- enc(Ftitle, "UTF-8")
         if (nrow(
           rqda_sel(
-            sprintf("select name from source where name = '%s'",
+            sprintf("select name from source where name = '%s'", 
                     Ftitle))) != 0) {
           Ftitle <- paste("New", Ftitle)
         } ## Make sure it is unique
@@ -199,8 +199,8 @@ AddNewFileFun <- function() {
         nextid <- ifelse(is.na(maxid), 0+1, maxid+1)
         ans <- rqda_exe(
           sprintf(
-            paste("insert into source (name, file, id, status, date, owner )",
-                  "values ('%s', '%s', %i, %i, '%s', '%s')"),
+            paste("insert into source (name, file, id, status, date, owner )", 
+                  "values ('%s', '%s', %i, %i, '%s', '%s')"), 
             Ftitle, content, nextid, 1, date(), .rqda$owner))
         if (is.null(ans)) {
           svalue(textW) <- "" ## clear the content.
@@ -214,12 +214,12 @@ AddNewFileFun <- function() {
       }
     } ## end of saveFileFun
 
-    gl <- glayout(homogeneous = T,
+    gl <- glayout(homogeneous = T, 
                   container = get(".AddNewFileWidget2", envir = .rqda))
     size(gl) <- head_s
 
     # ToDo: Make a save button and a close button, like in any other application
-    AddNewFilB <- gbutton(rqda_txt("Save To Project"),
+    AddNewFilB <- gbutton(rqda_txt("Save To Project"), 
                           handler = function(h, ...) {
                             saveFileFun()
                             FileNamesUpdate()
@@ -243,7 +243,7 @@ AddNewFileFun <- function() {
 
     addHandlerUnrealize(.rqda$.AddNewFileWidgetW, handler = function(h, ...) {
       rm("AddNewFilB", envir = button)
-      rm(".AddNewFileWidgetW", ".AddNewFileWidget",
+      rm(".AddNewFileWidgetW", ".AddNewFileWidget", 
          ".AddNewFileWidget2", envir = .rqda)
       FALSE
     })
@@ -283,14 +283,14 @@ GetFileNamesWidgetMenu <- function()
     })
 
   FileNamesWidgetMenu[[4]] <- gaction(
-    rqda_txt("Add/modify Attributes of The Open File..."),
+    rqda_txt("Add/modify Attributes of The Open File..."), 
     handler = function(h, ...) {
       if (is_projOpen(envir = .rqda, conName = "qdacon")) {
-        Selected <- tryCatch(svalue(.rqda$.root_edit),
+        Selected <- tryCatch(svalue(.rqda$.root_edit), 
                              error = function(e) {NULL})
         if (!is.null(Selected)) {
           fileId <- rqda_sel(
-            sprintf("select id from source where status = 1 and name = '%s'",
+            sprintf("select id from source where status = 1 and name = '%s'", 
                     enc(Selected)))[, 1]
           FileAttrFun(fileId = fileId, title = Selected)
         }
@@ -318,7 +318,7 @@ GetFileNamesWidgetMenu <- function()
   FileNamesWidgetMenu[[7]] <- gaction(
     rqda_txt("Export File Attributes"), handler = function(h, ...) {
       if (is_projOpen(envir = .rqda, conName = "qdacon")) {
-        fName <- gfile(type = 'save',
+        fName <- gfile(type = 'save', 
                        filter = list("csv" = list(pattern = c("*.csv"))))
         Encoding(fName) <- "UTF-8"
         if (length(grep(".csv$", fName)) == 0)
@@ -337,7 +337,7 @@ GetFileNamesWidgetMenu <- function()
     rqda_txt("Export Coded file as HTML"), handler = function(h, ...) {
       if (is_projOpen(envir = .rqda, conName = "qdacon", message = FALSE)) {
         path = gfile(
-          type = "save",
+          type = "save", 
           text = rqda_txt("Type a name for the exported codings and click OK."))
         if (!identical(path, character(0)))
         {
@@ -362,13 +362,13 @@ GetFileNamesWidgetMenu <- function()
     })
 
   FileNamesWidgetMenu[[12]] <- gaction(
-    rqda_txt("Import PDF Highlights via rjpod (selector)"),
+    rqda_txt("Import PDF Highlights via rjpod (selector)"), 
     handler = function(h, ...) {
       importPDFHL(engine = "rjpod")
     })
 
   FileNamesWidgetMenu[[13]] <- gaction(
-    rqda_txt("Import PDF Highlights via rjpod (file path)"),
+    rqda_txt("Import PDF Highlights via rjpod (file path)"), 
     handler = function(h, ...) {
       fpath = ginput(rqda_txt("Enter a pdf file path"), con = T)
       importPDFHL(file = fpath, engine = "rjpod")
@@ -383,8 +383,8 @@ GetFileNamesWidgetMenu <- function()
     rqda_txt("Open Previous Coded File"), handler = function(h, ...) {
       if (is_projOpen(envir = .rqda, conName = "qdacon", message = FALSE)) {
         fname <- rqda_sel(
-          paste("select name from source where id in (select fid from",
-                "coding where rowid in (select max(rowid) from coding",
+          paste("select name from source where id in (select fid from", 
+                "coding where rowid in (select max(rowid) from coding", 
                 "where status = 1))"))$name
         if (length(fname) != 0)  fname <- enc(fname, "UTF-8")
         ViewFileFunHelper(FileName = fname)
@@ -401,15 +401,15 @@ GetFileNamesWidgetMenu <- function()
   FileNamesWidgetMenu[[17]] <- gaction(
     rqda_txt("Search all files ..."), handler = function(h, ...) {
       if (is_projOpen(envir = .rqda, conName = "qdacon", message = FALSE)) {
-        pattern <- ifelse(is.null(.rqda$lastsearch),
-                          "file like '%%'",
+        pattern <- ifelse(is.null(.rqda$lastsearch), 
+                          "file like '%%'", 
                           .rqda$lastsearch)
-        pattern <- ginput(rqda_txt("Please input a search pattern."),
+        pattern <- ginput(rqda_txt("Please input a search pattern."), 
                           text = pattern)
         if (!is.na(pattern)) {
           tryCatch(
-            searchFiles(pattern, Widget = ".fnames_rqda", is.UTF8 = TRUE),
-            error = function(e) gmessage(rqda_txt("Error~~~.")),
+            searchFiles(pattern, Widget = ".fnames_rqda", is.UTF8 = TRUE), 
+            error = function(e) gmessage(rqda_txt("Error~~~.")), 
             container = TRUE)
 
           Encoding(pattern) <- "UTF-8"
@@ -422,64 +422,64 @@ GetFileNamesWidgetMenu <- function()
   show_lst <- vector("list", 9)
 
   show_lst[[1]] <- gaction(
-    rqda_txt("Show All Sorted By Imported Time"),
+    rqda_txt("Show All Sorted By Imported Time"), 
     handler = function(h, ...) {
       if (is_projOpen(envir = .rqda, conName = "qdacon", message = FALSE)) {
         FileNamesUpdate(FileNamesWidget = .rqda$.fnames_rqda)
-        FileNameWidgetUpdate(FileNamesWidget = .rqda$.fnames_rqda,
-                             FileId = getFileIds(condition = "unconditional",
+        FileNameWidgetUpdate(FileNamesWidget = .rqda$.fnames_rqda, 
+                             FileId = getFileIds(condition = "unconditional", 
                                                  type = "all"))
       }
     })
 
   show_lst[[2]] <- gaction(
-    rqda_txt("Show Coded Files Sorted by Imported time"),
+    rqda_txt("Show Coded Files Sorted by Imported time"), 
     handler = function(h, ...) {
       if (is_projOpen(envir = .rqda, conName = "qdacon")) {
-        FileNameWidgetUpdate(FileNamesWidget = .rqda$.fnames_rqda,
-                             FileId = getFileIds(condition = "unconditional",
+        FileNameWidgetUpdate(FileNamesWidget = .rqda$.fnames_rqda, 
+                             FileId = getFileIds(condition = "unconditional", 
                                                  type = "coded"))
       }
     })
 
   show_lst[[3]] <- gaction(
-    rqda_txt("Show Uncoded Files Sorted by Imported time"),
+    rqda_txt("Show Uncoded Files Sorted by Imported time"), 
     handler = function(h, ...) {
       if (is_projOpen(envir = .rqda, conName = "qdacon")) {
-        FileNameWidgetUpdate(FileNamesWidget = .rqda$.fnames_rqda,
-                             FileId = getFileIds(condition = "unconditional",
+        FileNameWidgetUpdate(FileNamesWidget = .rqda$.fnames_rqda, 
+                             FileId = getFileIds(condition = "unconditional", 
                                                  type = "uncoded"))
       }
     })
 
   show_lst[[4]] <- gaction(
-    rqda_txt("Show Files With Annotation"),
+    rqda_txt("Show Files With Annotation"), 
     handler = function(h, ...) {
       fileid <-
         rqda_sel(
           "select fid from annotation where status = 1 group by fid")$fid
       if (length(fileid) != 0) {
-        FileNameWidgetUpdate(FileNamesWidget = .rqda$.fnames_rqda,
+        FileNameWidgetUpdate(FileNamesWidget = .rqda$.fnames_rqda, 
                              FileId = fileid)
-      } else gmessage(rqda_txt("No file with memo."),
+      } else gmessage(rqda_txt("No file with memo."), 
                       container = TRUE)
     })
 
   show_lst[[5]] <- gaction(
-    rqda_txt("Show Files Without Annotation"),
+    rqda_txt("Show Files Without Annotation"), 
     handler = function(h, ...) {
       fileid <- rqda_sel(
-        paste("select id from source where status = 1 and id not in",
+        paste("select id from source where status = 1 and id not in", 
               "(select fid from annotation where status = 1 group by fid)"))$id
       if (length(fileid) != 0) {
-        FileNameWidgetUpdate(FileNamesWidget = .rqda$.fnames_rqda,
+        FileNameWidgetUpdate(FileNamesWidget = .rqda$.fnames_rqda, 
                              FileId = fileid)
-      } else gmessage(rqda_txt("All files have annotation."),
+      } else gmessage(rqda_txt("All files have annotation."), 
                       container = TRUE)
     })
 
   show_lst[[6]] <- gaction(
-    rqda_txt("Show Files With Memo"),
+    rqda_txt("Show Files With Memo"), 
     handler = function(h, ...) {
       if (is_projOpen(envir = .rqda, conName = "qdacon", message = FALSE)) {
         fileid <-
@@ -487,57 +487,57 @@ GetFileNamesWidgetMenu <- function()
             "select id from source where memo is not null")
         if (nrow(fileid) != 0) {
           fileid <- fileid[[1]]
-          FileNameWidgetUpdate(FileNamesWidget = .rqda$.fnames_rqda,
+          FileNameWidgetUpdate(FileNamesWidget = .rqda$.fnames_rqda, 
                                FileId = fileid)
-        } else gmessage(rqda_txt("No file with memo."),
+        } else gmessage(rqda_txt("No file with memo."), 
                         container = TRUE)
       }
     })
 
   show_lst[[7]] <- gaction(
-    rqda_txt("Show Files Without Memo"),
+    rqda_txt("Show Files Without Memo"), 
     handler = function(h, ...) {
       if (is_projOpen(envir = .rqda, conName = "qdacon", message = FALSE)) {
         fileid <- rqda_sel(
           "select id from source where memo is null")
         if (nrow(fileid) != 0) {
           fileid <- fileid[[1]]
-          FileNameWidgetUpdate(FileNamesWidget = .rqda$.fnames_rqda,
+          FileNameWidgetUpdate(FileNamesWidget = .rqda$.fnames_rqda, 
                                FileId = fileid)
-        } else gmessage(rqda_txt("No file is found."),
+        } else gmessage(rqda_txt("No file is found."), 
                         container = TRUE)
       }
     })
 
   show_lst[[8]] <- gaction(
-    rqda_txt("Show Files Without File Category"),
+    rqda_txt("Show Files Without File Category"), 
     handler = function(h, ...) {
       if (is_projOpen(envir = .rqda, conName = "qdacon", message = FALSE)) {
         fileid <- rqda_sel(
-          paste("select id from source where status = 1 and id not in",
+          paste("select id from source where status = 1 and id not in", 
                 "(select fid from treefile where status = 1)"))
         if (nrow(fileid) != 0) {
           fileid <- fileid[[1]]
-          FileNameWidgetUpdate(FileNamesWidget = .rqda$.fnames_rqda,
+          FileNameWidgetUpdate(FileNamesWidget = .rqda$.fnames_rqda, 
                                FileId = fileid)
         } else {
-          gmessage(rqda_txt("All are linked with file category."),
+          gmessage(rqda_txt("All are linked with file category."), 
                    container = TRUE)}
       }
     })
 
   show_lst[[9]] <- gaction(
-    rqda_txt("Show Files With No Case"),
+    rqda_txt("Show Files With No Case"), 
     handler = function(h, ...) {
       if (is_projOpen(envir = .rqda, conName = "qdacon", message = FALSE)) {
         fileid <- rqda_sel(
-          paste("select id from source where status = 1 and id not in",
+          paste("select id from source where status = 1 and id not in", 
                 "(select fid from caselinkage where status = 1)"))
         if (nrow(fileid) != 0) {
           fileid <- fileid[[1]]
-          FileNameWidgetUpdate(FileNamesWidget = .rqda$.fnames_rqda,
+          FileNameWidgetUpdate(FileNamesWidget = .rqda$.fnames_rqda, 
                                FileId = fileid)
-        } else gmessage(rqda_txt("All are linked with cases."),
+        } else gmessage(rqda_txt("All are linked with cases."), 
                         container = TRUE)
       }
     })

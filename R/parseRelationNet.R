@@ -1,21 +1,21 @@
  parseRelationNet <- function(mapStr, plot=FALSE) {
      mapStr <- strsplit(mapStr, "\n")[[1]]
-     mapStr <- gsub("(^[[:space:]]{1,})|([[:space:]]{1,}$)", "", mapStr) ## strip white space
+     mapStr <- gsub("(^[[:space:]]{1, })|([[:space:]]{1, }$)", "", mapStr) ## strip white space
      mapStr <- mapStr[!grepl("^#", mapStr)] ## strip comment lines
      mapStr <- mapStr[map != ""] # throw the empty lines
-     nrelations <- sapply(gregexpr("->",mapStr), length)
+     nrelations <- sapply(gregexpr("->", mapStr), length)
      if (!all(nrelations == 1))  stop("Each line represents one relation only", domain = "R-RQDA")
-     ix1 <- regexpr("\\[",mapStr)
-     ix2 <- regexpr("\\]",mapStr)
-     relation <- substr(mapStr,ix1,ix2)
-     mapStr <- gsub("[[:space:]]{0,}\\[(.)+\\]$", "", mapStr)
+     ix1 <- regexpr("\\[", mapStr)
+     ix2 <- regexpr("\\]", mapStr)
+     relation <- substr(mapStr, ix1, ix2)
+     mapStr <- gsub("[[:space:]]{0, }\\[(.)+\\]$", "", mapStr)
      mapL <- strsplit(mapStr, "->")
      mapDF <- as.data.frame(do.call(rbind, mapL))
      mapDF$relation <- relation
      map <- igraph::graph.data.frame(mapDF)
      if (plot) {
-         igraph::tkplot(map,vertex.label=igraph::get.vertex.attribute(map,"name"), vertex.size=10,
-                         edge.label=igraph::get.edge.attribute(map,"relation"), edge.label.cex=0.8)
+         igraph::tkplot(map, vertex.label=igraph::get.vertex.attribute(map, "name"), vertex.size=10, 
+                         edge.label=igraph::get.edge.attribute(map, "relation"), edge.label.cex=0.8)
      }
      map
  }
