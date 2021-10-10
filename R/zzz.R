@@ -8,15 +8,6 @@
 
     optOld <- options()
 
-    ## if (is.null(getOption("widgetCoordinate")))
-    ##  options(widgetCoordinate = c(400, 2))
-    ## cordinate of ViewFunWidget
-
-                                        # if (is.null(getOption("widgetSize")))
-                                        #   options(widgetSize = c(gdkScreenWidth()*.5,
-                                        #                          gdkScreenHeight()*.5))
-
-
     options(andMethod = c("overlap", "exact", "inclusion"))
     assign("optOld", optOld, envir = .rqda)
     if (interactive()) {

@@ -7,7 +7,7 @@ relation <- function(index1, index2) {
     ## WhichMax: which argument containts max(c(index1, index2))
     ## Distance: The distance between to index when Relation is proximity
     ## the index of the overlap of index1 and index2.
-    if (!is.vector(index1) || !is.vector(index1) ) stop("index1 and index2 must be vector.", domain = "R-RQDA")
+    if (!is.vector(index1) || !is.vector(index1)) stop("index1 and index2 must be vector.", domain = "R-RQDA")
     index1 <- as.numeric(index1)
     index2 <- as.numeric(index2)
     if (any(is.na(c(index1, index2)))) stop("index1 or index2 should not have any NA.", domain = "R-RQDA")
@@ -48,11 +48,11 @@ relation <- function(index1, index2) {
             }
             if (max(index1) < min(index2)) {
                 ans$Relation <- "proximity"
-                ans$Distance <- min(index2) -max(index1)
+                ans$Distance <- min(index2) - max(index1)
             }
             if (max(index2) < min(index1)) {
                 ans$Relation <- "proximity"
-                ans$Distance <- min(index1) -max(index2)
+                ans$Distance <- min(index1) - max(index2)
             }
         }
         if (length(ans$WhichMin) == 2) ans$WhichMin <- NA
@@ -62,8 +62,7 @@ relation <- function(index1, index2) {
 }
 
 #' @export
-crossTwoCodes <- function(cid1, cid2, data, relation = c("overlap", "inclusion", "exact", "proximity"), ...)
-{
+crossTwoCodes <- function(cid1, cid2, data, relation = c("overlap", "inclusion", "exact", "proximity"), ...) {
     ## cid1 and cid2 is length-1 numeric, represents the id of codes
     ## data is return by getCodingTable.
     ## cid1 = 1; cid2 = 2
@@ -75,8 +74,8 @@ crossTwoCodes <- function(cid1, cid2, data, relation = c("overlap", "inclusion",
         tmpdat1 <- data[data$fid == fid & data$cid == cid1, , drop = FALSE]
         tmpdat2 <- data[data$fid == fid & data$cid == cid2, , drop = FALSE]
         if (nrow(tmpdat2) > 0 && nrow(tmpdat1) > 0) {
-            for(i in seq_len(nrow(tmpdat1))) {
-                for(j in seq_len(nrow(tmpdat2))) {
+            for (i in seq_len(nrow(tmpdat1))) {
+                for (j in seq_len(nrow(tmpdat2))) {
                     Relation <- relation(unlist(tmpdat2[j, c("index1", "index2")]), unlist(tmpdat1[i, c("index1", "index2")]))
                     if (Relation$Relation == relation) {
                         ans <- ans + 1
@@ -102,7 +101,7 @@ crossCodes <- CrossCode <- function(relation = c("overlap", "inclusion", "exact"
             codeList <- intersect(Cid_Name$codename, codeList)
             if (nList > length(codeList)) cat(gettext("Codes without codings dropped.\n", domain = "R-RQDA"))
         }
-        if (length(codeList)<2) {
+        if (length(codeList) < 2) {
             stop("The codeList should be a vector of length 2 or greater", domain = "R-RQDA")
         } else {
             cidList <- Cid_Name$cid[match(codeList, Cid_Name$codename)]
@@ -135,7 +134,7 @@ plot.crossCodes <- function(x, ...) {
     igraph::set.edge.attribute(cmG, "color", V(cmG)[ew == 1], "green")
     igraph::set.edge.attribute(cmG, "color", V(cmG)[ew == 2], "yellow")
     igraph::set.edge.attribute(cmG, "color", V(cmG)[ew == 3], "orange")
-    igraph::set.edge.attribute(cmG, "color", V(cmG)[ew>3], "red")
+    igraph::set.edge.attribute(cmG, "color", V(cmG)[ew > 3], "red")
     tryCatch(igraph::tkplot(cmG, edge.width = sqrt(igraph::get.edge.attribute(cmG, "weight")),
                             vertex.label = igraph::get.vertex.attribute(cmG, "name"),
                             edge.label = floor(igraph::get.edge.attribute(cmG, "weight"))

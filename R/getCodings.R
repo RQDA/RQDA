@@ -48,8 +48,7 @@ getCodingsOfCodes <- function(fid = NULL, codingTable = c("coding", "coding2")) 
 }
 
 getCodingsFromFiles <- function(Fid, order = c("fname", "ftime", "ctime"),
-                                codingTable = "coding")
-{
+                                codingTable = "coding") {
     order <- match.arg(order)
     order <- switch(
         order,
@@ -71,7 +70,7 @@ getCodingsFromFiles <- function(Fid, order = c("fname", "ftime", "ctime"),
     } else {
         fid <- unique(retrieval$fid)
         Nfiles <- length(fid)
-        retrieval$fname <-""
+        retrieval$fname <- ""
         Ncodings <- nrow(retrieval)
         if (Ncodings == 1) {
             title <- sprintf(ngettext(Nfiles,
@@ -108,7 +107,7 @@ getCodingsFromFiles <- function(Fid, order = c("fname", "ftime", "ctime"),
             FileName <- rqda_sel(
                 sprintf(
                     "select name from source where status = 1 and id=%i",
-                    i))[['name']]
+                    i))[["name"]]
 
             if (!is.null(FileName)) {
                 Encoding(FileName) <- "UTF-8"
@@ -150,9 +149,9 @@ getCodingsFromFiles <- function(Fid, order = c("fname", "ftime", "ctime"),
         iter <- buffer$getIterAtOffset(0)$iter
 
         apply(retrieval, 1, function(x) {
-            metaData <- sprintf("[%s] - %s [%i:%i]", x[["code"]], x[['fname']],
-                                as.numeric(x[['selfirst']]),
-                                as.numeric(x[['selend']]))
+            metaData <- sprintf("[%s] - %s [%i:%i]", x[["code"]], x[["fname"]],
+                                as.numeric(x[["selfirst"]]),
+                                as.numeric(x[["selend"]]))
             ## buffer$InsertWithTagsByName(iter, metaData, "x-large", "red")
             buffer$InsertWithTagsByName(iter, metaData, "red")
             anchorcreated <- buffer$createChildAnchor(iter)
@@ -168,7 +167,7 @@ getCodingsFromFiles <- function(Fid, order = c("fname", "ftime", "ctime"),
             widget$showAll()
             iter$ForwardChar()
             buffer$insert(iter, "\n")
-            buffer$InsertWithTagsByName(iter, x[['seltext']])
+            buffer$InsertWithTagsByName(iter, x[["seltext"]])
             buffer$insert(iter, "\n\n")
         }
         )## end of apply

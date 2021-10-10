@@ -1,5 +1,4 @@
-retrieval_by_code <- function(Fid = NULL, order = c("fname", "ftime", "ctime"), code, codingTable = "coding")
-{
+retrieval_by_code <- function(Fid = NULL, order = c("fname", "ftime", "ctime"), code, codingTable = "coding") {
     currentCode2 <- code
     if (length(currentCode2) != 0) {
         currentCode <- enc(currentCode2, "UTF-8")

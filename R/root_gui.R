@@ -4,7 +4,7 @@ RQDA <- function() {
 
 ### GUI FOR ROOT #############################################################
 
-    options("guiToolkit" = 'RGtk2')
+    options("guiToolkit" = "RGtk2")
     ## avoid manual selection when more than one toolkit have been installed
     if (isTRUE(.rqda$isLaunched)) {
         message("RQDA has been launched.")
@@ -12,10 +12,12 @@ RQDA <- function() {
         ".root_rqdagui" <- gwindow(
             title = rqda_txt("RQDA: Qualitative Data Analysis"),
             parent = c(2, 2),
-            width = gdkScreenWidth()*.1,
-            height = gdkScreenHeight()*.1,
+            width = gdkScreenWidth() * .1,
+            height = gdkScreenHeight() * .1,
             visible = FALSE,
-            handler = function(h, ...) { closeProject(assignenv = .rqda) }
+            handler = function(h, ...) {
+                closeProject(assignenv = .rqda)
+            }
         )
         addHandlerKeystroke(.root_rqdagui, function(h, ...) {
             if (h$key == "\021") {
@@ -24,8 +26,8 @@ RQDA <- function() {
             }
         })
         if (is.null(getOption("widgetSize")))
-            options(widgetSize = c(gdkScreenWidth()*.5,
-                                   gdkScreenHeight()*.5))
+            options(widgetSize = c(gdkScreenWidth() * .5,
+                                   gdkScreenHeight() * .5))
 
 
         wdh <- size(.root_rqdagui)
@@ -183,11 +185,11 @@ RQDA <- function() {
 
         ".CodeCatWidget" <- gtable(character(0), container = .Ccat_PW,
                                    expand = TRUE, multiple = TRUE)
-        names(.CodeCatWidget)<- rqda_txt("Code Category")
+        names(.CodeCatWidget) <- rqda_txt("Code Category")
 
         ".CodeofCat" <- gtable(character(0), container = .Ccat_PW,
                                expand = TRUE, multiple = TRUE)
-        names(.CodeofCat)<- rqda_txt("Codes of This Category")
+        names(.CodeofCat) <- rqda_txt("Codes of This Category")
 
         .codecat_buttons[1, 1] <- AddCodeCatButton(rqda_txt("Add"))
         .codecat_buttons[1, 2] <- DeleteCodeCatButton(rqda_txt("Delete"))
@@ -526,7 +528,7 @@ AddHandler <- function() {
                             currentFid))[1, 1]
 
                 if (!is.null(allidx) && length(allidx) > 0)
-                    Maxindex <- Maxindex + sum(allidx<= Maxindex)
+                    Maxindex <- Maxindex + sum(allidx <= Maxindex)
 
                 ClearMark(.rqda$.openfile_gui, min = 0, max = Maxindex,
                           clear.fore.col = FALSE, clear.back.col = TRUE)
@@ -557,7 +559,7 @@ AddHandler <- function() {
     addHandlerClicked(.rqda$.CodeCatWidget, handler = function(h, ...) {
 
         Selected <- svalue(.rqda$.CodeCatWidget)
-        if (identical (Selected, character(0))) {
+        if (identical(Selected, character(0))) {
             return(invisible(NULL))
         }
 

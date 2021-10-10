@@ -13,8 +13,7 @@ setColor <- function(currentColor = "gold") {
         colorsel$setCurrentColor(currentColor)
         colorsel$setHasPalette(TRUE)
         response <- dialog$run()
-        if (response == GtkResponseType["ok"])
-        {
+        if (response == GtkResponseType["ok"]) {
             currentColor <- colorsel$getCurrentColor()$color
             colorString <- gdkColorToString(currentColor)
             colorDA$modifyBg("normal", currentColor)

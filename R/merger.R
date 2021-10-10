@@ -37,17 +37,17 @@ mergeCodes <- function(cid1, cid2) { ## cid1 and cid2 are two code IDs.
                     del <- (del1 | del2) ## index of rows in Exist that should be deleted.
                     if (any(del)) {
                         ## no rowid in Exist by sql of select, so add rowid to it (That is ToDat data frame).
-                        To_memo <- rqda_sel(sprintf("select memo from coding where rowid in (%s)", 
+                        To_memo <- rqda_sel(sprintf("select memo from coding where rowid in (%s)",
                                                     paste(Exist$rowid[del], collapse = ", ", sep = "")))$memo
                         memo <- paste(c(To_memo, From$memo), collapse = "\n", sep = "") ## merge the To_memo from From
-                        rqda_exe(sprintf("delete from coding where rowid in (%s)", 
+                        rqda_exe(sprintf("delete from coding where rowid in (%s)",
                                          paste(Exist$rowid[del], collapse = ", ", sep = ""))) ## delete codings
                         tt <-   rqda_sel(sprintf("select file from source where id='%i'", From$fid))[1, 1]
                         Encoding(tt) <- "UTF-8"  ## fulltext of the file
                         Sel <- c(min(Exist$Start[del]), max(Exist$End[del])) ## index to get the new coding
                         ## what is Sel?
-                        DAT <- data.frame(cid = From$cid, fid = From$fid, seltext = substr(tt, Sel[1], Sel[2]), 
-                                          selfirst = Sel[1], selend = Sel[2], status = 1, 
+                        DAT <- data.frame(cid = From$cid, fid = From$fid, seltext = substr(tt, Sel[1], Sel[2]),
+                                          selfirst = Sel[1], selend = Sel[2], status = 1,
                                           owner = .rqda$owner, date = date(), memo = memo) ## The new coding to table.
                         success <- rqda_wrt("coding", DAT)
                         if (!success) gmessage(gettext("Fail to write to database.", domain = "R-RQDA"))
@@ -102,9 +102,9 @@ expand <- function(first, end) {
 ## res2 <- unlist(apply(res, 1, function(x) expand(x[1], x[2])))
 ## identical(sort(x), res2)
 
-erger2 <- function(cid1, cid2, data)
-{## cid1 and cid2
-    data <- data[data$cid %in% c(cid1, cid2), c("cid", "fid", 
+erger2 <- function(cid1, cid2, data) {
+## cid1 and cid2
+    data <- data[data$cid %in% c(cid1, cid2), c("cid", "fid",
                                                 "index1", "index2")]
     ans <-  data.frame(fid = numeric(), cid = numeric(), index1 = numeric(), index2 = numeric())
     fidList <- unique(data[data$cid %in% cid1, "fid"])
@@ -112,8 +112,8 @@ erger2 <- function(cid1, cid2, data)
         tmpdat1 <- data[data$fid == fid & data$cid == cid1, , drop = FALSE]
         tmpdat2 <- data[data$fid == fid & data$cid == cid2, , drop = FALSE]
         if (nrow(tmpdat2) > 0 && nrow(tmpdat1) > 0) {
-            tmpdat1[, 4] <- tmpdat1[, 4] -1
-            tmpdat2[, 4] <- tmpdat2[, 4] -1
+            tmpdat1[, 4] <- tmpdat1[, 4] - 1
+            tmpdat2[, 4] <- tmpdat2[, 4] - 1
             idx1 <- sort(unlist(apply(tmpdat1[, 3:4], 1, function(x) expand(x[1], x[2]))))
             idx2 <- sort(unlist(apply(tmpdat2[, 3:4], 1, function(x) expand(x[1], x[2]))))
             idx <- unique(intersect(idx1, idx2))

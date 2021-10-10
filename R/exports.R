@@ -25,7 +25,7 @@ exportCodedFile <- function(file, fid, closeAfter = TRUE) {
         ans <- c(ans, text)
         marks <- gtkTextIterGetMarks(iter2)
         nincrease <- 0
-        while(identical(marks, list())) {
+        while (identical(marks, list())) {
             nincrease <- iter2$ForwardChar() + nincrease
             marks <- gtkTextIterGetMarks(iter2)
         }
