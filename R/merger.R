@@ -1,6 +1,6 @@
 mergeCodes <- function(cid1,cid2) { ## cid1 and cid2 are two code IDs.
   mergeHelperFUN <- function(From,Exist) { ## from and exist are data frame of codings.
-    if (nrow(Exist)==0) {## just write to the new code if there is no coding related to that code.
+    if (nrow(Exist) == 0) {## just write to the new code if there is no coding related to that code.
       success <- rqda_wrt("coding", From)
       if (!success) gmessage(gettext("Fail to write to database.", domain = "R-RQDA"))
     } else {
@@ -8,19 +8,19 @@ mergeCodes <- function(cid1,cid2) { ## cid1 and cid2 are two code IDs.
       ## because apply convert data to an array, and Exist containts character -> x is charater rather than numeric
       Exist$Relation <- sapply(Relations,FUN=function(x) x$Relation) ## add Relation to the data frame as indicator.
       ## possible bugs: should handle exact explicitely.
-      if (!any(Exist$Relation=="exact")) {
+      if (!any(Exist$Relation == "exact")) {
         ## if they are axact, do nothing; -> if they are not exact, do something. The following lines record meta info.
         Exist$WhichMin <- sapply(Relations,FUN=function(x)x$WhichMin)
         Exist$WhichMax <- sapply(Relations,FUN=function(x)x$WhichMax)
         Exist$Start <- sapply(Relations,FUN=function(x)x$UnionIndex[1])
         Exist$End <- sapply(Relations,FUN=function(x)x$UnionIndex[2])
-        if (all(Exist$Relation=="proximity")) { ## if there are no overlap in any kind, just write to database
+        if (all(Exist$Relation == "proximity")) { ## if there are no overlap in any kind, just write to database
             dis <- sapply(Relations,function(x) x$Distance)
             if (all(dis>0)) {
                 success <- rqda_wrt("coding", From)
                 if (!success) gmessage(gettext("Fail to write to database.", domain = "R-RQDA"))
             } else {
-                idx0 <- which(dis==0)
+                idx0 <- which(dis == 0)
                 index3 <- unlist(c(From[,c("selfirst","selend")], Exist[idx0,c("selfirst","selend")]))
                 From["seltext"] <- paste(Exist$coding[idx0][rank(Exist$selfirst[idx0])],collapse="")
                 From["selfirst"] <- min(index3)
@@ -29,10 +29,10 @@ mergeCodes <- function(cid1,cid2) { ## cid1 and cid2 are two code IDs.
                 ## delete the adjacent one.
             }
         } else { ## if not proximate, pass to else branch.
-          ## del1 <- (Exist$Relation =="inclusion" & any(Exist$WhichMin==2,Exist$WhichMax==2))
-          ## ==2 -> take care of NA. Here 2 means From according to how Relations is returned.
-          del1 <- Exist$Relation =="inclusion"
-          del2 <- Exist$Relation =="overlap"
+          ## del1 <- (Exist$Relation == "inclusion" & any(Exist$WhichMin == 2,Exist$WhichMax == 2))
+          ## == 2 -> take care of NA. Here 2 means From according to how Relations is returned.
+          del1 <- Exist$Relation == "inclusion"
+          del2 <- Exist$Relation == "overlap"
           ## if overlap or inclusion [Exist nested in From] -> delete codings in Exist
           del <- (del1 | del2) ## index of rows in Exist that should be deleted.
           if (any(del)) {
@@ -59,7 +59,7 @@ mergeCodes <- function(cid1,cid2) { ## cid1 and cid2 are two code IDs.
 
   Coding1 <-  rqda_sel(sprintf("select * from coding where cid=%i and status=1",cid1))
   Coding2 <-  rqda_sel(sprintf("select * from coding where cid=%i and status=1",cid2))
-  if (any(c(nrow(Coding1),nrow(Coding2))==0)) stop("One code has empty coding.", domain = "R-RQDA")
+  if (any(c(nrow(Coding1),nrow(Coding2)) == 0)) stop("One code has empty coding.", domain = "R-RQDA")
   if (nrow(Coding1) >= nrow(Coding2)) {
     FromDat <- Coding2
     ToDat <- Coding1
@@ -75,7 +75,7 @@ mergeCodes <- function(cid1,cid2) { ## cid1 and cid2 are two code IDs.
   } ## use small coding as FromDat -> speed it up.
   for (i in seq_len(nrow(FromDat))) {
     x <- FromDat[i,,drop=FALSE]
-    Exist <- ToDat[ToDat$fid==x$fid,] ## subset(ToDat,subset=fid==x$fid)
+    Exist <- ToDat[ToDat$fid == x$fid,] ## subset(ToDat,subset=fid == x$fid)
     ## avoding the NOTE from docs checking.
     mergeHelperFUN(From=x,Exist=Exist)
   }
@@ -87,8 +87,8 @@ findConsecutive <- function(x) {
     x <- sort(x)
     d <- diff(x)
     d2 <- rle(d)
-    eidx <- cumsum(d2$length) [which(d2$values==1)]+1
-    L.consecutive <- d2$length[which(d2$values==1)]
+    eidx <- cumsum(d2$length) [which(d2$values == 1)]+1
+    L.consecutive <- d2$length[which(d2$values == 1)]
     bidx <- eidx - L.consecutive
     ans <- data.frame(first=x[bidx],end=x[eidx])
     ans

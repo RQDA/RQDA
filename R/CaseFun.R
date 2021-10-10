@@ -4,7 +4,7 @@ CaseNamesUpdate <- function(CaseNamesWidget=.rqda$.CasesNamesWidget,
   if (is_projOpen()) {
     ## CaseName <- rqda_sel( "select name, id,date from cases where status=1 order by lower(name)")
     CaseName <- rqda_sel( "select name, id,date from cases where status=1")
-    if (nrow(CaseName)==0) {
+    if (nrow(CaseName) == 0) {
       case <- NULL
     } else {
       case <- CaseName$name
@@ -25,11 +25,11 @@ AddCase <- function(name,conName="qdacon",assignenv=.rqda,...) {
     maxid <- rqda_sel("select max(id) from cases")[[1]]
     nextid <- ifelse(is.na(maxid),0+1, maxid+1)
     write <- FALSE
-    if (nextid==1) {
+    if (nextid == 1) {
       write <- TRUE
     } else {
       dup <- rqda_sel(sprintf("select name from cases where name='%s'",enc(name)))
-      if (nrow(dup)==0) write <- TRUE
+      if (nrow(dup) == 0) write <- TRUE
     }
     if (write ) {
       rqda_exe(sprintf("insert into cases (name, id, status,date,owner)

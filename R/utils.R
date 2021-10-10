@@ -105,7 +105,7 @@ MemoWidget <- function(prefix,widget,dbTable) {
   ## widget of the F-cat/C-cat list, such as widget=.rqda$.fnames_rqda
   if (is_projOpen(envir=.rqda,"qdacon")) {
     Selected <- svalue(widget)
-    if (length(Selected)==0) {
+    if (length(Selected) == 0) {
       gmessage(
         gettext("Select first.", domain = "R-RQDA"),
         icon="error",container=TRUE)
@@ -124,7 +124,7 @@ MemoWidget <- function(prefix,widget,dbTable) {
                                      dbTable, enc(currentCode,"UTF-8")))[1, 1]
 
         if (isTRUE(all.equal(withinWidget,InRQDA)) |
-            (is.na(InRQDA) && withinWidget==""))
+            (is.na(InRQDA) && withinWidget == ""))
         {
           return(TRUE)
         } else {
@@ -166,14 +166,14 @@ MemoWidget <- function(prefix,widget,dbTable) {
         )
 
         addHandlerKeystroke(gw, function(h, ...) {
-          if(h$key=="\023") {
+          if(h$key == "\023") {
             #print("got keystroke")
             #print(enabled(mbut))
             save_memo(W, dbTable, Selected, prefix)
             #print(enabled(mbut))
             #print("end keystroke")
           }
-          if(h$key=="\027") dispose(gw)
+          if(h$key == "\027") dispose(gw)
         })
         mainIcon <- system.file("icon", "mainIcon.png", package = "RQDA")
         gw$set_icon(mainIcon)
@@ -222,7 +222,7 @@ MemoWidget <- function(prefix,widget,dbTable) {
 }
 
 getAnnos <- function(type="file") {
-    annos <- rqda_sel("select annotation.rowid, source.id, source.name, annotation.annotation,annotation.date from annotation join source on annotation.fid=source.id where  annotation.status==1 and annotation not in ('NA','')")
+    annos <- rqda_sel("select annotation.rowid, source.id, source.name, annotation.annotation,annotation.date from annotation join source on annotation.fid=source.id where  annotation.status == 1 and annotation not in ('NA','')")
     if (nrow(annos)>0) {
         Encoding(annos$annotation) <- "UTF-8"
         Encoding(annos$name) <- "UTF-8"
@@ -235,7 +235,7 @@ getAnnos <- function(type="file") {
 
 #' @export
 getMemos <- function(type="codes") {
-    memos <- rqda_sel("select memo, name, id, date, dateM from freecode where status==1 and memo not in ('NA','')")
+    memos <- rqda_sel("select memo, name, id, date, dateM from freecode where status == 1 and memo not in ('NA','')")
     if (nrow(memos)>0) {
         Encoding(memos$memo) <- "UTF-8"
         Encoding(memos$name) <- "UTF-8"
@@ -276,7 +276,7 @@ print.Info4Widget <- function(x, ...) {
                        width = getOption("widgetSize")[1], height = getOption("widgetSize")[2])
         mainIcon <- system.file("icon", "mainIcon.png", package = "RQDA")
         addHandlerKeystroke(.gw, function(h, ...) {
-          if(h$key=="\027") dispose(.gw)
+          if(h$key == "\027") dispose(.gw)
         })
         .gw$set_icon(mainIcon)
         ## assign(sprintf(".codingsOf%s", "codingsByone"), .gw, env = .rqda)
@@ -322,13 +322,13 @@ getCodingTable <- function() {
    ##         coding.cid as cid2,coding.fid as fid,source.id as fid2, source.name as filename,
    ##         coding.selend - coding.selfirst as CodingLength,coding.selend, coding.selfirst
    ##         from coding, freecode, source
-   ##         where coding.status==1 and freecode.id=coding.cid and coding.fid=source.id")
+   ##         where coding.status == 1 and freecode.id=coding.cid and coding.fid=source.id")
    Codings <- rqda_sel("select coding.rowid as rowid, coding.cid, coding.fid, freecode.name as codename, source.name as filename,
                                        coding.selfirst as index1, coding.selend as index2,
                                        coding.selend - coding.selfirst as CodingLength
                                       from coding left join freecode on (coding.cid=freecode.id)
                                                   left join source on (coding.fid=source.id)
-                                      where coding.status==1 and source.status=1 and freecode.status=1")
+                                      where coding.status == 1 and source.status=1 and freecode.status=1")
 
     if (nrow(Codings) != 0) {
       Encoding(Codings$codename) <- Encoding(Codings$filename) <- "UTF-8"
@@ -473,7 +473,7 @@ RunOnSelected <- function(x,multiple=TRUE,expr,enclos=parent.frame(),title=NULL,
   g <- gwindow(title=title,
   width = getOption("widgetSize")[1], height = getOption("widgetSize")[2],parent=c(hpos, vpos))
   addHandlerKeystroke(g, function(h, ...) {
-    if(h$key=="\027") dispose(g)
+    if(h$key == "\027") dispose(g)
   })
   x1<-ggroup(FALSE,container=g)
   ##x1$parent$parent$parent$SetTitle(title)
@@ -651,7 +651,7 @@ casesCodedByAnd <- function(cid) {
     case <- rqda_sel(sprintf("select fid, caseid from caselinkage where status=1 and fid in (%s)",fidUnique))
     codes <- tapply(case$fid, case$caseid,FUN=function(x) unique(fid[fid$fid %in% unique(x),]$cid))
     ans <- sapply(codes,length)
-    ans <- as.numeric(names(ans)[ans==Ncid])
+    ans <- as.numeric(names(ans)[ans == Ncid])
   }
   class(ans) <- c("RQDA.vector","caseId")
   ans
@@ -757,7 +757,7 @@ ShowFileProperty <- function(Fid = getFileIds(type = "selected"),focus=TRUE) {
       return (FALSE)
     }
 
-    if (length(Fid)==1) {
+    if (length(Fid) == 1) {
       Fcat <- rqda_sel(sprintf("select name from filecat where catid in (select catid from treefile where fid=%i and status=1) and status=1",Fid))$name
       Case <- rqda_sel(sprintf("select name from cases where id in (select caseid from caselinkage where fid=%i and status=1) and status=1",Fid))$name
       if (!is.null(Fcat)) Encoding(Fcat) <- "UTF-8"
@@ -778,7 +778,7 @@ ShowFileProperty <- function(Fid = getFileIds(type = "selected"),focus=TRUE) {
             width = getOption("widgetSize")[1]*.5,
             height = getOption("widgetSize")[2]*.5)
       addHandlerKeystroke(gw, function(h, ...) {
-        if(h$key=="\027") dispose(gw)
+        if(h$key == "\027") dispose(gw)
       })
       mainIcon <- system.file("icon", "mainIcon.png", package = "RQDA")
       gw$set_icon(mainIcon)
@@ -805,7 +805,7 @@ filesCodedByAnd <- function(cid, codingTable=c("coding","coding2")) {
 filesCodedByOr <- function(cid, codingTable=c("coding","coding2")) {
     cid <- paste(cid,collapse=',')
     fid <- rqda_sel(sprintf("select fid from %s where status=1 and cid in (%s)",codingTable, cid))$fid
-    if (length(fid)==0) {fid <- integer(0)}
+    if (length(fid) == 0) {fid <- integer(0)}
     class(fid) <- c("RQDA.vector","fileId")
     fid
 }
@@ -815,7 +815,7 @@ filesCodedByNot <- function(cid, codingTable=c("coding","coding2")) {
     codedfid <- filesCodedByOr(cid)
     allfid <- rqda_sel(sprintf("select fid from %s where status=1 group by fid",codingTable))$fid
     fid <- setdiff(allfid,codedfid)
-    if (length(fid)==0) {fid <- integer(0)}
+    if (length(fid) == 0) {fid <- integer(0)}
     class(fid) <- c("RQDA.vector","fileId")
     fid
 }
@@ -924,10 +924,10 @@ UpdateCoding <- function() {
 #' @export
 filesByCodes <- function(codingTable=c("coding","coding2")) {
   codingTable <- match.arg(codingTable)
-  if (codingTable=="coding") {
+  if (codingTable == "coding") {
     ans <- rqda_sel("select coding.fid as fid, freecode.name as codename, source.name as filename from coding left join freecode on (coding.cid=freecode.id)left join source on (coding.fid=source.id) where coding.status=1 and source.status=1 and freecode.status=1")
   }
-  if (codingTable=="coding2") {
+  if (codingTable == "coding2") {
     ans <- rqda_sel("select coding2.fid as fid, freecode.name as codename, source.name as filename from coding2 left join freecode on (coding2.cid=freecode.id)left join source on (coding2.fid=source.id) where coding2.status=1 and source.status=1 and freecode.status=1")
   }
   if (nrow(ans) != 0) {

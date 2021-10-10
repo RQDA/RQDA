@@ -61,7 +61,7 @@ JournalNamesUpdate <- function(Widget=.rqda$.JournalNamesWidget,decreasing=FALSE
 {
   if (is_projOpen()) {
     journal <- rqda_sel( "select name from journal where status=1")
-    if (nrow(journal)==0) {
+    if (nrow(journal) == 0) {
       journal <- NULL
     } else {
       journal <- journal[,1]
@@ -80,7 +80,7 @@ AddNewJournalFun <- function() {
                            )
 
         addHandlerKeystroke(gw, function(h, ...) {
-          if(h$key=="\027") dispose(gw)
+          if(h$key == "\027") dispose(gw)
         })
         
         # get size of root gui as width and height
@@ -124,7 +124,7 @@ AddNewJournalFun <- function() {
 ViewJournalWidget <- function(prefix="Journal",widget=.rqda$.JournalNamesWidget,dbTable="journal") {
   if (is_projOpen(envir=.rqda,"qdacon")) {
       Selected <- svalue(widget)
-      if (length(Selected)==0) {
+      if (length(Selected) == 0) {
         gmessage(gettext("Select first.", domain = "R-RQDA"),icon="error",container=TRUE)
       }
       else {
@@ -134,7 +134,7 @@ ViewJournalWidget <- function(prefix="Journal",widget=.rqda$.JournalNamesWidget,
                            )
 
     addHandlerKeystroke(gw, function(h, ...) {
-    if(h$key=="\027") dispose(gw)
+    if(h$key == "\027") dispose(gw)
     })
         mainIcon <- system.file("icon", "mainIcon.png", package = "RQDA")
         gw$set_icon(mainIcon)

@@ -99,24 +99,24 @@ MarkCaseFun <- function() {
         DAT <- data.frame(caseid=currentCid,fid=currentFid,
                           selfirst=ans$start,selend=ans$end,status=1,
                           owner=.rqda$owner,date=date(),memo="")
-        if (nrow(ExistLinkage)==0) {
+        if (nrow(ExistLinkage) == 0) {
           ## if there are no relevant caselinkage, write the caselinkage table
           success <- rqda_wrt("caselinkage", DAT)
           if (!success) gmessage(gettext("Fail to write to database.", domain = "R-RQDA"))
         } else {
           Relations <- apply(ExistLinkage,1,FUN=function(x) relation(x[c("selfirst","selend")],c(ans$start,ans$end)))
           ExistLinkage$Relation <- sapply(Relations,FUN=function(x)x$Relation)
-          if (!any(ExistLinkage$Relation=="exact")) {
+          if (!any(ExistLinkage$Relation == "exact")) {
             ## if there are exact caselinkage, skip; if no exact linkage then continue
             ExistLinkage$WhichMin <- sapply(Relations,FUN=function(x)x$WhichMin)
             ExistLinkage$Start <- sapply(Relations,FUN=function(x)x$UnionIndex[1])
             ExistLinkage$End <- sapply(Relations,FUN=function(x)x$UnionIndex[2])
-            if (all(ExistLinkage$Relation=="proximity")) {
+            if (all(ExistLinkage$Relation == "proximity")) {
               success <- rqda_wrt("caselinkage", DAT)
               if (!success) gmessage(gettext("Fail to write to database.", domain = "R-RQDA"))
             } else {
-              del1 <- ExistLinkage$WhichMin==2 & ExistLinkage$Relation =="inclusion"; del1[is.na(del1)] <- FALSE
-              del2 <- ExistLinkage$Relation =="overlap"; del2[is.na(del2)] <- FALSE
+              del1 <- ExistLinkage$WhichMin == 2 & ExistLinkage$Relation == "inclusion"; del1[is.na(del1)] <- FALSE
+              del2 <- ExistLinkage$Relation == "overlap"; del2[is.na(del2)] <- FALSE
               del <- (del1 | del2)
               if (any(del)) {
                 Sel <- c(min(ExistLinkage$Start[del]), max(ExistLinkage$End[del]))
@@ -150,7 +150,7 @@ CaseUnMark_Button<-function(label=gettext("Unmark", domain = "R-RQDA")) {
     ## if the not file is open, unmark doesn't work.
     if (!is.null(sel_index)) {
       SelectedCase <- svalue(.rqda$.CasesNamesWidget)
-      if (length(SelectedCase)==0) {gmessage(gettext("Select a case first.", domain = "R-RQDA"),con=TRUE)} else{
+      if (length(SelectedCase) == 0) {gmessage(gettext("Select a case first.", domain = "R-RQDA"),con=TRUE)} else{
         SelectedCase <- enc(SelectedCase,"UTF-8")
         caseid <-  rqda_sel(sprintf("select id from cases where name='%s'",SelectedCase))[,1]
         SelectedFile <- svalue(.rqda$.root_edit)
@@ -219,7 +219,7 @@ GetCaseNamesWidgetMenu <- function()
       if (nrow(fileofcase) != 0) {
         fileoutofcase <- subset(freefile,!(freefile$id %in% fileofcase$fid))
       } else  fileoutofcase <- freefile
-      if (length(fileoutofcase[['name']])==0) gmessage(gettext("All files are linked with this case.", domain = "R-RQDA"), cont=TRUE) else {
+      if (length(fileoutofcase[['name']]) == 0) gmessage(gettext("All files are linked with this case.", domain = "R-RQDA"), cont=TRUE) else {
         ##Selected <- select.list(fileoutofcase[['name']],multiple=TRUE)
         CurrentFrame <- sys.frame(sys.nframe())
         ## sys.frame(): get the frame of n
@@ -278,7 +278,7 @@ GetCaseNamesWidgetMenu <- function()
     if (is_projOpen(envir=.rqda,conName="qdacon")) {
       fName <- gfile(type='save',filter=list("csv"=list(pattern=c("*.csv"))))
       Encoding(fName) <- "UTF-8"
-      if (length(grep(".csv$",fName))==0) fName <- sprintf("%s.csv",fName)
+      if (length(grep(".csv$",fName)) == 0) fName <- sprintf("%s.csv",fName)
       write.csv(getAttr("case"), row.names=FALSE, file=fName, na="")
     }
   })
@@ -343,7 +343,7 @@ GetFileofCaseWidgetMenu <- function()
   FileofCaseWidgetMenu[[2]] <- gaction(gettext("Drop Selected File(s)", domain = "R-RQDA"), handler =function(h, ...) {
     if (is_projOpen(envir = .rqda, conName = "qdacon", message = FALSE)) {
       FileOfCat <- svalue(.rqda$.FileofCase)
-      if ((NumofSelected <- length(FileOfCat)) ==0) {
+      if ((NumofSelected <- length(FileOfCat)) == 0) {
         gmessage(gettext("Please select the Files you want to delete.", domain = "R-RQDA"),con=TRUE)} else
         {
           ## Give a confirm msg
@@ -391,7 +391,7 @@ GetFileofCaseWidgetMenu <- function()
   FileofCaseWidgetMenu[[6]] <- gaction(gettext("Rename selected File", domain = "R-RQDA"), handler =function(h, ...) {
     if (is_projOpen(envir=.rqda,conName="qdacon")) {
       selectedFN <- svalue(.rqda$.FileofCase)
-      if (length(selectedFN)==0) {
+      if (length(selectedFN) == 0) {
         gmessage(gettext("Select a file first.", domain = "R-RQDA"),icon="error",con=TRUE)
       }
       else {
@@ -400,7 +400,7 @@ GetFileofCaseWidgetMenu <- function()
           Encoding(NewFileName) <- "UTF-8"
           rename(selectedFN,NewFileName,"source")
           Fnames <- .rqda$.FileofCase[]
-          Fnames[Fnames==selectedFN] <- NewFileName
+          Fnames[Fnames == selectedFN] <- NewFileName
           .rqda$.FileofCase[] <- Fnames
         }
       }}

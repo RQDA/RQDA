@@ -7,10 +7,10 @@ importPDFHL <- function(file, type=c("Highlight"), engine="rjpod") {
     maxid <- rqda_sel("select max(id) from source")[[1]]
     nextid <- ifelse(is.na(maxid),0+1, maxid+1)
     write <- FALSE
-    if (nextid==1) {
+    if (nextid == 1) {
         write <- TRUE
     } else {
-        if (nrow(rqda_sel(sprintf("select name from source where name='%s'", fileName)))==0) {
+        if (nrow(rqda_sel(sprintf("select name from source where name='%s'", fileName))) == 0) {
             write <- TRUE
         } else {
             gmessage(gettext("A file with the same name exists in the database!", domain = "R-RQDA"))

@@ -17,7 +17,7 @@ AddNewFileFunOfCase <- function ()
     mainIcon <- system.file("icon", "mainIcon.png", package = "RQDA")
     gw$set_icon(mainIcon)
     addHandlerKeystroke(gw, function(h, ...) {
-    if(h$key=="\027") dispose(gw)
+    if(h$key == "\027") dispose(gw)
     })
     gp <- gpanedgroup(horizontal = FALSE, container=gw)
 

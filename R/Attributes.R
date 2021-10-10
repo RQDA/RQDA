@@ -35,7 +35,7 @@ EditVarWidget <- function(ExistingItems=NULL,container=NULL,title=NULL,ID=NULL,s
       path <- gtkTreePathNewFromString(path.string)
       column <- cell$getData("column")
       iter <- model$getIter(path)$iter
-      if (column==1) {
+      if (column == 1) {
                i <- path$getIndices()[[1]]+1
                articles[[i]]$Value <<- new.text
                model$set(iter, column, articles[[i]]$Value)
@@ -131,7 +131,7 @@ saveFUN4CaseAttr <- function(button,data) {
 }
 
 CaseAttrFun <- function(caseId,title=NULL,attrs=svalue(.rqda$.AttrNamesWidget)) {
-  if (length(attrs)==0) attrs <-  rqda_sel("select name from attributes where status=1")$name
+  if (length(attrs) == 0) attrs <-  rqda_sel("select name from attributes where status=1")$name
   if (is.null(attrs)) {
    gmessage(gettext("add attribute in Attrs Table first.", domain = "R-RQDA"),container=TRUE)
    } else {
@@ -187,7 +187,7 @@ saveFUN4FileAttr <- function(button,data) {
 }
 
 FileAttrFun <- function(fileId,title=NULL,attrs=svalue(.rqda$.AttrNamesWidget)) {
-  if (length(attrs)==0) attrs <-  rqda_sel("select name from attributes where status=1")$name
+  if (length(attrs) == 0) attrs <-  rqda_sel("select name from attributes where status=1")$name
   if (is.null(attrs)) gmessage(gettext("add attribute in Attrs Table first.", domain = "R-RQDA"),container=TRUE) else{
     Encoding(attrs) <- 'UTF-8'
     attrs2 <- data.frame(variable=attrs,value="NA",stringsAsFactors=FALSE)
@@ -210,7 +210,7 @@ AttrNamesUpdate <- function(Widget=.rqda$.AttrNamesWidget,sortByTime=FALSE,decre
   if (is_projOpen()) {
     attr <- rqda_sel(
                        "select name, date from attributes where status=1")
-    if (nrow(attr)==0) {
+    if (nrow(attr) == 0) {
       attr <- NULL
     } else {
       attr <- attr$name
@@ -227,7 +227,7 @@ AddAttrNames <- function(name,...) {
   if (name != "") {
     con <- .rqda$qdacon
     dup <- rqda_sel(sprintf("select name from attributes where name='%s'",name))
-    if (nrow(dup)==0) {
+    if (nrow(dup) == 0) {
       rqda_exe(sprintf("insert into attributes (name,status,date,owner) values ('%s', %i,%s, %s)",
                              name,1, shQuote(date()),shQuote(.rqda$owner)))
     }
@@ -409,13 +409,13 @@ viewFileAttr <- function() {
 #' \dontrun{
 #'   attr <- getAttr("case")
 #'   ## assuming there is a variable named atttribute1 in attr.
-#'   showSubset(subset(attr,attribute1==1))
+#'   showSubset(subset(attr,attribute1 == 1))
 #' }
 #' @export
 getAttr <- function(type=c("case","file"),attrs=svalue(.rqda$.AttrNamesWidget),subset) {
   if (is_projOpen()) {
   type <-  match.arg(type)
-  if (length(attrs)==0) attrs <- NULL
+  if (length(attrs) == 0) attrs <- NULL
   inClause <- ifelse(is.null(attrs),"",sprintf("where status=1 and variable in (%s)",paste(shQuote(attrs),collapse=",")))
   if (type == "case") {
     rqda_exe("delete from caseAttr where value='NA'")
@@ -432,7 +432,7 @@ getAttr <- function(type=c("case","file"),attrs=svalue(.rqda$.AttrNamesWidget),s
       DF <- merge(caseName,DF)
       class(DF) <- c("CaseAttr","data.frame")
     }}
-  } else if (type=="file") {
+  } else if (type == "file") {
     rqda_exe("delete from fileAttr where value='NA'")
     rqda_exe("delete from fileAttr where value=''") ## clean the table
     DF <- rqda_sel(sprintf("select variable,value, fileId from fileAttr %s",inClause))
@@ -449,7 +449,7 @@ getAttr <- function(type=c("case","file"),attrs=svalue(.rqda$.AttrNamesWidget),s
     }}
   }
   tt <- rqda_sel("select name, class from attributes")
-  attrs <- tt[tt$class=="numeric","name"]
+  attrs <- tt[tt$class == "numeric","name"]
   idx <- which(names(DF) %in% attrs)
   DF[,idx]<-as.data.frame(apply(DF[,idx,drop=FALSE],2,as.numeric))
   if (missing(subset)) DF else {
@@ -490,7 +490,7 @@ setAttrType <- function() {
     }
     w <- gwindow(gettext("Type of attribute", domain = "R-RQDA"),width = getOption("widgetSize")[1], height = getOption("widgetSize")[2])
     addHandlerKeystroke(w, function(h, ...) {
-      if(h$key=="\027") dispose(w)
+      if(h$key == "\027") dispose(w)
     })
     gp <- ggroup(horizontal=FALSE,container=w)
     rb <- gradio(items,idx,horizontal=TRUE, container=gp)
@@ -517,7 +517,7 @@ importAttr <- function(data, type='file', filename) {
     if (mode(attval) == "character" && Encoding(attval) != "UTF-8") attval <- iconv(attval, to='UTF-8')
     for (i in 1:nrow(dat)) {
       exist <- rqda_sel(sprintf("select value from fileAttr where variable='%s' and fileID=%i and status=1", att, fid[i]))
-      if (nrow(exist)==0 && !is.na(attval[i])) {
+      if (nrow(exist) == 0 && !is.na(attval[i])) {
         rqda_exe(sprintf("insert into fileAttr (variable, value, fileID, date, owner, status)
                           values ('%s','%s','%s','%s','rghuang',1)",att, attval[i], fid[i], as.character(date())))
         }

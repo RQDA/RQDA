@@ -5,19 +5,19 @@ list.deleted <- function(type=c("file","code","case","codecategory","filecategor
   if (!is_projOpen()) print("No project is open!")
   else {
     type <- match.arg(type)
-    if (type=="file") {
+    if (type == "file") {
       ans <- rqda_sel( "select name from source where status=0")
     }
-    else if (type=="code") {
+    else if (type == "code") {
       ans <- rqda_sel( "select name from freecode where status=0")
-    } else if (type=="case") {
+    } else if (type == "case") {
       ans <- rqda_sel( "select name from cases where status=0")
-    } else if (type=="codecategory") {
+    } else if (type == "codecategory") {
       ans <- rqda_sel( "select name from codecat where status=0")
-    } else if (type=="filecategory") {
+    } else if (type == "filecategory") {
       ans <- rqda_sel( "select name from filecat where status=0")
     }
-    if (nrow(ans)==0) {
+    if (nrow(ans) == 0) {
       sprintf("No %s is deleted.",type)
     }  else {
       Encoding(ans[,1]) <- "UTF-8"
@@ -116,7 +116,7 @@ pdelete <- function(type=c("file","code","case","codecategory","filecategory","c
     print("No project is open!")
   }  else {
     type <- match.arg(type)
-    if (type=="coding") {
+    if (type == "coding") {
       codingFun(ask=ask)
     } else {
       del <- list.deleted(type)

@@ -13,7 +13,7 @@ saveAsButt <- function(label=rqda_txt("Save Project As ..."),
 saveAs <- function(newpath=NULL) {
     oldpath <- dbGetInfo(.rqda$qdacon)$dbname
 
-    if (Encoding(oldpath)=="unknown")
+    if (Encoding(oldpath) == "unknown")
         Encoding(oldpath) <- "UTF-8"
 
     if (is.null(newpath)) {

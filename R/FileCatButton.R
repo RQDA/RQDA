@@ -22,7 +22,7 @@ DeleteFileCatButton <- function(label=gettext("Delete", domain = "R-RQDA")) {
       Selected <- svalue(.rqda$.FileCatWidget)
       Encoding(Selected) <- "UTF-8"
       catid <- rqda_sel(sprintf("select catid from filecat where status=1 and name='%s'",enc(Selected)))[,1]
-      if (length(catid) ==1) {
+      if (length(catid) == 1) {
         rqda_exe(sprintf("update filecat set status=0 where name='%s'",enc(Selected)))
         ## set status in table freecode to 0
         UpdateTableWidget(Widget=.rqda$.FileCatWidget,FromdbTable="filecat")
@@ -283,7 +283,7 @@ GetFileofCatWidgetMenu <- function()
   FileofCatWidgetMenu[[9]] <- gaction(gettext("Rename selected File", domain = "R-RQDA"), handler =function(h, ...) {
     if (is_projOpen(envir =.rqda,conName="qdacon")) {
       selectedFN <- svalue(.rqda$.FileofCat)
-      if (length(selectedFN)==0) {
+      if (length(selectedFN) == 0) {
         gmessage(gettext("Select a file first.", domain = "R-RQDA"),icon="error",con=TRUE)
       }
       else {
@@ -296,7 +296,7 @@ GetFileofCatWidgetMenu <- function()
           rename(selectedFN,NewFileName,"source")
           ## UpdateFileofCatWidget()
           Fnames <- .rqda$.FileofCat[]
-          Fnames[Fnames==selectedFN] <- NewFileName
+          Fnames[Fnames == selectedFN] <- NewFileName
           .rqda$.FileofCat[] <- Fnames
         }
         }

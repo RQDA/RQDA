@@ -1,7 +1,7 @@
 new_proj <- function(path, conName="qdacon",assignenv=.rqda,...) {
   ## success <- file.create(tmpNamme <- tempfile(pattern = "file"
   ## , tmpdir = dirname(path)))
-  success <- (file.access(names=dirname(path),mode=2)==0)
+  success <- (file.access(names=dirname(path),mode=2) == 0)
   if (!success) {
     gmessage(gettext("No write permission.", domain = "R-RQDA"),
              icon="error",container=TRUE)
@@ -29,7 +29,7 @@ new_proj <- function(path, conName="qdacon",assignenv=.rqda,...) {
       ## close con in assignmenv first.
       tryCatch(closeProject(conName=conName,assignenv=assignenv),
                error=function(e) {})
-      if (Encoding(path)=='UTF-8') {
+      if (Encoding(path) == 'UTF-8') {
         Encoding(path)='unknown'
         ## otherwise, it is illegible under windows when path contains
         ## chinese because it is in utf8 encoding
@@ -167,7 +167,7 @@ UpgradeTables <- function() {
     rqda_exe("update project set databaseversion='0.1.5'")
   }
   currentVersion <- rqda_sel("select databaseversion from project")[[1]]
-  if (currentVersion=="0.1.5") {
+  if (currentVersion == "0.1.5") {
     ##from="0.1.5"
     rqda_exe(
       paste("create table caseAttr (variable text, value text, caseID integer,",
@@ -213,7 +213,7 @@ UpgradeTables <- function() {
             "y1 integer, x2 integer, y2 integer, memo text, date text,",
             "dateM text, owner text,status integer)"))
   }
-  if (currentVersion=="0.1.6") {
+  if (currentVersion == "0.1.6") {
     rqda_exe("alter table project add column about text")
     rqda_exe(
       paste("update project set about='Database created by RQDA",
@@ -238,7 +238,7 @@ UpgradeTables <- function() {
             "y1 integer, x2 integer, y2 integer, memo text, date text,",
             "dateM text, owner text,status integer)"))
   }
-  if (currentVersion=="0.1.8") {
+  if (currentVersion == "0.1.8") {
     rqda_exe("update project set databaseversion='0.1.9'")
     rqda_exe("alter table freecode add column color text")
   }
@@ -362,7 +362,7 @@ ProjectMemoWidget <- function() {
                   height = getOption("widgetSize")[2])
 
     addHandlerKeystroke(gw, function(h, ...) {
-    if(h$key=="\027") dispose(gw)
+    if(h$key == "\027") dispose(gw)
     })
     mainIcon <- system.file("icon", "mainIcon.png", package = "RQDA")
     gw$set_icon(mainIcon)
@@ -403,7 +403,7 @@ ProjectMemoWidget <- function() {
     assign(".projmemocontent",tmp,envir=.rqda)
     prvcontent <- rqda_sel("select memo from project")[1,1]
     ## [1,1]turn data.frame to 1-length character. Existing content of memo
-    if (length(prvcontent)==0) {
+    if (length(prvcontent) == 0) {
       rqda_exe("replace into project (memo) values('')")
       prvcontent <- ""
       ## if there is no record in project table, it fails to save memo,

@@ -28,11 +28,11 @@ ImportFile <- function(paths, encoding = .rqda$encoding, con= .rqda$qdacon,...) 
       nextid <- ifelse(is.na(maxid),0+1, maxid+1)
       write <- FALSE
       ## check if the content should be written into con.
-      if (nextid==1) {
+      if (nextid == 1) {
         write <- TRUE
         ## if this is the first file, no need to worry about the duplication issue.
       } else {
-        if (nrow(rqda_sel(sprintf("select name from source where name='%s'",FnameUTF8)))==0) {
+        if (nrow(rqda_sel(sprintf("select name from source where name='%s'",FnameUTF8))) == 0) {
           ## no duplication file exists, then write.
           write <- TRUE
         } else {
@@ -132,7 +132,7 @@ ViewFileFunHelper <- function(FileName,hightlight=TRUE,codingTable=.rqda$codingT
   }
 
   addHandlerKeystroke(gw, function(h, ...) {
-    if(h$key=="\027") dispose(gw)
+    if(h$key == "\027") dispose(gw)
   })
 
   mainIcon <- system.file("icon", "mainIcon.png", package = "RQDA")
@@ -242,10 +242,10 @@ ViewFileFunHelper <- function(FileName,hightlight=TRUE,codingTable=.rqda$codingT
   ## gSignalConnect(tmp,"expose_event",LineNumber.expose) ## add line number to the widget
   ## does not work well yet
   enabled(button$AnnB) <- TRUE
-  enabled(button$MarCodB1) <- (length(svalue(.rqda$.codes_rqda))==1)
-  ## enabled(button$UnMarB1) <- (length(svalue(.rqda$.codes_rqda))==1)
-  enabled(button$MarCodB2) <- (length(svalue(.rqda$.CodeofCat))==1)
-  enabled(button$UnMarB2) <- (length(svalue(.rqda$.CodeofCat))==1)
+  enabled(button$MarCodB1) <- (length(svalue(.rqda$.codes_rqda)) == 1)
+  ## enabled(button$UnMarB1) <- (length(svalue(.rqda$.codes_rqda)) == 1)
+  enabled(button$MarCodB2) <- (length(svalue(.rqda$.CodeofCat)) == 1)
+  enabled(button$UnMarB2) <- (length(svalue(.rqda$.CodeofCat)) == 1)
   ## enabled(button$c2memobutton) <- TRUE
   addHandlerUnrealize(gw, handler = function(h,...) {
     enabled(button$AnnB) <- FALSE
@@ -276,7 +276,7 @@ EditFileFun <- function(FileNameWidget=.rqda$.fnames_rqda) {
       )
 
       addHandlerKeystroke(gw, function(h, ...) {
-        if(h$key=="\027") dispose(gw)
+        if(h$key == "\027") dispose(gw)
       })
       mainIcon <- system.file("icon", "mainIcon.png", package = "RQDA")
       gw$set_icon(mainIcon)
@@ -297,7 +297,7 @@ EditFileFun <- function(FileNameWidget=.rqda$.fnames_rqda) {
             ans <- c(selfirst = idx1, selend = idx2,x[3])## matrix of 3x N (N=nrow(mark_index))
           }) ## end of apply
           apply(idx,2,FUN=function(x) {
-            if (x[1]==x[2])  rqda_exe(sprintf("update coding set status=0 where rowid=%i",x[3])) else {
+            if (x[1] == x[2])  rqda_exe(sprintf("update coding set status=0 where rowid=%i",x[3])) else {
               Encoding(content) <- "UTF-8"
               rqda_exe(sprintf("update coding set seltext='%s',selfirst=%i, selend=%i where rowid=%i",
                                enc(substr(content,x[1],x[2]),"UTF-8"),x[1],x[2],x[3]))
@@ -316,7 +316,7 @@ EditFileFun <- function(FileNameWidget=.rqda$.fnames_rqda) {
             ans <- c(selfirst = idx1, selend = idx2,x[3])## matrix of 3x N (N=nrow(mark_index))
           }) ## end of apply
           apply(idxS,2,FUN=function(x) {
-            if (x[1]==x[2])  rqda_exe(sprintf("update coding2 set status=0 where rowid=%i",x[3])) else {
+            if (x[1] == x[2])  rqda_exe(sprintf("update coding2 set status=0 where rowid=%i",x[3])) else {
               Encoding(content) <- "UTF-8"
               rqda_exe(sprintf("update coding2 set seltext='%s',selfirst=%i, selend=%i where rowid=%i",
                                enc(substr(content,x[1],x[2]),"UTF-8"),x[1],x[2],x[3]))
@@ -335,7 +335,7 @@ EditFileFun <- function(FileNameWidget=.rqda$.fnames_rqda) {
             ans <- c(selfirst = idx1, selend = idx2,x["rowid"])
           }) ## end of apply
           apply(idx_case,2,FUN=function(x) {
-            if (x[1]==x[2])  rqda_exe(sprintf("update caselinkage set status=0 where rowid=%i",x["rowid"])) else {
+            if (x[1] == x[2])  rqda_exe(sprintf("update caselinkage set status=0 where rowid=%i",x["rowid"])) else {
               rqda_exe(sprintf("update caselinkage set selfirst=%i, selend=%i where rowid=%i",x[1],x[2],x[3]))
             }
           })## end of apply
@@ -440,11 +440,11 @@ write.FileList <- function(FileList,encoding=.rqda$encoding,con=.rqda$qdacon,...
     nextid <- ifelse(is.na(maxid),0+1, maxid+1)
     write <- FALSE
     ## check if the content should be written into con.
-    if (nextid==1) {
+    if (nextid == 1) {
       write <- TRUE
       ## if this is the first file, no need to worry about the duplication issue.
     } else {
-      if (nrow(rqda_sel(sprintf("select name from source where name='%s'",FnameUTF8)))==0) {
+      if (nrow(rqda_sel(sprintf("select name from source where name='%s'",FnameUTF8))) == 0) {
         ## no duplication file exists, then write.
         write <- TRUE
       } else {
@@ -458,7 +458,7 @@ write.FileList <- function(FileList,encoding=.rqda$encoding,con=.rqda$qdacon,...
     }
   }
   FileNames <- names(FileList)
-  FileNames[FileNames==""] <- as.character(1:sum(FileNames==""))
+  FileNames[FileNames == ""] <- as.character(1:sum(FileNames == ""))
 
   if (is_projOpen()) {
     for (i in 1:length(FileList)) {
@@ -487,7 +487,7 @@ FileNameWidgetUpdate <- function(FileNamesWidget=.rqda$.fnames_rqda,sort=TRUE,de
   wopt <- options(warn=-2)
   on.exit(options(wopt))
   source <- rqda_sel( "select name, date, id from source where status=1")
-  if (nrow(source)==0) {
+  if (nrow(source) == 0) {
     fnames <- NULL
   } else {
     Encoding(source$name) <- "UTF-8"
@@ -512,7 +512,7 @@ getFileIds <- function(condition=c("unconditional","case","filecategory","both")
   ## helper function
   unconditionalFun <- function(type)
   {
-    if (type=="selected") {
+    if (type == "selected") {
       selected <- svalue(.rqda$.fnames_rqda)
       ans <- rqda_sel(
         sprintf("select id from source where status=1 and name in (%s)",
@@ -523,11 +523,11 @@ getFileIds <- function(condition=c("unconditional","case","filecategory","both")
       if (type != "all") {
         fid_coded <- rqda_sel("select fid from coding where status=1 group by fid")$fid
       }
-      if (type=="all") {
+      if (type == "all") {
         ans <- allfid
-      } else if (type=="coded") {
+      } else if (type == "coded") {
         ans <- fid_coded
-      } else if (type=="uncoded") {
+      } else if (type == "uncoded") {
         ans <- allfid[! (allfid %in% fid_coded)]
       }
     }
@@ -535,7 +535,7 @@ getFileIds <- function(condition=c("unconditional","case","filecategory","both")
   }
 
   FidOfCaseFun <- function(type) {
-    if (type=="selected") {
+    if (type == "selected") {
       selected <- svalue(.rqda$.FileofCase)
       ans <- rqda_sel(
         sprintf("select id from source where status=1 and name in (%s)",
@@ -543,7 +543,7 @@ getFileIds <- function(condition=c("unconditional","case","filecategory","both")
         ))$id
     } else {
       Selected <- svalue(.rqda$.CasesNamesWidget)
-      if (length(Selected)==0) {
+      if (length(Selected) == 0) {
         ans <- NULL
       } else {
         if (length(Selected)>1) {gmessage(gettext("select one file category only.", domain = "R-RQDA"),container=TRUE)
@@ -554,7 +554,7 @@ getFileIds <- function(condition=c("unconditional","case","filecategory","both")
         fidofcase <- rqda_sel(sprintf("select fid from caselinkage where status=1 and caseid=%i",caseid))$fid
         ##         caseid <- rqda_sel(sprintf("select id from cases where status=1 and name in (%s)",
         ##                                                  paste(paste("'",Selected,"'",sep=""),collapse=",")))$id
-        ##         fidofcase <- rqda_sel(sprintf("select fid from caselinkage where status==1 and caseid in (%s)",
+        ##         fidofcase <- rqda_sel(sprintf("select fid from caselinkage where status == 1 and caseid in (%s)",
         ##                                                     paste(paste("'",caseid,"'",sep=""),collapse=",")))$fid
         ## roll back to rev 90
         allfid <-  unconditionalFun(type=type)
@@ -565,7 +565,7 @@ getFileIds <- function(condition=c("unconditional","case","filecategory","both")
   }
 
   FidOfCatFun <- function(type) {
-    if (type=="selected") {
+    if (type == "selected") {
       selected <- svalue(.rqda$.FileofCat)
       ans <- rqda_sel(
         sprintf("select id from source where status=1 and name in (%s)",
@@ -573,10 +573,10 @@ getFileIds <- function(condition=c("unconditional","case","filecategory","both")
         ))$id
     }
     allfid <- getFileIdsSets("filecategory","intersect")
-    if (type=="all") {ans <- allfid} else {
+    if (type == "all") {ans <- allfid} else {
       codedfid <- rqda_sel(sprintf("select fid from coding where status=1 and fid in (%s) group by fid",paste(shQuote(allfid),collapse=",")))$fid
-      if (type=="coded") {ans <- codedfid}
-      if (type=="uncoded") { ans <-  setdiff(allfid,codedfid)}
+      if (type == "coded") {ans <- codedfid}
+      if (type == "uncoded") { ans <-  setdiff(allfid,codedfid)}
     }
     ans
   }
@@ -604,32 +604,32 @@ getFileIds <- function(condition=c("unconditional","case","filecategory","both")
 getFileIdsSets <- function(set=c("case","filecategory"),relation=c("union","intersect")) {
   set <- match.arg(set)
   relation <- match.arg(relation)
-  if (set=="case") {
+  if (set == "case") {
     Selected <- svalue(.rqda$.CasesNamesWidget)
-    if (length(Selected)==0) {
+    if (length(Selected) == 0) {
       ans <- NULL
     } else {
       Selected <- gsub("'", "''", Selected)
-      if (relation=="union") {
+      if (relation == "union") {
         ans <- rqda_sel(sprintf("select fid from caselinkage where status=1 and caseid in (select id from cases where status=1 and name in (%s)) group by fid", paste(paste("'",Selected,"'",sep=""),collapse=",")))$fid
-      } else if (relation=="intersect") {
+      } else if (relation == "intersect") {
         ans <- rqda_sel(sprintf("select fid, count(fid) as n from caselinkage where status=1 and caseid in (select id from cases where status=1 and name in (%s)) group by fid having n= %i", paste(paste("'",Selected,"'",sep=""),collapse=","),length(Selected)))$fid
       }
     }
-  }## end of set=="case"
-  if (set=="filecategory") {
+  }## end of set == "case"
+  if (set == "filecategory") {
     Selected <- svalue(.rqda$.FileCatWidget)
-    if (length(Selected)==0) {
+    if (length(Selected) == 0) {
       ans <- NULL
     } else {
       Selected <- gsub("'", "''", Selected)
-      if (relation=="union") {
+      if (relation == "union") {
         ans <- rqda_sel(sprintf("select fid from treefile where status=1 and catid in (select catid from filecat where status=1 and name in (%s)) group by fid", paste(paste("'",Selected,"'",sep=""),collapse=",")))$fid
-      } else if (relation=="intersect") {
+      } else if (relation == "intersect") {
         ans <- rqda_sel(sprintf("select fid, count(fid) as n from treefile where status=1 and catid in (select catid from filecat where status=1 and name in (%s)) group by fid having n= %i", paste(paste("'",Selected,"'",sep=""),collapse=","),length(Selected)))$fid
       }
     }
-  } ## end of set=="filecategory"
+  } ## end of set == "filecategory"
   if (is.null(ans)) ans <- integer(0)
   class(ans) <- c("RQDA.vector","fileId")
   ans
@@ -644,7 +644,7 @@ AddToFileCategory <- function(Widget=.rqda$.fnames_rqda,updateWidget=TRUE) {
   Encoding(query$file) <- "UTF-8"
   ## select a F-cat name -> F-cat id
   Fcat <- rqda_sel("select catid, name from filecat where status=1")
-  if (nrow(Fcat)==0) {gmessage(gettext("Add File Category first.", domain = "R-RQDA"),container=TRUE)} else{
+  if (nrow(Fcat) == 0) {gmessage(gettext("Add File Category first.", domain = "R-RQDA"),container=TRUE)} else{
     Encoding(Fcat$name) <- "UTF-8"
     Selecteds <- gselect.list(Fcat$name,multiple=TRUE)
     if (length(Selecteds)>0 && Selecteds != "") {
@@ -723,7 +723,7 @@ viewPlainFile <- function(FileNameWidget=.rqda$.fnames_rqda) {
                     width = getOption("widgetSize")[1], height = getOption("widgetSize")[2])
 
       addHandlerKeystroke(gw, function(h, ...) {
-        if(h$key=="\027") dispose(gw)
+        if(h$key == "\027") dispose(gw)
       })
       mainIcon <- system.file("icon", "mainIcon.png", package = "RQDA")
       gw$set_icon(mainIcon)

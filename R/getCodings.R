@@ -65,7 +65,7 @@ getCodingsFromFiles <- function(Fid, order=c("fname","ftime","ctime"),
                        "(%s) %s"), codingTable, codingTable, codingTable,
                  codingTable, paste(Fid,collapse=","), order))
 
-    if (nrow(retrieval)==0) {
+    if (nrow(retrieval) == 0) {
         gmessage( rqda_txt("No Coding associated with the selected code."),
                   container=TRUE)
     } else {
@@ -92,7 +92,7 @@ getCodingsFromFiles <- function(Fid, order=c("fname","ftime","ctime"),
         )
 
     addHandlerKeystroke(.gw, function(h, ...) {
-    if(h$key=="\027") dispose(.gw)
+    if(h$key == "\027") dispose(.gw)
     })
         mainIcon <- system.file("icon", "mainIcon.png", package = "RQDA")
         .gw$set_icon(mainIcon)
@@ -112,7 +112,7 @@ getCodingsFromFiles <- function(Fid, order=c("fname","ftime","ctime"),
 
             if (!is.null(FileName)) {
                 Encoding(FileName) <- "UTF-8"
-                retrieval$fname[retrieval$fid==i] <- FileName
+                retrieval$fname[retrieval$fid == i] <- FileName
             } else {
                 retrieval <- retrieval[retrieval$fid != i,]
                 rqda_exe(sprintf("update %s set status=0 where fid=%i",

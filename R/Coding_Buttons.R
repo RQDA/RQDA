@@ -121,7 +121,7 @@ MarkCodeFun <- function(codeListWidget=".codes_rqda",codingTable="coding") {
           Exist1 <-  rqda_sel(sprintf("select %s.rowid, selfirst, selend,freecode.name from %s, freecode where cid=%i and fid=%i and %s.status=1 and cid=freecode.id",codingTable, codingTable,currentCid,currentFid,codingTable))
           DAT <- data.frame(cid=currentCid,fid=currentFid,seltext=ans$text,selfirst=ans$start,selend=ans$end,status=1,owner=.rqda$owner,date=date(),memo=NA,stringsAsFactors=FALSE)
           DAT$seltext <- enc(DAT$seltext)
-          if (nrow(Exist1)==0) {
+          if (nrow(Exist1) == 0) {
             rowid <- NextRowId(codingTable)
             success <- try(rqda_exe( sprintf("insert into %s (cid,fid, seltext, selfirst, selend, status, owner, date) values (%s, %s, '%s', %s, %s, %s, '%s', '%s') ",
                                                            codingTable,DAT$cid, DAT$fid,DAT$seltext, DAT$selfirst, DAT$selend, 1, .rqda$owner, as.character(date()))),silent=TRUE) > 0
@@ -134,12 +134,12 @@ MarkCodeFun <- function(codeListWidget=".codes_rqda",codingTable="coding") {
             Exist <- Exist1[,c("selfirst","selend","rowid")]
             Relations <- apply(Exist,1,FUN= function(x) relation(x[c("selfirst","selend")],c(ans$start,ans$end)))
             Exist$Relation <- sapply(Relations,FUN= function(x)x$Relation)
-            if (!any(Exist$Relation=="exact")) {
+            if (!any(Exist$Relation == "exact")) {
               ## if they are axact, do nothing; -> if they are not exact, do something.
               Exist$WhichMin <- sapply(Relations,FUN= function(x)x$WhichMin)
               Exist$Start <- sapply(Relations,FUN= function(x)x$UnionIndex[1])
               Exist$End <- sapply(Relations,FUN= function(x)x$UnionIndex[2])
-              if (all(Exist$Relation=="proximity")) {
+              if (all(Exist$Relation == "proximity")) {
                 rowid <- NextRowId(codingTable)
                 success <- try(rqda_exe( sprintf("insert into %s (cid,fid, seltext, selfirst, selend, status, owner, date) values (%s, %s, '%s', %s, %s, %s, '%s', '%s') ",
                                                                codingTable,DAT$cid, DAT$fid, DAT$seltext, DAT$selfirst, DAT$selend, 1, .rqda$owner, as.character(date()))),silent=TRUE) > 0
@@ -149,11 +149,11 @@ MarkCodeFun <- function(codeListWidget=".codes_rqda",codingTable="coding") {
                 } else {gmessage(gettext("Fail to write to data base.", domain = "R-RQDA"),con=TRUE)}
                 ## if there are no overlap in any kind, just write to database; otherwise, pass to else{}.
               } else {
-                del1 <-(Exist$Relation =="inclusion" & (is.na(Exist$WhichMin) | Exist$WhichMin==2))
+                del1 <-(Exist$Relation == "inclusion" & (is.na(Exist$WhichMin) | Exist$WhichMin == 2))
                 ## if overlap or inclusion [old nested in new]
                 ## then the original coding should be deleted
                 ## then write the new coding to table
-                del2 <- Exist$Relation =="overlap"
+                del2 <- Exist$Relation == "overlap"
                 del <- (del1 | del2)
                 if (any(del)) {
                   Sel <- c(min(Exist$Start[del]), max(Exist$End[del]))
@@ -162,7 +162,7 @@ MarkCodeFun <- function(codeListWidget=".codes_rqda",codingTable="coding") {
                   rqda_exe(sprintf("delete from %s where rowid in (%s)", codingTable,paste(Exist$rowid[del],collapse=",",sep="")))
                   buffer <- W$buffer
                   for (i in Exist1$rowid[del]) {
-                    code <- Exist1[Exist1$rowid==i,"name"]
+                    code <- Exist1[Exist1$rowid == i,"name"]
                     m <- buffer$GetMark(sprintf("%s.1", i))
                     pos <- buffer$GetIterAtMark(m)$iter$GetOffset()
                     DeleteButton(widget=W,label=sprintf("<%s>",code),index=pos,direction="backward")
@@ -217,7 +217,7 @@ UnMarkCodeFun <- function(codeListWidget=.rqda$.codes_rqda,codingTable="coding")
     if (!is.null(idx1)) {
       ## codeListWidget <- get(codeListWidget,envir=.rqda)
       SelectedCode <- svalue(codeListWidget)
-      if (length(SelectedCode)==0) {
+      if (length(SelectedCode) == 0) {
         gmessage(gettext("Select a code first.", domain = "R-RQDA"),con=TRUE)
       } else {
         Encoding(SelectedCode) <- "UTF-8"
@@ -233,7 +233,7 @@ UnMarkCodeFun <- function(codeListWidget=.rqda$.codes_rqda,codingTable="coding")
         ## should only work with those related to current code and current file.
         rowid <- codings_index$rowid[(codings_index$selfirst  >= idx1$startN) &
                                        (codings_index$selend  <= idx1$endN)]
-        if (length(rowid)==0) {
+        if (length(rowid) == 0) {
           gmessage(gettext("Select a code and one of its codings exactly first.", domain = "R-RQDA"),con=TRUE)
         } else {
           for (j in rowid) {
@@ -338,7 +338,7 @@ CodingMemoButton <- function(label=gettext("C2Memo", domain = "R-RQDA"))
     width = getOption("widgetSize")[1], height = getOption("widgetSize")[2])
     
         addHandlerKeystroke(.codingmemo, function(h, ...) {
-        if(h$key=="\027") dispose(.codingmemo)
+        if(h$key == "\027") dispose(.codingmemo)
         })
     assign(".codingmemo",.codingmemo, envir=.rqda)
     .codingmemo <- get(".codingmemo",envir=.rqda)
@@ -356,7 +356,7 @@ CodingMemoButton <- function(label=gettext("C2Memo", domain = "R-RQDA"))
     prvcontent <- rqda_sel(sprintf("select memo from coding where rowid=%i",rowid))[1,1]
     if (is.na(prvcontent)) prvcontent <- ""
     Encoding(prvcontent) <- "UTF-8"
-    if (prvcontent=="") assign("NewCodingMemo",TRUE,envir=.rqda)
+    if (prvcontent == "") assign("NewCodingMemo",TRUE,envir=.rqda)
     W <- get(".cdmemocontent",envir=.rqda)
     insert(W, prvcontent, do.newline = FALSE, where = "beginning",
            font.attr=list(size="large"))
@@ -373,7 +373,7 @@ CodingMemoButton <- function(label=gettext("C2Memo", domain = "R-RQDA"))
       if (is.null(sel_index)) {gmessage(gettext("Open a file first!", domain = "R-RQDA"),container=TRUE)}
       else {
         SelectedCode <- svalue(.rqda$.codes_rqda)
-        if (length(SelectedCode)==0) gmessage(gettext("select a code first.", domain = "R-RQDA"),container=TRUE) else {
+        if (length(SelectedCode) == 0) gmessage(gettext("select a code first.", domain = "R-RQDA"),container=TRUE) else {
           Encoding(SelectedCode) <- "UTF-8"
           SelectedCode2 <- enc(SelectedCode,"UTF-8")
           currentCid <-  rqda_sel(sprintf("select id from freecode where name='%s'",SelectedCode2))[,1]
@@ -409,7 +409,7 @@ FreeCode_RenameButton <- function(label=gettext("Rename", domain = "R-RQDA"),Cod
     if (is_projOpen(envir=.rqda,"qdacon")) {
       ## if project is open, then continue
       selectedCodeName <- svalue(CodeNamesWidget)
-      if (length(selectedCodeName)==0) {
+      if (length(selectedCodeName) == 0) {
         gmessage(gettext("Select a code first.", domain = "R-RQDA"),icon="error",container=TRUE)
       }
       else {
@@ -604,8 +604,8 @@ GetCodesNamesWidgetMenu <- function()
     freq <- rqda_sel("select count(cid) as freq, freecode.name, freecode.status from freecode left join coding on cid=freecode.id group by freecode.name order by freq desc")
     if (nrow(freq)>0) {
       Encoding(freq$name) <- "UTF-8"
-      #freq <- subset(freq, status==1)
-      freq <- freq[freq$status==1, ]
+      #freq <- subset(freq, status == 1)
+      freq <- freq[freq$status == 1, ]
       CodeNamesWidget=.rqda$.codes_rqda
       CodeNamesWidget[] <- freq$name
     }
@@ -615,8 +615,8 @@ GetCodesNamesWidgetMenu <- function()
     freq <- rqda_sel("select count(cid) as freq, freecode.name, freecode.status from freecode left join coding on cid=freecode.id group by freecode.name order by freq asc")
     if (nrow(freq)>0) {
       Encoding(freq$name) <- "UTF-8"
-      #freq <- subset(freq, status==1)
-      freq <- freq[freq$status==1, ]
+      #freq <- subset(freq, status == 1)
+      freq <- freq[freq$status == 1, ]
       CodeNamesWidget=.rqda$.codes_rqda
       CodeNamesWidget[] <- freq$name
     }

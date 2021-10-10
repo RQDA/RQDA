@@ -126,7 +126,7 @@ setFont <- function(default="Sans 11") {
                 height=(gdkScreenHeight()/10),
                 parent=getOption("widgetCoordinate"))
   addHandlerKeystroke(gw, function(h, ...) {
-      if(h$key=="\027") dispose(gw)
+      if(h$key == "\027") dispose(gw)
   })
   g <-glayout(container=gw, homogeneous=TRUE)
   g[1,1:2] <- font

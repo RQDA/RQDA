@@ -15,28 +15,28 @@ insertCoding <- function(fid, cid, start, end, fulltext) {
   DAT <- data.frame(cid=cid,fid=fid,seltext=substr(fulltext,start+1,end),selfirst=start,selend=end,status=1,owner=.rqda$owner,date=date(),memo=NA,stringsAsFactors=FALSE)
   DAT$seltext <- enc(DAT$seltext)
 
-  if (nrow(Exist1)==0) {
+  if (nrow(Exist1) == 0) {
     try(rqda_exe(sprintf("insert into coding (cid,fid, seltext, selfirst, selend, status, owner, date) values (%s, %s, '%s', %s, %s, %s, '%s', '%s') ",
                            DAT$cid, DAT$fid,DAT$seltext, DAT$selfirst, DAT$selend, 1, .rqda$owner, as.character(date()))),silent=TRUE)
   } else {
     Exist <- Exist1[,c("selfirst","selend","rowid")]
     Relations <- apply(Exist,1,FUN=function(x) relation(x[c("selfirst","selend")],c(start,end)))
     Exist$Relation <- sapply(Relations,FUN=function(x)x$Relation)
-    if (!any(Exist$Relation=="exact")) {
+    if (!any(Exist$Relation == "exact")) {
       ## if they are axact, do nothing; -> if they are not exact, do something.
       Exist$WhichMin <- sapply(Relations,FUN=function(x)x$WhichMin)
       Exist$Start <- sapply(Relations,FUN=function(x)x$UnionIndex[1])
       Exist$End <- sapply(Relations,FUN=function(x)x$UnionIndex[2])
-      if (all(Exist$Relation=="proximity")) {
+      if (all(Exist$Relation == "proximity")) {
         rowid <- NextRowId("coding")
         try(rqda_exe(sprintf("insert into coding (cid,fid, seltext, selfirst, selend, status, owner, date) values (%s, %s, '%s', %s, %s, %s, '%s', '%s') ",
                               DAT$cid, DAT$fid, DAT$seltext, DAT$selfirst, DAT$selend, 1, .rqda$owner, as.character(date()))),silent=TRUE)
       } else {
-        del1 <-(Exist$Relation =="inclusion" & (is.na(Exist$WhichMin) | Exist$WhichMin==2))
+        del1 <-(Exist$Relation == "inclusion" & (is.na(Exist$WhichMin) | Exist$WhichMin == 2))
         ## if overlap or inclusion [old nested in new]
         ## then the original coding should be deleted
         ## then write the new coding to table
-        del2 <- Exist$Relation =="overlap"
+        del2 <- Exist$Relation == "overlap"
         del <- (del1 | del2)
         if (any(del)) {
           Sel <- c(min(Exist$Start[del]), max(Exist$End[del]))
@@ -67,7 +67,7 @@ codingBySearchOneFile <- function(pattern, fid, cid, seperator, concatenate, ...
         residx <- unique(findInterval(sidx,sort(c(idx1,idx2))))
         idx <- (residx + 1)/2
         if (concatenate)
-            removeidx <- which(diff(idx)==1)
+            removeidx <- which(diff(idx) == 1)
         else
             removeidx <- NULL
         

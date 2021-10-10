@@ -168,7 +168,7 @@ AddNewFileFun <- function() {
                   height = getOption("widgetSize")[2])
 
     addHandlerKeystroke(gw, function(h, ...) {
-      if(h$key=="\027") dispose(gw)
+      if(h$key == "\027") dispose(gw)
     })
 
     mainIcon <- system.file("icon", "mainIcon.png", package = "RQDA")
