@@ -707,8 +707,7 @@ HL_AllCodings <- function(codingTable = "coding") {
 
 ##addAnnoTable <- function() {
 ##  tryCatch(
-##  rqda_exe("create table annotation (fid integer, position integer, annotation text, owner text, date text, dateM text, ##status integer)"), error = function(e) {
-})
+##  rqda_exe("create table annotation (fid integer, position integer, annotation text, owner text, date text, dateM text, ##status integer)"), error = function(e) {})
 ##} ##rqda_exe("drop table annotation")
 
 NextRowId <- function(table) {
