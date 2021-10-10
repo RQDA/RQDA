@@ -41,7 +41,7 @@ exportCodedFile <- function(file, fid, closeAfter = TRUE) {
         shift <- shift + nincrease
     } ## end of loop over i
     ans <- paste(ans, collapse = "|", sep = "")
-    ans <-gsub("\n", "<br>", ans)
+    ans <- gsub("\n", "<br>", ans)
     file <- file(file, open = "w", encoding = "UTF-8")
     cat("<HEAD><META HTTP-EQUIV='CONTENT-TYPE' CONTENT='text/html; charset = UTF-8'><TITLE>Coded file exported by RQDA.</TITLE><META NAME='AUTHOR' CONTENT='RQDA'>",
         file = file, append = FALSE)

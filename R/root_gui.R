@@ -88,7 +88,7 @@ RQDA <- function() {
       container = .proj_gui, handler = function(h, ...) {
         gtext(
           paste(readLines((system.file("License", package = "RQDA")),
-                          warn = FALSE) , collapse = "\n"),
+                          warn = FALSE), collapse = "\n"),
           container = gwindow(title = "License"))
       })
     glabel(
@@ -109,9 +109,9 @@ RQDA <- function() {
 
     #### GUI for FILES #########################################################
 
-    ##".fnames_rqda"<-gtable("Click Here to see the File list.",
+    ##".fnames_rqda"<- gtable("Click Here to see the File list.",
     ## container = .files_pan, multiple = TRUE)
-    ##.fnames_rqda[] <-NULL # get around of the text argument.
+    ##.fnames_rqda[] <- NULL # get around of the text argument.
 
     ".files_pan" <- gpanedgroup(container = .nb_rqdagui,
                                 horizontal = FALSE,
@@ -187,7 +187,7 @@ RQDA <- function() {
 
     ".CodeofCat" <- gtable(character(0), container = .Ccat_PW,
                            expand = TRUE, multiple = TRUE)
-    names(.CodeofCat)<-rqda_txt("Codes of This Category")
+    names(.CodeofCat)<- rqda_txt("Codes of This Category")
 
     .codecat_buttons[1, 1] <- AddCodeCatButton(rqda_txt("Add"))
     .codecat_buttons[1, 2] <- DeleteCodeCatButton(rqda_txt("Delete"))
@@ -221,7 +221,7 @@ RQDA <- function() {
 
     ".FileofCase" <- gtable(character(0), container = .case_PW,
                             expand = TRUE, multiple = TRUE)
-    names(.FileofCase) <-rqda_txt("Files of This Case")
+    names(.FileofCase) <- rqda_txt("Files of This Case")
 
     .case_buttons[1, 1] <- AddCaseButton()
     .case_buttons[1, 2] <- DeleteCaseButton()
@@ -293,7 +293,7 @@ RQDA <- function() {
     ##  ".fsearch_rqda" <- gtable(rqda_txt("Click Here to see the File list.",
     ##   domain = "R-RQDA"), container = .fsearch_pan, multiple = TRUE,
     ##    expand = TRUE)
-    ##  .fsearch_rqda[] <-NULL # get around of the text argument.
+    ##  .fsearch_rqda[] <- NULL # get around of the text argument.
     ##  names(.fsearch_rqda) <- "Files Search"
 
 
@@ -370,11 +370,11 @@ RQDA <- function() {
     ##########################
     ### set the positions
     ###  svalue(.codes_pan) <- 0.09
-    ###  svalue(.codecat_pan)<-0.09
-    ###  svalue(.filecat_pan)<-0.09
-    ###  svalue(.case_pan)<-0.04
-    ###  svalue(.attr_pan)<-0.04
-    ###  svalue(.journal_pan)<-0.04
+    ###  svalue(.codecat_pan)<- 0.09
+    ###  svalue(.filecat_pan)<- 0.09
+    ###  svalue(.case_pan)<- 0.04
+    ###  svalue(.attr_pan)<- 0.04
+    ###  svalue(.journal_pan)<- 0.04
     ### The effect depends on the screen size, which makes
     ###  it difficult to look elegant for all PCs.
     ##########################

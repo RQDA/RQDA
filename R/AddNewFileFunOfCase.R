@@ -1,5 +1,4 @@
-AddNewFileFunOfCase <- function()
-{
+AddNewFileFunOfCase <- function() {
     updateCaseLink <- function(fid) {
         SelectedCase <- svalue(.rqda$.CasesNamesWidget)
         SelectedCase <- enc(SelectedCase, "UTF-8")
@@ -7,7 +6,7 @@ AddNewFileFunOfCase <- function()
         content <- rqda_sel(sprintf("select file from source where id=%s", fid))$file
         Encoding(content) <- "UTF-8"
         selend <- nchar(content)
-        Dat <- data.frame(caseid = caseid, fid = fid, selfirst = 0, selend = selend, status = 1, owner=.rqda$owner, date = date(), memo = NA)
+        Dat <- data.frame(caseid = caseid, fid = fid, selfirst = 0, selend = selend, status = 1, owner = .rqda$owner, date = date(), memo = NA)
         rqda_wrt("caselinkage", Dat)
         UpdateFileofCaseWidget()
     }

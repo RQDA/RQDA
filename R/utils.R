@@ -53,7 +53,7 @@ ScrollToItem <- function(widget, item = svalue(widget)) {
     Encoding(items) <- "UTF-8"
     idx <- as.character(which(items %in% item) - 1)
     if (length(idx) != 0) {
-      path <-gtkTreePathNewFromString(idx)
+      path <- gtkTreePathNewFromString(idx)
       gtkTreeViewScrollToCell(widget$widget, path, use.align = TRUE, row.align = 0.07)
     }}}
 
@@ -76,14 +76,14 @@ OrderByTime <- function(date, decreasing = FALSE) {
   ##     ## should rewrite it when project merge is provided.
   ##   } else{
   ## Work for R.2.8.0 or above for Dateclass, so convert to character
-  oldLCTIME<- Sys.getlocale("LC_TIME")
+  oldLCTIME <- Sys.getlocale("LC_TIME")
   Sys.setlocale("LC_TIME", "C")
   on.exit(Sys.setlocale("LC_TIME", oldLCTIME))
   Newdate <- as.character(strptime(date, "%a %b %d %H:%M:%S %Y"))
   permutation <- order(Newdate, decreasing = decreasing)
   ##  }
 }
-## dd<- rqda_sel("select date from source")$date
+## dd <- rqda_sel("select date from source")$date
 ## sort(dd) == dd[order(dd)] ## but the order is not correct.
 ## dd[OrderByTime(dd)]
 
@@ -101,7 +101,7 @@ save_memo <- function(W = W, dbTable = dbTable, Selected = Selected, prefix = pr
 
 MemoWidget <- function(prefix, widget, dbTable) {
   ## prefix of window tile. E.g. "Code" ->  tile of gwindow becomes "Code Memo:"
-  ## widget of the F-cat/C-cat list, such as widget=.rqda$.fnames_rqda
+  ## widget of the F-cat/C-cat list, such as widget = .rqda$.fnames_rqda
   if (is_projOpen(envir = .rqda, "qdacon")) {
     Selected <- svalue(widget)
     if (length(Selected) == 0) {
@@ -272,7 +272,7 @@ print.Info4Widget <- function(x, ...) {
     if (nrow(x) == 0)
         gmessage(gettext("No Information is collected.", domain = "R-RQDA"), container = TRUE)
     else {
-        field.name <-attr(x, "field.name")
+        field.name <- attr(x, "field.name")
         .gw <- gwindow(title = attr(x, "descr"), parent = getOption("widgetCoordinate"),
                        width = getOption("widgetSize")[1], height = getOption("widgetSize")[2])
         mainIcon <- system.file("icon", "mainIcon.png", package = "RQDA")
@@ -343,7 +343,7 @@ getCodingTable <- function() {
 }
 
 #' @export
-summaryCodings <-function(byFile = FALSE, ...) {
+summaryCodings <- function(byFile = FALSE, ...) {
   if (is_projOpen()) {
     Codings <- getCodingTable()
     if (nrow(Codings) > 0) {
@@ -442,7 +442,7 @@ print.summaryCodings <- function(x, ...) {
 searchFiles <- function(pattern, content = FALSE, Fid = NULL, Widget = NULL, is.UTF8 = FALSE) {
 ##searchFiles("file like '%Xin Min Wan Bao%'")
 ##searchFiles("name like '%Wu Quan Fa%'")
-##searchFiles("file like '%Xin Min Wan Bao%'", Widget=.rqda$.fnames_rqda)
+##searchFiles("file like '%Xin Min Wan Bao%'", Widget = .rqda$.fnames_rqda)
     if (is_projOpen()) {
         if (!is.UTF8) {
             pattern <- iconv(pattern, to = "UTF-8")
@@ -478,10 +478,10 @@ RunOnSelected <- function(x, multiple = TRUE, expr, enclos = parent.frame(), tit
   addHandlerKeystroke(g, function(h, ...) {
     if (h$key == "\027") dispose(g)
   })
-  x1<-ggroup(FALSE, container = g)
+  x1 <- ggroup(FALSE, container = g)
   ##x1$parent$parent$parent$SetTitle(title)
   ##x1$parent$parent$parent$SetDefaultSize(200, 500)
-  x2<-gtable(x, multiple = multiple, container = x1, expand = TRUE)
+  x2 <- gtable(x, multiple = multiple, container = x1, expand = TRUE)
   gbutton(gettext("Cancel", domain = "R-RQDA"), container = x1, handler = function(h, ...) {
     dispose(x1)
   })
@@ -537,12 +537,12 @@ gselect.list <- function(list, multiple = TRUE, title = NULL, height = getOption
   ## Thanks go to John Verzani for his help.
   if (is.null(title)) title <- ifelse(multiple, "Select one or more", "Select one")
   helper <- function() {
-      ans<-new.env()
+      ans <- new.env()
        dlg <- gbasicdialog(title = title, handler = function(h, ...) {
           value <- svalue(x2)
           assign("selected", value, envir = h$action$env)
           }, action = list(envir = ans))
-      x2<-gtable(list, multiple = multiple, container = dlg, expand = TRUE)
+      x2 <- gtable(list, multiple = multiple, container = dlg, expand = TRUE)
       #dlg$widget$Move(size(.rqda$.root_rqdagui)[1], 2)
       size(dlg) <- c(width, height)
       visible(dlg, set = TRUE)
@@ -780,8 +780,8 @@ ShowFileProperty <- function(Fid = getFileIds(type = "selected"), focus = TRUE) 
     # not sure what the tryCatch below is supposed to catch.
     #tryCatch(svalue(.rqda$.sfp) <- val, error = function(e) {
       gw <- gwindow(gettext("File Property", domain = "R-RQDA"),
-            width = getOption("widgetSize")[1]*.5,
-            height = getOption("widgetSize")[2]*.5)
+            width = getOption("widgetSize")[1] * .5,
+            height = getOption("widgetSize")[2] * .5)
       addHandlerKeystroke(gw, function(h, ...) {
         if (h$key == "\027") dispose(gw)
       })
@@ -789,7 +789,7 @@ ShowFileProperty <- function(Fid = getFileIds(type = "selected"), focus = TRUE) 
       gw$set_icon(mainIcon)
       sfp <- glabel(val, container = gw)
       assign(".sfp", sfp, envir = .rqda)
-      "focus<-" (gw, value = focus)
+      "focus <-" (gw, value = focus)
     #})
 
   }}
@@ -840,7 +840,7 @@ nCodedByTwo <- function(FUN, codeList = NULL, print = TRUE, ...) {
     if (is.null(codeList)) {
         codeList <- gselect.list(Cid_Name$name, multiple = TRUE)
     }
-    if (length(codeList)<2) {
+    if (length(codeList) < 2) {
         stop("The codeList should be a vector of length 2 or greater.", domain = "R-RQDA")
     } else {
         cidList <- Cid_Name$id[match(codeList, Cid_Name$name)]

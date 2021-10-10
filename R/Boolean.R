@@ -41,7 +41,7 @@ print.codingsByOne <- function(x, ...)
     if (nrow(x) == 0)
       gmessage(gettext("No Codings.", domain = "R-RQDA"), container = TRUE)
     else {
-        x <-x[order(x$fid, x$index1, x$index2), ]
+        x <- x[order(x$fid, x$index1, x$index2), ]
         fid <- unique(x$fid)
         Nfiles <- length(fid)
         Ncodings <- nrow(x)
@@ -470,7 +470,7 @@ not <- function(CT1, CT2)
 ##                 }
 ##               } ## end for j
 
-##               inidx<- Relation %in% c("inclusion")
+##               inidx <- Relation %in% c("inclusion")
 ##               ans <- sapply(relAll[inidx], function(x) x$OverlapIndex)
 ##               ans <- sort(unlist(c(CT1[i, c("index1", "index2"), drop = TRUE], ans)))
 ##               ridx <- c(ridx, rep(i, length(ans)/2))

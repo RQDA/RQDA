@@ -1,4 +1,4 @@
-CaseNamesUpdate <- function(CaseNamesWidget=.rqda$.CasesNamesWidget, 
+CaseNamesUpdate <- function(CaseNamesWidget = .rqda$.CasesNamesWidget, 
                             sortByTime = FALSE, decreasing = FALSE, ...)
 {
   if (is_projOpen()) {
@@ -20,7 +20,7 @@ CaseNamesUpdate <- function(CaseNamesWidget=.rqda$.CasesNamesWidget,
 
 #################
 ###############
-AddCase <- function(name, conName = "qdacon", assignenv=.rqda, ...) {
+AddCase <- function(name, conName = "qdacon", assignenv = .rqda, ...) {
   if (name != "") {
     con <- get(conName, assignenv)
     maxid <- rqda_sel("select max(id) from cases")[[1]]
@@ -41,7 +41,7 @@ AddCase <- function(name, conName = "qdacon", assignenv=.rqda, ...) {
 }
 
 
-AddFileToCaselinkage <- function(Widget=.rqda$.fnames_rqda) {
+AddFileToCaselinkage <- function(Widget = .rqda$.fnames_rqda) {
   ## filenames -> fid -> selfirst = 0; selend = nchar(filesource)
   filename <- svalue(Widget)
   ## Encoding(filename) <- "unknown"
@@ -64,7 +64,7 @@ AddFileToCaselinkage <- function(Widget=.rqda$.fnames_rqda) {
               exist <- rqda_sel(sprintf("select fid from caselinkage where status = 1 and fid in (%s) and caseid=%i", paste("'", fid, "'", sep = "", collapse = ", "), i))
               if (nrow(exist) != length(fid)) {
                   ## write only when the selected file associated with specific case is not in the caselinkage table
-                  DAT <- data.frame(caseid = caseid, fid = fid[!fid %in% exist$fid], selfirst = 0, selend = selend[!fid %in% exist$fid], status = 1, owner=.rqda$owner, date = date(), memo='')
+                  DAT <- data.frame(caseid = caseid, fid = fid[!fid %in% exist$fid], selfirst = 0, selend = selend[!fid %in% exist$fid], status = 1, owner = .rqda$owner, date = date(), memo="")
                   success <- rqda_wrt("caselinkage", DAT)
                   if (!success) gmessage(sprintf(gettext("Fail to write to database for case with id %i", domain = "R-RQDA"), i))
               }}
@@ -74,7 +74,7 @@ AddFileToCaselinkage <- function(Widget=.rqda$.fnames_rqda) {
 
 
 
-UpdateFileofCaseWidget <- function(con=.rqda$qdacon, Widget=.rqda$.FileofCase, sortByTime = FALSE, ...) {
+UpdateFileofCaseWidget <- function(con = .rqda$qdacon, Widget = .rqda$.FileofCase, sortByTime = FALSE, ...) {
   Selected <- svalue(.rqda$.CasesNamesWidget)
   if (length(Selected) != 0) {
     caseid <- rqda_sel(sprintf("select id from cases where status = 1 and name='%s'", 
@@ -116,8 +116,8 @@ HL_Case <- function() {
           idx[, "selfirst"] <- sapply(idx[, "selfirst"], FUN = function(x) x + sum(allidx <= x))
           idx[, "selend"] <- sapply(idx[, "selend"], FUN = function(x) x + sum(allidx <= x))
         }
-        ClearMark(.rqda$.openfile_gui , 0 , max(idx$selend), clear.fore.col = FALSE, clear.back.col = TRUE)
-        HL(.rqda$.openfile_gui, index = idx, fore.col = NULL, back.col=.rqda$back.col)
+        ClearMark(.rqda$.openfile_gui, 0, max(idx$selend), clear.fore.col = FALSE, clear.back.col = TRUE)
+        HL(.rqda$.openfile_gui, index = idx, fore.col = NULL, back.col = .rqda$back.col)
       }
     }
   }

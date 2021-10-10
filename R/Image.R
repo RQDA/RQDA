@@ -16,11 +16,11 @@ ViewImage <- function(file, width = 800, height = 600, ...) {
   scale <- min(c(width/imgW, height/imgH))
   scale <- ifelse(scale > 1, 1, scale)
   width <- imgW*scale
-  height <-imgH*scale
+  height <- imgH*scale
   img <- img$ScaleSimple(width, height, 'bilinear')
   gSignalConnect(da, "expose-event", expose_event, data = list(img = img))
 
-  w<-gtkWindow(show = F)
+  w <- gtkWindow(show = F)
   w$SetSizeRequest(width, height)
   w$SetResizable(FALSE)
   w$Add(da)

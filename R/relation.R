@@ -22,7 +22,7 @@ relation <- function(index1, index2) {
       if (length(ans$WhichMin) == 2 && length(ans$WhichMax) == 2) {
         ans$Relation <- "exact"
         ans$OverlapIndex <- index1
-        ans$UnionIndex<- index1
+        ans$UnionIndex <- index1
       } else {
         ans$Relation <- "inclusion"
         if (intersect(ans$WhichMin, ans$WhichMax) == 1) {
@@ -30,7 +30,7 @@ relation <- function(index1, index2) {
           ans$UnionIndex <- index1
         } else {
           ans$OverlapIndex <- index1
-          ans$UnionIndex<- index2
+          ans$UnionIndex <- index2
         }
       }
     } else {
@@ -43,8 +43,8 @@ relation <- function(index1, index2) {
       if (min(index2) <= min(index1) &&
           max(index2) >= min(index1)) {
         ans$Relation <- "overlap"
-        ans$OverlapIndex<- c(min(index1), max(index2))
-        ans$UnionIndex<- c(min(index2), max(index1))
+        ans$OverlapIndex <- c(min(index1), max(index2))
+        ans$UnionIndex <- c(min(index2), max(index1))
       }
       if (max(index1) < min(index2)) {
         ans$Relation <- "proximity"

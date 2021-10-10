@@ -8,7 +8,7 @@ addSettingGUI <- function(container, width = 12) {
     ans <- gbutton(gettext("Click to set font", domain = "R-RQDA"),
                    container = container,
                    handler = function(h, ...)
-                       setFont(default=.rqda$font))
+                       setFont(default = .rqda$font))
     ## set font for widget
     gtkWidgetSetTooltipText(getToolkitWidget(ans),
                             gettext("Set fonts for memo widgets.", domain = "R-RQDA"))
@@ -138,7 +138,7 @@ setFont <- function(default = "Sans 11") {
     addHandlerKeystroke(gw, function(h, ...) {
         if (h$key == "\027") dispose(gw)
     })
-    g <-glayout(container = gw, homogeneous = TRUE)
+    g <- glayout(container = gw, homogeneous = TRUE)
     g[1, 1:2] <- font
     g[2, 1] <- gbutton("Ok", handler = function(h, ...) {
         ans <- font$GetFontName()

@@ -123,7 +123,7 @@ saveFUN4CaseAttr <- function(button, data) {
     }
     if (any(new_idx)) {
     ## add the new variable to table
-    vars <- data.frame(variable = ans[new_idx, 1], value = ans[new_idx, 2], caseID = MoreArgs$caseId, date = date(), dateM = NA, owner=.rqda$owner, status = 1)
+    vars <- data.frame(variable = ans[new_idx, 1], value = ans[new_idx, 2], caseID = MoreArgs$caseId, date = date(), dateM = NA, owner = .rqda$owner, status = 1)
     rqda_wrt("caseAttr", vars)
   }
   }
@@ -179,7 +179,7 @@ saveFUN4FileAttr <- function(button, data) {
     }
     if (any(new_idx)) {
     ## add the new variable to table
-    vars <- data.frame(variable = ans[new_idx, 1], value = ans[new_idx, 2], fileID = MoreArgs$fileId, date = date(), dateM = NA, owner=.rqda$owner, status = 1)
+    vars <- data.frame(variable = ans[new_idx, 1], value = ans[new_idx, 2], fileID = MoreArgs$fileId, date = date(), dateM = NA, owner = .rqda$owner, status = 1)
     rqda_wrt("fileAttr", vars)
     }
   }
@@ -205,7 +205,7 @@ FileAttrFun <- function(fileId, title = NULL, attrs = svalue(.rqda$.AttrNamesWid
 
 ## change the name of Variables.R to Attributes.R
 
-AttrNamesUpdate <- function(Widget=.rqda$.AttrNamesWidget, sortByTime = FALSE, decreasing = FALSE, ...)
+AttrNamesUpdate <- function(Widget = .rqda$.AttrNamesWidget, sortByTime = FALSE, decreasing = FALSE, ...)
 {
   if (is_projOpen()) {
     attr <- rqda_sel(
@@ -452,7 +452,7 @@ getAttr <- function(type = c("case", "file"), attrs = svalue(.rqda$.AttrNamesWid
   tt <- rqda_sel("select name, class from attributes")
   attrs <- tt[tt$class == "numeric", "name"]
   idx <- which(names(DF) %in% attrs)
-  DF[, idx]<-as.data.frame(apply(DF[, idx, drop = FALSE], 2, as.numeric))
+  DF[, idx]<- as.data.frame(apply(DF[, idx, drop = FALSE], 2, as.numeric))
   if (missing(subset)) DF else {
       r <- eval(substitute(subset), DF)
       if (!is.logical(r))

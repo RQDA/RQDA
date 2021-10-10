@@ -3,7 +3,7 @@ AutoCoding <- function(KeyWord, expansion = 6) {
   AnsIndex <- gregexpr(KeyWord, Files$file)
   AnsIndex2 <- lapply(AnsIndex, FUN = function(x) {
     begin <- x-expansion
-    begin[begin<0]<-0
+    begin[begin<0]<- 0
     data.frame(begin = begin, end = x + attr(x, "match.length"))
   })
   ## if any index > nchar(Files$file), set to nchar(Files$file)

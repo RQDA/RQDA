@@ -201,7 +201,7 @@ undelete <- function(type = c("file", "code", "case", "codecategory", "filecateg
     if (length(catid) != 0) {
       rqda_exe(sprintf("update codecat set status = 1 where status = 0 and catid in (%s)", 
                                        paste(paste(catid, sep = ""), collapse = ", ")))
-      UpdateTableWidget(Widget=.rqda$.CodeCatWidget, FromdbTable = "codecat")
+      UpdateTableWidget(Widget = .rqda$.CodeCatWidget, FromdbTable = "codecat")
       rqda_exe(sprintf("update treecode set status = 1 where status = 0 and catid in (%s)", 
                                        paste(paste(catid, sep = ""), collapse = ", ")))
     }
@@ -213,7 +213,7 @@ undelete <- function(type = c("file", "code", "case", "codecategory", "filecateg
     if (length(catid) != 0) {
       rqda_exe(sprintf("update filecat set status = 1 where status = 0 and catid in (%s)", 
                                        paste(paste(catid, sep = ""), collapse = ", ")))
-      UpdateTableWidget(Widget=.rqda$.FileCatWidget, FromdbTable = "filecat")
+      UpdateTableWidget(Widget = .rqda$.FileCatWidget, FromdbTable = "filecat")
       rqda_exe(sprintf("update treefile set status = 1 where status = 0 and catid in (%s)", 
                                        paste(paste(catid, sep = ""), collapse = ", ")))
     }

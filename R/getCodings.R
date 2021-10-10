@@ -96,7 +96,7 @@ getCodingsFromFiles <- function(Fid, order = c("fname", "ftime", "ctime"),
     })
         mainIcon <- system.file("icon", "mainIcon.png", package = "RQDA")
         .gw$set_icon(mainIcon)
-        .retreivalgui <- gtext(container=.gw)
+        .retreivalgui <- gtext(container = .gw)
         font <- pangoFontDescriptionFromString(.rqda$font)
         gtkWidgetModifyFont(.retreivalgui$widget, font)
         ## set the spacing

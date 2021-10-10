@@ -2,7 +2,7 @@ setColor <- function(currentColor = "gold") {
   currentColor <- gdkColorParse(currentColor)$color
   colorDA <- gtkDrawingAreaNew()
   colorDA$modifyBg("normal", currentColor)
-  g <-glayout(container = gwindow(
+  g <- glayout(container = gwindow(
     width = getOption("widgetSize")[1], height = getOption("widgetSize")[2],
     parent = getOption("widgetCoordinate")), homogeneous = TRUE, title = gettext("Change color.", domain = "R-RQDA"))
   g[1, 1:3] <- colorDA

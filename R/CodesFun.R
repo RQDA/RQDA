@@ -1,4 +1,4 @@
-addcode <- function(name, conName = "qdacon", assignenv=.rqda, ...) {
+addcode <- function(name, conName = "qdacon", assignenv = .rqda, ...) {
   if (name != "") {
     con <- get(conName, assignenv)
     maxid <- rqda_sel("select max(id) from freecode")[[1]]
@@ -18,7 +18,7 @@ addcode <- function(name, conName = "qdacon", assignenv=.rqda, ...) {
 }
 
 
-CodeNamesUpdate <- function(CodeNamesWidget=.rqda$.codes_rqda, sortByTime = TRUE, decreasing = FALSE, ...)
+CodeNamesUpdate <- function(CodeNamesWidget = .rqda$.codes_rqda, sortByTime = TRUE, decreasing = FALSE, ...)
 {
   if (is_projOpen()) {
   freecode <- rqda_sel("select name, id, date from freecode where status = 1 order by lower(name)")
@@ -36,7 +36,7 @@ CodeNamesUpdate <- function(CodeNamesWidget=.rqda$.codes_rqda, sortByTime = TRUE
 }
 
 
-CodeNamesWidgetUpdate <- function(CodeNamesWidget=.rqda$.codes_rqda, sortByTime = TRUE, decreasing = FALSE, CodeId = NULL, ...)
+CodeNamesWidgetUpdate <- function(CodeNamesWidget = .rqda$.codes_rqda, sortByTime = TRUE, decreasing = FALSE, CodeId = NULL, ...)
   ## CodeNamesWidgetUpdate is the alternative function of CodeNamesUpdate, should be used afterwards
 {
   if (is_projOpen()) {
@@ -54,7 +54,7 @@ CodeNamesWidgetUpdate <- function(CodeNamesWidget=.rqda$.codes_rqda, sortByTime 
   } else gmessage(gettext("Cannot update Code List in the Widget. Project is closed already.\n", domain = "R-RQDA"), con = TRUE)
 }
 
-mark <- function(widget, fore.col=.rqda$fore.col, back.col = NULL, addButton = FALSE, buttonLabel = "", codingTable = "coding") {
+mark <- function(widget, fore.col = .rqda$fore.col, back.col = NULL, addButton = FALSE, buttonLabel = "", codingTable = "coding") {
   ## modified so can change fore.col and back.col easily
   index <- sindex(widget, includeAnchor = TRUE, codingTable = codingTable)
   startI <- index$startI ## start and end iter
@@ -89,7 +89,7 @@ mark <- function(widget, fore.col=.rqda$fore.col, back.col = NULL, addButton = F
 }
 
 
-markRange <- function(widget, from, to, rowid, fore.col=.rqda$fore.col, back.col = NULL, addButton = FALSE, buttonLabel = "", buttonCol=.rqda$codeMark.col, codingTable = "coding") {
+markRange <- function(widget, from, to, rowid, fore.col = .rqda$fore.col, back.col = NULL, addButton = FALSE, buttonLabel = "", buttonCol = .rqda$codeMark.col, codingTable = "coding") {
   if (from != to) {
     FileName <- tryCatch(if (exists(".root_edit", envir = .rqda)) svalue(.rqda$.root_edit), error = function(e) {
 })
@@ -125,20 +125,20 @@ ClearMark <- function(widget, min = 0, max, clear.fore.col = TRUE, clear.back.co
   ## max position of marked text.
   buffer <- widget$buffer
   startI <- gtkTextBufferGetIterAtOffset(buffer, min)$iter # translate number back to iter
-  endI <-gtkTextBufferGetIterAtOffset(buffer, max)$iter
+  endI <- gtkTextBufferGetIterAtOffset(buffer, max)$iter
   if (clear.fore.col) gtkTextBufferRemoveTagByName(buffer, .rqda$fore.col, startI, endI)
   if (clear.back.col) gtkTextBufferRemoveTagByName(buffer, sprintf("%s.background", .rqda$back.col), startI, endI)
   if (clear.underline) gtkTextBufferRemoveTagByName(buffer, "underline", startI, endI)
 }
 
-HL <- function(W, index, fore.col=.rqda$fore.col, back.col = NULL) {
+HL <- function(W, index, fore.col = .rqda$fore.col, back.col = NULL) {
   ## highlight text chuck according to index
   ## W is the gtext widget of the text.
   ## index is a data frame, each row == one text chuck.
   buffer <- W$buffer
   apply(index, 1, function(x) {
-    start <-gtkTextBufferGetIterAtOffset(buffer, x[1])$iter # translate number back to iter
-    end <-gtkTextBufferGetIterAtOffset(buffer, x[2])$iter
+    start <- gtkTextBufferGetIterAtOffset(buffer, x[1])$iter # translate number back to iter
+    end <- gtkTextBufferGetIterAtOffset(buffer, x[2])$iter
     if (!is.null(fore.col)) {
       buffer$ApplyTagByName(fore.col, start, end)
     }
@@ -149,7 +149,7 @@ HL <- function(W, index, fore.col=.rqda$fore.col, back.col = NULL) {
         )
 }
 
-sindex <- function(widget=.rqda$.openfile_gui$widget, includeAnchor = TRUE, codingTable = "coding") {
+sindex <- function(widget = .rqda$.openfile_gui$widget, includeAnchor = TRUE, codingTable = "coding") {
   buffer <- widget$buffer
   bounds = buffer$GetSelectionBounds()
   startI = bounds$start ## start and end iter
@@ -178,7 +178,7 @@ InsertAnchor <- function(widget, label, index, label.col = "gray90",
     labelEvBox$Add(lab)
     buffer <- widget$buffer
     if (isTRUE(handler)) {
-      button_press <-function(widget, event, W, codeName = label) {
+      button_press <- function(widget, event, W, codeName = label) {
           if (attr(event$type, "name") == "GDK_BUTTON_PRESS" && event$button == 1) {
               ## action for left click
               if (!is.null(EndMarkName)) {
@@ -193,7 +193,7 @@ InsertAnchor <- function(widget, label, index, label.col = "gray90",
                   ## buffer$createTag("underline", underline = "single")
                   ## should be created when a file is opened
                   rowid <- gsub(".2$", "", EndMarkName)
-                  assign("selectedRowid", rowid, envir=.codingEnv)
+                  assign("selectedRowid", rowid, envir = .codingEnv)
                   enabled(button$UnMarB1) <- TRUE
                   memo <- rqda_sel(sprintf("select memo from coding where rowid=%s", rowid))$memo
                   if (!is.na(memo) && memo != "") {
@@ -214,8 +214,8 @@ InsertAnchor <- function(widget, label, index, label.col = "gray90",
                   width = getOption("widgetSize")[1], height = getOption("widgetSize")[2])
                   assign(".codingmemo", .codingmemo, envir = .rqda)
                   .codingmemo <- get(".codingmemo", envir = .rqda)
-                  .codingmemo2 <- gpanedgroup(horizontal = FALSE, container=.codingmemo)
-                  .codingMemoSaveButton <- gbutton(gettext("Save Coding Memo", domain = "R-RQDA"), container=.codingmemo2, action = list(rowid = rowid), handler = function(h, ...) {
+                  .codingmemo2 <- gpanedgroup(horizontal = FALSE, container = .codingmemo)
+                  .codingMemoSaveButton <- gbutton(gettext("Save Coding Memo", domain = "R-RQDA"), container = .codingmemo2, action = list(rowid = rowid), handler = function(h, ...) {
                       newcontent <- svalue(.rqda$.cdmemocontent)
                       newcontent <- enc(newcontent, encoding = "UTF-8") ## take care of double quote.
                       rqda_exe(sprintf("update coding set memo='%s' where rowid=%s", newcontent, rowid = h$action$rowid))
@@ -223,7 +223,7 @@ InsertAnchor <- function(widget, label, index, label.col = "gray90",
                   })## end of save memo button
                   enabled(.codingMemoSaveButton) <- FALSE
                   assign(".codingMemoSaveButton", .codingMemoSaveButton, envir = .rqda)
-                  assign(".cdmemocontent", gtext(container=.codingmemo2, font.attr = list(size = "large")), envir = .rqda)
+                  assign(".cdmemocontent", gtext(container = .codingmemo2, font.attr = list(size = "large")), envir = .rqda)
                   if (is.na(prvcontent)) prvcontent <- ""
                   Encoding(prvcontent) <- "UTF-8"
                   if (prvcontent == "") assign("NewCodingMemo", TRUE, envir = .rqda)
@@ -275,7 +275,7 @@ DeleteButton <- function(widget, label, index, direction = c("backward", "forwar
   invisible(isRemove)
 }
 
-countAnchors <- function(widget=.rqda$.openfile_gui$widget, to, from = 0) {
+countAnchors <- function(widget = .rqda$.openfile_gui$widget, to, from = 0) {
   buffer <- widget$buffer
   iter <- gtkTextBufferGetIterAtOffset(buffer, from)$iter
   ans <- 0
@@ -288,7 +288,7 @@ countAnchors <- function(widget=.rqda$.openfile_gui$widget, to, from = 0) {
   ans
 }
 ## testing
-## g<-gtext("testing widget of text.", container = T)
+## g <- gtext("testing widget of text.", container = T)
 ## InsertAnchor(g, "button", 8)
 
 countAnchorsWithFileName <- function(to, fileName = enc(svalue(.rqda$.root_edit), encoding = "UTF-8"), codingTable = "coding")
@@ -337,7 +337,7 @@ countAnchorsWithFileName <- function(to, fileName = enc(svalue(.rqda$.root_edit)
 #'
 #' @seealso \code{\link{getFileIds}}
 #' @export
-retrieval <- function(Fid = NULL, order = c("fname", "ftime", "ctime"), CodeNameWidget=.rqda$.codes_rqda, codingTable = "coding")
+retrieval <- function(Fid = NULL, order = c("fname", "ftime", "ctime"), CodeNameWidget = .rqda$.codes_rqda, codingTable = "coding")
 ## retrieval is rewritten in rev 134
 {
   currentCode2 <- svalue(CodeNameWidget)
@@ -383,12 +383,12 @@ retrieval <- function(Fid = NULL, order = c("fname", "ftime", "ctime"), CodeName
     })
 
       assign(sprintf(".codingsOf%s", currentCid), .gw, envir = .rqda)
-      .retreivalgui <- gtext(container=.gw)
+      .retreivalgui <- gtext(container = .gw)
       font <- pangoFontDescriptionFromString(.rqda$font)
       gtkWidgetModifyFont(.retreivalgui$widget, font)
       .retreivalgui$widget$SetPixelsBelowLines(5) ## set the spacing
       .retreivalgui$widget$SetPixelsInsideWrap(5) ## so the text looks more confortable.
-    ## .retreivalgui <- gtext(container=.gw)
+    ## .retreivalgui <- gtext(container = .gw)
       for (i in fid) {
         FileName <- rqda_sel(sprintf("select name from source where status = 1 and id=%i", i))[['name']]
         if (!is.null(FileName)) {
@@ -521,7 +521,7 @@ retrieval <- function(Fid = NULL, order = c("fname", "ftime", "ctime"), CodeName
         buffer$createChildAnchor(iter)
         iter$BackwardChar()
         anchor_unmark <- iter$getChildAnchor()
-        lab_unmark<- gtkLabelNew(gettext("Unmark", domain = "R-RQDA"))
+        lab_unmark <- gtkLabelNew(gettext("Unmark", domain = "R-RQDA"))
         widget_unmark <- gtkEventBoxNew()
         widget_unmark$Add(lab_unmark)
         gSignalConnect(widget_unmark, "button-press-event",
@@ -621,7 +621,7 @@ if (!is.null(allcodes)) {
 
 
 ClickHandlerFun <- function(CodeNameWidget, buttons = c("MarCodB1", "UnMarB1"), codingTable = "coding") {
-    ## CodeNameWidget=.rqda$.codes_rqda
+    ## CodeNameWidget = .rqda$.codes_rqda
     con <- .rqda$qdacon
     SelectedCode <- currentCode <- svalue(CodeNameWidget)
     if (length(SelectedCode) != 0) {
@@ -651,7 +651,7 @@ ClickHandlerFun <- function(CodeNameWidget, buttons = c("MarCodB1", "UnMarB1"), 
                 addidx <-  data.frame(selfirst = apply(outer(allidx, idx1$selfirst, "<="), 2, sum),
                                       selend = apply(outer(allidx, idx1$selend, "<="), 2, sum))
                 idx1 <- idx1 + addidx
-                HL(.rqda$.openfile_gui, index = idx1, fore.col=.rqda$fore.col, back.col = NULL)
+                HL(.rqda$.openfile_gui, index = idx1, fore.col = .rqda$fore.col, back.col = NULL)
             }
         }# end of mark text chuck
     }
@@ -678,7 +678,7 @@ HL_CodingWithMemo <- function(codingTable = "coding") {
                                 selend = apply(outer(allidx, idx$selend, "<="), 2, sum))
           idx[, c("selfirst", "selend")] <- idx[, c("selfirst", "selend")] + addidx
           idx1 <- idx[(idx$memo != "") & (!is.na(idx$memo)), c("selfirst", "selend")]
-          HL(widget, index = idx1, fore.col=.rqda$fore.col, back.col = NULL)
+          HL(widget, index = idx1, fore.col = .rqda$fore.col, back.col = NULL)
         }
       }, error = function(e) {
 }) # end of mark text chuck
@@ -696,8 +696,8 @@ HL_AllCodings <- function(codingTable = "coding") {
                 idx1 <- idx1 + rank(idx1)
                 idx2 <- c(idx$selend, anno)
                 idx2 <- idx2 + rank(idx2)
-                idx <-data.frame(idx1, idx2)
-                ClearMark(.rqda$.openfile_gui , 0 , max(idx2))
+                idx <- data.frame(idx1, idx2)
+                ClearMark(.rqda$.openfile_gui, 0, max(idx2))
                 HL(.rqda$.openfile_gui, index = idx)
             }
         }
@@ -719,7 +719,7 @@ NextRowId <- function(table) {
 
 InsertAnnotation <- function(index, fid, rowid, label = gettext("[Annotation]", domain = "R-RQDA"), AnchorPos = NULL)
   {
-    widget=.rqda$.openfile_gui
+    widget = .rqda$.openfile_gui
     lab <- gtkLabelNew(label)
     label <- gtkEventBoxNew()
     label$ModifyBg("normal", gdkColorParse("yellow")$color)
@@ -765,9 +765,9 @@ openAnnotation <- function(New = TRUE, pos, fid, rowid, AnchorPos = NULL) {
     mainIcon <- system.file("icon", "mainIcon.png", package = "RQDA")
     .annotation$set_icon(mainIcon)
     assign(".annotation", .annotation, envir = .rqda)
-    .annotation2 <- gpanedgroup(horizontal = FALSE, container=.annotation)
+    .annotation2 <- gpanedgroup(horizontal = FALSE, container = .annotation)
     savAnnB <-
-    gbutton(gettext("Save Annotation", domain = "R-RQDA"), container=.annotation2, handler = function(h, ...) {
+    gbutton(gettext("Save Annotation", domain = "R-RQDA"), container = .annotation2, handler = function(h, ...) {
         newcontent <- svalue(W)
         newcontent <- enc(newcontent, encoding = "UTF-8")
         if (newcontent != "") {
@@ -793,7 +793,7 @@ openAnnotation <- function(New = TRUE, pos, fid, rowid, AnchorPos = NULL) {
             )## end of save button
     enabled(savAnnB) <- FALSE
     assign("savAnnB", savAnnB, envir = button)
-    assign(".annotationContent", gtext(container=.annotation2, font.attr = list(size = "large")), envir = .rqda)
+    assign(".annotationContent", gtext(container = .annotation2, font.attr = list(size = "large")), envir = .rqda)
     ## prvcontent <- rqda_sel(sprintf("select annotation from annotation where fid=%i and position=%s and status = 1", fid, pos))[1, 1]
     prvcontent <- rqda_sel(sprintf("select annotation from annotation where rowid=%s and status = 1", rowid))[1, 1]
     if (is.null(prvcontent) || is.na(prvcontent)) prvcontent <- ""
@@ -881,7 +881,7 @@ AddToCodeCategory <- function(Widget = .rqda$.codes_rqda, updateWidget = TRUE)
         if (nrow(exist) != length(cid)) {
           DAT <- data.frame(cid = cid[!cid %in% exist$cid],
                             catid = CodeCatid, date = date(), dateM = date(),
-                            memo = "", status = 1, owner=.rqda$owner)
+                            memo = "", status = 1, owner = .rqda$owner)
           success <- rqda_wrt("treecode", DAT)
           if (success && updateWidget) {
             UpdateCodeofCatWidget()
@@ -921,7 +921,7 @@ AddToCodeCategory <- function(Widget = .rqda$.codes_rqda, updateWidget = TRUE)
 ##   Encoding(Codes) <- "UTF-8"
 ##   tryCatch(dispose(.rqda$.c2info), error = function(e) {
 })
-##   gw <- gwindow(title = "Associted code-list.", heigh = min(33*length(Codes), 600), parent=.rqda$.openfile_gui)
+##   gw <- gwindow(title = "Associted code-list.", heigh = min(33*length(Codes), 600), parent = .rqda$.openfile_gui)
 ##   c2infoWidget <- gtable(Codes, container = gw)
 ##   assign(".c2info", gw, envir = .rqda)
 ##   addHandlerDoubleclick(c2infoWidget, handler = function(h, ...) retrieval2(CodeNameWidget = c2infoWidget))
@@ -939,7 +939,7 @@ AddToCodeCategory <- function(Widget = .rqda$.codes_rqda, updateWidget = TRUE)
 ##     label$Add(lab)
 ##     buffer <- widget$buffer
 ##     if (isTRUE(handler)) {
-##       button_press <-function(widget, event, W) {
+##       button_press <- function(widget, event, W) {
 ##         Iter <- gtkTextBufferGetIterAtChildAnchor(buffer, anchor)$iter
 ##         Offset <- Iter$GetOffset()
 ##         label <- lab$GetLabel()

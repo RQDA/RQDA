@@ -48,7 +48,7 @@ mergeCodes <- function(cid1, cid2) { ## cid1 and cid2 are two code IDs.
             ## what is Sel?
             DAT <- data.frame(cid = From$cid, fid = From$fid, seltext = substr(tt, Sel[1], Sel[2]), 
                               selfirst = Sel[1], selend = Sel[2], status = 1, 
-                              owner=.rqda$owner, date = date(), memo = memo) ## The new coding to table.
+                              owner = .rqda$owner, date = date(), memo = memo) ## The new coding to table.
             success <- rqda_wrt("coding", DAT)
             if (!success) gmessage(gettext("Fail to write to database.", domain = "R-RQDA"))
           }
@@ -109,10 +109,8 @@ erger2 <- function(cid1, cid2, data)
     ans <-  data.frame(fid = numeric(), cid = numeric(), index1 = numeric(), index2 = numeric())
     fidList <- unique(data[data$cid %in% cid1, "fid"])
     for (fid in fidList) {
-        tmpdat1 <- data[data$fid == fid & data$cid == cid1, , 
-                        drop = FALSE]
-        tmpdat2 <- data[data$fid == fid & data$cid == cid2, , 
-                        drop = FALSE]
+        tmpdat1 <- data[data$fid == fid & data$cid == cid1, , drop = FALSE]
+        tmpdat2 <- data[data$fid == fid & data$cid == cid2, , drop = FALSE]
         if (nrow(tmpdat2) > 0 && nrow(tmpdat1) > 0) {
             tmpdat1[, 4] <- tmpdat1[, 4] -1
             tmpdat2[, 4] <- tmpdat2[, 4] -1

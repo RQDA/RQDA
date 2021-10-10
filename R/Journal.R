@@ -30,7 +30,7 @@ RenameJournalButton <- function(label = gettext("Rename", domain = "R-RQDA"))
       selected <- svalue(.rqda$.JournalNamesWidget)
       NewName <- ginput(gettext("Enter new journal name. ", domain = "R-RQDA"), text = substring(selected, 20), icon = "info")
       Encoding(NewName) <- "UTF-8"
-      NewName <- paste(substring(selected, 0 , 19), NewName, sep = " ")
+      NewName <- paste(substring(selected, 0, 19), NewName, sep = " ")
 
         if (!identical(NewName, character(0)))
         {
@@ -57,7 +57,7 @@ OpenJournalButton <- function(label = gettext("Open", domain = "R-RQDA"))
   OpeJouB
 }
 
-JournalNamesUpdate <- function(Widget=.rqda$.JournalNamesWidget, decreasing = FALSE, ...)
+JournalNamesUpdate <- function(Widget = .rqda$.JournalNamesWidget, decreasing = FALSE, ...)
 {
   if (is_projOpen()) {
     journal <- rqda_sel("select name from journal where status = 1")
@@ -123,7 +123,7 @@ AddNewJournalFun <- function() {
         textW <- get(".AddNewJournalWidgetW", envir = .rqda)
     }}
 
-ViewJournalWidget <- function(prefix = "Journal", widget=.rqda$.JournalNamesWidget, dbTable = "journal") {
+ViewJournalWidget <- function(prefix = "Journal", widget = .rqda$.JournalNamesWidget, dbTable = "journal") {
   if (is_projOpen(envir = .rqda, "qdacon")) {
       Selected <- svalue(widget)
       if (length(Selected) == 0) {

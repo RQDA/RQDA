@@ -1,4 +1,4 @@
-new_proj <- function(path, conName = "qdacon", assignenv=.rqda, ...) {
+new_proj <- function(path, conName = "qdacon", assignenv = .rqda, ...) {
   ## success <- file.create(tmpNamme <- tempfile(pattern = "file"
   ## , tmpdir = dirname(path)))
   success <- (file.access(names = dirname(path), mode = 2) == 0)
@@ -260,7 +260,7 @@ UpgradeTables <- function() {
   }
 }
 
-open_proj <- function(path, conName = "qdacon", assignenv=.rqda, ...) {
+open_proj <- function(path, conName = "qdacon", assignenv = .rqda, ...) {
   tryCatch({ con <- get(conName, assignenv)
   pkg <- attr(attr(con, "class"), 'package')
   Open <- getFunction("dbIsValid",
@@ -291,7 +291,7 @@ open_proj <- function(path, conName = "qdacon", assignenv=.rqda, ...) {
 
 
 
-closeProject <- function(conName = "qdacon", assignenv=.rqda, ...) {
+closeProject <- function(conName = "qdacon", assignenv = .rqda, ...) {
   tryCatch({
     con <- get(conName, assignenv)
     if (is_projOpen(message = FALSE)) {
@@ -309,7 +309,7 @@ closeProject <- function(conName = "qdacon", assignenv=.rqda, ...) {
                  icon = "waring", container = TRUE)
       }
     }
-  } , error = function(e) {
+  }, error = function(e) {
 })
 }
 
@@ -332,12 +332,12 @@ is_projOpen <- function(envir = .rqda, conName = "qdacon", message = TRUE) {
 }
 
 backup_proj <- function(con) {
-  ## con=.rqda$qdacon
+  ## con = .rqda$qdacon
   dbname <- con@dbname
   Encoding(dbname) <- "UTF-8"
   backupname <- sprintf("%s%s.rqda", gsub("rqda$", "", dbname),
                         format(Sys.time(), "%H%M%S%d%m%Y"))
-  success <- file.copy(from = dbname, to = backupname , overwrite = FALSE)
+  success <- file.copy(from = dbname, to = backupname, overwrite = FALSE)
   if (success) {
     gmessage(gettext("Succeeded!", domain = "R-RQDA"),
              container = TRUE, icon = "info")
@@ -376,11 +376,11 @@ ProjectMemoWidget <- function() {
     gw$set_icon(mainIcon)
     assign(".projmemo", gw, envir = .rqda)
     .projmemo <- get(".projmemo", .rqda)
-    .projmemo2 <- gpanedgroup(horizontal = FALSE, container=.projmemo)
+    .projmemo2 <- gpanedgroup(horizontal = FALSE, container = .projmemo)
     ## use .projmemo2, so can add a save button to it.
     proj_memoB <- gbutton(
       gettext("Save memo", domain = "R-RQDA"),
-      container=.projmemo2, handler = function(h, ...) {
+      container = .projmemo2, handler = function(h, ...) {
         ## send the new content of memo back to database
         newcontent <- svalue(W)
         ## Encoding(newcontent) <- "UTF-8"
@@ -399,7 +399,7 @@ ProjectMemoWidget <- function() {
     )## end of save memo button
     size(proj_memoB) <- head_s
     assign("proj_memoB", proj_memoB, envir = button)
-    tmp <- gtext(container=.projmemo2, font.attr = list(size = "large"))
+    tmp <- gtext(container = .projmemo2, font.attr = list(size = "large"))
     size(tmp) <- body_s
     gSignalConnect(tmp$buffer, "changed",
                    function(h, ...) {

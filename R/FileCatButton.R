@@ -5,7 +5,7 @@ AddFileCatButton <- function(label = gettext("Add", domain = "R-RQDA")) {
     if (!is.na(item)) {
       Encoding(item) <- "UTF-8"
       AddTodbTable(item, "filecat", Id = "catid") ## FILE CATegory
-      UpdateTableWidget(Widget=.rqda$.FileCatWidget, FromdbTable = "filecat")
+      UpdateTableWidget(Widget = .rqda$.FileCatWidget, FromdbTable = "filecat")
     }
   }
                         )
@@ -25,7 +25,7 @@ DeleteFileCatButton <- function(label = gettext("Delete", domain = "R-RQDA")) {
       if (length(catid) == 1) {
         rqda_exe(sprintf("update filecat set status = 0 where name='%s'", enc(Selected)))
         ## set status in table freecode to 0
-        UpdateTableWidget(Widget=.rqda$.FileCatWidget, FromdbTable = "filecat")
+        UpdateTableWidget(Widget = .rqda$.FileCatWidget, FromdbTable = "filecat")
         tryCatch(rqda_exe(sprintf("update treefile set status = 0 where catid='%s'", catid)), error = function(e) {
 })
         ## should delete all the related codelists
@@ -40,7 +40,7 @@ DeleteFileCatButton <- function(label = gettext("Delete", domain = "R-RQDA")) {
 }
 
 
-FileCat_RenameButton <- function(label = gettext("Rename", domain = "R-RQDA"), Widget=.rqda$.FileCatWidget, ...)
+FileCat_RenameButton <- function(label = gettext("Rename", domain = "R-RQDA"), Widget = .rqda$.FileCatWidget, ...)
 {
   ## rename of selected file cat.
   FilCatRenB <- gbutton(label, handler = function(h, ...) {
@@ -53,7 +53,7 @@ FileCat_RenameButton <- function(label = gettext("Rename", domain = "R-RQDA"), W
     if (!is.na(NewName)) {
       Encoding(NewName) <- "UTF-8"
       rename(OldName, NewName, "filecat")
-      UpdateTableWidget(Widget=.rqda$.FileCatWidget, FromdbTable = "filecat")
+      UpdateTableWidget(Widget = .rqda$.FileCatWidget, FromdbTable = "filecat")
     }
     }
   }
@@ -63,7 +63,7 @@ FileCat_RenameButton <- function(label = gettext("Rename", domain = "R-RQDA"), W
   FilCatRenB
 }
 
-UpdateFileofCatWidget <- function(con=.rqda$qdacon, Widget=.rqda$.FileofCat, sortByTime = FALSE, ...) {
+UpdateFileofCatWidget <- function(con = .rqda$qdacon, Widget = .rqda$.FileofCat, sortByTime = FALSE, ...) {
   SelectedFileCat <- svalue(.rqda$.FileCatWidget)
   if (length(SelectedFileCat) != 0) {
     Encoding(SelectedFileCat) <- "UTF-8"
@@ -83,7 +83,7 @@ UpdateFileofCatWidget <- function(con=.rqda$qdacon, Widget=.rqda$.FileofCat, sor
 })
 }
 
-UpdateFileofCatWidget2 <- function(con=.rqda$qdacon, Widget=.rqda$.FileofCat, sortByTime = FALSE, ...)
+UpdateFileofCatWidget2 <- function(con = .rqda$qdacon, Widget = .rqda$.FileofCat, sortByTime = FALSE, ...)
 {
   Total_fid <- getFileIdsSets("filecategory", "intersect")
   if (length(Total_fid) != 0) {
@@ -113,13 +113,13 @@ FileCatMemoButton <- function(label = gettext("Memo", domain = "R-RQDA")) {
 }
 
 
-FileCatAddToButton <- function(label = gettext("AddTo", domain = "R-RQDA"), Widget=.rqda$.FileCatWidget, ...)
+FileCatAddToButton <- function(label = gettext("AddTo", domain = "R-RQDA"), Widget = .rqda$.FileCatWidget, ...)
 {
   ans <- gbutton(label, handler = function(h, ...) {
     SelectedFileCat <- svalue(.rqda$.FileCatWidget)
     catid <- rqda_sel(sprintf("select catid from filecat where status = 1 and name='%s'", enc(SelectedFileCat)))[, 1]
     freefile <-  rqda_sel("select name, id from source where status = 1")
-    if (nrow(freefile) == 0) {gmessage(gettext("No files Yet.", domain = "R-RQDA"), cont=.rqda$.FileCatWidget)} else {
+    if (nrow(freefile) == 0) {gmessage(gettext("No files Yet.", domain = "R-RQDA"), cont = .rqda$.FileCatWidget)} else {
       Encoding(SelectedFileCat) <- Encoding(freefile[['name']]) <- "UTF-8"
       fileofcat <- rqda_sel(sprintf("select fid from treefile where status = 1 and catid=%i", catid))
       if (nrow(fileofcat) != 0) {
@@ -129,7 +129,7 @@ FileCatAddToButton <- function(label = gettext("AddTo", domain = "R-RQDA"), Widg
       if (Selected != "") {
         ## Selected <- iconv(Selected, to = "UTF-8") ## already Encoded as UTF-8.
         fid <- fileoutofcat[fileoutofcat$name %in% Selected, "id"]
-        Dat <- data.frame(fid = fid, catid = catid, date = date(), dateM = date(), memo = NA, status = 1, owner=.rqda$owner)
+        Dat <- data.frame(fid = fid, catid = catid, date = date(), dateM = date(), memo = NA, status = 1, owner = .rqda$owner)
         rqda_wrt("treefile", Dat)
         UpdateFileofCatWidget()
       }
@@ -142,7 +142,7 @@ FileCatAddToButton <- function(label = gettext("AddTo", domain = "R-RQDA"), Widg
   return(ans)
 }
 
-FileCatDropFromButton <- function(label = gettext("DropFrom", domain = "R-RQDA"), Widget=.rqda$.FileofCat, ...)
+FileCatDropFromButton <- function(label = gettext("DropFrom", domain = "R-RQDA"), Widget = .rqda$.FileofCat, ...)
 {
   ans <- gbutton(label, handler = function(h, ...) {
     FileOfCat <- svalue(Widget)
@@ -195,7 +195,7 @@ GetFileCatWidgetMenu <- function()
 
   FileCatWidgetMenu[[2]] <- gaction(gettext("Sort by created time", domain = "R-RQDA"), handler = function(h, ...) {
     if (is_projOpen(envir = .rqda, conName = "qdacon")) {
-      UpdateTableWidget(Widget=.rqda$.FileCatWidget, FromdbTable = "filecat")
+      UpdateTableWidget(Widget = .rqda$.FileCatWidget, FromdbTable = "filecat")
     }
   })
 
@@ -210,14 +210,14 @@ GetFileofCatWidgetMenu <- function()
 
   FileofCatWidgetMenu[[1]] <- gaction(gettext("Add To Case ...", domain = "R-RQDA"), handler =function(h, ...) {
     if (is_projOpen(envir = .rqda, conName = "qdacon", message = FALSE)) {
-      AddFileToCaselinkage(Widget=.rqda$.FileofCat)
+      AddFileToCaselinkage(Widget = .rqda$.FileofCat)
       UpdateFileofCaseWidget()
     }
   })
 
   FileofCatWidgetMenu[[2]] <- gaction(gettext("Add To File Category ...", domain = "R-RQDA"), handler =function(h, ...) {
     if (is_projOpen(envir = .rqda, conName = "qdacon", message = FALSE)) {
-      AddToFileCategory(Widget=.rqda$.FileofCat, updateWidget = FALSE)
+      AddToFileCategory(Widget = .rqda$.FileofCat, updateWidget = FALSE)
     }
   })
 
@@ -227,7 +227,7 @@ GetFileofCatWidgetMenu <- function()
       fcatid <- rqda_sel(sprintf("select catid from filecat where name='%s'",
                                                 enc(fcatname)))$catid
       fid <- getFileIds("file", "select")
-      ans <- AddToFileCategory(Widget=.rqda$.FileofCat, updateWidget = FALSE)
+      ans <- AddToFileCategory(Widget = .rqda$.FileofCat, updateWidget = FALSE)
       if (isTRUE(ans)) {
         rqda_exe(sprintf("update treefile set status = 0 where fid in (%s) and catid='%s'",
                                         paste(shQuote(fid), collapse = ", "),
@@ -243,11 +243,11 @@ GetFileofCatWidgetMenu <- function()
   })
 
   FileofCatWidgetMenu[[5]] <- gaction(gettext("Open Selected File", domain = "R-RQDA"), handler =function(h, ...) {
-    ViewFileFun(FileNameWidget=.rqda$.FileofCat)
+    ViewFileFun(FileNameWidget = .rqda$.FileofCat)
   })
 
   FileofCatWidgetMenu[[6]] <- gaction(gettext("Edit Selected File", domain = "R-RQDA"), handler =function(h, ...) {
-    EditFileFun(FileNameWidget=.rqda$.FileofCat)
+    EditFileFun(FileNameWidget = .rqda$.FileofCat)
   })
 
   FileofCatWidgetMenu[[7]] <- gaction(gettext("Search Files Within Category", domain = "R-RQDA"), handler =function(h, ...) {
@@ -311,20 +311,20 @@ GetFileofCatWidgetMenu <- function()
   show_lst[[1]] <- gaction(gettext("Show All By Imported Time", domain = "R-RQDA"), handler =function(h, ...) {
     if (is_projOpen(envir = .rqda, conName = "qdacon")) {
       fid <- getFileIds(condition = "filecategory", type = "all")
-      FileNameWidgetUpdate(FileNamesWidget=.rqda$.FileofCat, FileId = fid)
+      FileNameWidgetUpdate(FileNamesWidget = .rqda$.FileofCat, FileId = fid)
     }
   })
 
   show_lst[[2]] <- gaction(gettext("Show Coded Files Sorted by Imported time", domain = "R-RQDA"), handler =function(h, ...) {
     if (is_projOpen(envir = .rqda, conName = "qdacon")) {
-      FileNameWidgetUpdate(FileNamesWidget=.rqda$.FileofCat, FileId = getFileIds(condition = "filecat", type = "coded"))
+      FileNameWidgetUpdate(FileNamesWidget = .rqda$.FileofCat, FileId = getFileIds(condition = "filecat", type = "coded"))
     }
   })
 
   show_lst[[3]] <- gaction(gettext("Show Uncoded Files Sorted by Imported time", domain = "R-RQDA"), handler =function(h, ...) {
     if (is_projOpen(envir = .rqda, conName = "qdacon", message = FALSE)) {
       ## UncodedFileNamesUpdate(FileNamesWidget = .rqda$.fnames_rqda)
-      FileNameWidgetUpdate(FileNamesWidget=.rqda$.FileofCat, FileId = getFileIds(condition = "filecat", type = "uncoded"))
+      FileNameWidgetUpdate(FileNamesWidget = .rqda$.FileofCat, FileId = getFileIds(condition = "filecat", type = "uncoded"))
       ## By default, the file names in the widget will be sorted.
     }
   })
