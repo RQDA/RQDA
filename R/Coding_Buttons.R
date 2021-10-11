@@ -93,7 +93,7 @@ MarkCodeFun <- function(codeListWidget = ".codes_rqda", codingTable = "coding") 
         })
         if (is.null(currentFile)) {
             gmessage(gettext("Open a file first.", domain = "R-RQDA"), con = TRUE)
-        } else{
+        } else {
             W <- .rqda$.openfile_gui$widget
             con <- .rqda$qdacon
             codeListWidget <- get(codeListWidget, envir = .rqda)
@@ -104,23 +104,25 @@ MarkCodeFun <- function(codeListWidget = ".codes_rqda", codingTable = "coding") 
                 if (length(SelectedCode) != 0) {
                     Encoding(SelectedCode) <- "UTF-8"
                     SelectedCode2 <- enc(SelectedCode, encoding = "UTF-8")
-                    codeInfo <-  rqda_sel(sprintf("select id, color from freecode where name='%s'", SelectedCode2))
+                    codeInfo <- rqda_sel(sprintf("select id, color from freecode where name='%s'", SelectedCode2))
                     currentCid <- codeInfo[, 1]
                     codeCol <- codeInfo[, 2] ## select color for the code
                     ## if (is.na(codeCol)) codeCol <-  c("antiquewhite1", "green", "aquamarine2", "bisque1", "brown1")[as.numeric(currentCid) %% 5 + 1] ## specification of default color for codemark
-                    if (is.na(codeCol)) codeCol <-  DefaultCodeColor[as.numeric(currentCid) %% 11 + 1] ## specification of default color for codemark
+                    if (is.na(codeCol)) {
+                        codeCol <-  DefaultCodeColor[as.numeric(currentCid) %% 11 + 1] ## specification of default color for codemark
+                    }
                     SelectedFile <- svalue(.rqda$.root_edit)
                     SelectedFile <- enc(SelectedFile, encoding = "UTF-8")
                     currentFid <-  rqda_sel(sprintf("select id from source where name='%s'", SelectedFile))[, 1]
 
-                                        # JS Test for coherency!
-                                        #sourcetext <- rqda_sel(sprintf("select substr(file, %s, %s) from source where name='%s'", ans$start + 1, ans$end-ans$start, SelectedFile))[, 1]
-                                        #if (sourcetext != ans$text) {
-                                        #  print(sprintf("Start: %s  End: %s", ans$start, ans$end))
-                                        #  print(sprintf("Source <%s>", sourcetext))
-                                        #  print(sprintf("Selection <%s>", ans$text))
-                                        #  gmessage(gettext("CONSISTENCY ERROR 1 - See console for details", domain = "R-RQDA"))
-                                        #}
+                    ## JS Test for coherency!
+                    ## sourcetext <- rqda_sel(sprintf("select substr(file, %s, %s) from source where name='%s'", ans$start + 1, ans$end-ans$start, SelectedFile))[, 1]
+                    ##if (sourcetext != ans$text) {
+                    ##  print(sprintf("Start: %s  End: %s", ans$start, ans$end))
+                    ##  print(sprintf("Source <%s>", sourcetext))
+                    ##  print(sprintf("Selection <%s>", ans$text))
+                    ##  gmessage(gettext("CONSISTENCY ERROR 1 - See console for details", domain = "R-RQDA"))
+                    ##}
 
                     ## Exist <-  rqda_sel(sprintf("select rowid, selfirst, selend from coding where cid=%i and fid=%i and status = 1", currentCid, currentFid))
                     Exist1 <-  rqda_sel(sprintf("select %s.rowid, selfirst, selend, freecode.name from %s, freecode where cid=%i and fid=%i and %s.status = 1 and cid = freecode.id", codingTable, codingTable, currentCid, currentFid, codingTable))
@@ -132,8 +134,7 @@ MarkCodeFun <- function(codeListWidget = ".codes_rqda", codingTable = "coding") 
                                                         codingTable, DAT$cid, DAT$fid, DAT$seltext, DAT$selfirst, DAT$selend, 1, .rqda$owner, as.character(date()))), silent = TRUE) > 0
                         if (success) {
                             markRange(widget = .rqda$.openfile_gui, from = ans$start, to = ans$end, rowid = rowid, addButton = TRUE, buttonLabel = SelectedCode, buttonCol = codeCol, codingTable = codingTable)
-                        }
-                        else{
+                        } else {
                             gmessage(gettext("Fail to write to database.", domain = "R-RQDA"))
                         }
                     } else {
@@ -156,32 +157,32 @@ MarkCodeFun <- function(codeListWidget = ".codes_rqda", codingTable = "coding") 
                                     gmessage(gettext("Fail to write to data base.", domain = "R-RQDA"), con = TRUE)
                                 }
                                 ## if there are no overlap in any kind, just write to database; otherwise, pass to else{
-                            }
-                        } else {
-                            del1 <- (Exist$Relation == "inclusion" & (is.na(Exist$WhichMin) | Exist$WhichMin == 2))
-                            ## if overlap or inclusion [old nested in new]
-                            ## then the original coding should be deleted
-                            ## then write the new coding to table
-                            del2 <- Exist$Relation == "overlap"
-                            del <- (del1 | del2)
-                            if (any(del)) {
-                                Sel <- c(min(Exist$Start[del]), max(Exist$End[del]))
-                                memo <- rqda_sel(sprintf("select memo from %s where rowid in (%s)", codingTable, paste(Exist$rowid[del], collapse = ", ", sep = "")))$memo
-                                memo <- paste(memo, collapse = "", sep = "")
-                                rqda_exe(sprintf("delete from %s where rowid in (%s)", codingTable, paste(Exist$rowid[del], collapse = ", ", sep = "")))
-                                buffer <- W$buffer
-                                for (i in Exist1$rowid[del]) {
-                                    code <- Exist1[Exist1$rowid == i, "name"]
-                                    m <- buffer$GetMark(sprintf("%s.1", i))
-                                    pos <- buffer$GetIterAtMark(m)$iter$GetOffset()
-                                    DeleteButton(widget = W, label = sprintf("<%s>", code), index = pos, direction = "backward")
-                                    m <- buffer$GetMark(sprintf("%s.2", i))
-                                    pos <- buffer$GetIterAtMark(m)$iter$GetOffset()
-                                    ##DeleteButton(widget = W, label = sprintf(">%s", code), index = pos, direction = "forward")
-                                }
-                                tt <- svalue(W)
-                                Encoding(tt) <- "UTF-8"
-                                DAT <- data.frame(cid = currentCid, fid = currentFid, seltext = substr(tt, Sel[1] + 1, Sel[2]), selfirst = Sel[1], selend = Sel[2], status = 1, owner = .rqda$owner, date = date(), memo = memo, stringsAsFactors = FALSE)
+                                
+                            } else {
+                                del1 <- (Exist$Relation == "inclusion" & (is.na(Exist$WhichMin) | Exist$WhichMin == 2))
+                                ## if overlap or inclusion [old nested in new]
+                                ## then the original coding should be deleted
+                                ## then write the new coding to table
+                                del2 <- Exist$Relation == "overlap"
+                                del <- (del1 | del2)
+                                if (any(del)) {
+                                    Sel <- c(min(Exist$Start[del]), max(Exist$End[del]))
+                                    memo <- rqda_sel(sprintf("select memo from %s where rowid in (%s)", codingTable, paste(Exist$rowid[del], collapse = ", ", sep = "")))$memo
+                                    memo <- paste(memo, collapse = "", sep = "")
+                                    rqda_exe(sprintf("delete from %s where rowid in (%s)", codingTable, paste(Exist$rowid[del], collapse = ", ", sep = "")))
+                                    buffer <- W$buffer
+                                    for (i in Exist1$rowid[del]) {
+                                        code <- Exist1[Exist1$rowid == i, "name"]
+                                        m <- buffer$GetMark(sprintf("%s.1", i))
+                                        pos <- buffer$GetIterAtMark(m)$iter$GetOffset()
+                                        DeleteButton(widget = W, label = sprintf("<%s>", code), index = pos, direction = "backward")
+                                        m <- buffer$GetMark(sprintf("%s.2", i))
+                                        pos <- buffer$GetIterAtMark(m)$iter$GetOffset()
+                                        ##DeleteButton(widget = W, label = sprintf(">%s", code), index = pos, direction = "forward")
+                                    }
+                                    tt <- svalue(W)
+                                    Encoding(tt) <- "UTF-8"
+                                    DAT <- data.frame(cid = currentCid, fid = currentFid, seltext = substr(tt, Sel[1] + 1, Sel[2]), selfirst = Sel[1], selend = Sel[2], status = 1, owner = .rqda$owner, date = date(), memo = memo, stringsAsFactors = FALSE)
 
                                         # JS Test for coherency!
                                         #sourcetext <- rqda_sel(sprintf("select substr(file, %s, %s) from source where name='%s'", Sel[1] + 1, Sel[2]-Sel[1], SelectedFile))[, 1]
@@ -193,17 +194,17 @@ MarkCodeFun <- function(codeListWidget = ".codes_rqda", codingTable = "coding") 
                                         #  gmessage(gettext("CONSISTENCY ERROR 2 - See console for details", domain = "R-RQDA"))
                                         #}
 
-                                DAT$seltext <- enc(DAT$seltext)
-                                rowid <- NextRowId(codingTable)
-                                success <- is.null(try(rqda_exe(sprintf("insert into %s (cid, fid, seltext, selfirst, selend, status, owner, date, memo) values (%s, %s, '%s', %s, %s, %s, '%s', '%s', '%s') ",
-                                                                        codingTable, DAT$cid, DAT$fid, DAT$seltext, DAT$selfirst, DAT$selend, 1, .rqda$owner, as.character(date()), DAT$memo)), silent = TRUE))
-                                if (success) {
-                                    markRange(widget = .rqda$.openfile_gui, from = Sel[1], to = Sel[2], rowid = rowid, addButton = TRUE, buttonLabel = SelectedCode, buttonCol = codeCol, codingTable = codingTable)
-                                } else {
-                                    gmessage(gettext("Fail to write to database.", domain = "R-RQDA"))
+                                    DAT$seltext <- enc(DAT$seltext)
+                                    rowid <- NextRowId(codingTable)
+                                    success <- is.null(try(rqda_exe(sprintf("insert into %s (cid, fid, seltext, selfirst, selend, status, owner, date, memo) values (%s, %s, '%s', %s, %s, %s, '%s', '%s', '%s') ",
+                                                                            codingTable, DAT$cid, DAT$fid, DAT$seltext, DAT$selfirst, DAT$selend, 1, .rqda$owner, as.character(date()), DAT$memo)), silent = TRUE))
+                                    if (success) {
+                                        markRange(widget = .rqda$.openfile_gui, from = Sel[1], to = Sel[2], rowid = rowid, addButton = TRUE, buttonLabel = SelectedCode, buttonCol = codeCol, codingTable = codingTable)
+                                    } else {
+                                        gmessage(gettext("Fail to write to database.", domain = "R-RQDA"))
+                                    }
                                 }
-                            }
-                        }}}}}}}}
+                            }}}}}}}}
 
 
 Unmark_Button <- function (label = gettext("Unmark", domain = "R-RQDA"), codeListWidget = .rqda$.codes_rqda, name = "UnMarB1") {
