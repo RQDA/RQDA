@@ -401,7 +401,7 @@ retrieval <- function(Fid = NULL, order = c("fname", "ftime", "ctime"), CodeName
                     rqda_exe(sprintf("update %s set status = 0 where fid=%i", codingTable, i))
                 }
             }
-            Encoding(retrieval$seltext) <-  Encoding(retrieval$fname) <- "UTF-8"
+            Encoding(retrieval$seltext) <- Encoding(retrieval$fname) <- "UTF-8"
             ## helper function
             ComputeCallbackFun <- function(FileName, rowid) {
                 CallBackFUN <- function(widget, event, ...) {
@@ -433,7 +433,7 @@ retrieval <- function(Fid = NULL, order = c("fname", "ftime", "ctime"), CodeName
                     if (length(SelectedCode) != 0) {
                         Encoding(SelectedCode) <- "UTF-8"
                         SelectedCode2 <- enc(SelectedCode, encoding = "UTF-8")
-                        currentCid <-  rqda_sel(sprintf("select id from freecode where name='%s'", SelectedCode2))$id
+                        currentCid <- rqda_sel(sprintf("select id from freecode where name='%s'", SelectedCode2))$id
                         DAT <- rqda_sel(sprintf("select * from coding where rowid=%s", rowid))
 
                         ## DAT will be empty if the user has Unmarked the coding and clicked
@@ -638,9 +638,9 @@ ClickHandlerFun <- function(CodeNameWidget, buttons = c("MarCodB1", "UnMarB1"), 
             }
             SelectedFile <- svalue(.rqda$.root_edit)
             SelectedFile <- enc(SelectedFile, encoding = "UTF-8")
-            currentFid <-  rqda_sel(sprintf("select id from source where name='%s'", SelectedFile))[, 1]
+            currentFid <- rqda_sel(sprintf("select id from source where name='%s'", SelectedFile))[, 1]
             ## following code: Only mark the text chuck according to the current code.
-            idx1 <-  rqda_sel(sprintf("select selfirst, selend from %s where
+            idx1 <- rqda_sel(sprintf("select selfirst, selend from %s where
                                        cid=%i and fid=%i and status = 1", codingTable, currentCid, currentFid))
             idx2 <- rqda_sel(sprintf("select selfirst, selend from %s where fid=%i and status = 1", codingTable, currentFid))
             if (nrow(idx2) > 0) {
@@ -650,7 +650,7 @@ ClickHandlerFun <- function(CodeNameWidget, buttons = c("MarCodB1", "UnMarB1"), 
                 ##allidx <- unlist(idx2)
                 anno <- rqda_sel(sprintf("select position from annotation where status = 1 and fid=%s", currentFid))$position
                 allidx <- c(idx2[, 1], anno) ## since 0.2-0, only one code label is added to file widget.
-                addidx <-  data.frame(selfirst = apply(outer(allidx, idx1$selfirst, "<="), 2, sum),
+                addidx <- data.frame(selfirst = apply(outer(allidx, idx1$selfirst, "<="), 2, sum),
                                       selend = apply(outer(allidx, idx1$selend, "<="), 2, sum))
                 idx1 <- idx1 + addidx
                 HL(.rqda$.openfile_gui, index = idx1, fore.col = .rqda$fore.col, back.col = NULL)
@@ -667,16 +667,16 @@ HL_CodingWithMemo <- function(codingTable = "coding") {
         })
         if (!is.null(SelectedFile)) {
             SelectedFile <- enc(SelectedFile, encoding = "UTF-8")
-            currentFid <-  rqda_sel(sprintf("select id from source where name='%s'", SelectedFile))[, 1]
+            currentFid <- rqda_sel(sprintf("select id from source where name='%s'", SelectedFile))[, 1]
             tryCatch({
                 widget <- .rqda$.openfile_gui$widget
-                idx <-  rqda_sel(sprintf("select selfirst, selend, memo from %s where fid=%i and status = 1", codingTable, currentFid))
+                idx <- rqda_sel(sprintf("select selfirst, selend, memo from %s where fid=%i and status = 1", codingTable, currentFid))
                 if (nrow(idx) != 0) {
                     ClearMark(widget, min = 0, max = max(as.numeric(idx$selend)) + 2 * nrow(idx), clear.fore.col = TRUE, clear.back.col = FALSE)
                     anno <- rqda_sel(sprintf("select position from annotation where status = 1 and fid=%s", currentFid))$position
                     ## allidx <- unlist(idx[, c("selfirst", "selend")])
                     allidx <- c(idx[, c("selfirst")], anno)
-                    addidx <-  data.frame(selfirst = apply(outer(allidx, idx$selfirst, "<="), 2, sum),
+                    addidx <- data.frame(selfirst = apply(outer(allidx, idx$selfirst, "<="), 2, sum),
                                           selend = apply(outer(allidx, idx$selend, "<="), 2, sum))
                     idx[, c("selfirst", "selend")] <- idx[, c("selfirst", "selend")] + addidx
                     idx1 <- idx[(idx$memo != "") & (!is.na(idx$memo)), c("selfirst", "selend")]
@@ -692,7 +692,7 @@ HL_AllCodings <- function(codingTable = "coding") {
             NULL
         })
         if (!is.null(SelectedFile)) {
-            currentFid <-  rqda_sel(sprintf("select id from source where name='%s'", enc(SelectedFile, "UTF-8")))[, 1]
+            currentFid <- rqda_sel(sprintf("select id from source where name='%s'", enc(SelectedFile, "UTF-8")))[, 1]
             idx <- rqda_sel(sprintf("select selfirst, selend from %s where fid=%i and status = 1", codingTable, currentFid))
             if ((N <- nrow(idx)) != 0) {
                 anno <- rqda_sel(sprintf("select position from annotation where status = 1 and fid=%s", currentFid))$position
@@ -825,7 +825,7 @@ Annotation <- function(...) {
             AnchorPos <- sindex(W, includeAnchor = TRUE)$startN
             SelectedFile <- svalue(.rqda$.root_edit)
             SelectedFile <- enc(SelectedFile, encoding = "UTF-8")
-            currentFid <-  rqda_sel(sprintf("select id from source where name='%s'", SelectedFile))[, 1]
+            currentFid <- rqda_sel(sprintf("select id from source where name='%s'", SelectedFile))[, 1]
             idx <- rqda_sel(sprintf("select fid, annotation, rowid from annotation where fid=%i and position=%s and status = 1", currentFid, pos$startN))
             New <- ifelse(nrow(idx) == 0, TRUE, FALSE)
             if (nrow(idx) == 0) rowid <- NextRowId("annotation") else rowid <- idx$rowid
@@ -907,10 +907,10 @@ AddToCodeCategory <- function(Widget = .rqda$.codes_rqda, updateWidget = TRUE) {
 ## ## if the not file is open, it doesn't work.
 ## if (is.null(sel_index)) {gmessage(gettext("Open a file first!", domain = "R-RQDA"), container = TRUE)}
 ## else {
-## CodeTable <-  rqda_sel("select id, name from freecode where status == 1")
+## CodeTable <- rqda_sel("select id, name from freecode where status == 1")
 ## SelectedFile <- svalue(.rqda$.root_edit); Encoding(SelectedFile) <- "UTF-8" ##file title
-## currentFid <-  rqda_sel(sprintf("select id from source where name == '%s'", SelectedFile))[, 1]
-## codings_index <-  rqda_sel(sprintf("select rowid, cid, fid, selfirst, selend from coding where fid == %i ", currentFid))
+## currentFid <- rqda_sel(sprintf("select id from source where name == '%s'", SelectedFile))[, 1]
+## codings_index <- rqda_sel(sprintf("select rowid, cid, fid, selfirst, selend from coding where fid == %i ", currentFid))
 ## ## should only work with those related to current code and current file.
 ## rowid <- codings_index$rowid[(codings_index$selfirst >= sel_index$startN) &
 ##                              (codings_index$selend  <= sel_index$endN)

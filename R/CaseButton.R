@@ -85,15 +85,15 @@ MarkCaseFun <- function() {
                 ## when selected no text, makes on sense to do anything.
                 SelectedCase <- svalue(.rqda$.CasesNamesWidget)
                 SelectedCase <- enc(SelectedCase, encoding = "UTF-8")
-                currentCid <-  rqda_sel(sprintf("select id from cases where name='%s'",
+                currentCid <- rqda_sel(sprintf("select id from cases where name='%s'",
                                                 SelectedCase))[, 1]
                 SelectedFile <- svalue(.rqda$.root_edit)
                 ##Encoding(SelectedFile) <- "UTF-8"
                 SelectedFile <- enc(SelectedFile, encoding = "UTF-8")
-                currentFid <-  rqda_sel(sprintf("select id from source where name='%s'",
+                currentFid <- rqda_sel(sprintf("select id from source where name='%s'",
                                                 SelectedFile))[, 1]
                 ## Query of caselinkage
-                ExistLinkage <-  rqda_sel(sprintf("select rowid, selfirst, selend, status from caselinkage where caseid=%i and fid=%i and status = 1", currentCid, currentFid))
+                ExistLinkage <- rqda_sel(sprintf("select rowid, selfirst, selend, status from caselinkage where caseid=%i and fid=%i and status = 1", currentCid, currentFid))
                 DAT <- data.frame(caseid = currentCid, fid = currentFid,
                                   selfirst = ans$start, selend = ans$end, status = 1,
                                   owner = .rqda$owner, date = date(), memo = "")
@@ -154,11 +154,11 @@ CaseUnMark_Button <- function(label = gettext("Unmark", domain = "R-RQDA")) {
                 gmessage(gettext("Select a case first.", domain = "R-RQDA"), con = TRUE)
             } else{
                 SelectedCase <- enc(SelectedCase, "UTF-8")
-                caseid <-  rqda_sel(sprintf("select id from cases where name='%s'", SelectedCase))[, 1]
+                caseid <- rqda_sel(sprintf("select id from cases where name='%s'", SelectedCase))[, 1]
                 SelectedFile <- svalue(.rqda$.root_edit)
                 SelectedFile <- enc(SelectedFile, "UTF-8")
-                currentFid <-  rqda_sel(sprintf("select id from source where name='%s'", SelectedFile))[, 1]
-                codings_index <-  rqda_sel(sprintf("select rowid, caseid, fid, selfirst, selend from caselinkage where caseid=%i and fid=%i", caseid, currentFid))
+                currentFid <- rqda_sel(sprintf("select id from source where name='%s'", SelectedFile))[, 1]
+                codings_index <- rqda_sel(sprintf("select rowid, caseid, fid, selfirst, selend from caselinkage where caseid=%i and fid=%i", caseid, currentFid))
                 ## should only work with those related to current case and current file.
                 rowid <- codings_index$rowid[(codings_index$selfirst  >= sel_index$startN) &
                                              (codings_index$selend  <= sel_index$endN)]
@@ -214,7 +214,7 @@ GetCaseNamesWidgetMenu <- function() {
             SelectedCase <- svalue(.rqda$.CasesNamesWidget)
             SelectedCase <- enc(SelectedCase, "UTF-8")
             caseid <- rqda_sel(sprintf("select id from cases where status = 1 and name='%s'", SelectedCase))[, 1]
-            freefile <-  rqda_sel("select name, id, file from source where status = 1")
+            freefile <- rqda_sel("select name, id, file from source where status = 1")
             fileofcase <- rqda_sel(sprintf("select fid from caselinkage where status = 1 and caseid=%i", caseid))
             Encoding(freefile[["name"]]) <- Encoding(freefile[["file"]]) <- "UTF-8"
             if (nrow(fileofcase) != 0) {

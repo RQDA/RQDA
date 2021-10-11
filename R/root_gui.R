@@ -317,8 +317,8 @@ RQDA <- function() {
 
         .journal_buttons[1, 1] <- AddJournalButton()
         .journal_buttons[1, 2] <- DeleteJournalButton()
-        .journal_buttons[1, 3] <-  OpenJournalButton()
-        .journal_buttons[1, 4] <-  RenameJournalButton()
+        .journal_buttons[1, 3] <- OpenJournalButton()
+        .journal_buttons[1, 4] <- RenameJournalButton()
 
 
 ### GUI  for settings ######################################################
@@ -518,7 +518,7 @@ AddHandler <- function() {
                                   "fid = %i and status = 1"), currentFid))$position
                 allidx <- unlist(coding.idx, anno.idx)
 
-                sel_index <-  rqda_sel(
+                sel_index <- rqda_sel(
                     sprintf(paste("select selfirst, selend from caselinkage where",
                                   "caseid = %i and fid = %i and status = 1"),
                             currentCid, currentFid))

@@ -114,7 +114,7 @@ FileCatAddToButton <- function(label = gettext("AddTo", domain = "R-RQDA"), Widg
     ans <- gbutton(label, handler = function(h, ...) {
         SelectedFileCat <- svalue(.rqda$.FileCatWidget)
         catid <- rqda_sel(sprintf("select catid from filecat where status = 1 and name='%s'", enc(SelectedFileCat)))[, 1]
-        freefile <-  rqda_sel("select name, id from source where status = 1")
+        freefile <- rqda_sel("select name, id from source where status = 1")
         if (nrow(freefile) == 0) {
             gmessage(gettext("No files Yet.", domain = "R-RQDA"), cont = .rqda$.FileCatWidget)
         } else {

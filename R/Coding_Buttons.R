@@ -107,13 +107,13 @@ MarkCodeFun <- function(codeListWidget = ".codes_rqda", codingTable = "coding") 
                     codeInfo <- rqda_sel(sprintf("select id, color from freecode where name='%s'", SelectedCode2))
                     currentCid <- codeInfo[, 1]
                     codeCol <- codeInfo[, 2] ## select color for the code
-                    ## if (is.na(codeCol)) codeCol <-  c("antiquewhite1", "green", "aquamarine2", "bisque1", "brown1")[as.numeric(currentCid) %% 5 + 1] ## specification of default color for codemark
+                    ## if (is.na(codeCol)) codeCol <- c("antiquewhite1", "green", "aquamarine2", "bisque1", "brown1")[as.numeric(currentCid) %% 5 + 1] ## specification of default color for codemark
                     if (is.na(codeCol)) {
-                        codeCol <-  DefaultCodeColor[as.numeric(currentCid) %% 11 + 1] ## specification of default color for codemark
+                        codeCol <- DefaultCodeColor[as.numeric(currentCid) %% 11 + 1] ## specification of default color for codemark
                     }
                     SelectedFile <- svalue(.rqda$.root_edit)
                     SelectedFile <- enc(SelectedFile, encoding = "UTF-8")
-                    currentFid <-  rqda_sel(sprintf("select id from source where name='%s'", SelectedFile))[, 1]
+                    currentFid <- rqda_sel(sprintf("select id from source where name='%s'", SelectedFile))[, 1]
 
                     ## JS Test for coherency!
                     ## sourcetext <- rqda_sel(sprintf("select substr(file, %s, %s) from source where name='%s'", ans$start + 1, ans$end-ans$start, SelectedFile))[, 1]
@@ -124,8 +124,8 @@ MarkCodeFun <- function(codeListWidget = ".codes_rqda", codingTable = "coding") 
                     ##  gmessage(gettext("CONSISTENCY ERROR 1 - See console for details", domain = "R-RQDA"))
                     ##}
 
-                    ## Exist <-  rqda_sel(sprintf("select rowid, selfirst, selend from coding where cid=%i and fid=%i and status = 1", currentCid, currentFid))
-                    Exist1 <-  rqda_sel(sprintf("select %s.rowid, selfirst, selend, freecode.name from %s, freecode where cid=%i and fid=%i and %s.status = 1 and cid = freecode.id", codingTable, codingTable, currentCid, currentFid, codingTable))
+                    ## Exist <- rqda_sel(sprintf("select rowid, selfirst, selend from coding where cid=%i and fid=%i and status = 1", currentCid, currentFid))
+                    Exist1 <- rqda_sel(sprintf("select %s.rowid, selfirst, selend, freecode.name from %s, freecode where cid=%i and fid=%i and %s.status = 1 and cid = freecode.id", codingTable, codingTable, currentCid, currentFid, codingTable))
                     DAT <- data.frame(cid = currentCid, fid = currentFid, seltext = ans$text, selfirst = ans$start, selend = ans$end, status = 1, owner = .rqda$owner, date = date(), memo = NA, stringsAsFactors = FALSE)
                     DAT$seltext <- enc(DAT$seltext)
                     if (nrow(Exist1) == 0) {
@@ -238,14 +238,14 @@ UnMarkCodeFun <- function (codeListWidget = .rqda$.codes_rqda, codingTable = "co
             } else {
                 Encoding(SelectedCode) <- "UTF-8"
                 SelectedCode2 <- enc(SelectedCode, "UTF-8")
-                currentCid <-  rqda_sel(
+                currentCid <- rqda_sel(
                     sprintf("select id from freecode where name='%s'",
                             SelectedCode2))[, 1]
                 SelectedFile <- svalue(.rqda$.root_edit)
                 SelectedFile <- enc(SelectedFile, "UTF-8") ## Encoding(SelectedFile) <- "UTF-8"
-                currentFid <-  rqda_sel(sprintf("select id from source where name='%s'",
+                currentFid <- rqda_sel(sprintf("select id from source where name='%s'",
                                                 SelectedFile))[, 1]
-                codings_index <-  rqda_sel(sprintf("select rowid, cid, fid, selfirst, selend from %s where cid=%i and fid=%i and status = 1", codingTable, currentCid, currentFid))
+                codings_index <- rqda_sel(sprintf("select rowid, cid, fid, selfirst, selend from %s where cid=%i and fid=%i and status = 1", codingTable, currentCid, currentFid))
                 ## should only work with those related to current code and current file.
                 rowid <- codings_index$rowid[(codings_index$selfirst  >= idx1$startN) &
                                              (codings_index$selend  <= idx1$endN)]
@@ -401,11 +401,11 @@ CodingMemoButton <- function (label = gettext("C2Memo", domain = "R-RQDA"))
                 } else {
                     Encoding(SelectedCode) <- "UTF-8"
                     SelectedCode2 <- enc(SelectedCode, "UTF-8")
-                    currentCid <-  rqda_sel(sprintf("select id from freecode where name='%s'", SelectedCode2))[, 1]
+                    currentCid <- rqda_sel(sprintf("select id from freecode where name='%s'", SelectedCode2))[, 1]
                     SelectedFile <- svalue(.rqda$.root_edit)
                     SelectedFile <- enc(SelectedFile, encoding = "UTF-8")
-                    currentFid <-  rqda_sel(sprintf("select id from source where name='%s'", SelectedFile))[, 1]
-                    codings_index <-  rqda_sel(sprintf("select rowid, cid, fid, selfirst, selend from coding where
+                    currentFid <- rqda_sel(sprintf("select id from source where name='%s'", SelectedFile))[, 1]
+                    codings_index <- rqda_sel(sprintf("select rowid, cid, fid, selfirst, selend from coding where
                                                    cid=%i and fid=%i and status = 1 ", currentCid, currentFid))
                     ## should only work with those related to current code and current file.
                     rowid <- codings_index$rowid[(codings_index$selfirst  >= sel_index$startN) &

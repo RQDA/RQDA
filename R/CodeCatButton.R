@@ -193,7 +193,7 @@ CodeCatAddToButton <- function(label = rqda_txt("Add To"),
             sprintf("select catid from codecat where status = 1 and name='%s'",
                     enc(SelectedCodeCat)))[, 1]
 
-        freecode <-  rqda_sel("select name, id from freecode where status = 1")
+        freecode <- rqda_sel("select name, id from freecode where status = 1")
 
         if (nrow(freecode) == 0) {
             gmessage(rqda_txt("No free codes yet."),

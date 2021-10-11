@@ -127,7 +127,7 @@ saveFUN4CaseAttr <- function(button, data) {
 }
 
 CaseAttrFun <- function(caseId, title = NULL, attrs = svalue(.rqda$.AttrNamesWidget)) {
-    if (length(attrs) == 0) attrs <-  rqda_sel("select name from attributes where status = 1")$name
+    if (length(attrs) == 0) attrs <- rqda_sel("select name from attributes where status = 1")$name
     if (is.null(attrs)) {
         gmessage(gettext("add attribute in Attrs Table first.", domain = "R-RQDA"), container = TRUE)
     } else {
@@ -183,7 +183,7 @@ saveFUN4FileAttr <- function(button, data) {
 }
 
 FileAttrFun <- function(fileId, title = NULL, attrs = svalue(.rqda$.AttrNamesWidget)) {
-    if (length(attrs) == 0) attrs <-  rqda_sel("select name from attributes where status = 1")$name
+    if (length(attrs) == 0) attrs <- rqda_sel("select name from attributes where status = 1")$name
     if (is.null(attrs)) gmessage(gettext("add attribute in Attrs Table first.", domain = "R-RQDA"), container = TRUE) else{
                                                                                                                           Encoding(attrs) <- "UTF-8"
                                                                                                                           attrs2 <- data.frame(variable = attrs, value = "NA", stringsAsFactors = FALSE)
@@ -410,7 +410,7 @@ viewFileAttr <- function() {
 #' @export
 getAttr <- function(type = c("case", "file"), attrs = svalue(.rqda$.AttrNamesWidget), subset) {
     if (is_projOpen()) {
-        type <-  match.arg(type)
+        type <- match.arg(type)
         if (length(attrs) == 0) attrs <- NULL
         inClause <- ifelse(is.null(attrs), "", sprintf("where status = 1 and variable in (%s)", paste(shQuote(attrs), collapse = ", ")))
         if (type == "case") {

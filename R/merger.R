@@ -42,7 +42,7 @@ mergeCodes <- function(cid1, cid2) { ## cid1 and cid2 are two code IDs.
                         memo <- paste(c(To_memo, From$memo), collapse = "\n", sep = "") ## merge the To_memo from From
                         rqda_exe(sprintf("delete from coding where rowid in (%s)",
                                          paste(Exist$rowid[del], collapse = ", ", sep = ""))) ## delete codings
-                        tt <-   rqda_sel(sprintf("select file from source where id='%i'", From$fid))[1, 1]
+                        tt <- rqda_sel(sprintf("select file from source where id='%i'", From$fid))[1, 1]
                         Encoding(tt) <- "UTF-8"  ## fulltext of the file
                         Sel <- c(min(Exist$Start[del]), max(Exist$End[del])) ## index to get the new coding
                         ## what is Sel?
@@ -57,8 +57,8 @@ mergeCodes <- function(cid1, cid2) { ## cid1 and cid2 are two code IDs.
         }
     } ## end of helper function.
 
-    Coding1 <-  rqda_sel(sprintf("select * from coding where cid=%i and status = 1", cid1))
-    Coding2 <-  rqda_sel(sprintf("select * from coding where cid=%i and status = 1", cid2))
+    Coding1 <- rqda_sel(sprintf("select * from coding where cid=%i and status = 1", cid1))
+    Coding2 <- rqda_sel(sprintf("select * from coding where cid=%i and status = 1", cid2))
     if (any(c(nrow(Coding1), nrow(Coding2)) == 0)) stop("One code has empty coding.", domain = "R-RQDA")
     if (nrow(Coding1) >= nrow(Coding2)) {
         FromDat <- Coding2
@@ -106,7 +106,7 @@ erger2 <- function(cid1, cid2, data) {
 ## cid1 and cid2
     data <- data[data$cid %in% c(cid1, cid2), c("cid", "fid",
                                                 "index1", "index2")]
-    ans <-  data.frame(fid = numeric(), cid = numeric(), index1 = numeric(), index2 = numeric())
+    ans <- data.frame(fid = numeric(), cid = numeric(), index1 = numeric(), index2 = numeric())
     fidList <- unique(data[data$cid %in% cid1, "fid"])
     for (fid in fidList) {
         tmpdat1 <- data[data$fid == fid & data$cid == cid1, , drop = FALSE]

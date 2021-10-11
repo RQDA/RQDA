@@ -120,7 +120,7 @@ getCodingsFromFiles <- function(Fid, order = c("fname", "ftime", "ctime"),
 
         }
 
-        Encoding(retrieval$seltext) <-  Encoding(retrieval$fname) <- "UTF-8"
+        Encoding(retrieval$seltext) <- Encoding(retrieval$fname) <- "UTF-8"
         ## helper function
         ComputeCallbackFun <- function(FileName, rowid) {
             CallBackFUN <- function(widget, event, ...) {

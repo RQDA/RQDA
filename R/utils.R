@@ -555,7 +555,7 @@ gselect.list <- function(list, multiple = TRUE, title = NULL, height = getOption
 
 #' @export
 getFileNames <- function(fid = getFileIds()) {
-    ans <-  rqda_sel(sprintf("select name from source where status = 1 and id in (%s)", paste(shQuote(fid), collapse = ", ")))$name
+    ans <- rqda_sel(sprintf("select name from source where status = 1 and id in (%s)", paste(shQuote(fid), collapse = ", ")))$name
     if (length(ans) > 0) Encoding(ans) <- "UTF-8"
     class(ans) <- c("RQDA.vector", "fileName")
     ans
@@ -574,7 +574,7 @@ getFiles <- function(condition = c("unconditional", "case", "filecategory", "bot
 getCaseIds <- function(fid = getFileIds(), nFiles = FALSE) {
     ## if (caseName) {
     if (nFiles) {
-        ## ans <-  rqda_sel(sprintf(" select name, id from cases where status = 1 and id in (select caseid from caselinkage where status = 1 and fid in (%s) group by caseid)", paste(shQuote(fid), collapse = ", ")))
+        ## ans <- rqda_sel(sprintf(" select name, id from cases where status = 1 and id in (select caseid from caselinkage where status = 1 and fid in (%s) group by caseid)", paste(shQuote(fid), collapse = ", ")))
         ## if (nrow(ans) > 0) Encoding(ans$name) <- "UTF-8"
         ans <- rqda_sel(sprintf("select caseid, count(caseid) as nFiles from caselinkage where status = 1 and fid in (%s) group by caseid", paste(shQuote(fid), collapse = ", ")))
     } else {
@@ -636,7 +636,7 @@ getCases <- function(fid, names = TRUE) {
 
 #' @export
 getCaseNames <- function(caseId = getCaseIds(nFiles = FALSE)) {
-    ans <-  rqda_sel(sprintf("select name from cases where status = 1 and id in (%s)", paste(shQuote(caseId), collapse = ", ")))$name
+    ans <- rqda_sel(sprintf("select name from cases where status = 1 and id in (%s)", paste(shQuote(caseId), collapse = ", ")))$name
     if (length(ans) > 0) Encoding(ans) <- "UTF-8"
     class(ans) <- c("RQDA.vector", "caseName")
     ans
@@ -768,7 +768,7 @@ ShowFileProperty <- function(Fid = getFileIds(type = "selected"), focus = TRUE) 
             if (!is.null(Fcat)) Encoding(Fcat) <- "UTF-8"
             if (!is.null(Case)) Encoding(Case) <- "UTF-8"
             fcat <- paste(strwrap(sprintf(gettext("File Category is %s", domain = "R-RQDA"), paste(shQuote(Fcat), collapse = ", ")), 105, exdent = 4), collapse = "\n")
-            Encoding(fcat) <-  "UTF-8"
+            Encoding(fcat) <- "UTF-8"
             val <- sprintf(gettext(" File ID is %i \n %s \nCase is %s", domain = "R-RQDA"), Fid, fcat, paste(shQuote(Case), collapse = ", "))
         }
 

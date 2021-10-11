@@ -11,7 +11,7 @@ AutoCoding <- function(KeyWord, expansion = 6) {
 }
 
 insertCoding <- function(fid, cid, start, end, fulltext) {
-    Exist1 <-  rqda_sel(sprintf("select coding.rowid, selfirst, selend, freecode.name from coding, freecode where cid=%i and fid=%i and coding.status = 1 and cid = freecode.id", cid, fid))
+    Exist1 <- rqda_sel(sprintf("select coding.rowid, selfirst, selend, freecode.name from coding, freecode where cid=%i and fid=%i and coding.status = 1 and cid = freecode.id", cid, fid))
     DAT <- data.frame(cid = cid, fid = fid, seltext = substr(fulltext, start + 1, end), selfirst = start, selend = end, status = 1, owner = .rqda$owner, date = date(), memo = NA, stringsAsFactors = FALSE)
     DAT$seltext <- enc(DAT$seltext)
 

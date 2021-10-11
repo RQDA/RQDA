@@ -103,7 +103,7 @@ UpdateFileofCaseWidget <- function(con = .rqda$qdacon, Widget = .rqda$.FileofCas
 HL_Case <- function() {
     if (is_projOpen(envir = .rqda, conName = "qdacon")) {
         SelectedFile <- svalue(.rqda$.root_edit)
-        currentFid <-  rqda_sel(sprintf("select id from source where name='%s'",
+        currentFid <- rqda_sel(sprintf("select id from source where name='%s'",
                                         enc(SelectedFile)))[, 1]
         if (length(currentFid) != 0) {
             caseName <- svalue(.rqda$.CasesNamesWidget)

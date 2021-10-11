@@ -205,7 +205,7 @@ ViewFileFunHelper <- function(FileName, hightlight = TRUE, codingTable = .rqda$c
             Encoding(code) <- "UTF-8"
             codeColor <- markidx[markidx$rowid == x, "color"]
             if (is.na(codeColor)) {
-                codeColor <-  DefaultCodeColor[as.numeric(markidx[markidx$rowid == x, "id"]) %% length(DefaultCodeColor) + 1]
+                codeColor <- DefaultCodeColor[as.numeric(markidx[markidx$rowid == x, "id"]) %% length(DefaultCodeColor) + 1]
             }
             m1 <- buffer$GetMark(sprintf("%s.1", x))
             iter1 <- buffer$GetIterAtMark(m1)
@@ -287,7 +287,7 @@ EditFileFun <- function(FileNameWidget = .rqda$.fnames_rqda) {
             assign(".root_edit", gw, envir = .rqda)
             assign(".root_edit2", gpanedgroup(horizontal = FALSE, container = .rqda$.root_edit), envir = .rqda)
             EdiFilB <- gbutton(gettext("Save File", domain = "R-RQDA"), container = .rqda$.root_edit2, handler = function(h, ...) {
-                content <-  svalue(.rqda$.openfile_gui)
+                content <- svalue(.rqda$.openfile_gui)
                 rqda_exe(sprintf("update source set file='%s', dateM='%s' where name='%s'",
                                  enc(content, "UTF-8"), date(), enc(svalue(.rqda$.root_edit), "UTF-8"))) ## update source table
                 if (nrow(mark_index) != 0) { ## only manipulate the coding when there is one.
@@ -562,7 +562,7 @@ getFileIds <- function(condition = c("unconditional", "case", "filecategory", "b
                 ##         fidofcase <- rqda_sel(sprintf("select fid from caselinkage where status == 1 and caseid in (%s)",
                 ##                                                     paste(paste("'", caseid, "'", sep = ""), collapse = ", ")))$fid
                 ## roll back to rev 90
-                allfid <-  unconditionalFun(type = type)
+                allfid <- unconditionalFun(type = type)
                 ans <- intersect(fidofcase, allfid)
             }
         }
@@ -586,7 +586,7 @@ getFileIds <- function(condition = c("unconditional", "case", "filecategory", "b
                 ans <- codedfid
             }
             if (type == "uncoded") {
-                ans <-  setdiff(allfid, codedfid)
+                ans <- setdiff(allfid, codedfid)
             }
         }
         ans

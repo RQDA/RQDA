@@ -66,7 +66,7 @@ DeleteFileButton <- function(label = rqda_txt("Delete"), container, ...) {
     gtkWidgetSetSensitive(button$DelFilB$widget, FALSE)
 }
 
-ViewFileButton <-  function(label = rqda_txt("Open"), container, ...) {
+ViewFileButton <- function(label = rqda_txt("Open"), container, ...) {
     VieFilB <- gbutton(label, container = container,
                        handler = function(h, ...) {
                            ViewFileFun(FileNameWidget = .rqda$.fnames_rqda)

@@ -369,7 +369,7 @@ not <- function(CT1, CT2) {
 ##           if (any(del)) {
 ##             ExistN <- Exist[-which(del), c("rowid", "fid", "filename", "index1", "index2", "coding")]
 ##             ## delete codings
-##             tt <-   rqda_sel(sprintf("select file from source where id == '%i'", From$fid))[1, 1]
+##             tt <- rqda_sel(sprintf("select file from source where id == '%i'", From$fid))[1, 1]
 ##             Encoding(tt) <- "UTF-8"  ## fulltext of the file
 ##             Sel <- c(min(Exist$Start[del]), max(Exist$End[del])) ## index to get the new coding
 ##             ans <- rbind(ExistN,
