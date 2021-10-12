@@ -81,7 +81,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          remotes::install_deps(dependencies = TRUE, type = "binary")
+          remotes::install_deps(dependencies = TRUE, type = ifelse(Sys.info()["sysname"] == "Linux", "source", "binary"))
           remotes::install_cran("rcmdcheck")
           remotes::install_cran("sessioninfo")
         shell: Rscript {0}
