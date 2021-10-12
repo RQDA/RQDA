@@ -62,7 +62,7 @@ jobs:
         run: |
           curl -O http://gemmei.ftp.acc.umu.se/pub/gnome/binaries/win64/gtk+/2.22/gtk+-bundle_2.22.1-20101229_win64.zip
           7z x -o"C:\GTK2-Runtime" gtk+-bundle_2.22.1-20101229_win64.zip
-          DEL gtk+-bundle_2.22.1-20101229_win64.zip  
+          DEL gtk+-bundle_2.22.1-20101229_win64.zip
           ECHO %PATH%
         shell: cmd
 
@@ -81,7 +81,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          remotes::install_deps(dependencies = TRUE)
+          remotes::install_deps(dependencies = TRUE, type = "binary")
           remotes::install_cran("rcmdcheck")
           remotes::install_cran("sessioninfo")
         shell: Rscript {0}
