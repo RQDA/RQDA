@@ -5,8 +5,8 @@ Version: 0.3-2
 Author: Ronggui Huang
 Maintainer: Ronggui Huang <ronggui.huang@gmail.com>
 Depends: RSQLite, gWidgets2RGtk2, DBI, stringi
-Imports: RGtk2, igraph, gWidgets2, methods
-Enhances: tcltk, d3Network
+Imports: RGtk2, igraph, d3Network, gWidgets2, methods
+Enhances: tcltk, rjpod
 Description: Software for qualitative text analysis (Kuckartz, 2014, <doi:10.4135/9781446288719>). Current version only supports plain text, but it can import PDF highlights if package 'rjpod' (<https://r-forge.r-project.org/projects/rqda/>) is installed.
 License: BSD_3_clause + file LICENSE
 LazyLoad: yes

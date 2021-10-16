@@ -777,8 +777,8 @@ ShowFileProperty <- function(Fid = getFileIds(type = "selected"), focus = TRUE) 
             return(FALSE)
         }
 
-                                        # not sure what the tryCatch below is supposed to catch.
-                                        #tryCatch(svalue(.rqda$.sfp) <- val, error = function(e) {
+        # not sure what the tryCatch below is supposed to catch.
+        #tryCatch(svalue(.rqda$.sfp) <- val, error = function(e) {
         gw <- gwindow(gettext("File Property", domain = "R-RQDA"),
                       width = getOption("widgetSize")[1] * .5,
                       height = getOption("widgetSize")[2] * .5)
@@ -789,8 +789,8 @@ ShowFileProperty <- function(Fid = getFileIds(type = "selected"), focus = TRUE) 
         gw$set_icon(mainIcon)
         sfp <- glabel(val, container = gw)
         assign(".sfp", sfp, envir = .rqda)
-        "focus <-" (gw, value = focus)
-                                        #})
+        # "focus <-" (gw, value = focus) # what is this supposed to do?
+        #})
 
     }}
 
