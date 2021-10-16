@@ -27,11 +27,13 @@ addSettingGUI <- function(container, width = 12) {
 
     gedit(name = "owner",
           label = name,
-          text = .rqda$owner, container = SettingFL
+          text = .rqda$owner,
+          container = SettingFL
           )
     gedit(name = "encoding",
           label = fenc,
-          text = .rqda$encoding, container = SettingFL
+          text = .rqda$encoding,
+          container = SettingFL
           )
     gcombobox(name = "fore.col",
               label = colc,
@@ -67,7 +69,7 @@ addSettingGUI <- function(container, width = 12) {
               container = SettingFL
               )
 
-    ButtonContainer <- ggroup(container = container) ##, width = 100) ## not necessary to set width here
+    ButtonContainer <- ggroup(container = container)
     addSpring(ButtonContainer)
     resetButton <- gbutton(gettext("Default", domain = "R-RQDA"),
                            container = ButtonContainer)
