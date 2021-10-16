@@ -27,11 +27,13 @@ addSettingGUI <- function(container, width = 12) {
 
     gedit(name = "owner",
           label = name,
-          text = .rqda$owner, container = SettingFL
+          text = .rqda$owner,
+          container = SettingFL
           )
     gedit(name = "encoding",
           label = fenc,
-          text = .rqda$encoding, container = SettingFL
+          text = .rqda$encoding,
+          container = SettingFL
           )
     gcombobox(name = "fore.col",
               label = colc,
@@ -67,7 +69,7 @@ addSettingGUI <- function(container, width = 12) {
               container = SettingFL
               )
 
-    ButtonContainer <- ggroup(container = container) ##, width = 100) ## not necessary to set width here
+    ButtonContainer <- ggroup(container = container)
     addSpring(ButtonContainer)
     resetButton <- gbutton(gettext("Default", domain = "R-RQDA"),
                            container = ButtonContainer)
@@ -88,7 +90,19 @@ addSettingGUI <- function(container, width = 12) {
 
         tryCatch(ClearMark(.rqda$.root_edit, 0, nchar(svalue(.rqda$.openfile_gui)), TRUE, TRUE), error = function(e) {
         })
-        for (i in names(out)) assign(i, out[[i]], envir = .rqda)
+
+        nams <- c(
+          "owner",       # name of coder
+          "encoding",    # file encoding
+          "fore.col",    # color of coding
+          "back.col",    # color of case
+          "codingTable", # current coding table
+          "BOM",         # byte order mark
+          "SFP",         # show file property
+          "TOR"          # type of retrieval
+        )
+
+        for (i in seq_along(nams)) assign(nams[i], out[[i]], envir = .rqda)
     })
 
     addHandlerChanged(resetButton, function(h, ...) {

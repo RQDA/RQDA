@@ -11,5 +11,4 @@ button <- new.env(parent = emptyenv())
 .rqda$isLaunched <- FALSE
 .rqda$owner <- "default"
 .rqda$encoding <- "unknown"
-.rqda$back.col <- "gold"
 .rqda$fore.col <- "blue"
