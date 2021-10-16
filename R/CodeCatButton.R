@@ -318,11 +318,22 @@ plotCodeCategory <- function(parent = NULL) {
 
 d3CodeCategory <- function(parent = NULL) {
     if (is.null(parent)) parent <- svalue(.rqda$.CodeCatWidget)
-    ans <- rqda_sel(sprintf("select codecat.name as parent, freecode.name as child from treecode, codecat, freecode
-where treecode.status = 1 and codecat.status = 1 and freecode.status = 1
-and treecode.catid = codecat.catid and freecode.id = treecode.cid and codecat.name in (%s)", paste(shQuote(parent), collapse = ", ")))
+    ans <- rqda_sel(
+        sprintf("select
+            codecat.name as parent,
+            freecode.name as child from treecode,
+            codecat, freecode
+            where treecode.status = 1 and
+                  codecat.status = 1 and
+                  freecode.status = 1 and
+                  treecode.catid = codecat.catid and
+                  freecode.id = treecode.cid and
+                  codecat.name in (%s)",
+            paste(shQuote(parent), collapse = ", ")))
+
     Encoding(ans$parent) <- "UTF-8"
     Encoding(ans$child) <- "UTF-8"
+
     file = paste(tempfile(), "html", sep = ".")
     d3Network::d3SimpleNetwork(ans, width = gdkScreenWidth(), height = gdkScreenHeight(), file = file(file, encoding = "UTF-8"))
     browseURL(file)
