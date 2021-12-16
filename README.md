@@ -1,5 +1,6 @@
 # RQDA ![R-CMD-check](https://github.com/RQDA/RQDA/workflows/R-CMD-check/badge.svg)
 
+_In December 2021 the orphaned RGtk2 package was archived on CRAN and while me and this is the end for RQDA. It was fun while it lasted, but it's time to move on._
 
 [RQDA](http://rqda.r-forge.r-project.org/) is an R package for computer-aided qualitative data analysis
 
