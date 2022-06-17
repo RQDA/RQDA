@@ -66,7 +66,7 @@ devtools::install_github("RQDA/RQDA", INSTALL_opts = "--no-multiarch")
 $ R
 ```
 ```R
-> devtools::install_github("RQDA/RQDA")
+> devtools::install_github("RQDA/RQDA", ref = "main")
 ```
 
 7. If all steps are successful, then we can launch RQDA by the following R command:
